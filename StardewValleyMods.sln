@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.16
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ButcherMod", "ButcherMod\ButcherMod.csproj", "{FA6A5BA1-8983-4982-B746-ADF42EC01795}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MailFrameworkMod", "MailFrameworkMod\MailFrameworkMod.csproj", "{9AB101DD-FB56-4441-8180-783405D2D2F0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FA6A5BA1-8983-4982-B746-ADF42EC01795}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA6A5BA1-8983-4982-B746-ADF42EC01795}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA6A5BA1-8983-4982-B746-ADF42EC01795}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA6A5BA1-8983-4982-B746-ADF42EC01795}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9AB101DD-FB56-4441-8180-783405D2D2F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9AB101DD-FB56-4441-8180-783405D2D2F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9AB101DD-FB56-4441-8180-783405D2D2F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9AB101DD-FB56-4441-8180-783405D2D2F0}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A19DE11F-EB42-4341-8B3D-46D4AC89D34D}
+	EndGlobalSection
+EndGlobal

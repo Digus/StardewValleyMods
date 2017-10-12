@@ -1,0 +1,51 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using StardewValley;
+
+namespace MailFrameworkMod
+{
+    public class Letter
+    {
+        /// <summary>
+        /// this letter unique id
+        /// </summary>
+        public string Id { get; private set; }
+        /// <summary>
+        /// text to be show on the letter menu. You can use @ to put the players name and ^ for line breakes
+        /// </summary>
+        public string Text { get; private set; }
+        /// <summary>
+        /// list of items to be added in the letter. If null or empty, no item is added
+        /// There is a bug with the game when adding more than one object. It draws one over the other, and when clicked the one showing is the last one to be picked.
+        /// </summary>
+        public List<Item> Items { get; private set; }
+        /// <summary>
+        /// a function that will be called to check if the letter is ready to be placed in the mailbox
+        /// </summary>
+        public Func<bool> Condition { get; private set; }
+        /// <summary>
+        /// a action that will be called after the letter was seen by the player
+        /// </summary>
+        public Action Callback { get; set; }
+
+        /// <summary>
+        /// Creates a letter.
+        /// </summary>
+        /// <param name="id">this letter unique id</param>
+        /// <param name="text">text to be show on the letter menu. You can use @ to put the players name and ^ for line breakes</param>
+        /// <param name="items">list of items to be added in the letter. If null or empty, no item is added</param>
+        /// <param name="condition">a function that will be called to check if the letter is ready to be placed in the mailbox</param>
+        /// <param name="callback">a action that will be called after the letter was seen by the player</param>
+        public Letter(string id, string text, List<Item> items, Func<bool> condition, Action callback = null)
+        {
+            this.Id = id;
+            this.Text = text;
+            this.Items = items;
+            this.Condition = condition;
+            this.Callback = callback;
+        }
+    }
+}

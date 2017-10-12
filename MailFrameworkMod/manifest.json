@@ -1,0 +1,13 @@
+﻿{
+	"Name": "MailFramework",
+	"Author": "Digus",
+	"Version": {
+		"MajorVersion": 1,
+		"MinorVersion": 0,
+		"PatchVersion": 0,
+		"Build": null
+	},
+	"Description": "Utility classes to send mail in the game.",
+	"UniqueID": "DIGUS.MailFrameworkMod",
+	"EntryDll": "MailFrameworkMod.dll"
+}
