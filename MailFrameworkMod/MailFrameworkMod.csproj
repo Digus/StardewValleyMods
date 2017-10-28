@@ -47,6 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataLoader.cs" />
     <Compile Include="Letter.cs" />
     <Compile Include="MailController.cs" />
     <Compile Include="MailDao.cs" />

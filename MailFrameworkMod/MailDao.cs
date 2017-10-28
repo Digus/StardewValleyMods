@@ -35,7 +35,7 @@ namespace MailFrameworkMod
         /// <returns>The list with all letter that matched their conditions</returns>
         public static List<Letter> GetValidatedLetters()
         {
-            return Letters.FindAll((l) => l.Condition());
+            return Letters.FindAll((l) => l.Condition(l));
         }
     }
 }

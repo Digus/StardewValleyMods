@@ -6,13 +6,14 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using StardewModdingAPI.Events;
 using StardewValley;
+using StardewValley.BellsAndWhistles;
 using StardewValley.Menus;
 
 namespace MailFrameworkMod
 {
     public class MailController
     {
-        private static readonly string CUSTOM_MAIL_ID = "taxPassed";
+        public static readonly string CustomMailId = "MailFrameworkPlaceholderId";
 
         private static String _nextLetterId = "none";
         private static readonly List<Letter> Letters = new List<Letter>();
@@ -25,10 +26,33 @@ namespace MailFrameworkMod
         {
             List<Letter> newLetters = MailDao.GetValidatedLetters();
             newLetters.RemoveAll((l)=>Letters.Contains(l));
-            newLetters.ForEach((l) =>Game1.mailbox.Enqueue(CUSTOM_MAIL_ID));
+            newLetters.ForEach((l) =>Game1.mailbox.Enqueue(CustomMailId));
             Letters.AddRange(newLetters);
             UpdateNextLetterId();
         }
+
+
+        /// <summary>
+        /// Call this method to unload any new letters still on the mailbox.
+        /// </summary>
+        public static void UnloadMailBox()
+        {
+            List<String> tempMailBox = new List<string>();
+            while (Game1.mailbox.Count > 0)
+            {
+                tempMailBox.Add(Game1.mailbox.Dequeue());
+            }
+            foreach (Letter letter in Letters)
+            {
+                tempMailBox.Remove(CustomMailId);
+            }
+            foreach (String mail in tempMailBox)
+            {
+                Game1.mailbox.Enqueue(mail);
+            }
+            Letters.Clear();
+        }
+
         /// <summary>
         /// If exists any custom mail to be delivered.
         /// </summary>
@@ -46,7 +70,7 @@ namespace MailFrameworkMod
         {
             if (_shownLetter == null)
             {
-                if (Letters.Count > 0 && _nextLetterId == CUSTOM_MAIL_ID)
+                if (Letters.Count > 0 && _nextLetterId == CustomMailId)
                 {
                     _shownLetter = Letters.First();
                     var activeClickableMenu = new LetterViewerMenu(_shownLetter.Text.Replace("@", Game1.player.Name),_shownLetter.Id);
@@ -73,6 +97,21 @@ namespace MailFrameworkMod
                             }
                         )
                     );
+                    if (_shownLetter.Recipe != null)
+                    {
+                        string recipe = _shownLetter.Recipe;
+                        if (!Game1.player.cookingRecipes.ContainsKey(recipe))
+                        {
+                            Game1.player.cookingRecipes.Add(recipe, 0);
+                        }
+
+                        //if (LocalizedContentManager.CurrentLanguageCode != LocalizedContentManager.LanguageCode.en)
+                        //    this.learnedRecipe = strArray2[strArray2.Length - 1];
+                        MailFrameworkModEntery.ModHelper.Reflection
+                            .GetPrivateField<String>(activeClickableMenu, "cookingOrCrafting").SetValue(Game1.content.LoadString("Strings\\UI:LearnedRecipe_cooking"));
+                        MailFrameworkModEntery.ModHelper.Reflection
+                            .GetPrivateField<String>(activeClickableMenu, "learnedRecipe").SetValue(recipe);
+                    }
 
                     MenuEvents.MenuClosed += MenuEvents_MenuClosed;
                     ;
@@ -93,7 +132,7 @@ namespace MailFrameworkMod
         private static void MenuEvents_MenuClosed(object sender, EventArgsClickableMenuClosed e)
         {
             Letters.Remove(_shownLetter);
-            _shownLetter.Callback?.Invoke();
+            _shownLetter.Callback?.Invoke(_shownLetter);
             UpdateNextLetterId();
             MenuEvents.MenuClosed -= MenuEvents_MenuClosed;
             _shownLetter = null;

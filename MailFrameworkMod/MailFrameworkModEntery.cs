@@ -12,7 +12,7 @@ namespace MailFrameworkMod
 {
     public class MailFrameworkModEntery : Mod
     {
-        internal static IModHelper ModHelper;
+        public static IModHelper ModHelper;
 
         /*********
         ** Public methods
@@ -28,6 +28,9 @@ namespace MailFrameworkMod
             TimeEvents.AfterDayStarted += TimeEvents_AfterDayStarted;
             SaveEvents.AfterLoad += SaveEvents_AfterLoad;
             SaveEvents.AfterReturnToTitle += SaveEvents_AfterReturnToTitle;
+            SaveEvents.BeforeSave += TimeEvents_BeforeSave;
+            var editors = helper.Content.AssetEditors;
+            editors.Add(new DataLoader());
         }
 
         /// <summary>
@@ -76,10 +79,22 @@ namespace MailFrameworkMod
         private void MenuEvents_MenuChanged(object sender, EventArgsClickableMenuChanged e)
         {
             
-            if (e.NewMenu is LetterViewerMenu && this.Helper.Reflection.GetPrivateValue<string>(typeof(LetterViewerMenu), "mailTitle") != null && MailController.HasCustomMail())
+            if (e.NewMenu is LetterViewerMenu && this.Helper.Reflection.GetPrivateValue<string>(e.NewMenu, "mailTitle") != null && MailController.HasCustomMail())
             {
                 MailController.ShowLetter();
             }
+        }
+
+
+        /// <summary>
+        /// To be invoked before saving a game.
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void TimeEvents_BeforeSave(object sender, EventArgs e)
+        {
+            MailController.UnloadMailBox();
         }
     }
 }

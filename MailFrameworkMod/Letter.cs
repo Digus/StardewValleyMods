@@ -23,13 +23,26 @@ namespace MailFrameworkMod
         /// </summary>
         public List<Item> Items { get; private set; }
         /// <summary>
+        /// name of the recipe to be learned with the letter
+        /// </summary>
+        public string Recipe { get; private set;}
+        /// <summary>
         /// a function that will be called to check if the letter is ready to be placed in the mailbox
         /// </summary>
-        public Func<bool> Condition { get; private set; }
+        public Func<Letter,bool> Condition { get; private set; }
         /// <summary>
         /// a action that will be called after the letter was seen by the player
         /// </summary>
-        public Action Callback { get; set; }
+        public Action<Letter> Callback { get; set; }
+
+        /// <summary>
+        /// Creates a letter.
+        /// </summary>
+        /// <param name="id">this letter unique id</param>
+        /// <param name="text">text to be show on the letter menu. You can use @ to put the players name and ^ for line breakes</param>
+        /// <param name="condition">a function that will be called to check if the letter is ready to be placed in the mailbox</param>
+        /// <param name="callback">a action that will be called after the letter was seen by the player</param>
+        public Letter(string id, string text, Func<Letter, bool> condition, Action<Letter> callback = null) : this(id, text, null, null, condition, callback) { }
 
         /// <summary>
         /// Creates a letter.
@@ -39,13 +52,26 @@ namespace MailFrameworkMod
         /// <param name="items">list of items to be added in the letter. If null or empty, no item is added</param>
         /// <param name="condition">a function that will be called to check if the letter is ready to be placed in the mailbox</param>
         /// <param name="callback">a action that will be called after the letter was seen by the player</param>
-        public Letter(string id, string text, List<Item> items, Func<bool> condition, Action callback = null)
+        public Letter(string id, string text, List<Item> items, Func<Letter,bool> condition, Action<Letter> callback = null) : this(id, text, items, null, condition, callback) { }
+
+        /// <summary>
+        /// Creates a letter.
+        /// </summary>
+        /// <param name="id">this letter unique id</param>
+        /// <param name="text">text to be show on the letter menu. You can use @ to put the players name and ^ for line breakes</param>
+        /// <param name="recipe">name of the recipe to be learned with the letter</param>
+        /// <param name="condition">a function that will be called to check if the letter is ready to be placed in the mailbox</param>
+        /// <param name="callback">a action that will be called after the letter was seen by the player</param>
+        public Letter(string id, string text, string recipe, Func<Letter,bool> condition, Action<Letter> callback = null) : this(id, text, null, recipe, condition, callback) { }
+
+        private Letter(string id, string text, List<Item> items, string recipe, Func<Letter,bool> condition, Action<Letter> callback)
         {
-            this.Id = id;
-            this.Text = text;
-            this.Items = items;
-            this.Condition = condition;
-            this.Callback = callback;
+            Id = id;
+            Text = text;
+            Items = items;
+            Recipe = recipe;
+            Condition = condition;
+            Callback = callback;
         }
     }
 }
