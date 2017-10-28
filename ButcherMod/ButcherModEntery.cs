@@ -30,9 +30,21 @@ namespace ButcherMod
         {
             ModHelper = helper;
             //ControlEvents.KeyPressed += this.ControlEvents_KeyPress;
-            var editors = ((IList<IAssetEditor>)helper.Content.GetType().GetProperty("AssetEditors", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance).GetValue(Helper.Content));
             DataLoader = new DataLoader(helper);
-            editors.Add(DataLoader);
+
+            TimeEvents.AfterDayStarted += (x, y) => DataLoader.RecipeLoader.MeatFridayChannel.CheckChannelDay();
+
+            //SaveEvents.AfterLoad += SaveEvents_AfterLoad;
+
+        }
+
+        /// <summary>
+        /// To be invoked after returning loading a game.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void SaveEvents_AfterLoad(object sender, EventArgs e)
+        {
 
         }
 

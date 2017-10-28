@@ -42,8 +42,8 @@
       <HintPath>K:\StardewValley\Mods\StardewValleyMods\CustomElementHandler\bin\Release\CustomElementHandler.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="EntoaroxFramework">
-      <HintPath>K:\StardewValley\Mods\Entoarox\StardewMods-master\Framework\bin\Debug\EntoaroxFramework.dll</HintPath>
+    <Reference Include="CustomTV">
+      <HintPath>..\..\..\Mods\StardewValleyMods\CustomTV\bin\Release\CustomTV.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
@@ -57,9 +57,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataLoader.cs" />
+    <Compile Include="recipes\RecipesLoader.cs" />
     <Compile Include="tools\MeatCleaver.cs" />
     <Compile Include="ButcherModEntery.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="recipes\MeatFridayChannel.cs" />
+    <Compile Include="tools\MeatCleaverLoader.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="manifest.json">

@@ -17,7 +17,7 @@ namespace ButcherMod
         private FarmAnimal _animal;
         private FarmAnimal _tempAnimal;
 
-        public new static int  initialParentTileIndex = 504;
+        public new static int initialParentTileIndex = 504;
         public new static int indexOfMenuItemView = 530;
 
         public MeatCleaver() : base("Meat Cleaver", 0, initialParentTileIndex, indexOfMenuItemView, false, 0)
