@@ -8,6 +8,7 @@ using StardewValley.Tools;
 using StardewValley;
 using StardewValley.Objects;
 using Object = StardewValley.Object;
+using ButcherMod.animals;
 
 namespace ButcherMod
 {
@@ -20,19 +21,25 @@ namespace ButcherMod
         public new static int initialParentTileIndex = 504;
         public new static int indexOfMenuItemView = 530;
 
+        private string _sufix = "";
+
         public MeatCleaver() : base("Meat Cleaver", 0, initialParentTileIndex, indexOfMenuItemView, false, 0)
         {
+            if (DataLoader.ModConfig.Softmode)
+            {
+                _sufix = ".Soft";
+            }
         }
 
 
         protected override string loadDisplayName()
         {
-            return "Meat Cleaver";
+            return DataLoader.i18n.Get("Tool.MeatCleaver.Name"+ _sufix);
         }
 
         protected override string loadDescription()
         {
-            return "Turn your animals into meat.";
+            return DataLoader.i18n.Get("Tool.MeatCleaver.Description"+ _sufix);
         }
 
         public override bool canBeTrashed()
@@ -46,6 +53,7 @@ namespace ButcherMod
             y = (int) who.GetToolLocation(false).Y;
             Rectangle rectangle = new Rectangle(x - Game1.tileSize / 2, y - Game1.tileSize / 2, Game1.tileSize,
                 Game1.tileSize);
+
             if (location is Farm)
             {
                 foreach (FarmAnimal farmAnimal in (location as Farm).animals.Values)
@@ -60,8 +68,18 @@ namespace ButcherMod
                         else
                         {
                             this._tempAnimal = farmAnimal;
-                            Microsoft.Xna.Framework.Audio.Cue hurtSound = Game1.soundBank.GetCue(farmAnimal.sound);
-                            hurtSound.SetVariable("Pitch", 1800);
+                            Microsoft.Xna.Framework.Audio.Cue hurtSound;
+                            if (!DataLoader.ModConfig.Softmode)
+                            {
+                                hurtSound = Game1.soundBank.GetCue(farmAnimal.sound);
+                                hurtSound.SetVariable("Pitch", 1800);
+                            }
+                            else
+                            {
+                                hurtSound = Game1.soundBank.GetCue("toolCharge");
+                                hurtSound.SetVariable("Pitch", 5000f);
+                            }
+
                             hurtSound.Play();
                             break;
                         }
@@ -82,9 +100,19 @@ namespace ButcherMod
                         else
                         {
                             this._tempAnimal = farmAnimal;
-                            Microsoft.Xna.Framework.Audio.Cue hurtSound = Game1.soundBank.GetCue(farmAnimal.sound);
-                            hurtSound.SetVariable("Pitch", 1800);
-                            hurtSound.Play ();
+                            Microsoft.Xna.Framework.Audio.Cue hurtSound;
+                            if (!DataLoader.ModConfig.Softmode)
+                            {
+                                hurtSound = Game1.soundBank.GetCue(farmAnimal.sound);
+                                hurtSound.SetVariable("Pitch", 1800);
+                            }
+                            else
+                            {
+                                hurtSound = Game1.soundBank.GetCue("toolCharge");
+                                hurtSound.SetVariable("Pitch", 5000f);
+                            }
+
+                            hurtSound.Play();
                             break;
                         }
                     }
@@ -93,7 +121,7 @@ namespace ButcherMod
             this.Update(who.facingDirection, 0, who);
             if (this._tempAnimal != null && this._tempAnimal.age < (int)this._tempAnimal.ageWhenMature)
             {
-                string dialogue = this._tempAnimal.displayName + " is too young to be turned into meat.";
+                string dialogue = DataLoader.i18n.Get("Tool.MeatCleaver.TooYoung"+_sufix, new { animalName = this._tempAnimal.displayName });
                 DelayedAction.showDialogueAfterDelay(dialogue, 150);
                 this._tempAnimal = null;
             }
@@ -119,17 +147,20 @@ namespace ButcherMod
                 (this._animal.home.indoors as AnimalHouse).animalsThatLiveHere.Remove(this._animal.myID);
                 this._animal.health = -1;
                 int numClouds = this._animal.frontBackSourceRect.Width / 2;
+                int cloudSprite = !DataLoader.ModConfig.Softmode ? 5 : 10;
                 for (int i = 0; i < numClouds; i++)
                 {
                     int nonRedness = Game1.random.Next(0, 80);
+                    Color cloudColor = new Color(255, 255 - nonRedness, 255 - nonRedness); ;
+                    
                     Game1.currentLocation.temporarySprites.Add
                     (
                         new TemporaryAnimatedSprite
                         (
-                            5
+                            cloudSprite
                             ,this._animal.position +new Vector2(Game1.random.Next(-Game1.tileSize / 2, this._animal.frontBackSourceRect.Width * 3)
                             ,Game1.random.Next(-Game1.tileSize / 2, this._animal.frontBackSourceRect.Height * 3))
-                            ,new Color(255, 255 - nonRedness, 255 - nonRedness)
+                            ,cloudColor
                             , 8
                             , false,
                             Game1.random.NextDouble() < .5 ? 50 : Game1.random.Next(30, 200), 0, Game1.tileSize
@@ -143,6 +174,18 @@ namespace ButcherMod
                         }
                     );
                 }
+                Color animalColor;
+                float alfaFade;
+                if (!DataLoader.ModConfig.Softmode)
+                {
+                    animalColor = Color.LightPink;
+                    alfaFade = .025f;
+                }
+                else
+                {
+                    animalColor = Color.White;
+                    alfaFade = .050f;
+                }
                 Game1.currentLocation.temporarySprites.Add
                 (
                     new TemporaryAnimatedSprite
@@ -151,14 +194,23 @@ namespace ButcherMod
                         ,this._animal.sprite.SourceRect
                         , this._animal.position
                         , this._animal.FacingDirection == Game1.left
-                        ,.025f
-                        , Color.LightPink
+                        , alfaFade
+                        , animalColor
                     )
                     {
                         scale = 4f
                     }
                 );
-                Game1.playSound("killAnimal");
+                if (!DataLoader.ModConfig.Softmode)
+                {
+                    Game1.playSound("killAnimal");
+                } else
+                {
+                    Microsoft.Xna.Framework.Audio.Cue warptSound = Game1.soundBank.GetCue("wand");
+                    warptSound.SetVariable("Pitch", 1800);
+                    warptSound.Play();
+                }
+                
 
                 this.CreateMeat();
                 who.gainExperience(0, 5);
@@ -168,60 +220,27 @@ namespace ButcherMod
         }
 
         private void CreateMeat()
-        {
-            int numberOfMeat;
-            int maxNumberOfMeat ;
-            int meatPrice;
+        {                        
             int debrisType = this._animal.meatIndex;
 
-            if (this._animal.type.Contains("Cow"))
-            {
-                numberOfMeat = 5;
-                maxNumberOfMeat = 20;
-                meatPrice = 100;
-            }
-            else if (this._animal.type.Contains("Pig"))
-            {
-                numberOfMeat = 4;
-                maxNumberOfMeat = 16;
-                meatPrice = 1250;
-            }
-            else if (this._animal.type.Contains("Chicken"))
-            {
-                numberOfMeat = 1;
-                maxNumberOfMeat = 4;
-                meatPrice = 250;
-            }
-            else if (this._animal.type.Contains("Duck"))
-            {
-                numberOfMeat = 2;
-                maxNumberOfMeat = 6;
-                meatPrice = 800;
-            }
-            else if (this._animal.type.Contains("Rabbit"))
-            {
-                numberOfMeat = 1;
-                maxNumberOfMeat = 4;
-                meatPrice = 2500;
-            }
-            else if (this._animal.type.Contains("Sheep"))
-            {
-                numberOfMeat = 4;
-                maxNumberOfMeat = 16;
-                meatPrice = 650;
-            }
-            else if (this._animal.type.Contains("Goat"))
-            {
-                numberOfMeat = 3;
-                maxNumberOfMeat = 8;
-                meatPrice = 650;
-            }
-            else
+            Animal animal;
+            Animal? foundAnimal = this.GetAnimalFromType(this._animal.type);
+            if (foundAnimal == null)
             {
                 return;
             }
+            else
+            {
+                animal = (Animal)foundAnimal;
+            }
 
-            numberOfMeat += (int) ((_animal.getSellPrice() / ((double)_animal.price) - 0.3) * (maxNumberOfMeat - numberOfMeat));
+            AnimalItem animalItem = DataLoader.AnimalData.getAnimalItem(animal);
+            int meatPrice =  DataLoader.MeatData.getMeatItem(animal.GetMeat()).Price;
+            int minimumNumberOfMeat = animalItem.MinimalNumberOfMeat;
+            int maxNumberOfMeat = animalItem.MaximumNumberOfMeat;
+            int numberOfMeat = minimumNumberOfMeat;
+
+            numberOfMeat += (int) ((_animal.getSellPrice() / ((double)_animal.price) - 0.3) * (maxNumberOfMeat - minimumNumberOfMeat));
 
             Random random = new Random((int)_animal.myID * 10000 + (int)Game1.stats.DaysPlayed);
             int[] quality = {0,0,0,0,0}; 
@@ -269,10 +288,12 @@ namespace ButcherMod
                 this.ThrowItem(newItem);
             }
 
-            if (this._animal.type.Equals("Sheep"))
+            if ((animal == Animal.Sheep || animal == Animal.Rabbit))
             {
-                int numberOfWools = (int) ((_animal.getSellPrice() / ((double) _animal.price) - 0.3) * (2));
-                numberOfWools += this._animal.currentProduce > 0 ? 1 : 0;
+                WoolAnimalItem woolAnimalItem = (WoolAnimalItem)animalItem;
+                int numberOfWools = this._animal.currentProduce > 0 ? 1 : 0;
+                numberOfWools += (int)(woolAnimalItem.MinimumNumberOfExtraWool + (_animal.getSellPrice() / ((double)_animal.price) - 0.3) * (woolAnimalItem.MaximumNumberOfExtraWool - woolAnimalItem.MinimumNumberOfExtraWool));
+                
                 for (; numberOfWools > 0; --numberOfWools)
                 {
                     Object newItem = new Object(Vector2.Zero, this._animal.defaultProduceIndex, 1);
@@ -280,9 +301,11 @@ namespace ButcherMod
                     this.ThrowItem(newItem);
                 }
             }
-            else if (this._animal.type.Equals("Duck"))
+
+            if (animal == Animal.Duck)
             {
-                int numberOfFeather = (int)((_animal.getSellPrice() / ((double)_animal.price) - 0.3) * (2));
+                FeatherAnimalItem featherAnimalItem = (FeatherAnimalItem)animalItem;
+                int numberOfFeather = (int)(featherAnimalItem.MinimumNumberOfFeatherChances + (_animal.getSellPrice() / ((double)_animal.price) - 0.3) * (featherAnimalItem.MaximumNumberOfFeatherChances - featherAnimalItem.MinimumNumberOfFeatherChances));
                 float num1 = (int)this._animal.happiness > 200 ? (float)this._animal.happiness * 1.5f : ((int)this._animal.happiness <= 100 ? (float)((int)this._animal.happiness - 100) : 0.0f);
                 for (; numberOfFeather > 0; --numberOfFeather)
                 {
@@ -297,17 +320,11 @@ namespace ButcherMod
                     }
                 }
             } 
-            else if (this._animal.type.Equals("Rabbit"))
+
+            if (animal == Animal.Rabbit)
             {
-                int numberOfWools = (int)((_animal.getSellPrice() / ((double)_animal.price) - 0.3) * (1));
-                numberOfWools += this._animal.currentProduce > 0 ? 1 : 0;
-                for (; numberOfWools > 0; --numberOfWools)
-                {
-                    Object newItem = new Object(Vector2.Zero, this._animal.defaultProduceIndex, 1);
-                    newItem.quality = this.ProduceQuality(random);
-                    this.ThrowItem(newItem);
-                }
-                int numberOfFeet = (int)((_animal.getSellPrice() / ((double)_animal.price) - 0.3) * (4));
+                FeetAnimalItem feetAnimalItem = (FeetAnimalItem)animalItem;
+                int numberOfFeet = (int)(feetAnimalItem.MinimumNumberOfFeetChances + (_animal.getSellPrice() / ((double)_animal.price) - 0.3) * (feetAnimalItem.MaximumNumberOfFeetChances - feetAnimalItem.MinimumNumberOfFeetChances));
                 float num1 = (int)this._animal.happiness > 200 ? (float)this._animal.happiness * 1.5f : ((int)this._animal.happiness <= 100 ? (float)((int)this._animal.happiness - 100) : 0.0f);
                 for (; numberOfFeet > 0; --numberOfFeet)
                 {
@@ -362,6 +379,18 @@ namespace ButcherMod
                 ? (random.NextDouble() >= chance / 2.0 ? (random.NextDouble() >= chance ? 0 : 1) : 2)
                 : 4;
             return produceQuality;
+        }
+
+        public Animal? GetAnimalFromType(string type)
+        {
+            foreach (Animal animal in System.Enum.GetValues(typeof(Animal)))
+            {
+                if (type.Contains(animal.ToString()))
+                {
+                    return animal;
+                }
+            }
+            return null;
         }
 
         public object getReplacement()

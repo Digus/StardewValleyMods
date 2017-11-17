@@ -20,6 +20,7 @@ namespace ButcherMod
 
         internal static IModHelper ModHelper;
         internal static DataLoader DataLoader;
+        private string _meatCleaverSpawnKey;
 
         /*********
         ** Public methods
@@ -29,11 +30,17 @@ namespace ButcherMod
         public override void Entry(IModHelper helper)
         {
             ModHelper = helper;
-            //ControlEvents.KeyPressed += this.ControlEvents_KeyPress;
+            
             DataLoader = new DataLoader(helper);
+            _meatCleaverSpawnKey = DataLoader.ModConfig.MeatCleaverSpawnKey;
 
             TimeEvents.AfterDayStarted += (x, y) => DataLoader.RecipeLoader.MeatFridayChannel.CheckChannelDay();
 
+            if (_meatCleaverSpawnKey != null)
+            {
+                ControlEvents.KeyPressed += this.ControlEvents_KeyPress;
+            }
+            
             //SaveEvents.AfterLoad += SaveEvents_AfterLoad;
 
         }
@@ -57,29 +64,14 @@ namespace ButcherMod
         /// <param name="e">The event data.</param>
         private void ControlEvents_KeyPress(object sender, EventArgsKeyPressed e)
         {
-            //if (Context.IsWorldReady) // save is loaded
-            //{
-            //    this.Monitor.Log($"{Game1.player.name} pressed {e.KeyPressed}.");
-            //    if (e.KeyPressed == Keys.G)
-            //    {
-            //        Game1.createRadialDebris(Game1.currentLocation, 639, Game1.player.getTileX() - 1,
-            //            Game1.player.getTileY() - 1, 3, false, -1, true);
-            //        Game1.createRadialDebris(Game1.currentLocation, 640, Game1.player.getTileX() - 1,
-            //            Game1.player.getTileY() - 1, 3, false, -1, true);
-            //        Game1.createRadialDebris(Game1.currentLocation, 641, Game1.player.getTileX() - 1,
-            //            Game1.player.getTileY() - 1, 3, false, -1, true);
-            //        Game1.createRadialDebris(Game1.currentLocation, 642, Game1.player.getTileX() - 1,
-            //            Game1.player.getTileY() - 1, 3, false, -1, true);
-            //        Game1.createRadialDebris(Game1.currentLocation, 643, Game1.player.getTileX() - 1,
-            //            Game1.player.getTileY() - 1, 3, false, -1, true);
-            //        Game1.createRadialDebris(Game1.currentLocation, 644, Game1.player.getTileX() - 1,
-            //            Game1.player.getTileY() - 1, 3, false, -1, true);
-            //    }
-            //    else if (e.KeyPressed == Keys.U)
-            //    {
-            //        Game1.player.addItemToInventory(new MeatCleaver());
-            //    }
-            //}
+            if (Context.IsWorldReady) // save is loaded
+            {
+                
+                if (_meatCleaverSpawnKey != null && e.KeyPressed == (Keys)Enum.Parse(typeof(Keys), _meatCleaverSpawnKey.ToUpper()))
+                {
+                    Game1.player.addItemToInventory(new MeatCleaver());
+                }
+            }
         }
     }
 }

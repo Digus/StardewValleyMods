@@ -56,7 +56,25 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="animals\Animal.cs" />
+    <Compile Include="animals\AnimalData.cs" />
+    <Compile Include="animals\AnimalItem.cs" />
+    <Compile Include="animals\AnimalExtension.cs" />
+    <Compile Include="animals\FeatherAnimalItem.cs" />
+    <Compile Include="animals\FeetAnimalItem.cs" />
+    <Compile Include="animals\WoolAnimalItem.cs" />
+    <Compile Include="ModConfig.cs" />
+    <Compile Include="recipes\RecipeAttribute.cs" />
+    <Compile Include="meats\MeatAttribute.cs" />
+    <Compile Include="cooking\Cooking.cs" />
+    <Compile Include="cooking\CookingData.cs" />
+    <Compile Include="cooking\CookingExtension.cs" />
+    <Compile Include="cooking\CookingItem.cs" />
     <Compile Include="DataLoader.cs" />
+    <Compile Include="meats\Meat.cs" />
+    <Compile Include="meats\MeatData.cs" />
+    <Compile Include="meats\MeatItem.cs" />
+    <Compile Include="meats\MeatExtension.cs" />
     <Compile Include="recipes\RecipesLoader.cs" />
     <Compile Include="tools\MeatCleaver.cs" />
     <Compile Include="ButcherModEntery.cs" />
@@ -65,6 +83,10 @@
     <Compile Include="tools\MeatCleaverLoader.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="i18n\pt.json" />
+    <None Include="i18n\default.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="manifest.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -82,12 +104,15 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="data\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\packages\Pathoschild.Stardew.ModBuildConfig.1.7.1\build\Pathoschild.Stardew.ModBuildConfig.targets" Condition="Exists('..\packages\Pathoschild.Stardew.ModBuildConfig.1.7.1\build\Pathoschild.Stardew.ModBuildConfig.targets')" />
+  <Import Project="..\packages\Pathoschild.Stardew.ModBuildConfig.2.0.2\build\Pathoschild.Stardew.ModBuildConfig.targets" Condition="Exists('..\packages\Pathoschild.Stardew.ModBuildConfig.2.0.2\build\Pathoschild.Stardew.ModBuildConfig.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\Pathoschild.Stardew.ModBuildConfig.1.7.1\build\Pathoschild.Stardew.ModBuildConfig.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Pathoschild.Stardew.ModBuildConfig.1.7.1\build\Pathoschild.Stardew.ModBuildConfig.targets'))" />
+    <Error Condition="!Exists('..\packages\Pathoschild.Stardew.ModBuildConfig.2.0.2\build\Pathoschild.Stardew.ModBuildConfig.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Pathoschild.Stardew.ModBuildConfig.2.0.2\build\Pathoschild.Stardew.ModBuildConfig.targets'))" />
   </Target>
 </Project>

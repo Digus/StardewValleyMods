@@ -50,20 +50,30 @@ namespace ButcherMod.tools
             asset.ReplaceWith(newSpriteSheet);
 
             var newToolInitialParentIdex = (originalWidth / 16) * (originalHeight / 16);
-            MeatCleaver.initialParentTileIndex = newToolInitialParentIdex;
-            MeatCleaver.indexOfMenuItemView = newToolInitialParentIdex + 26;
+
+            int offset = 0;
+            if (DataLoader.ModConfig.Softmode)
+            {
+                offset = 7;
+            }
+
+            MeatCleaver.initialParentTileIndex = newToolInitialParentIdex + offset;
+            MeatCleaver.indexOfMenuItemView = newToolInitialParentIdex + 26 + offset;
+            LoadMail();
         }
 
         public void LoadMail()
         {
-            string meatCleaverText = "Dear Farmer @," +
-                       "^^    We know you are the proud owner of a farm animal. Congratulations!" +
-                       "^    Here in our world, we love animals very deeply, but unfortunately they can't breed. So, we are always looking to get more from other worlds." +
-                       "^    We know you humans love meat, and you might one day want to kill your animals for their meat... DONT'T DO THAT!" +
-                       "^^    So here is the deal. To our luck, meat here grows on tree. So just send your animals to us and we will send you some meat in exchange. We promise to take really good care of them." +
-                       "^    We have sent you a magic wand, just use it on the animal you want meat from to make the exchange. The more loved it is, the more meat we will give you. We might even add some extra items depending on which animal you send us." +
-                       "^    -Your interdimensional friend" +
-                       "^^P.S. We know the wand looks like a Meat Cleaver, we had to do it like that to please the bloodlust of some humans.";
+
+            string meatCleaverText;
+            if (DataLoader.ModConfig.Softmode)
+            {
+                meatCleaverText = DataLoader.i18n.Get("Tool.MeatCleaver.Letter.Soft");
+            }
+            else
+            {
+                meatCleaverText = DataLoader.i18n.Get("Tool.MeatCleaver.Letter");
+            }
 
             bool MeatCleaverCondition(Letter l)
             {

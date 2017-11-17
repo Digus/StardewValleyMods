@@ -3,13 +3,14 @@
    "Author": "Digus",
    "Version": {
       "MajorVersion": 1,
-      "MinorVersion": 1,
-      "PatchVersion": 2,
-      "Build": null
+      "MinorVersion": 2,
+      "PatchVersion": 0,
+      "Build": "beta.1"
    },
    "Description": "Adds a way to obtain meat from your animals.",
    "UniqueID": "DIGUS.BUTCHER",
    "EntryDll": "ButcherMod.dll",
+   "MinimumApiVersion": "2.0",
    "Dependencies": [
 	   {
 		   "UniqueID": "Platonymous.CustomElementHandler",
@@ -23,5 +24,6 @@
 		   "UniqueID": "DIGUS.MailFrameworkMod",
 		   "MinimumVersion": "1.1.0"
 	   }
-   ]
+   ],
+   "UpdateKeys": [ "Nexus:1538" ]
 }

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ButcherMod.cooking;
+using ButcherMod.meats;
 using ButcherMod.recipes;
 using ButcherMod.tools;
 using MailFrameworkMod;
@@ -14,12 +16,19 @@ using StardewValley;
 using StardewValley.Locations;
 using StardewValley.Objects;
 using Object = StardewValley.Object;
+using ButcherMod.animals;
 
 namespace ButcherMod
 {
     public class DataLoader : IAssetEditor
     {
-        private readonly IModHelper _helper;
+        public static IModHelper Helper;
+        public static ITranslationHelper i18n;
+        public static MeatData MeatData;
+        public static CookingData CookingData;
+        public static AnimalData AnimalData;
+
+        public static ModConfig ModConfig;
 
         public MeatCleaverLoader MeatCleaverLoader { get; }
 
@@ -27,17 +36,21 @@ namespace ButcherMod
 
         public DataLoader(IModHelper helper)
         {
-            this._helper = helper;
+            Helper = helper;
+            i18n = Helper.Translation;
 
-            MeatCleaverLoader = new MeatCleaverLoader(_helper.Content.Load<Texture2D>("tools/MeatCleaver.png"));
+            ModConfig = helper.ReadConfig<ModConfig>();
+
+            MeatCleaverLoader = new MeatCleaverLoader(Helper.Content.Load<Texture2D>("tools/MeatCleaver.png"));
             RecipeLoader = new RecipesLoader();
 
-            var editors = this._helper.Content.AssetEditors;
+            var editors = Helper.Content.AssetEditors;
             editors.Add(this);
             editors.Add(MeatCleaverLoader);
             editors.Add(RecipeLoader);
 
-            //this._helper.Content.InvalidateCache("Data\\CookingRecipes.xnb");
+            AnimalData = DataLoader.Helper.ReadJsonFile<AnimalData>("data\\animals.json") ?? new AnimalData();
+            DataLoader.Helper.WriteJsonFile("data\\animals.json", AnimalData);
 
             MeatCleaverLoader.LoadMail();
             RecipeLoader.LoadMails();
@@ -54,28 +67,35 @@ namespace ButcherMod
             {
                 var data = asset.AsDictionary<int, string>().Data;
                 //MEAT
-                data[639] = "Beef/100/15/Basic -14/Beef/Meat from a cow. Fatty and slightly sweet.";
-                data[640] = "Pork/1250/30/Basic -14/Pork/Meat from a pig. Very nutritious.";
-                data[641] = "Chicken/250/15/Basic -14/Chicken/The meat of a chicken. It's mild.";
-                data[642] = "Duck/800/20/Basic -14/Duck/The meat of a duck. It's darker and richer than chicken meat.";
-                data[643] = "Rabbit/2500/20/Basic -14/Rabbit/The meat of a rabbit. It's very lean.";
-                data[644] = "Mutton/650/20/Basic -14/Mutton/The meat from sheep or goat.";
+                MeatData = DataLoader.Helper.ReadJsonFile<MeatData>("data\\meats.json") ?? new MeatData();
+                DataLoader.Helper.WriteJsonFile("data\\meats.json", MeatData);
+
+                data[(int)Meat.Beef] = Meat.Beef.GetObjectString();
+                data[(int)Meat.Pork] = Meat.Pork.GetObjectString();
+                data[(int)Meat.Chicken] = Meat.Chicken.GetObjectString();
+                data[(int)Meat.Duck] = Meat.Duck.GetObjectString();
+                data[(int)Meat.Rabbit] = Meat.Rabbit.GetObjectString();
+                data[(int)Meat.Mutton] = Meat.Mutton.GetObjectString();
+
                 //COOKING
-                data[652] = "Meatloaf/370/90/Cooking -7/Meatloaf/A dense meat casserole with a sweet tomato glaze./food/0 0 0 0 1 0 0 0 0 1 1/1440";
-                data[653] = "Orange Chicken/250/65/Cooking -7/Orange Chicken/It has a sweet, tangy sauce./food/0 0 2 0 2 0 0 0 0 0 0/600";
-                data[654] = "Monte Cristo/620/120/Cooking -7/Monte Cristo/It has a nice thick batter and is absolutely delicious./food/0 0 0 0 3 6 0 0 64 2 0/780";
-                data[655] = "Bacon Cheeseburger/660/130/Cooking -7/Bacon Cheeseburger/The best kind of burger./food/0 0 0 0 0 0 0 100 0 0 0/960";
-                data[656] = "Roast Duck/410/100/Cooking -7/Roast Duck/Simplicity at its best./food/0 0 0 0 0 0 0 0 0 1 6/780";
-                data[657] = "Rabbit au Vin/570/110/Cooking -7/Rabbit au Vin/A strong and sophisticated meal that will make you feel you can take on anything./food/0 0 0 0 4 0 0 0 64 2 4 4/1440";
-                data[658] = "Steak Fajitas/415/100/Cooking -7/Steak Fajitas/Spicy got a new level./food/0 0 0 0 0 0 0 0 0 2 0/300";
-                data[659] = "Glazed Ham/550/105/Cooking -7/Glazed Ham/The ham yields a moist, succulent, sweet taste./food/0 0 6 0 3 0 0 0 64 1 0/960";
-                data[660] = "Summer Sausage/360/90/Cooking -7/Summer Sausage/Lean beef, bacon and garlic make for a distinctive tangy flavor./food/0 0 0 0 0 0 0 0 0 0 2 2/780";
-                data[661] = "Sweet and Sour Pork/450/105/Cooking -7/Sweet and Sour Pork/A juicy pork with a nice crust, seasoned with the perfect balance of vinegar and sugar./food/6 0 0 0 3 0 0 0 32 2 0/780";
-                data[662] = "Rabbit Stew/360/90/Cooking -7/Rabbit Stew/A rustic and very hearty rabbit recipe that will warm you up to withstand anything./food/0 0 4 0 4 0 0 0 64 2 4/1440";
-                data[663] = "Winter Duck/360/90/Cooking -7/Winter Duck/This slightly sweet duck is perfect for festivities./food/0 0 0 0 6 0 0 0 0 0 0/1440";
-                data[664] = "Steak with Mushrooms/510/105/Cooking -7/Steak with Mushrooms/You will feel the strengh of the earth go through your body./food/0 0 0 0 0 0 0 0 0 2 3 6/1440";
-                data[665] = "Cowboy Dinner/305/80/Cooking -7/Cowboy Dinner/Meal of a champion farmer./food/4 0 4 0 3 4 0 50 0 1 0/960";
-                data[666] = "Bacon/300/75/Cooking -7/Bacon/It's bacon!/food/0 0 0 0 0 0 0 50 0 0 0/780";
+                CookingData = Helper.ReadJsonFile<CookingData>("data\\cooking.json") ?? new CookingData();
+                Helper.WriteJsonFile("data\\cooking.json", CookingData);
+
+                data[(int)Cooking.Meatloaf] = Cooking.Meatloaf.GetObjectString();
+                data[(int)Cooking.OrangeChicken] = Cooking.OrangeChicken.GetObjectString();
+                data[(int)Cooking.MonteCristo] = Cooking.MonteCristo.GetObjectString();
+                data[(int)Cooking.BaconCheeseburger] = Cooking.BaconCheeseburger.GetObjectString();
+                data[(int)Cooking.RoastDuck] = Cooking.RoastDuck.GetObjectString();
+                data[(int)Cooking.RabbitAuVin] = Cooking.RabbitAuVin.GetObjectString();
+                data[(int)Cooking.SteakFajitas] = Cooking.SteakFajitas.GetObjectString();
+                data[(int)Cooking.GlazedHam] = Cooking.GlazedHam.GetObjectString();
+                data[(int)Cooking.SummerSausage] = Cooking.SummerSausage.GetObjectString();
+                data[(int)Cooking.SweetAndSourPork] = Cooking.SweetAndSourPork.GetObjectString();
+                data[(int)Cooking.RabbitStew] = Cooking.RabbitStew.GetObjectString();
+                data[(int)Cooking.WinterDuck] = Cooking.WinterDuck.GetObjectString();
+                data[(int)Cooking.SteakWithMushrooms] = Cooking.SteakWithMushrooms.GetObjectString();
+                data[(int)Cooking.CowboyDinner] = Cooking.CowboyDinner.GetObjectString();
+                data[(int)Cooking.Bacon] = Cooking.Bacon.GetObjectString();
             }
             else if (asset.AssetNameEquals("Data\\Bundles"))
             {
