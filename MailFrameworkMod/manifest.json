@@ -3,11 +3,13 @@
 	"Author": "Digus",
 	"Version": {
 		"MajorVersion": 1,
-		"MinorVersion": 1,
+		"MinorVersion": 2,
 		"PatchVersion": 0,
 		"Build": null
 	},
+	"MinimumApiVersion": "2.0",
 	"Description": "Utility classes to send mail in the game.",
 	"UniqueID": "DIGUS.MailFrameworkMod",
-	"EntryDll": "MailFrameworkMod.dll"
+	"EntryDll": "MailFrameworkMod.dll",
+	"UpdateKeys": [ "Nexus:1536" ]
 }

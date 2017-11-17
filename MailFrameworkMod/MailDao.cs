@@ -1,4 +1,5 @@
-﻿using System;
+﻿using StardewModdingAPI;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,7 +17,14 @@ namespace MailFrameworkMod
         /// <param name="letter"> The letter to be saved.</param>
         public static void SaveLetter(Letter letter)
         {
-            Letters.Add(letter);
+            if (Letters.Exists((l) => l.Id == letter.Id))
+            {
+                Letters[Letters.FindIndex((l) => l.Id == letter.Id)] = letter;
+            } else
+            {
+                Letters.Add(letter);
+            }
+            
         }
 
         /// <summary>
@@ -35,7 +43,21 @@ namespace MailFrameworkMod
         /// <returns>The list with all letter that matched their conditions</returns>
         public static List<Letter> GetValidatedLetters()
         {
-            return Letters.FindAll((l) => l.Condition(l));
+            return Letters.FindAll((l) => 
+            {
+                var condition = false;
+                try
+                {
+                    condition = l.Condition(l);
+                }
+                catch (Exception ex)
+                {
+                    MailFrameworkModEntery.monitor.Log($"Error while validating letter '{l.Id}'. This letter will be ignored.", LogLevel.Error);
+                }
+
+                return condition;
+            }
+            );
         }
     }
 }

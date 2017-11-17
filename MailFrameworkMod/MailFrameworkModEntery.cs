@@ -13,6 +13,7 @@ namespace MailFrameworkMod
     public class MailFrameworkModEntery : Mod
     {
         public static IModHelper ModHelper;
+        public static IMonitor monitor;
 
         /*********
         ** Public methods
@@ -25,6 +26,7 @@ namespace MailFrameworkMod
         public override void Entry(IModHelper helper)
         {
             ModHelper = helper;
+            monitor = Monitor;
             TimeEvents.AfterDayStarted += TimeEvents_AfterDayStarted;
             SaveEvents.AfterLoad += SaveEvents_AfterLoad;
             SaveEvents.AfterReturnToTitle += SaveEvents_AfterReturnToTitle;
@@ -42,6 +44,7 @@ namespace MailFrameworkMod
         private void SaveEvents_AfterReturnToTitle(object sender, EventArgs e)
         {
             MenuEvents.MenuChanged -= MenuEvents_MenuChanged;
+            MailController.UnloadMailBox();
         }
         /// <summary>
         /// To be invoked after returning loading a game.

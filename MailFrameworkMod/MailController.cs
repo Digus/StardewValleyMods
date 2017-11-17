@@ -8,6 +8,7 @@ using StardewModdingAPI.Events;
 using StardewValley;
 using StardewValley.BellsAndWhistles;
 using StardewValley.Menus;
+using StardewModdingAPI;
 
 namespace MailFrameworkMod
 {
@@ -105,12 +106,25 @@ namespace MailFrameworkMod
                             Game1.player.cookingRecipes.Add(recipe, 0);
                         }
 
-                        //if (LocalizedContentManager.CurrentLanguageCode != LocalizedContentManager.LanguageCode.en)
-                        //    this.learnedRecipe = strArray2[strArray2.Length - 1];
+                        string learnedRecipe = recipe;
+                        
+                        if (LocalizedContentManager.CurrentLanguageCode != LocalizedContentManager.LanguageCode.en)
+                        {
+                            string recipeString = Game1.content.Load<Dictionary<string, string>>("Data\\CookingRecipes")[recipe];
+                            string[] strArray = recipeString.Split('/');
+                            if (strArray.Length < 5)
+                            {
+                                MailFrameworkModEntery.monitor.Log($"The recipe '{recipe}' does not have a internationalized name. The default name will be used.", LogLevel.Warn);
+                            }
+                            else {
+                                learnedRecipe = strArray[strArray.Length - 1];
+                            }                            
+                        }
+                            
                         MailFrameworkModEntery.ModHelper.Reflection
                             .GetPrivateField<String>(activeClickableMenu, "cookingOrCrafting").SetValue(Game1.content.LoadString("Strings\\UI:LearnedRecipe_cooking"));
                         MailFrameworkModEntery.ModHelper.Reflection
-                            .GetPrivateField<String>(activeClickableMenu, "learnedRecipe").SetValue(recipe);
+                            .GetPrivateField<String>(activeClickableMenu, "learnedRecipe").SetValue(learnedRecipe);
                     }
 
                     MenuEvents.MenuClosed += MenuEvents_MenuClosed;
