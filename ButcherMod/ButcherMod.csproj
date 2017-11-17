@@ -76,6 +76,7 @@
     <Compile Include="meats\MeatItem.cs" />
     <Compile Include="meats\MeatExtension.cs" />
     <Compile Include="recipes\RecipesLoader.cs" />
+    <Compile Include="tools\InseminationSyringe.cs" />
     <Compile Include="tools\MeatCleaver.cs" />
     <Compile Include="ButcherModEntery.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

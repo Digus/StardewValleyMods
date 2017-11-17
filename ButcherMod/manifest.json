@@ -3,9 +3,9 @@
    "Author": "Digus",
    "Version": {
       "MajorVersion": 1,
-      "MinorVersion": 2,
-      "PatchVersion": 1,
-      "Build": null
+      "MinorVersion": 3,
+      "PatchVersion": 0,
+      "Build": "alpha.1"
    },
    "Description": "Adds a way to obtain meat from your animals.",
    "UniqueID": "DIGUS.BUTCHER",
