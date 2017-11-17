@@ -32,7 +32,7 @@ namespace ButcherMod
             ModHelper = helper;
             
             DataLoader = new DataLoader(helper);
-            _meatCleaverSpawnKey = DataLoader.ModConfig.MeatCleaverSpawnKey;
+            _meatCleaverSpawnKey = DataLoader.ModConfig.AddMeatCleaverToInventoryKey;
 
             TimeEvents.AfterDayStarted += (x, y) => DataLoader.RecipeLoader.MeatFridayChannel.CheckChannelDay();
 
