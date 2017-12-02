@@ -44,30 +44,39 @@ namespace ButcherMod.tools
             return DataLoader.i18n.Get("Tool.InseminationSyringe.Description");
         }
 
+        public override bool canBeTrashed()
+        {
+            return true;
+        }
+
         public override bool beginUsing(GameLocation location, int x, int y, StardewValley.Farmer who)
         {
             x = (int)who.GetToolLocation(false).X;
             y = (int)who.GetToolLocation(false).Y;
             Rectangle rectangle = new Rectangle(x - Game1.tileSize / 2, y - Game1.tileSize / 2, Game1.tileSize, Game1.tileSize);
-            if (location is Farm)
+
+            if (!DataLoader.ModConfig.DisablePregnancy)
             {
-                foreach (FarmAnimal farmAnimal in (location as Farm).animals.Values)
+                if (location is Farm)
                 {
-                    if (farmAnimal.GetBoundingBox().Intersects(rectangle))
+                    foreach (FarmAnimal farmAnimal in (location as Farm).animals.Values)
                     {
-                        this._animal = farmAnimal;
-                        break;
+                        if (farmAnimal.GetBoundingBox().Intersects(rectangle))
+                        {
+                            this._animal = farmAnimal;
+                            break;
+                        }
                     }
                 }
-            }
-            else if (location is AnimalHouse)
-            {
-                foreach (FarmAnimal farmAnimal in (location as AnimalHouse).animals.Values)
+                else if (location is AnimalHouse)
                 {
-                    if (farmAnimal.GetBoundingBox().Intersects(rectangle))
+                    foreach (FarmAnimal farmAnimal in (location as AnimalHouse).animals.Values)
                     {
-                        this._animal = farmAnimal;
-                        break;
+                        if (farmAnimal.GetBoundingBox().Intersects(rectangle))
+                        {
+                            this._animal = farmAnimal;
+                            break;
+                        }
                     }
                 }
             }
@@ -240,7 +249,7 @@ namespace ButcherMod.tools
             }
             else
             {
-                b.Draw(Game1.menuTexture, new Vector2((float)x, (float)y), new Rectangle?(Game1.getSourceRectForStandardTileSheet(Game1.menuTexture, 68, -1, -1)), Microsoft.Xna.Framework.Color.White, 0.0f, Vector2.Zero, 1f, SpriteEffects.None, 0.86f);
+                b.Draw(Game1.menuTexture, new Vector2((float)x, (float)y), new Rectangle?(Game1.getSourceRectForStandardTileSheet(Game1.menuTexture, AttachmentMenuTile, -1, -1)), Microsoft.Xna.Framework.Color.White, 0.0f, Vector2.Zero, 1f, SpriteEffects.None, 0.86f);
             }
         }
 

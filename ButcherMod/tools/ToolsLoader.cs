@@ -216,9 +216,15 @@ namespace ButcherMod.tools
                 return hasAnimalInValidBuildings && !hasInseminationSyringe;
             }
 
-            MailDao.SaveLetter(new Letter("meatCleaver", meatCleaverText, new List<Item> { new MeatCleaver() }, MeatCleaverCondition));
-
-            MailDao.SaveLetter(new Letter("inseminationSyringe", DataLoader.i18n.Get("Tool.InseminationSyringe.Letter"), new List<Item> { new InseminationSyringe() }, InseminationSyringeCondition));
+            if (!DataLoader.ModConfig.DisableMeat)
+            {
+                MailDao.SaveLetter(new Letter("meatCleaver", meatCleaverText, new List<Item> { new MeatCleaver() }, MeatCleaverCondition));
+            }
+            
+            if (!DataLoader.ModConfig.DisablePregnancy)
+            {
+                MailDao.SaveLetter(new Letter("inseminationSyringe", DataLoader.i18n.Get("Tool.InseminationSyringe.Letter"), new List<Item> { new InseminationSyringe() }, InseminationSyringeCondition));
+            }
         }
     }
 }

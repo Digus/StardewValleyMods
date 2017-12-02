@@ -54,70 +54,74 @@ namespace ButcherMod
             Rectangle rectangle = new Rectangle(x - Game1.tileSize / 2, y - Game1.tileSize / 2, Game1.tileSize,
                 Game1.tileSize);
 
-            if (location is Farm)
+            if (!DataLoader.ModConfig.DisableMeat)
             {
-                foreach (FarmAnimal farmAnimal in (location as Farm).animals.Values)
+                if (location is Farm)
                 {
-                    if (farmAnimal.GetBoundingBox().Intersects(rectangle))
+                    foreach (FarmAnimal farmAnimal in (location as Farm).animals.Values)
                     {
-                        if (farmAnimal == this._tempAnimal)
+                        if (farmAnimal.GetBoundingBox().Intersects(rectangle))
                         {
-                            this._animal = farmAnimal;
-                            break;
-                        }
-                        else
-                        {
-                            this._tempAnimal = farmAnimal;
-                            Microsoft.Xna.Framework.Audio.Cue hurtSound;
-                            if (!DataLoader.ModConfig.Softmode)
+                            if (farmAnimal == this._tempAnimal)
                             {
-                                hurtSound = Game1.soundBank.GetCue(farmAnimal.sound);
-                                hurtSound.SetVariable("Pitch", 1800);
+                                this._animal = farmAnimal;
+                                break;
                             }
                             else
                             {
-                                hurtSound = Game1.soundBank.GetCue("toolCharge");
-                                hurtSound.SetVariable("Pitch", 5000f);
-                            }
+                                this._tempAnimal = farmAnimal;
+                                Microsoft.Xna.Framework.Audio.Cue hurtSound;
+                                if (!DataLoader.ModConfig.Softmode)
+                                {
+                                    hurtSound = Game1.soundBank.GetCue(farmAnimal.sound);
+                                    hurtSound.SetVariable("Pitch", 1800);
+                                }
+                                else
+                                {
+                                    hurtSound = Game1.soundBank.GetCue("toolCharge");
+                                    hurtSound.SetVariable("Pitch", 5000f);
+                                }
 
-                            hurtSound.Play();
-                            break;
+                                hurtSound.Play();
+                                break;
+                            }
                         }
                     }
                 }
-            }
-            else if (location is AnimalHouse)
-            {
-                foreach (FarmAnimal farmAnimal in (location as AnimalHouse).animals.Values)
+                else if (location is AnimalHouse)
                 {
-                    if (farmAnimal.GetBoundingBox().Intersects(rectangle))
+                    foreach (FarmAnimal farmAnimal in (location as AnimalHouse).animals.Values)
                     {
-                        if (farmAnimal == this._tempAnimal)
+                        if (farmAnimal.GetBoundingBox().Intersects(rectangle))
                         {
-                            this._animal = farmAnimal;
-                            break;
-                        }
-                        else
-                        {
-                            this._tempAnimal = farmAnimal;
-                            Microsoft.Xna.Framework.Audio.Cue hurtSound;
-                            if (!DataLoader.ModConfig.Softmode)
+                            if (farmAnimal == this._tempAnimal)
                             {
-                                hurtSound = Game1.soundBank.GetCue(farmAnimal.sound);
-                                hurtSound.SetVariable("Pitch", 1800);
+                                this._animal = farmAnimal;
+                                break;
                             }
                             else
                             {
-                                hurtSound = Game1.soundBank.GetCue("toolCharge");
-                                hurtSound.SetVariable("Pitch", 5000f);
-                            }
+                                this._tempAnimal = farmAnimal;
+                                Microsoft.Xna.Framework.Audio.Cue hurtSound;
+                                if (!DataLoader.ModConfig.Softmode)
+                                {
+                                    hurtSound = Game1.soundBank.GetCue(farmAnimal.sound);
+                                    hurtSound.SetVariable("Pitch", 1800);
+                                }
+                                else
+                                {
+                                    hurtSound = Game1.soundBank.GetCue("toolCharge");
+                                    hurtSound.SetVariable("Pitch", 5000f);
+                                }
 
-                            hurtSound.Play();
-                            break;
+                                hurtSound.Play();
+                                break;
+                            }
                         }
                     }
-                }
+                }                
             }
+
             this.Update(who.facingDirection, 0, who);
             if (this._tempAnimal != null && this._tempAnimal.age < (int)this._tempAnimal.ageWhenMature)
             {

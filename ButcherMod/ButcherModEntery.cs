@@ -17,6 +17,7 @@ using StardewValley.Menus;
 using Harmony;
 using ButcherMod.animals;
 using ButcherMod.farmer;
+using ButcherMod.tools;
 
 namespace ButcherMod
 {
@@ -27,6 +28,7 @@ namespace ButcherMod
         internal static IMonitor monitor;
         internal static DataLoader DataLoader;
         private string _meatCleaverSpawnKey;
+        private string _inseminationSyringeSpawnKey;
 
         /*********
         ** Public methods
@@ -40,29 +42,33 @@ namespace ButcherMod
 
             DataLoader = new DataLoader(helper);
             _meatCleaverSpawnKey = DataLoader.ModConfig.AddMeatCleaverToInventoryKey;
+            _inseminationSyringeSpawnKey = DataLoader.ModConfig.AddInseminationSyringeToInventoryKey;
 
-            TimeEvents.AfterDayStarted += (x, y) => DataLoader.RecipeLoader.MeatFridayChannel.CheckChannelDay();
+            if (!DataLoader.ModConfig.DisableMeat)
+            {
+                TimeEvents.AfterDayStarted += (x, y) => DataLoader.RecipeLoader.MeatFridayChannel.CheckChannelDay();
+            }
 
-            if (_meatCleaverSpawnKey != null)
+            if (_meatCleaverSpawnKey != null || _inseminationSyringeSpawnKey != null)
             {
                 ControlEvents.KeyPressed += this.ControlEvents_KeyPress;
             }
-            
-            TimeEvents.AfterDayStarted += (x, y) => PregnancyController.CheckForBirth();
 
-            SaveEvents.BeforeSave += (x, y) => PregnancyController.UpdatePregnancy();
-
-            MenuEvents.MenuChanged += (s, e) =>
+            if (!DataLoader.ModConfig.DisablePregnancy)
             {
-                if (e.NewMenu is AnimalQueryMenu && ! (e.NewMenu is AnimalQueryMenuExtended))
+                TimeEvents.AfterDayStarted += (x, y) => PregnancyController.CheckForBirth();
+                SaveEvents.BeforeSave += (x, y) => PregnancyController.UpdatePregnancy();
+                MenuEvents.MenuChanged += (s, e) =>
                 {
-                    Game1.activeClickableMenu = new AnimalQueryMenuExtended(this.Helper.Reflection.GetPrivateValue<FarmAnimal>(e.NewMenu, "animal"));
-                }
-            };
+                    if (e.NewMenu is AnimalQueryMenu && !(e.NewMenu is AnimalQueryMenuExtended))
+                    {
+                        Game1.activeClickableMenu = new AnimalQueryMenuExtended(this.Helper.Reflection.GetPrivateValue<FarmAnimal>(e.NewMenu, "animal"));
+                    }
+                };
+            }            
 
             var harmony = HarmonyInstance.Create("Digus.ButcherMod");
             harmony.PatchAll(Assembly.GetExecutingAssembly());
-
         }
 
         /*********
@@ -79,6 +85,10 @@ namespace ButcherMod
                 if (_meatCleaverSpawnKey != null && e.KeyPressed == (Keys)Enum.Parse(typeof(Keys), _meatCleaverSpawnKey.ToUpper()))
                 {
                     Game1.player.addItemToInventory(new MeatCleaver());
+                }
+                if (_inseminationSyringeSpawnKey != null && e.KeyPressed == (Keys)Enum.Parse(typeof(Keys), _inseminationSyringeSpawnKey.ToUpper()))
+                {
+                    Game1.player.addItemToInventory(new InseminationSyringe());
                 }
             }
         }

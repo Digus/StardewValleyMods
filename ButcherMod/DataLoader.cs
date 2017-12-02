@@ -31,7 +31,7 @@ namespace ButcherMod
 
         public static ModConfig ModConfig;
 
-        public ToolsLoader MeatCleaverLoader { get; }
+        public ToolsLoader ToolsLoader { get; }
 
         public RecipesLoader RecipeLoader { get; }
 
@@ -42,22 +42,29 @@ namespace ButcherMod
 
             ModConfig = helper.ReadConfig<ModConfig>();
 
-            MeatCleaverLoader = new ToolsLoader(Helper.Content.Load<Texture2D>("tools/Tools.png"), Helper.Content.Load<Texture2D>("tools/MenuTiles.png"));
-            RecipeLoader = new RecipesLoader();
-
             var editors = Helper.Content.AssetEditors;
-            editors.Add(this);
-            editors.Add(MeatCleaverLoader);
-            editors.Add(RecipeLoader);
+
+            if (!ModConfig.DisableMeat)
+            {               
+                editors.Add(this);
+            }
+
+            ToolsLoader = new ToolsLoader(Helper.Content.Load<Texture2D>("tools/Tools.png"), Helper.Content.Load<Texture2D>("tools/MenuTiles.png"));   
+            editors.Add(ToolsLoader);
+            ToolsLoader.LoadMail();
+
+            if (!ModConfig.DisableMeat)
+            {
+                RecipeLoader = new RecipesLoader();
+                editors.Add(RecipeLoader);
+                RecipeLoader.LoadMails();
+            }
 
             AnimalBuildingData = DataLoader.Helper.ReadJsonFile<AnimalBuildingData>("data\\animalBuilding.json") ?? new AnimalBuildingData();
             DataLoader.Helper.WriteJsonFile("data\\animalBuilding.json", AnimalBuildingData);
 
             AnimalData = DataLoader.Helper.ReadJsonFile<AnimalData>("data\\animals.json") ?? new AnimalData();
-            DataLoader.Helper.WriteJsonFile("data\\animals.json", AnimalData);
-
-            MeatCleaverLoader.LoadMail();
-            RecipeLoader.LoadMails();
+            DataLoader.Helper.WriteJsonFile("data\\animals.json", AnimalData);  
         }
 
         public bool CanEdit<T>(IAssetInfo asset)

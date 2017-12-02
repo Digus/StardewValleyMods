@@ -18,6 +18,7 @@ namespace ButcherMod.animals
         static Queue<FarmAnimal> parentAnimals = new Queue<FarmAnimal>();
         static FarmAnimal parentAnimal = null;
 
+        static List<string> animalsWithBirthTomorrow = new List<string>();
 
         public static Boolean IsAnimalPregnant(long farmAnimalId)
         {
@@ -135,16 +136,15 @@ namespace ButcherMod.animals
             }
             if (!DataLoader.ModConfig.DisableTomorrowBirthNotification)
             {
-                NotifyBirthTomorrow();
+                animalsWithBirthTomorrow = CheckBirthTomorrow();
             }
-            if (parentAnimals.Count > 0)
-            {
-                Game1.messagePause = true;
+            if (parentAnimals.Count > 0 || animalsWithBirthTomorrow.Count > 0)
+            {                
                 GameEvents.UpdateTick += tickUpdate;
             }
         }
 
-        public static void NotifyBirthTomorrow()
+        public static List<string> CheckBirthTomorrow()
         {
             List<string> animals = new List<string>();
             foreach (PregnancyItem pregancyItem in AnimalsReadyForBirthTomorrow().ToList())
@@ -154,22 +154,34 @@ namespace ButcherMod.animals
                 {
                     animals.Add(farmAnimal.displayName);
                 }                
-            }            
-            if (animals.Count() > 1)
-            {
-                string animalsString =  string.Join(", ", animals.Take(animals.Count() - 1)) + " and " + animals.Last();
-                Game1.drawObjectDialogue(DataLoader.i18n.Get("Tool.InseminationSyringe.BirthsTomorrow", new { animalNames = animalsString }));
-            } else if (animals.Count() == 1)
-            {
-                Game1.drawObjectDialogue(DataLoader.i18n.Get("Tool.InseminationSyringe.BirthTomorrow", new { animalName = animals.FirstOrDefault() })); 
-            }            
+            }
+            return animals;      
         }
-
+        
         private static void tickUpdate(object sender, EventArgs e)
         {
-            if (Game1.dialogueUp)
+            if (Game1.dialogueUp ||  Game1.fadeToBlackAlpha > 0)
+            {
                 return;
-            if (parentAnimal == null)
+            }                
+            if (!Game1.messagePause)
+            {
+                Game1.messagePause = true;
+            }                
+            if (animalsWithBirthTomorrow.Count > 0)
+            {
+                if (animalsWithBirthTomorrow.Count() > 1)
+                {
+                    string animalsString = string.Join(", ", animalsWithBirthTomorrow.Take(animalsWithBirthTomorrow.Count() - 1)) + " and " + animalsWithBirthTomorrow.Last();
+                    Game1.drawObjectDialogue(DataLoader.i18n.Get("Tool.InseminationSyringe.BirthsTomorrow", new { animalNames = animalsString }));
+                }
+                else if (animalsWithBirthTomorrow.Count() == 1)
+                {
+                    Game1.drawObjectDialogue(DataLoader.i18n.Get("Tool.InseminationSyringe.BirthTomorrow", new { animalName = animalsWithBirthTomorrow.FirstOrDefault() }));
+                }
+                animalsWithBirthTomorrow.Clear();
+            }
+            else if (parentAnimal == null)
             {
                 if (parentAnimals.Count > 0)
                 {
