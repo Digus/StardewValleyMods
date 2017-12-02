@@ -22,6 +22,8 @@ namespace ButcherMod.animals
         [Meat(Meat.Mutton)]
         Sheep,
         [Meat(Meat.Mutton)]
-        Goat
+        Goat,
+        Dinosaur
+
     }
 }

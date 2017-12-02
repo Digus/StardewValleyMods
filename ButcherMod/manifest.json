@@ -5,7 +5,7 @@
       "MajorVersion": 1,
       "MinorVersion": 3,
       "PatchVersion": 0,
-      "Build": "alpha.1"
+      "Build": "beta.1"
    },
    "Description": "Adds a way to obtain meat from your animals.",
    "UniqueID": "DIGUS.BUTCHER",

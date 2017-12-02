@@ -17,5 +17,17 @@ namespace ButcherMod.animals
 
             return attribute.Meat;
         }
+
+        public static Animal? GetAnimalFromType(string type)
+        {
+            foreach (Animal animal in System.Enum.GetValues(typeof(Animal)))
+            {
+                if (type.Contains(animal.ToString()))
+                {
+                    return animal;
+                }
+            }
+            return null;
+        }
     }
 }

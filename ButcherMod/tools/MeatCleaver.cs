@@ -136,7 +136,7 @@ namespace ButcherMod
         public override void DoFunction(GameLocation location, int x, int y, int power, StardewValley.Farmer who)
         {
             base.DoFunction(location, x, y, power, who);
-            who.Stamina -= 4f;
+            who.Stamina -= ((float)4f - (float)who.FarmingLevel * 0.2f);
             if (this._animal != null && this._animal.type == "Dinosaur")
             {
                 return;
@@ -224,8 +224,8 @@ namespace ButcherMod
             int debrisType = this._animal.meatIndex;
 
             Animal animal;
-            Animal? foundAnimal = this.GetAnimalFromType(this._animal.type);
-            if (foundAnimal == null)
+            Animal? foundAnimal = AnimalExtension.GetAnimalFromType(this._animal.type);
+            if (foundAnimal == null || foundAnimal == Animal.Dinosaur)
             {
                 return;
             }
@@ -381,17 +381,7 @@ namespace ButcherMod
             return produceQuality;
         }
 
-        public Animal? GetAnimalFromType(string type)
-        {
-            foreach (Animal animal in System.Enum.GetValues(typeof(Animal)))
-            {
-                if (type.Contains(animal.ToString()))
-                {
-                    return animal;
-                }
-            }
-            return null;
-        }
+        
 
         public object getReplacement()
         {

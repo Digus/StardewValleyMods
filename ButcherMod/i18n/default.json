@@ -71,4 +71,23 @@
 	"Tool.MeatCleaver.Description.Soft": "Exchange your animals for meat.",
 	"Tool.MeatCleaver.TooYoung.Soft": "{{animalName}} is too young to be exchanged for meat.",
 	"Tool.MeatCleaver.Letter.Soft": "Dear Farmer @,^^    We know you are the proud owner of a farm animal. Congratulations!^    Here in our world, we love animals very deeply, but unfortunately they can't breed. So, we are always looking to get more from other worlds.^    We know you humans love meat, and you might one day want to kill your animals for their meat... DON'T DO THAT!^^    So here is the deal. To our luck, meat here grows on tree. So just send your animals to us and we will send you some meat in exchange. We promise to take really good care of them.^    We have sent you a magic wand, just use it on the animal you want meat from to make the exchange. The more loved it is, the more meat we will give you. We might even add some extra items depending on which animal you send us.^    -Your interdimensional friend",
+	
+	"Tool.InseminationSyringe.Name": "Insemination Syringe",
+	"Tool.InseminationSyringe.Description": "Use this to inseminate your farm animals.",
+	"Tool.InseminationSyringe.TooYoung": "{{animalName}} is too young to be inseminated.",
+	"Tool.InseminationSyringe.AlreadyPregnant": "{{animalName}} is already pregnant and may give birth in {{numberOfDays}} days.",
+	"Tool.InseminationSyringe.ReadyForBirth": "{{animalName}} is already pregnant and ready for birth.",
+	"Tool.InseminationSyringe.BuildingLimit": "Its {{buildingType}} has no room for pregnant animals.",
+	"Tool.InseminationSyringe.Empty": "Empty Syringe.",
+	"Tool.InseminationSyringe.CorrectItem": "You should use {{itemName}} to inseminate this animal.",
+	"Tool.InseminationSyringe.FullBuilding": "{{animalName}} was ready for birth last night, but its {{buildingType}} was full.",
+	"Tool.InseminationSyringe.BirthTomorrow": "{{animalName}} can give birth tomorrow. Make sure you have room for the baby." ,
+	"Tool.InseminationSyringe.BirthsTomorrow": "{{animalNames}} can give birth tomorrow. Make sure you have room for the babies" ,
+	"Tool.InseminationSyringe.ItemConsumed": "Last {{itemName}} Consumed.",
+	"Tool.InseminationSyringe.EggAnimal": "{{animalName}} can't be inseminated. You can place its egg on an incubator.",
+	"Tool.InseminationSyringe.Letter": "Dear Farmer @,^^    We know you own a farm building capable of supporting pregnant animals.^    On our effort to solve the infertility problem of animals here, we invented a device to impregnate them using the products they produce.^    Unfortunately, it did not work for us. But it should work well in your world.^^^    We are giving it to you, in the hope that once you can control their reproduction, you will send us more animals.^    Barns can support a limited amount of pregnant animals depending on its size, but coops can support as many pregnant rabbits as it can fit.^    But make sure you always have room for the new borns before birth.^    Good luck with your new tool!^    -Your interdimensional friend",
+	//Menus
+	"Menu.AnimalQueryMenu.PregnancyBuildingLimit": "That building has no room for a pregnant animal.",
+	"Menu.AnimalQueryMenu.DaysUntilBirth": "Pregnant! {{numberOfDays}} Days Until Birth.",
+	"Menu.AnimalQueryMenu.ReadyForBirth": "Pregnant! Ready For Birth."
 }

@@ -12,6 +12,11 @@ using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewModdingAPI.Utilities;
 using StardewValley;
+using StardewValley.Buildings;
+using StardewValley.Menus;
+using Harmony;
+using ButcherMod.animals;
+using ButcherMod.farmer;
 
 namespace ButcherMod
 {
@@ -19,6 +24,7 @@ namespace ButcherMod
     {
 
         internal static IModHelper ModHelper;
+        internal static IMonitor monitor;
         internal static DataLoader DataLoader;
         private string _meatCleaverSpawnKey;
 
@@ -30,7 +36,8 @@ namespace ButcherMod
         public override void Entry(IModHelper helper)
         {
             ModHelper = helper;
-            
+            monitor = Monitor;
+
             DataLoader = new DataLoader(helper);
             _meatCleaverSpawnKey = DataLoader.ModConfig.AddMeatCleaverToInventoryKey;
 
@@ -41,20 +48,22 @@ namespace ButcherMod
                 ControlEvents.KeyPressed += this.ControlEvents_KeyPress;
             }
             
-            //SaveEvents.AfterLoad += SaveEvents_AfterLoad;
+            TimeEvents.AfterDayStarted += (x, y) => PregnancyController.CheckForBirth();
+
+            SaveEvents.BeforeSave += (x, y) => PregnancyController.UpdatePregnancy();
+
+            MenuEvents.MenuChanged += (s, e) =>
+            {
+                if (e.NewMenu is AnimalQueryMenu && ! (e.NewMenu is AnimalQueryMenuExtended))
+                {
+                    Game1.activeClickableMenu = new AnimalQueryMenuExtended(this.Helper.Reflection.GetPrivateValue<FarmAnimal>(e.NewMenu, "animal"));
+                }
+            };
+
+            var harmony = HarmonyInstance.Create("Digus.ButcherMod");
+            harmony.PatchAll(Assembly.GetExecutingAssembly());
 
         }
-
-        /// <summary>
-        /// To be invoked after returning loading a game.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void SaveEvents_AfterLoad(object sender, EventArgs e)
-        {
-
-        }
-
 
         /*********
         ** Private methods

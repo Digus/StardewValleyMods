@@ -10,11 +10,15 @@ namespace ButcherMod
     {
         public bool Softmode;
         public string AddMeatCleaverToInventoryKey;
+        public bool DisableFullBuildingForBirthNotification;
+        public bool DisableTomorrowBirthNotification;
 
         public ModConfig()
         {
             this.Softmode = false;
             this.AddMeatCleaverToInventoryKey = null;
+            this.DisableFullBuildingForBirthNotification = false;
+            this.DisableTomorrowBirthNotification = false;
         }
     }
 }

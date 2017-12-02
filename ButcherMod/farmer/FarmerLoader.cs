@@ -1,0 +1,24 @@
+﻿using StardewModdingAPI;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ButcherMod.farmer
+{
+    public class FarmerLoader
+    {
+        public static FarmerData FarmerData = null;
+
+        public static void LoadData()
+        {
+            FarmerData = DataLoader.Helper.ReadJsonFile<FarmerData>($"data/farmers/{Constants.SaveFolderName}.json") ?? new FarmerData();
+        }
+
+        public static void SaveData()
+        {
+            DataLoader.Helper.WriteJsonFile<FarmerData>($"data/farmers/{Constants.SaveFolderName}.json", FarmerData);
+        }
+    }
+}

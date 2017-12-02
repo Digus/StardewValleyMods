@@ -27,10 +27,11 @@ namespace ButcherMod
         public static MeatData MeatData;
         public static CookingData CookingData;
         public static AnimalData AnimalData;
+        public static AnimalBuildingData AnimalBuildingData;
 
         public static ModConfig ModConfig;
 
-        public MeatCleaverLoader MeatCleaverLoader { get; }
+        public ToolsLoader MeatCleaverLoader { get; }
 
         public RecipesLoader RecipeLoader { get; }
 
@@ -41,13 +42,16 @@ namespace ButcherMod
 
             ModConfig = helper.ReadConfig<ModConfig>();
 
-            MeatCleaverLoader = new MeatCleaverLoader(Helper.Content.Load<Texture2D>("tools/MeatCleaver.png"));
+            MeatCleaverLoader = new ToolsLoader(Helper.Content.Load<Texture2D>("tools/Tools.png"), Helper.Content.Load<Texture2D>("tools/MenuTiles.png"));
             RecipeLoader = new RecipesLoader();
 
             var editors = Helper.Content.AssetEditors;
             editors.Add(this);
             editors.Add(MeatCleaverLoader);
             editors.Add(RecipeLoader);
+
+            AnimalBuildingData = DataLoader.Helper.ReadJsonFile<AnimalBuildingData>("data\\animalBuilding.json") ?? new AnimalBuildingData();
+            DataLoader.Helper.WriteJsonFile("data\\animalBuilding.json", AnimalBuildingData);
 
             AnimalData = DataLoader.Helper.ReadJsonFile<AnimalData>("data\\animals.json") ?? new AnimalData();
             DataLoader.Helper.WriteJsonFile("data\\animals.json", AnimalData);
