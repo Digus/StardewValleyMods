@@ -8,9 +8,17 @@ using System.Threading.Tasks;
 
 namespace ButcherMod.meats
 {
-    [HarmonyPatch(typeof(StardewValley.Object), "sellToStorePrice")]
+    [HarmonyPatch]
     public class MeatPriceOverrides
     {
+        internal static MethodInfo TargetMethod()
+        {
+            if (Type.GetType("StardewValley.Object, Stardew Valley") != null)
+                return AccessTools.Method(Type.GetType("StardewValley.Object, Stardew Valley"), "sellToStorePrice");
+            else
+                return AccessTools.Method(Type.GetType("StardewValley.Object, StardewValley"), "sellToStorePrice");
+        }
+        
         [HarmonyPrefix]
         public static bool sellToStorePrice(StardewValley.Object __instance, ref int __result)
         {
