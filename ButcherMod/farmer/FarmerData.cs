@@ -1,11 +1,11 @@
-﻿using ButcherMod.animals;
+﻿using AnimalHusbandryMod.animals;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ButcherMod.farmer
+namespace AnimalHusbandryMod.farmer
 {
     public class FarmerData
     {

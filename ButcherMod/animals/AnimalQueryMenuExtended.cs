@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace ButcherMod.animals
+namespace AnimalHusbandryMod.animals
 {
     public class AnimalQueryMenuExtended : AnimalQueryMenu
     {

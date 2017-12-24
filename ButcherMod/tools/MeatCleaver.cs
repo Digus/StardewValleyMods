@@ -8,9 +8,9 @@ using StardewValley.Tools;
 using StardewValley;
 using StardewValley.Objects;
 using Object = StardewValley.Object;
-using ButcherMod.animals;
+using AnimalHusbandryMod.animals;
 
-namespace ButcherMod
+namespace AnimalHusbandryMod.tools
 {
     public class MeatCleaver : Tool, ISaveElement
     {

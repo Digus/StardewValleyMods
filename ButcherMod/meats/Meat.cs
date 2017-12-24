@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ButcherMod.meats
+namespace AnimalHusbandryMod.meats
 {
     public enum Meat
 {

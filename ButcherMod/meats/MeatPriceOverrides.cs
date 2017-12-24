@@ -6,12 +6,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ButcherMod.meats
+namespace AnimalHusbandryMod.meats
 {
-    [HarmonyPatch(typeof(StardewValley.Object), "sellToStorePrice")]
     public class MeatPriceOverrides
     {
-        [HarmonyPrefix]
         public static bool sellToStorePrice(StardewValley.Object __instance, ref int __result)
         {
             if (Game1.player.professions.Contains(0) && __instance.category == -14)

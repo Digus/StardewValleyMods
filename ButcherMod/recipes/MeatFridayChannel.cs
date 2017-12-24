@@ -10,9 +10,9 @@ using StardewModdingAPI.Events;
 using StardewModdingAPI.Utilities;
 using StardewValley;
 using StardewValley.Objects;
-using ButcherMod.cooking;
+using AnimalHusbandryMod.cooking;
 
-namespace ButcherMod.recipes
+namespace AnimalHusbandryMod.recipes
 {
     public class MeatFridayChannel
     {

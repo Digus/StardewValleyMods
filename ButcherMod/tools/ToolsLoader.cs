@@ -11,7 +11,7 @@ using StardewValley;
 using StardewValley.Locations;
 using StardewValley.Objects;
 
-namespace ButcherMod.tools
+namespace AnimalHusbandryMod.tools
 {
     public class ToolsLoader : IAssetEditor
     {
@@ -91,6 +91,68 @@ namespace ButcherMod.tools
                 var newMenuTitlesInitialParentIdex = (originalWidth / 64) * (originalHeight / 64);                
 
                 InseminationSyringe.AttachmentMenuTile = newMenuTitlesInitialParentIdex;
+            }
+        }
+
+        internal void ReplaceOldTools(object sender, EventArgs e)
+        {
+            List<Item> inventory = Game1.player.items;
+            for (int i = 0; i < inventory.Count; i++)
+            {
+                ReplaceIfOldItem(inventory, i);
+
+            }
+            List<GameLocation> locations = Game1.locations;
+            for (int i = 0; i < locations.Count; i++)
+            {
+                var location = locations[i];
+                ReplaceInLocationChests(location);
+
+                if (location is BuildableGameLocation bgl)
+                {
+                    bgl.buildings.ForEach(((b) =>
+                    {
+                        if (b.indoors is GameLocation gl)
+                        {
+                            ReplaceInLocationChests(gl);
+                        }
+                    }));
+                }
+            }
+        }
+
+        private static void ReplaceInLocationChests(GameLocation location)
+        {
+            var objects = location.objects.Values;
+            for (int j = 0; j < objects.Count; j++)
+            {
+                var o = objects.ToList()[j];
+                if (o is Chest chest)
+                {
+                    List<Item> items = chest.items;
+                    for (int k = 0; k < items.Count; k++)
+                    {
+                        ReplaceIfOldItem(items, k);
+                    }
+                }
+            }
+        }
+
+        private static void ReplaceIfOldItem(List<Item> items, int i)
+        {
+            Item item = items[i];
+            if (item != null)
+            {
+                if (item.Name.Contains("ButcherMod.MeatCleaver"))
+                {
+                    items[i] = new MeatCleaver();
+                    AnimalHusbandryModEntery.monitor.Log($"An older version of the MeatCleaver found. Replacing it with the new one.", LogLevel.Debug);
+                }
+                else if (item.Name.Contains("ButcherMod.tools.InseminationSyringe"))
+                {
+                    items[i] = new InseminationSyringe();
+                    AnimalHusbandryModEntery.monitor.Log($"An older version of the InseminationSyringe found. Replacing it with the new one.", LogLevel.Debug);
+                }
             }
         }
 

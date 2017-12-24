@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ButcherMod.meats
+namespace AnimalHusbandryMod.meats
 {
     public static class MeatExtension
     {

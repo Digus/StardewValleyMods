@@ -8,9 +8,9 @@ using StardewModdingAPI;
 using StardewModdingAPI.Utilities;
 using StardewValley;
 using StardewValley.Locations;
-using ButcherMod.cooking;
+using AnimalHusbandryMod.cooking;
 
-namespace ButcherMod.recipes
+namespace AnimalHusbandryMod.recipes
 {
     public class RecipesLoader : IAssetEditor
     {
@@ -61,11 +61,7 @@ namespace ButcherMod.recipes
 
             Func<Letter, bool> glazedHamCondition = (letter) => !Game1.player.cookingRecipes.ContainsKey(letter.Recipe)
                                         && GetNpcFriendship("Clint") >= 9
-                                        && Game1.stats.GeodesCracked > 60
-                                        && Game1.player.getToolFromName("Pickaxe").upgradeLevel > 2
-                                        && Game1.player.getToolFromName("Axe").upgradeLevel > 0
-                                        && Game1.player.getToolFromName("Watering Can").upgradeLevel > 0
-                                        && Game1.player.getToolFromName("Hoe").upgradeLevel > 0;
+                                        && Game1.stats.GeodesCracked > 80;
             MailDao.SaveLetter(new Letter("glazedHamRecipe", DataLoader.i18n.Get("Cooking.GlazedHam.Letter"), Cooking.GlazedHam.GetDescription(), glazedHamCondition));
 
             MailDao.SaveLetter(new Letter("cowboyDinnerkRecipe", DataLoader.i18n.Get("Cooking.CowboyDinner.Letter"), Cooking.CowboyDinner.GetDescription(), (letter) => !Game1.player.cookingRecipes.ContainsKey(letter.Recipe) && (Game1.getLocationFromName("ArchaeologyHouse") as LibraryMuseum)?.museumPieces.Count >= 70));
