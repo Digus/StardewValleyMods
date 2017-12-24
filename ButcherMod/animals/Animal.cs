@@ -1,11 +1,11 @@
-﻿using ButcherMod.meats;
+﻿using AnimalHusbandryMod.meats;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ButcherMod.animals
+namespace AnimalHusbandryMod.animals
 {
     public enum Animal
     {

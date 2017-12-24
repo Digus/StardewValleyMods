@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.ComponentModel;
 using StardewValley;
 
-namespace ButcherMod.cooking
+namespace AnimalHusbandryMod.cooking
 {
     public static class CookingExtension
     {

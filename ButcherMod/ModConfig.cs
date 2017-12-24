@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ButcherMod
+namespace AnimalHusbandryMod
 {
     public class ModConfig
     {
@@ -15,6 +15,7 @@ namespace ButcherMod
         public bool DisableTomorrowBirthNotification;
         public bool DisablePregnancy;
         public bool DisableMeat;
+        public bool DisableRancherMeatPriceAjust;
 
         public ModConfig()
         {
@@ -25,6 +26,7 @@ namespace ButcherMod
             this.DisableTomorrowBirthNotification = false;
             this.DisablePregnancy = false;
             this.DisableMeat = false;
+            this.DisableRancherMeatPriceAjust = false;
         }
     }
 }

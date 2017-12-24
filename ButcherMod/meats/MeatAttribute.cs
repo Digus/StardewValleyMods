@@ -1,7 +1,7 @@
 ﻿using System;
-using ButcherMod.meats;
+using AnimalHusbandryMod.meats;
 
-namespace ButcherMod.animals
+namespace AnimalHusbandryMod.animals
 {
     internal class MeatAttribute : Attribute
     {

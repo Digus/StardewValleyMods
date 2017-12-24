@@ -11,8 +11,8 @@
     <ProjectGuid>{FA6A5BA1-8983-4982-B746-ADF42EC01795}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ButcherMod</RootNamespace>
-    <AssemblyName>ButcherMod</AssemblyName>
+    <RootNamespace>AnimalHusbandryMod</RootNamespace>
+    <AssemblyName>AnimalHusbandryMod</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -46,7 +46,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="CustomTV">
-      <HintPath>..\..\..\Mods\StardewValleyMods\CustomTV\bin\Release\CustomTV.dll</HintPath>
+      <HintPath>I:\Program Files (x86)\Steam\steamapps\common\Stardew Valley\Mods\CustomTV\CustomTV.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
@@ -96,7 +96,7 @@
     <Compile Include="farmer\FarmerData.cs" />
     <Compile Include="tools\InseminationSyringe.cs" />
     <Compile Include="tools\MeatCleaver.cs" />
-    <Compile Include="ButcherModEntery.cs" />
+    <Compile Include="AnimalHusbandryModEntery.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="recipes\MeatFridayChannel.cs" />
     <Compile Include="tools\ToolsLoader.cs" />

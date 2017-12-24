@@ -1,4 +1,4 @@
-﻿using ButcherMod.animals;
+﻿using AnimalHusbandryMod.animals;
 using CustomElementHandler;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
@@ -12,7 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ButcherMod.tools
+namespace AnimalHusbandryMod.tools
 {
     public class InseminationSyringe : MilkPail, ISaveElement
     {

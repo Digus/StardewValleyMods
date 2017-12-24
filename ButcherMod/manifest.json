@@ -1,15 +1,15 @@
 ﻿{
-   "Name": "BUTCHER",
+   "Name": "Animal Husbandry Mod",
    "Author": "Digus",
    "Version": {
-      "MajorVersion": 1,
-      "MinorVersion": 3,
+      "MajorVersion": 2,
+      "MinorVersion": 0,
       "PatchVersion": 0,
       "Build": null
    },
-   "Description": "Adds a way to obtain meat from your animals.",
-   "UniqueID": "DIGUS.BUTCHER",
-   "EntryDll": "ButcherMod.dll",
+   "Description": "Adds features related to animal husbandry.",
+   "UniqueID": "DIGUS.ANIMALHUSBANDRYMOD",
+   "EntryDll": "AnimalHusbandryMod.dll",
    "MinimumApiVersion": "2.0",
    "Dependencies": [
 	   {

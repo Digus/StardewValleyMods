@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static ButcherMod.meats.MeatExtension;
+using static AnimalHusbandryMod.meats.MeatExtension;
 
-namespace ButcherMod.meats
+namespace AnimalHusbandryMod.meats
 {
     public class MeatData
     {

@@ -1,4 +1,4 @@
-﻿using ButcherMod.farmer;
+﻿using AnimalHusbandryMod.farmer;
 using Microsoft.Xna.Framework;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
@@ -11,7 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ButcherMod.animals
+namespace AnimalHusbandryMod.animals
 {
     public class PregnancyController
     {
@@ -108,7 +108,7 @@ namespace ButcherMod.animals
             }
             else
             {
-                ButcherModEntery.monitor.Log($"The animal id '{id}' was not found in the game and its pregnancy data is being discarted.", LogLevel.Warn);
+                AnimalHusbandryModEntery.monitor.Log($"The animal id '{id}' was not found in the game and its pregnancy data is being discarted.", LogLevel.Warn);
                 PregnancyController.RemovePregnancyItem(id);
                 return null;
             }

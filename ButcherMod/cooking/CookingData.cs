@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ButcherMod.cooking
+namespace AnimalHusbandryMod.cooking
 {
     public class CookingData
     {
