@@ -225,8 +225,6 @@ namespace AnimalHusbandryMod.tools
 
         private void CreateMeat()
         {                        
-            int debrisType = this._animal.meatIndex;
-
             Animal animal;
             Animal? foundAnimal = AnimalExtension.GetAnimalFromType(this._animal.type);
             if (foundAnimal == null || foundAnimal == Animal.Dinosaur)
@@ -239,6 +237,7 @@ namespace AnimalHusbandryMod.tools
             }
 
             AnimalItem animalItem = DataLoader.AnimalData.getAnimalItem(animal);
+            int debrisType = (int)animal.GetMeat();
             int meatPrice =  DataLoader.MeatData.getMeatItem(animal.GetMeat()).Price;
             int minimumNumberOfMeat = animalItem.MinimalNumberOfMeat;
             int maxNumberOfMeat = animalItem.MaximumNumberOfMeat;
