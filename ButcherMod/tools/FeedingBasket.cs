@@ -1,9 +1,6 @@
-﻿using AnimalHusbandryMod.animals;
-using CustomElementHandler;
+﻿using CustomElementHandler;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
-using StardewModdingAPI;
 using StardewValley;
 using StardewValley.Tools;
 using System;
@@ -14,15 +11,15 @@ using System.Threading.Tasks;
 
 namespace AnimalHusbandryMod.tools
 {
-    public class InseminationSyringe : MilkPail, ISaveElement
+    public class FeedingBasket : MilkPail, ISaveElement
     {
         private FarmAnimal _animal;
 
-        public static int InitialParentTileIndex = 518;
-        public static int IndexOfMenuItemView = 518;
+        public static int InitialParentTileIndex = 519;
+        public static int IndexOfMenuItemView = 519;
         public static int AttachmentMenuTile = 68;
 
-        public InseminationSyringe() : base()
+        public FeedingBasket() : base()
         {
             this.name = "Insemination Syringe";
             this.initialParentTileIndex = InitialParentTileIndex;
@@ -36,12 +33,12 @@ namespace AnimalHusbandryMod.tools
 
         protected override string loadDisplayName()
         {
-            return DataLoader.i18n.Get("Tool.InseminationSyringe.Name");
+            return DataLoader.i18n.Get("Tool.FeedingBasket.Name");
         }
 
         protected override string loadDescription()
         {
-            return DataLoader.i18n.Get("Tool.InseminationSyringe.Description");
+            return DataLoader.i18n.Get("Tool.FeedingBasket.Description");
         }
 
         public override bool canBeTrashed()
@@ -86,47 +83,15 @@ namespace AnimalHusbandryMod.tools
                 string dialogue = "";
                 if (this.attachments[0] == null)
                 {
-                    Game1.showRedMessage(DataLoader.i18n.Get("Tool.InseminationSyringe.Empty"));
+                    Game1.showRedMessage(DataLoader.i18n.Get("Tool.FeedingBasket.Empty"));
                     this._animal = null;
                 }
-                else if (IsEggAnimal(this._animal))
-                {
-                    dialogue = DataLoader.i18n.Get("Tool.InseminationSyringe.EggAnimal", new { animalName = this._animal.displayName });
-                }
-                else if (this._animal.isBaby())
-                {
-                    dialogue = DataLoader.i18n.Get("Tool.InseminationSyringe.TooYoung", new { animalName = this._animal.displayName });
-                }                
-                else if (PregnancyController.IsAnimalPregnant(this._animal.myID))
-                {
-                    int daysUtillBirth = PregnancyController.GetPregnancyItem(this._animal.myID).DaysUntilBirth;
-                    if (daysUtillBirth > 1)
-                    {
-                        dialogue = DataLoader.i18n.Get("Tool.InseminationSyringe.AlreadyPregnant", new { animalName = this._animal.displayName, numberOfDays = daysUtillBirth });
-                    } else
-                    {
-                        dialogue = DataLoader.i18n.Get("Tool.InseminationSyringe.ReadyForBirth", new { animalName = this._animal.displayName});
-                    }                    
-                }
-                else if (!CheckCorrectProduct(this._animal, this.attachments[0]))
-                {
-                    var data = DataLoader.Helper.Content.Load<Dictionary<int, string>>(@"Data\ObjectInformation.xnb", ContentSource.GameContent);
-                    string produceName = data[this._animal.defaultProduceIndex].Split('/')[4];
-                    dialogue = DataLoader.i18n.Get("Tool.InseminationSyringe.CorrectItem", new { itemName = produceName });
-                }
-                else if (PregnancyController.CheckBuildingLimit(this._animal))
-                {
-                    dialogue = DataLoader.i18n.Get("Tool.InseminationSyringe.BuildingLimit", new { buildingType = this._animal.displayHouse });
-                }                
                 else
                 {
-                    this._animal.doEmote(16, true);
-                    Cue animalSound = Game1.soundBank.GetCue(this._animal.sound);  
-                    animalSound.Play();
-                    DelayedAction.playSoundAfterDelay("fishingRodBend", 300);
-                    DelayedAction.playSoundAfterDelay("fishingRodBend", 1200);
-                    this._animal.pauseTimer = 1500;
-                }                
+                    this._animal.pauseTimer = 1000;               
+                }
+
+
                 if (dialogue.Length > 0)
                 {
                     DelayedAction.showDialogueAfterDelay(dialogue, 150);
@@ -134,15 +99,75 @@ namespace AnimalHusbandryMod.tools
                 }
             }
 
+            
             who.Halt();
             int currentFrame = who.FarmerSprite.currentFrame;
-            who.FarmerSprite.animateOnce(287 + who.FacingDirection, 50f, 4);
+            if (this._animal != null)
+            {
+                switch (who.FacingDirection)
+                {
+                    case 0:
+                        who.FarmerSprite.animateOnce(new FarmerSprite.AnimationFrame[1] { new FarmerSprite.AnimationFrame(62, 900, false, false, new AnimatedSprite.endOfAnimationBehavior(StardewValley.Farmer.useTool), true) });
+                        break;
+                    case 1:
+                        who.FarmerSprite.animateOnce(new FarmerSprite.AnimationFrame[1] { new FarmerSprite.AnimationFrame(58, 900, false, false, new AnimatedSprite.endOfAnimationBehavior(StardewValley.Farmer.useTool), true) });
+                        break;
+                    case 2:
+                        who.FarmerSprite.animateOnce(new FarmerSprite.AnimationFrame[1] { new FarmerSprite.AnimationFrame(54, 900, false, false, new AnimatedSprite.endOfAnimationBehavior(StardewValley.Farmer.useTool), true) });
+                        break;
+                    case 3:
+                        who.FarmerSprite.animateOnce(new FarmerSprite.AnimationFrame[1] { new FarmerSprite.AnimationFrame(58, 900, false, true, new AnimatedSprite.endOfAnimationBehavior(StardewValley.Farmer.useTool), true) });
+                        break;
+                }
+            } else
+            {                
+                who.FarmerSprite.animateOnce(new FarmerSprite.AnimationFrame[1] { new FarmerSprite.AnimationFrame(currentFrame, 0, false, who.FacingDirection == 3, new AnimatedSprite.endOfAnimationBehavior(StardewValley.Farmer.useTool), true) });
+            }
             who.FarmerSprite.oldFrame = currentFrame;
             who.UsingTool = true;
-            who.CanMove = false;            
+            who.CanMove = false;
+
+            if (this._animal != null)
+            {
+                Rectangle boundingBox = this._animal.GetBoundingBox();
+
+                double numX = boundingBox.Center.X;
+                double numY = boundingBox.Center.Y;
+
+                Vector2 vectorBasket = new Vector2((float)numX - 32, (float)numY);
+                Vector2 vectorFood = new Vector2((float)numX - 24, (float)numY - 10);
+                var foodScale = Game1.pixelZoom * 0.75f;
+
+                TemporaryAnimatedSprite basketSprite = new TemporaryAnimatedSprite(Game1.toolSpriteSheet, Game1.getSourceRectForStandardTileSheet(Game1.toolSpriteSheet, this.currentParentTileIndex, 16, 16), 800.0f, 1, 1, vectorBasket, false, false, ((float)boundingBox.Bottom + 0.1f) / 10000f, 0.0f, Color.White, Game1.pixelZoom, 0.0f, 0.0f, 0.0f);
+                basketSprite.delayBeforeAnimationStart = 100;
+                who.currentLocation.temporarySprites.Add(basketSprite);
+                TemporaryAnimatedSprite foodSprite = new TemporaryAnimatedSprite(Game1.objectSpriteSheet, Game1.getSourceRectForStandardTileSheet(Game1.objectSpriteSheet, this.attachments[0].parentSheetIndex, 16, 16), 500.0f, 1, 1, vectorFood, false, false, ((float)boundingBox.Bottom + 0.2f) / 10000f, 0.0f, Color.White, foodScale, 0.0f, 0.0f, 0.0f);
+                foodSprite.delayBeforeAnimationStart = 100;
+                who.currentLocation.temporarySprites.Add(foodSprite);
+
+                for (int index = 0; index < 8; ++index)
+                {
+                    Rectangle standardTileSheet = Game1.getSourceRectForStandardTileSheet(Game1.objectSpriteSheet, this.attachments[0].parentSheetIndex, 16, 16);
+                    standardTileSheet.X += 8;
+                    standardTileSheet.Y += 8;
+
+                    standardTileSheet.Width = Game1.pixelZoom;
+                    standardTileSheet.Height = Game1.pixelZoom;
+                    TemporaryAnimatedSprite temporaryAnimatedSprite2 = new TemporaryAnimatedSprite(Game1.objectSpriteSheet, standardTileSheet, 400f, 1, 0, vectorFood + new Vector2(12, 12), false, false, ((float)boundingBox.Bottom + 0.2f) / 10000f, 0.0f, Color.White, (float)foodScale, 0.0f, 0.0f, 0.0f, false) { motion = new Vector2((float)Game1.random.Next(-30, 31) / 10f, (float)Game1.random.Next(-6, -3)), acceleration = new Vector2(0.0f, 0.5f) };
+                    temporaryAnimatedSprite2.delayBeforeAnimationStart = 600;
+                    who.currentLocation.temporarySprites.Add(temporaryAnimatedSprite2);
+                }
+
+                Game1.delayedActions.Add(new DelayedAction(300, new DelayedAction.delayedBehavior(() => {
+                    AnimalHusbandryModEntery.ModHelper.Reflection.GetPrivateField<bool>(this._animal, "isEating").SetValue(true);
+                    this._animal.sprite.loop = false;
+                    DelayedAction.playSoundAfterDelay("eat", 300);
+                })));                
+            }
 
             return true;
         }
+
 
         public override void DoFunction(GameLocation location, int x, int y, int power, StardewValley.Farmer who)
         {
@@ -151,20 +176,13 @@ namespace AnimalHusbandryMod.tools
 
             if (this._animal != null)
             {
-                Animal? foundAnimal = AnimalExtension.GetAnimalFromType(this._animal.type);
-                who.Stamina -= ((float) 4f - (float)who.FarmingLevel * 0.2f);
-                int daysUtillBirth = (DataLoader.AnimalData.getAnimalItem((Animal)foundAnimal) as ImpregnatableAnimalItem).MinimumDaysUtillBirth;
-                PregnancyController.AddPregancy(new PregnancyItem(this._animal.myID, daysUtillBirth, this._animal.allowReproduction));
-                this._animal.allowReproduction = false;
-                --this.attachments[0].Stack;
-                if (this.attachments[0].Stack <= 0)
-                {
-                    Game1.showGlobalMessage(DataLoader.i18n.Get("Tool.InseminationSyringe.ItemConsumed", new { itemName = this.attachments[0].DisplayName }));
-                    this.attachments[0] = (StardewValley.Object)null;
-                }
+
+                this._animal.doEmote(20, true);
+
+
                 this._animal = (FarmAnimal)null;
             }
-            
+
             if (Game1.activeClickableMenu == null)
             {
                 who.CanMove = true;
@@ -172,39 +190,14 @@ namespace AnimalHusbandryMod.tools
             else
             {
                 who.Halt();
-            }                
+            }
             who.usingTool = false;
             who.canReleaseTool = true;
-        }        
-
-        public bool CheckCorrectProduct(FarmAnimal animal, StardewValley.Object @object)
-        {
-            switch (AnimalExtension.GetAnimalFromType(animal.type))
-            {
-                case Animal.Cow:
-                case Animal.Goat:                    
-                        return animal.defaultProduceIndex == @object.ParentSheetIndex || animal.deluxeProduceIndex == @object.ParentSheetIndex;                    
-                default:                    
-                        return animal.defaultProduceIndex == @object.ParentSheetIndex;
-            }
-        }
-
-        public bool IsEggAnimal(FarmAnimal animal)
-        {
-            switch (AnimalExtension.GetAnimalFromType(animal.type))
-            {
-                case Animal.Duck:
-                case Animal.Chicken:
-                case Animal.Dinosaur:
-                    return true;
-                default:
-                    return false;
-            }
         }
 
         public override bool canThisBeAttached(StardewValley.Object o)
         {
-            if (o == null || o.category == - 6 || o.parentSheetIndex == 430 || o.parentSheetIndex == 440)
+            if (o == null || o.category == -6 || o.category == -75 || o.category == -79)
             {
                 return true;
             }
@@ -241,7 +234,7 @@ namespace AnimalHusbandryMod.tools
 
         public override void drawAttachments(SpriteBatch b, int x, int y)
         {
-            
+
             if (attachments[0] != null)
             {
                 b.Draw(Game1.menuTexture, new Vector2((float)x, (float)y), new Rectangle?(Game1.getSourceRectForStandardTileSheet(Game1.menuTexture, 10, -1, -1)), Color.White, 0.0f, Vector2.Zero, 1f, SpriteEffects.None, 0.86f);
@@ -262,7 +255,7 @@ namespace AnimalHusbandryMod.tools
 
         public dynamic getReplacement()
         {
-            FishingRod replacement = new FishingRod(1);
+            FishingRod replacement = new FishingRod(2);
             replacement.upgradeLevel = -1;
             replacement.attachments = this.attachments;
             return replacement;

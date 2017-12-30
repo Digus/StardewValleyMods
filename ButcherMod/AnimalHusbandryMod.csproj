@@ -94,6 +94,7 @@
     <Compile Include="recipes\RecipesLoader.cs" />
     <Compile Include="farmer\FarmerLoader.cs" />
     <Compile Include="farmer\FarmerData.cs" />
+    <Compile Include="tools\FeedingBasket.cs" />
     <Compile Include="tools\InseminationSyringe.cs" />
     <Compile Include="tools\MeatCleaver.cs" />
     <Compile Include="AnimalHusbandryModEntery.cs" />

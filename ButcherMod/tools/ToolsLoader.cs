@@ -287,6 +287,8 @@ namespace AnimalHusbandryMod.tools
             {
                 MailDao.SaveLetter(new Letter("inseminationSyringe", DataLoader.i18n.Get("Tool.InseminationSyringe.Letter"), new List<Item> { new InseminationSyringe() }, InseminationSyringeCondition));
             }
+
+            MailDao.SaveLetter(new Letter("feedingBasket", DataLoader.i18n.Get("Tool.FeedingBasket.Letter"), new List<Item> { new FeedingBasket() }, (l)=>true));
         }
     }
 }
