@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace AnimalHusbandryMod.animals.data
 {
-    public interface ImpregnatableAnimalItem 
+    public interface TreatItem
     {
-        int MinimumDaysUtillBirth { get; set; }
-        
+        int MinimumDaysBetweenTreats { get; set; }
+        int[] LikedTreats { get; set; }
     }
 }

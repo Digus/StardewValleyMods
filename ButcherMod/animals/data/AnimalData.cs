@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AnimalHusbandryMod.animals
+namespace AnimalHusbandryMod.animals.data
 {
     public class AnimalData
     {

@@ -5,7 +5,7 @@
       "MajorVersion": 2,
       "MinorVersion": 1,
       "PatchVersion": 0,
-      "Build": "alfa.1"
+      "Build": "alfa.2"
    },
    "Description": "Adds features related to animal husbandry.",
    "UniqueID": "DIGUS.ANIMALHUSBANDRYMOD",
@@ -13,13 +13,9 @@
    "MinimumApiVersion": "2.0",
    "Dependencies": [
 	   {
-		   "UniqueID": "Platonymous.CustomElementHandler",
-		   "MinimumVersion": "1.3.0"
-	   },
-		{
-		"UniqueID": "Platonymous.CustomTV",
-		"MinimumVersion": "1.0.6"
-		}
+		   "UniqueID": "Platonymous.Toolkit",
+		   "MinimumVersion": "0.7.0"
+	   }
 	   , {
 		   "UniqueID": "DIGUS.MailFrameworkMod",
 		   "MinimumVersion": "1.1.0"

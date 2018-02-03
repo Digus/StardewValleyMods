@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel;
+using AnimalHusbandryMod.common;
 using StardewValley;
 
 namespace AnimalHusbandryMod.cooking

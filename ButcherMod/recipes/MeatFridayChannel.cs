@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using CustomTV;
+using AnimalHusbandryMod.common;
 using Microsoft.Xna.Framework;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
@@ -11,6 +11,7 @@ using StardewModdingAPI.Utilities;
 using StardewValley;
 using StardewValley.Objects;
 using AnimalHusbandryMod.cooking;
+using PyTK.CustomTV;
 
 namespace AnimalHusbandryMod.recipes
 {
@@ -34,7 +35,7 @@ namespace AnimalHusbandryMod.recipes
 
         public void CheckChannelDay()
         {
-            CustomTVMod.removeChannel("MeatFriday");
+            CustomTVMod.removeKey("MeatFriday");
 
             if(SDate.Now().DayOfWeek == DayOfWeek.Friday)
             {

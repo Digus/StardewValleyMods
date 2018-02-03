@@ -10,6 +10,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AnimalHusbandryMod.animals.data;
+using AnimalHusbandryMod.common;
 
 namespace AnimalHusbandryMod.animals
 {
@@ -124,7 +126,6 @@ namespace AnimalHusbandryMod.animals
 
         public static void CheckForBirth()
         {
-            FarmerLoader.LoadData();
             foreach (PregnancyItem pregancyItem in AnimalsReadyForBirth().ToList())
             {
                 FarmAnimal animal = GetAnimal(pregancyItem.Id);
@@ -132,7 +133,6 @@ namespace AnimalHusbandryMod.animals
                 {
                     parentAnimals.Enqueue(animal);
                 }
-                
             }
             if (!DataLoader.ModConfig.DisableTomorrowBirthNotification)
             {

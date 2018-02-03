@@ -19,7 +19,6 @@ using AnimalHusbandryMod.animals;
 using AnimalHusbandryMod.farmer;
 using AnimalHusbandryMod.tools;
 using AnimalHusbandryMod.meats;
-using CustomElementHandler;
 
 namespace AnimalHusbandryMod
 {
@@ -55,6 +54,7 @@ namespace AnimalHusbandryMod
                 _inseminationSyringeSpawnKey = DataLoader.ModConfig.AddInseminationSyringeToInventoryKey;
 
                 SaveEvents.AfterLoad += DataLoader.ToolsLoader.ReplaceOldTools;
+                SaveEvents.AfterLoad += (x, y) => FarmerLoader.LoadData();
 
                 if (!DataLoader.ModConfig.DisableMeat)
                 {

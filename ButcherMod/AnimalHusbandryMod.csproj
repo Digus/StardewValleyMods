@@ -39,14 +39,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="0Harmony">
-      <HintPath>..\..\..\Bibliotecas\Harmony\Harmony\bin\Release\0Harmony.dll</HintPath>
+      <HintPath>H:\Projetos\Harmony\Harmony\bin\Release\0Harmony.dll</HintPath>
     </Reference>
-    <Reference Include="CustomElementHandler">
-      <HintPath>K:\StardewValley\Mods\StardewValleyMods\CustomElementHandler\bin\Release\CustomElementHandler.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="CustomTV">
-      <HintPath>I:\Program Files (x86)\Steam\steamapps\common\Stardew Valley\Mods\CustomTV\CustomTV.dll</HintPath>
+    <Reference Include="PyTK">
+      <HintPath>H:\Projetos\Stardew-Valley-Mods-Platonymous\PyTK\bin\Release\PyTK.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
@@ -60,6 +56,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="animals\Animal.cs" />
+    <Compile Include="animals\AnimalStatus.cs" />
     <Compile Include="animals\data\AnimalBuildingData.cs" />
     <Compile Include="animals\data\AnimalData.cs" />
     <Compile Include="animals\data\AnimalItem.cs" />
@@ -73,10 +70,12 @@
     <Compile Include="animals\data\GoatItem.cs" />
     <Compile Include="animals\data\ImpregnatableAnimalItem.cs" />
     <Compile Include="animals\data\PigItem.cs" />
+    <Compile Include="animals\data\TreatItem.cs" />
     <Compile Include="animals\PregnancyController.cs" />
     <Compile Include="animals\data\PregnancyItem.cs" />
     <Compile Include="animals\data\SheepItem.cs" />
     <Compile Include="animals\data\WoolAnimalItem.cs" />
+    <Compile Include="animals\TreatsController.cs" />
     <Compile Include="meats\MeatPriceOverrides.cs" />
     <Compile Include="ModConfig.cs" />
     <Compile Include="animals\data\RabbitItem.cs" />
@@ -120,6 +119,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="common\Cursors.png" />
     <Content Include="tools\MenuTiles.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

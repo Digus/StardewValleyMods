@@ -1,24 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using AnimalHusbandryMod.animals.data;
 using AnimalHusbandryMod.cooking;
 using AnimalHusbandryMod.meats;
 using AnimalHusbandryMod.recipes;
 using AnimalHusbandryMod.tools;
-using MailFrameworkMod;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
-using StardewModdingAPI.Utilities;
-using StardewValley;
-using StardewValley.Locations;
-using StardewValley.Objects;
 using Object = StardewValley.Object;
-using AnimalHusbandryMod.animals;
 
-namespace AnimalHusbandryMod
+namespace AnimalHusbandryMod.common
 {
     public class DataLoader : IAssetEditor
     {

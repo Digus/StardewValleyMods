@@ -90,10 +90,18 @@
 	"Tool.FeedingBasket.Name": "Feeding Basket",
 	"Tool.FeedingBasket.Description": "Use this to give treats to your animals.",
 	"Tool.FeedingBasket.Empty": "Empty Feeding Basket.",
+	"Tool.FeedingBasket.NotLikeTreat":  "This animal do not like {{itemName}} as a treat.",
+	"Tool.FeedingBasket.ItemConsumed": "Last {{itemName}} Consumed.",
+	"Tool.FeedingBasket.WantsTreatInDays":  "{{animalName}} would love another treat in {{numberOfDays}} days.",
+	"Tool.FeedingBasket.WantsTreatTomorrow":  "{{animalName}} would love a treat tomorrow.",
+	"Tool.FeedingBasket.WantsTreat":  "{{animalName}} would love a treat.",
 	"Tool.FeedingBasket.Letter": "Dear Farmer @,^^-Marnie",
 	
 	//Menus
 	"Menu.AnimalQueryMenu.PregnancyBuildingLimit": "That building has no room for a pregnant animal.",
 	"Menu.AnimalQueryMenu.DaysUntilBirth": "Pregnant! {{numberOfDays}} Days Until Birth.",
-	"Menu.AnimalQueryMenu.ReadyForBirth": "Pregnant! Ready For Birth."
+	"Menu.AnimalQueryMenu.ReadyForBirth": "Pregnant! Ready For Birth.",
+	"Menu.AnimalQueryMenu.WantsTreat":  "It would love a treat now.",
+	"Menu.AnimalQueryMenu.WantsTreatTomorrow":  "It'll want a treat tomorrow.",
+	"Menu.AnimalQueryMenu.WantsTreatInDays":  "I'll want a treat in {{numberOfDays}} days."
 }

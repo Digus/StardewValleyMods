@@ -1,5 +1,4 @@
-﻿using CustomElementHandler;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StardewValley;
 using StardewValley.Tools;
@@ -8,6 +7,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AnimalHusbandryMod.animals;
+using AnimalHusbandryMod.animals.data;
+using PyTK.CustomElementHandler;
 
 namespace AnimalHusbandryMod.tools
 {
@@ -85,6 +87,22 @@ namespace AnimalHusbandryMod.tools
                 {
                     Game1.showRedMessage(DataLoader.i18n.Get("Tool.FeedingBasket.Empty"));
                     this._animal = null;
+                }
+                else if (!TreatsController.IsLikedTreat(this._animal, this.attachments[0].parentSheetIndex))
+                {
+                    dialogue = DataLoader.i18n.Get("Tool.FeedingBasket.NotLikeTreat", new  { itemName = this.attachments[0].DisplayName});
+                }
+                else if (!TreatsController.IsReadyForTreat(this._animal))
+                {
+                    int daysUntilNextTreat = TreatsController.DaysUntilNextTreat(this._animal);
+                    if (daysUntilNextTreat > 1)
+                    {
+                        dialogue = DataLoader.i18n.Get("Tool.FeedingBasket.WantsTreatInDays", new { animalName = this._animal.displayName ,  numberOfDays = daysUntilNextTreat });
+                    }
+                    else if (daysUntilNextTreat == 1)
+                    {
+                        dialogue = DataLoader.i18n.Get("Tool.FeedingBasket.WantsTreatTomorrow", new { animalName = this._animal.displayName });
+                    }
                 }
                 else
                 {
@@ -178,6 +196,16 @@ namespace AnimalHusbandryMod.tools
             {
 
                 this._animal.doEmote(20, true);
+                this._animal.friendshipTowardFarmer += (int)Math.Ceiling(this.attachments[0].price * (1.0 + this.attachments[0].quality * 0.25) / (this._animal.price / 1000.0));
+                this._animal.happiness = byte.MaxValue;
+                TreatsController.FeedAnimalTreat(this._animal, this.attachments[0]);
+
+                --this.attachments[0].Stack;
+                if (this.attachments[0].Stack <= 0)
+                {
+                    Game1.showGlobalMessage(DataLoader.i18n.Get("Tool.FeedingBasket.ItemConsumed", new { itemName = this.attachments[0].DisplayName }));
+                    this.attachments[0] = (StardewValley.Object)null;
+                }
 
 
                 this._animal = (FarmAnimal)null;
@@ -197,7 +225,7 @@ namespace AnimalHusbandryMod.tools
 
         public override bool canThisBeAttached(StardewValley.Object o)
         {
-            if (o == null || o.category == -6 || o.category == -75 || o.category == -79)
+            if (o == null || o.category == -6 || o.category == -75 || o.category == -79 || TreatsController.IsLikedTreat(o.parentSheetIndex))
             {
                 return true;
             }

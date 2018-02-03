@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AnimalHusbandryMod.animals
+namespace AnimalHusbandryMod.animals.data
 {
-    public interface AnimalItem
+    public interface AnimalItem 
     {
         int MinimalNumberOfMeat { get; set; }
         int MaximumNumberOfMeat { get; set; }

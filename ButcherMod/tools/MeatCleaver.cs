@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using CustomElementHandler;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
@@ -9,6 +8,9 @@ using StardewValley;
 using StardewValley.Objects;
 using Object = StardewValley.Object;
 using AnimalHusbandryMod.animals;
+using AnimalHusbandryMod.animals.data;
+using AnimalHusbandryMod.common;
+using PyTK.CustomElementHandler;
 
 namespace AnimalHusbandryMod.tools
 {
