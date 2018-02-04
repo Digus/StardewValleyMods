@@ -62,6 +62,9 @@
 	"TV.MeatFriday.ChannelDisplayName":"The Queen Of Sauce - Meat Friday",
 	"TV.MeatFriday.ReRunDisplaySuffix":"(Re-run)",
 	"TV.MeatFriday.Announcement":"Greetings! It is I, the queen of sauce... here to teach you a new meat recipe from my secret cookbook. This friday's dish...",
+	"TV.LivingWithTheAnimals.ChannelDisplayName": "Livin' With The Animals",
+	"TV.LivingWithTheAnimals.Announcement": "Welcome to \"Livin' With The Animals\". We're back again with another animal tip for y'all. Now listen up:",
+	"TV.LivingWithTheAnimals.Episode.Buildings": "Thinking of raising your own farm animals? They'll need a place to live. To get that, you will need a bunch of wood, stone and money. Visit your local carpenter for details.",
 	// Tools
 	"Tool.MeatCleaver.Name": "Meat Cleaver",
 	"Tool.MeatCleaver.Description": "Turn your animals into meat.",
@@ -89,8 +92,8 @@
 	
 	"Tool.FeedingBasket.Name": "Feeding Basket",
 	"Tool.FeedingBasket.Description": "Use this to give treats to your animals.",
-	"Tool.FeedingBasket.Empty": "Empty Feeding Basket.",
-	"Tool.FeedingBasket.NotLikeTreat":  "This animal do not like {{itemName}} as a treat.",
+	"Tool.FeedingBasket.Empty": "Empty Basket.",
+	"Tool.FeedingBasket.NotLikeTreat":  "This animal does not eat {{itemName}} as a treat.",
 	"Tool.FeedingBasket.ItemConsumed": "Last {{itemName}} Consumed.",
 	"Tool.FeedingBasket.WantsTreatInDays":  "{{animalName}} would love another treat in {{numberOfDays}} days.",
 	"Tool.FeedingBasket.WantsTreatTomorrow":  "{{animalName}} would love a treat tomorrow.",
@@ -103,5 +106,6 @@
 	"Menu.AnimalQueryMenu.ReadyForBirth": "Pregnant! Ready For Birth.",
 	"Menu.AnimalQueryMenu.WantsTreat":  "It would love a treat now.",
 	"Menu.AnimalQueryMenu.WantsTreatTomorrow":  "It'll want a treat tomorrow.",
-	"Menu.AnimalQueryMenu.WantsTreatInDays":  "I'll want a treat in {{numberOfDays}} days."
+	"Menu.AnimalQueryMenu.WantsTreatInDays":  "It'll want a treat in {{numberOfDays}} days.",
+	"Menu.AnimalQueryMenu.ExchangeAnimalForMeat":  "Exchange for meat."
 }

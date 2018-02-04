@@ -19,6 +19,7 @@ using AnimalHusbandryMod.animals;
 using AnimalHusbandryMod.farmer;
 using AnimalHusbandryMod.tools;
 using AnimalHusbandryMod.meats;
+using DataLoader = AnimalHusbandryMod.common.DataLoader;
 
 namespace AnimalHusbandryMod
 {
@@ -30,6 +31,7 @@ namespace AnimalHusbandryMod
         internal static DataLoader DataLoader;
         private string _meatCleaverSpawnKey;
         private string _inseminationSyringeSpawnKey;
+        private string _feedingBasketSpawnKey;
 
         /*********
         ** Public methods
@@ -52,9 +54,12 @@ namespace AnimalHusbandryMod
                 DataLoader = new DataLoader(helper);
                 _meatCleaverSpawnKey = DataLoader.ModConfig.AddMeatCleaverToInventoryKey;
                 _inseminationSyringeSpawnKey = DataLoader.ModConfig.AddInseminationSyringeToInventoryKey;
+                _feedingBasketSpawnKey = DataLoader.ModConfig.AddFeedingBasketToInventoryKey;
 
                 SaveEvents.AfterLoad += DataLoader.ToolsLoader.ReplaceOldTools;
                 SaveEvents.AfterLoad += (x, y) => FarmerLoader.LoadData();
+
+                TimeEvents.AfterDayStarted += (x, y) => DataLoader.LivingWithTheAnimalsChannel.CheckChannelDay();
 
                 if (!DataLoader.ModConfig.DisableMeat)
                 {
@@ -70,14 +75,15 @@ namespace AnimalHusbandryMod
                 {
                     TimeEvents.AfterDayStarted += (x, y) => PregnancyController.CheckForBirth();
                     SaveEvents.BeforeSave += (x, y) => PregnancyController.UpdatePregnancy();
-                    MenuEvents.MenuChanged += (s, e) =>
-                    {
-                        if (e.NewMenu is AnimalQueryMenu && !(e.NewMenu is AnimalQueryMenuExtended))
-                        {
-                            Game1.activeClickableMenu = new AnimalQueryMenuExtended(this.Helper.Reflection.GetPrivateValue<FarmAnimal>(e.NewMenu, "animal"));
-                        }
-                    };
                 }
+
+                MenuEvents.MenuChanged += (s, e) =>
+                {
+                    if (e.NewMenu is AnimalQueryMenu && !(e.NewMenu is AnimalQueryMenuExtended))
+                    {
+                        Game1.activeClickableMenu = new AnimalQueryMenuExtended(this.Helper.Reflection.GetField<FarmAnimal>(e.NewMenu, "animal").GetValue());
+                    }
+                };
 
                 if (!DataLoader.ModConfig.DisableRancherMeatPriceAjust)
                 {
@@ -107,6 +113,10 @@ namespace AnimalHusbandryMod
                 if (_inseminationSyringeSpawnKey != null && e.KeyPressed == (Keys)Enum.Parse(typeof(Keys), _inseminationSyringeSpawnKey.ToUpper()))
                 {
                     Game1.player.addItemToInventory(new InseminationSyringe());
+                }
+                if (_feedingBasketSpawnKey != null && e.KeyPressed == (Keys)Enum.Parse(typeof(Keys), _feedingBasketSpawnKey.ToUpper()))
+                {
+                    Game1.player.addItemToInventory(new FeedingBasket());
                 }
             }
         }

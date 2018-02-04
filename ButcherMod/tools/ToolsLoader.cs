@@ -66,6 +66,8 @@ namespace AnimalHusbandryMod.tools
                 MeatCleaver.indexOfMenuItemView = newToolInitialParentIdex + 26 + offset;
                 InseminationSyringe.InitialParentTileIndex = newToolInitialParentIdex + 14;
                 InseminationSyringe.IndexOfMenuItemView = newToolInitialParentIdex + 14;
+                FeedingBasket.InitialParentTileIndex = newToolInitialParentIdex + 15;
+                FeedingBasket.IndexOfMenuItemView = newToolInitialParentIdex + 15;
                 LoadMail();
             } else if (asset.AssetNameEquals("Maps\\MenuTiles"))
             {
@@ -92,6 +94,7 @@ namespace AnimalHusbandryMod.tools
                 var newMenuTitlesInitialParentIdex = (originalWidth / 64) * (originalHeight / 64);                
 
                 InseminationSyringe.AttachmentMenuTile = newMenuTitlesInitialParentIdex;
+                FeedingBasket.AttachmentMenuTile = newMenuTitlesInitialParentIdex + 1;
             }
         }
 

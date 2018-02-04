@@ -41,6 +41,9 @@
     <Reference Include="0Harmony">
       <HintPath>H:\Projetos\Harmony\Harmony\bin\Release\0Harmony.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>G:\Program Files (x86)\Steam\steamapps\common\Stardew Valley\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="PyTK">
       <HintPath>H:\Projetos\Stardew-Valley-Mods-Platonymous\PyTK\bin\Release\PyTK.dll</HintPath>
       <Private>False</Private>
@@ -71,6 +74,8 @@
     <Compile Include="animals\data\ImpregnatableAnimalItem.cs" />
     <Compile Include="animals\data\PigItem.cs" />
     <Compile Include="animals\data\TreatItem.cs" />
+    <Compile Include="animals\LivingWithTheAnimalsChannel.cs" />
+    <Compile Include="animals\MeatController.cs" />
     <Compile Include="animals\PregnancyController.cs" />
     <Compile Include="animals\data\PregnancyItem.cs" />
     <Compile Include="animals\data\SheepItem.cs" />
@@ -85,7 +90,7 @@
     <Compile Include="cooking\CookingData.cs" />
     <Compile Include="cooking\CookingExtension.cs" />
     <Compile Include="cooking\CookingItem.cs" />
-    <Compile Include="DataLoader.cs" />
+    <Compile Include="common\DataLoader.cs" />
     <Compile Include="meats\Meat.cs" />
     <Compile Include="meats\MeatData.cs" />
     <Compile Include="meats\MeatItem.cs" />
@@ -119,7 +124,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="common\Cursors.png" />
+    <Content Include="common\LooseSprites.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="tools\MenuTiles.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

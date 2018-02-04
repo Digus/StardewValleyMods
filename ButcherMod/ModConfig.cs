@@ -11,17 +11,20 @@ namespace AnimalHusbandryMod
         public bool Softmode;
         public string AddMeatCleaverToInventoryKey;
         public string AddInseminationSyringeToInventoryKey;
+        public string AddFeedingBasketToInventoryKey;
         public bool DisableFullBuildingForBirthNotification;
         public bool DisableTomorrowBirthNotification;
         public bool DisablePregnancy;
         public bool DisableMeat;
         public bool DisableRancherMeatPriceAjust;
 
+
         public ModConfig()
         {
             this.Softmode = false;
             this.AddMeatCleaverToInventoryKey = null;
             this.AddInseminationSyringeToInventoryKey = null;
+            this.AddFeedingBasketToInventoryKey = null;
             this.DisableFullBuildingForBirthNotification = false;
             this.DisableTomorrowBirthNotification = false;
             this.DisablePregnancy = false;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using AnimalHusbandryMod.animals;
 using AnimalHusbandryMod.animals.data;
 using AnimalHusbandryMod.cooking;
 using AnimalHusbandryMod.meats;
@@ -15,24 +16,29 @@ namespace AnimalHusbandryMod.common
     public class DataLoader : IAssetEditor
     {
         public static IModHelper Helper;
+        public static ModConfig ModConfig;
         public static ITranslationHelper i18n;
+
         public static MeatData MeatData;
         public static CookingData CookingData;
         public static AnimalData AnimalData;
         public static AnimalBuildingData AnimalBuildingData;
 
-        public static ModConfig ModConfig;
+        public static Texture2D LooseSprites;
+        public static Texture2D ToolsSprites;
 
         public ToolsLoader ToolsLoader { get; }
-
         public RecipesLoader RecipeLoader { get; }
+
+        public LivingWithTheAnimalsChannel LivingWithTheAnimalsChannel { get; }
 
         public DataLoader(IModHelper helper)
         {
             Helper = helper;
+            ModConfig = helper.ReadConfig<ModConfig>();
             i18n = Helper.Translation;
 
-            ModConfig = helper.ReadConfig<ModConfig>();
+            LooseSprites = Helper.Content.Load<Texture2D>("common/LooseSprites.png");
 
             var editors = Helper.Content.AssetEditors;
 
@@ -41,7 +47,8 @@ namespace AnimalHusbandryMod.common
                 editors.Add(this);
             }
 
-            ToolsLoader = new ToolsLoader(Helper.Content.Load<Texture2D>("tools/Tools.png"), Helper.Content.Load<Texture2D>("tools/MenuTiles.png"));   
+            ToolsSprites = Helper.Content.Load<Texture2D>("tools/Tools.png");
+            ToolsLoader = new ToolsLoader(ToolsSprites, Helper.Content.Load<Texture2D>("tools/MenuTiles.png"));   
             editors.Add(ToolsLoader);
             ToolsLoader.LoadMail();
 
@@ -56,7 +63,9 @@ namespace AnimalHusbandryMod.common
             DataLoader.Helper.WriteJsonFile("data\\animalBuilding.json", AnimalBuildingData);
 
             AnimalData = DataLoader.Helper.ReadJsonFile<AnimalData>("data\\animals.json") ?? new AnimalData();
-            DataLoader.Helper.WriteJsonFile("data\\animals.json", AnimalData);  
+            DataLoader.Helper.WriteJsonFile("data\\animals.json", AnimalData);
+
+            LivingWithTheAnimalsChannel = new LivingWithTheAnimalsChannel();
         }
 
         public bool CanEdit<T>(IAssetInfo asset)

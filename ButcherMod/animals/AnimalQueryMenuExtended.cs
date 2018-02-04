@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AnimalHusbandryMod.common;
+using AnimalHusbandryMod.tools;
 using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
 
@@ -16,8 +18,14 @@ namespace AnimalHusbandryMod.animals
     {
         private FarmAnimal _farmAnimal;
         private String _parentName;
-        private ClickableTextureComponent pregnantStatus = null;
         private TextBox _textBox;
+
+        private bool confirmingMeat = false;
+
+        private ClickableTextureComponent pregnantStatus = null;
+        private ClickableTextureComponent treatStatus = null;
+        private ClickableTextureComponent meatButton = null;
+
         private IReflectedField<bool> _movingAnimal;
         private IReflectedField<bool> _confirmingSell;
         private IReflectedField<double> _lovelLevel;
@@ -26,10 +34,35 @@ namespace AnimalHusbandryMod.animals
         public AnimalQueryMenuExtended(FarmAnimal farmAnimal) : base(farmAnimal)
         {
             _farmAnimal = farmAnimal;
-            if (PregnancyController.IsAnimalPregnant(this._farmAnimal.myID))
-            {                
-                this.allowReproductionButton = null;
-                pregnantStatus = new ClickableTextureComponent(new Microsoft.Xna.Framework.Rectangle(this.xPositionOnScreen + AnimalQueryMenu.width + Game1.pixelZoom * 4, this.yPositionOnScreen + AnimalQueryMenu.height - Game1.tileSize * 2 - IClickableMenu.borderWidth + Game1.pixelZoom * 2, Game1.pixelZoom * 9, Game1.pixelZoom * 9), Game1.mouseCursors, new Microsoft.Xna.Framework.Rectangle( 128, 393, 9, 9), 4f, false);
+            if (!DataLoader.ModConfig.DisablePregnancy)
+            {
+                if (PregnancyController.IsAnimalPregnant(this._farmAnimal.myID))
+                {
+                    this.allowReproductionButton = null;
+                    pregnantStatus = new ClickableTextureComponent(
+                        new Microsoft.Xna.Framework.Rectangle(
+                            this.xPositionOnScreen + AnimalQueryMenu.width + Game1.pixelZoom * 3,
+                            this.yPositionOnScreen + AnimalQueryMenu.height - Game1.tileSize * 2 -
+                            IClickableMenu.borderWidth + Game1.pixelZoom, Game1.pixelZoom * 11, Game1.pixelZoom * 11),
+                        DataLoader.LooseSprites, new Microsoft.Xna.Framework.Rectangle(34, 29, 11, 11), 4f, false);
+                }
+            }
+
+            if (TreatsController.IsReadyForTreat(farmAnimal))
+            {
+                treatStatus = new ClickableTextureComponent(new Microsoft.Xna.Framework.Rectangle(this.xPositionOnScreen + AnimalQueryMenu.width + Game1.tileSize + 4, this.yPositionOnScreen + AnimalQueryMenu.height - Game1.tileSize * 2 - IClickableMenu.borderWidth, Game1.tileSize, Game1.tileSize), DataLoader.ToolsSprites, new Microsoft.Xna.Framework.Rectangle(240, 0, 16, 16), 4f, false);
+            }
+            else
+            {
+                treatStatus = new ClickableTextureComponent(new Microsoft.Xna.Framework.Rectangle(this.xPositionOnScreen + AnimalQueryMenu.width + Game1.tileSize + 4, this.yPositionOnScreen + AnimalQueryMenu.height - Game1.tileSize * 2 - IClickableMenu.borderWidth, Game1.tileSize, Game1.tileSize), DataLoader.LooseSprites, new Microsoft.Xna.Framework.Rectangle(16, 28, 16, 16), 4f, false);
+            }
+
+            if (!DataLoader.ModConfig.DisableMeat)
+            {
+                if (!this._farmAnimal.isBaby())
+                {
+                    meatButton = new ClickableTextureComponent(new Microsoft.Xna.Framework.Rectangle(this.xPositionOnScreen + AnimalQueryMenu.width + Game1.tileSize + 4, this.yPositionOnScreen + AnimalQueryMenu.height - Game1.tileSize * 3 - IClickableMenu.borderWidth, Game1.tileSize, Game1.tileSize), DataLoader.LooseSprites, new Microsoft.Xna.Framework.Rectangle(0, 28, 16, 16), 4f, false);
+                }
             }
 
             _parentName = DataLoader.Helper.Reflection.GetField<String>(this, "parentName").GetValue();
@@ -40,45 +73,10 @@ namespace AnimalHusbandryMod.animals
             _hoverText = DataLoader.Helper.Reflection.GetField<string>(this, "hoverText");
         }
 
-        public override void performHoverAction(int x, int y)
-        {
-            base.performHoverAction(x, y);
-            if (_movingAnimal.GetValue())
-            {
-                Vector2 tile = new Vector2((float)((x + Game1.viewport.X) / Game1.tileSize), (float)((y + Game1.viewport.Y) / Game1.tileSize));
-                Farm locationFromName = Game1.getLocationFromName("Farm") as Farm;
-                Building buildingAt = locationFromName.getBuildingAt(tile);
-                if (buildingAt != null)
-                    if( buildingAt.color.Equals(Color.LightGreen * 0.8f)
-                    && PregnancyController.IsAnimalPregnant(this._farmAnimal.myID)
-                    && PregnancyController.CheckBuildingLimit((buildingAt.indoors as AnimalHouse)))
-                {
-                    buildingAt.color = Color.Red * 0.8f;
-                }
-            }
-            else
-            {
-                if (this.pregnantStatus != null)
-                {
-                    if (this.pregnantStatus.containsPoint(x, y))
-                    {
-                        int daysUtilBirth = PregnancyController.GetPregnancyItem(this._farmAnimal.myID).DaysUntilBirth;
-                        if (daysUtilBirth > 1)
-                        {
-                            _hoverText.SetValue(DataLoader.i18n.Get("Menu.AnimalQueryMenu.DaysUntilBirth", new { numberOfDays = daysUtilBirth }));
-                        }
-                        else
-                        {
-                            _hoverText.SetValue(DataLoader.i18n.Get("Menu.AnimalQueryMenu.ReadyForBirth"));
-                        }
-                        
-                    }
-                }
-            }
-        }
-
         public override void receiveLeftClick(int x, int y, bool playSound = true)
         {
+            if (Game1.globalFade)
+                return;
             if (_movingAnimal.GetValue())
             {
                 Building buildingAt = (Game1.getLocationFromName("Farm") as Farm).getBuildingAt(new Vector2((float)((x + Game1.viewport.X) / Game1.tileSize), (float)((y + Game1.viewport.Y) / Game1.tileSize)));
@@ -101,7 +99,132 @@ namespace AnimalHusbandryMod.animals
                     return;
                 }
             }
+            else if (this.confirmingMeat)
+            {
+                if (this.yesButton.containsPoint(x, y))
+                {
+                    (this._farmAnimal.home.indoors as AnimalHouse).animalsThatLiveHere.Remove(this._farmAnimal.myID);
+                    this._farmAnimal.health = -1;
+                    int num1 = this._farmAnimal.frontBackSourceRect.Width / 2;
+                    for (int index = 0; index < num1; ++index)
+                    {
+                        int num2 = Game1.random.Next(25, 200);
+                        Game1.currentLocation.temporarySprites.Add(new TemporaryAnimatedSprite(5, this._farmAnimal.position + new Vector2((float)Game1.random.Next(-Game1.tileSize / 2, this._farmAnimal.frontBackSourceRect.Width * 3), (float)Game1.random.Next(-Game1.tileSize / 2, this._farmAnimal.frontBackSourceRect.Height * 3)), new Color((int)byte.MaxValue - num2, (int)byte.MaxValue, (int)byte.MaxValue - num2), 8, false, Game1.random.NextDouble() < 0.5 ? 50f : (float)Game1.random.Next(30, 200), 0, Game1.tileSize, -1f, Game1.tileSize, Game1.random.NextDouble() < 0.5 ? 0 : Game1.random.Next(0, 600))
+                        {
+                            scale = (float)Game1.random.Next(2, 5) * 0.25f,
+                            alpha = (float)Game1.random.Next(2, 5) * 0.25f,
+                            motion = new Vector2(0.0f, (float)-Game1.random.NextDouble())
+                        });
+                    }
+                    Game1.playSound("newRecipe");
+                    Game1.playSound("money");
+                    Game1.exitActiveMenu();
+
+                    MeatController.AddItemsToInventoryByMenuIfNecessary(MeatController.CreateMeat(this._farmAnimal));
+                }
+                else
+                {
+                    if (!this.noButton.containsPoint(x, y))
+                        return;
+                    this.confirmingMeat = false;
+                    Game1.playSound("smallSelect");
+                    if (!Game1.options.SnappyMenus)
+                        return;
+                    this.currentlySnappedComponent = this.getComponentWithID(103);
+                    this.snapCursorToCurrentSnappedComponent();
+                }
+                return;
+            }
+            else if (!_confirmingSell.GetValue())
+            {
+                if (this.meatButton?.containsPoint(x, y)??false)
+                {
+                    this.confirmingMeat = true;
+                    ClickableTextureComponent textureComponent1 = new ClickableTextureComponent(new Microsoft.Xna.Framework.Rectangle(Game1.viewport.Width / 2 - Game1.tileSize - 4, Game1.viewport.Height / 2 - Game1.tileSize / 2, Game1.tileSize, Game1.tileSize), Game1.mouseCursors, Game1.getSourceRectForStandardTileSheet(Game1.mouseCursors, 46, -1, -1), 1f, false);
+                    textureComponent1.myID = 111;
+                    textureComponent1.rightNeighborID = 105;
+                    this.yesButton = textureComponent1;
+                    ClickableTextureComponent textureComponent2 = new ClickableTextureComponent(new Microsoft.Xna.Framework.Rectangle(Game1.viewport.Width / 2 + 4, Game1.viewport.Height / 2 - Game1.tileSize / 2, Game1.tileSize, Game1.tileSize), Game1.mouseCursors, Game1.getSourceRectForStandardTileSheet(Game1.mouseCursors, 47, -1, -1), 1f, false);
+                    textureComponent2.myID = 105;
+                    textureComponent2.leftNeighborID = 111;
+                    this.noButton = textureComponent2;
+                    Game1.playSound("smallSelect");
+                    if (!Game1.options.SnappyMenus)
+                        return;
+                    this.populateClickableComponentList();
+                    this.currentlySnappedComponent = (ClickableComponent)this.noButton;
+                    this.snapCursorToCurrentSnappedComponent();
+                }
+            }
+
             base.receiveLeftClick(x, y, playSound);
+        }
+
+        public override void performHoverAction(int x, int y)
+        {
+            base.performHoverAction(x, y);
+            if (_movingAnimal.GetValue())
+            {
+                Vector2 tile = new Vector2((float)((x + Game1.viewport.X) / Game1.tileSize), (float)((y + Game1.viewport.Y) / Game1.tileSize));
+                Farm locationFromName = Game1.getLocationFromName("Farm") as Farm;
+                Building buildingAt = locationFromName.getBuildingAt(tile);
+                if (buildingAt != null)
+                    if( buildingAt.color.Equals(Color.LightGreen * 0.8f)
+                    && PregnancyController.IsAnimalPregnant(this._farmAnimal.myID)
+                    && PregnancyController.CheckBuildingLimit((buildingAt.indoors as AnimalHouse)))
+                {
+                    buildingAt.color = Color.Red * 0.8f;
+                }
+            }
+            else
+            {
+                if (this.meatButton != null)
+                {
+                    if (this.meatButton.containsPoint(x, y))
+                    {
+                        this.meatButton.scale = Math.Min(4.1f, this.meatButton.scale + 0.05f);
+                        _hoverText.SetValue(DataLoader.i18n.Get("Menu.AnimalQueryMenu.ExchangeAnimalForMeat"));
+                    }
+                    else
+                        this.meatButton.scale = Math.Max(4f, this.sellButton.scale - 0.05f);
+                }
+                if (this.pregnantStatus != null)
+                {
+                    if (this.pregnantStatus.containsPoint(x, y))
+                    {
+                        int daysUtilBirth = PregnancyController.GetPregnancyItem(this._farmAnimal.myID).DaysUntilBirth;
+                        if (daysUtilBirth > 1)
+                        {
+                            _hoverText.SetValue(DataLoader.i18n.Get("Menu.AnimalQueryMenu.DaysUntilBirth", new { numberOfDays = daysUtilBirth }));
+                        }
+                        else
+                        {
+                            _hoverText.SetValue(DataLoader.i18n.Get("Menu.AnimalQueryMenu.ReadyForBirth"));
+                        }
+                        
+                    }
+                }
+                if (this.treatStatus != null)
+                {
+                    if (this.treatStatus.containsPoint(x, y))
+                    {
+                        int daysUntilNextTreat = TreatsController.DaysUntilNextTreat(this._farmAnimal);
+                        if (daysUntilNextTreat > 1)
+                        {
+                            _hoverText.SetValue(DataLoader.i18n.Get("Menu.AnimalQueryMenu.WantsTreatInDays", new { numberOfDays = daysUntilNextTreat }));
+                        }
+                        else if (daysUntilNextTreat == 1)
+                        {
+                            _hoverText.SetValue(DataLoader.i18n.Get("Menu.AnimalQueryMenu.WantsTreatTomorrow"));
+                        }
+                        else
+                        {
+                            _hoverText.SetValue(DataLoader.i18n.Get("Menu.AnimalQueryMenu.WantsTreat"));
+                        }
+
+                    }
+                }
+            }
         }
 
         public override void draw(SpriteBatch b)
@@ -145,11 +268,16 @@ namespace AnimalHusbandryMod.animals
                 this.moveHomeButton.draw(b);
                 if (this.allowReproductionButton != null)
                     this.allowReproductionButton.draw(b);
-                // START PregancyStatus
+                // START pregancyStatus treatStatus meatButton
                 if (this.pregnantStatus != null)
                     this.pregnantStatus.draw(b);
+                if (this.treatStatus != null)
+                    this.treatStatus.draw(b);
+                if (this.meatButton != null)
+                    this.meatButton.draw(b);
                 // END PregancyStatus
-                if (confirmingSell)
+                // ADDED || confirmingMeat
+                if (confirmingSell || confirmingMeat)
                 {
                     b.Draw(Game1.fadeToBlackRect, Game1.graphics.GraphicsDevice.Viewport.Bounds, Color.Black * 0.75f);
                     Game1.drawDialogueBox(Game1.viewport.Width / 2 - Game1.tileSize * 5 / 2, Game1.viewport.Height / 2 - Game1.tileSize * 3, Game1.tileSize * 5, Game1.tileSize * 4, false, true, (string)null, false);

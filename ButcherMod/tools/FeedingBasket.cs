@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AnimalHusbandryMod.animals;
 using AnimalHusbandryMod.animals.data;
+using AnimalHusbandryMod.common;
 using PyTK.CustomElementHandler;
 
 namespace AnimalHusbandryMod.tools
@@ -19,7 +20,7 @@ namespace AnimalHusbandryMod.tools
 
         public static int InitialParentTileIndex = 519;
         public static int IndexOfMenuItemView = 519;
-        public static int AttachmentMenuTile = 68;
+        public static int AttachmentMenuTile = 69;
 
         public FeedingBasket() : base()
         {
@@ -196,7 +197,7 @@ namespace AnimalHusbandryMod.tools
             {
 
                 this._animal.doEmote(20, true);
-                this._animal.friendshipTowardFarmer += (int)Math.Ceiling(this.attachments[0].price * (1.0 + this.attachments[0].quality * 0.25) / (this._animal.price / 1000.0));
+                this._animal.friendshipTowardFarmer = Math.Min(1000, this._animal.friendshipTowardFarmer + (int)Math.Ceiling(this.attachments[0].price * (1.0 + this.attachments[0].quality * 0.25) / (this._animal.price / 1000.0)));
                 this._animal.happiness = byte.MaxValue;
                 TreatsController.FeedAnimalTreat(this._animal, this.attachments[0]);
 
