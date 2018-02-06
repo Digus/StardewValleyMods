@@ -16,15 +16,20 @@ namespace AnimalHusbandryMod.animals
     {
         public static bool IsLikedTreat(int id)
         {
-            return 
-                   DataLoader.AnimalData.Chicken.LikedTreats.Contains(id)
+            return DataLoader.AnimalData.Chicken.LikedTreats.Contains(id)
                 || DataLoader.AnimalData.Duck.LikedTreats.Contains(id)
                 || DataLoader.AnimalData.Rabbit.LikedTreats.Contains(id)
                 || DataLoader.AnimalData.Cow.LikedTreats.Contains(id)
                 || DataLoader.AnimalData.Goat.LikedTreats.Contains(id)
                 || DataLoader.AnimalData.Sheep.LikedTreats.Contains(id)
                 || DataLoader.AnimalData.Pig.LikedTreats.Contains(id)
+                || DataLoader.AnimalData.Pet.LikedTreats.Contains(id)
                 ;
+        }
+
+        public static bool IsLikedTreatPet(int itemId)
+        {
+            return DataLoader.AnimalData.Pet.LikedTreats.Contains(itemId);
         }
 
         public static bool IsLikedTreat(FarmAnimal farmAnimal, int itemId)
@@ -33,23 +38,48 @@ namespace AnimalHusbandryMod.animals
             return GetTreatItem(farmAnimal).LikedTreats.Contains(itemId);
         }
 
+        public static bool IsReadyForTreatPet()
+        {
+            return DaysUntilNextTreatPet() <= 0;
+        }
+
         public static bool IsReadyForTreat(FarmAnimal farmAnimal)
         {
             return DaysUntilNextTreat(farmAnimal) <= 0;
         }
 
+        public static int DaysUntilNextTreatPet()
+        {
+            return DaysUntilNextTreat(AnimalData.PetId, DataLoader.AnimalData.Pet);
+        }
+
         public static int DaysUntilNextTreat(FarmAnimal farmAnimal)
         {
-            if (GetAnimalStatus(farmAnimal).LastDayFeedTreat == null)
+            return DaysUntilNextTreat(farmAnimal.myID, GetTreatItem(farmAnimal));
+        }
+
+        public static int DaysUntilNextTreat(long id, TreatItem treatItem)
+        {
+            if (GetAnimalStatus(id).LastDayFeedTreat == null)
             {
                 return 0;
             }
-            return GetAnimalStatus(farmAnimal).LastDayFeedTreat.DaysSinceStart + GetTreatItem(farmAnimal).MinimumDaysBetweenTreats - SDate.Now().DaysSinceStart;
+            return GetAnimalStatus(id).LastDayFeedTreat.DaysSinceStart + treatItem.MinimumDaysBetweenTreats - SDate.Now().DaysSinceStart;
         }
 
         public static void FeedAnimalTreat(FarmAnimal farmAnimal, Object treat)
         {
-            AnimalStatus animalStatus = GetAnimalStatus(farmAnimal);
+            FeedAnimalTreat(farmAnimal.myID, treat);
+        }
+
+        public static void FeedPetTreat(Object treat)
+        {
+            FeedAnimalTreat(AnimalData.PetId, treat);
+        }
+
+        private static void FeedAnimalTreat(long id, Object treat)
+        {
+            AnimalStatus animalStatus = GetAnimalStatus(id);
             animalStatus.LastDayFeedTreat = SDate.Now();
             if (!animalStatus.FeedTreatsQuantity.ContainsKey(treat.parentSheetIndex))
             {
@@ -58,18 +88,18 @@ namespace AnimalHusbandryMod.animals
             animalStatus.FeedTreatsQuantity[treat.parentSheetIndex]++;
         }
 
-        private static TreatItem GetTreatItem(FarmAnimal farmAnimal)
+        public static TreatItem GetTreatItem(FarmAnimal farmAnimal)
         {
             Animal? foundAnimal = AnimalExtension.GetAnimalFromType(farmAnimal.type);
             return DataLoader.AnimalData.getAnimalItem((Animal)foundAnimal) as TreatItem;
         }
 
-        private static AnimalStatus GetAnimalStatus(FarmAnimal farmAnimal)
+        private static AnimalStatus GetAnimalStatus(long id)
         {
-            AnimalStatus animalStatus = FarmerLoader.FarmerData.AnimalData.Find(s => s.Id == farmAnimal.myID);
+            AnimalStatus animalStatus = FarmerLoader.FarmerData.AnimalData.Find(s => s.Id == id);
             if (animalStatus == null)
             {
-                animalStatus = new AnimalStatus(farmAnimal.myID);
+                animalStatus = new AnimalStatus(id);
                 FarmerLoader.FarmerData.AnimalData.Add(animalStatus);
             }
 

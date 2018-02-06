@@ -8,6 +8,8 @@ namespace AnimalHusbandryMod.animals.data
 {
     public class AnimalData
     {
+        public const long PetId = -10;
+
         public CowItem Cow;
         public PigItem Pig;
         public ChickenItem Chicken;
@@ -15,6 +17,7 @@ namespace AnimalHusbandryMod.animals.data
         public RabbitItem Rabbit;
         public SheepItem Sheep;
         public GoatItem Goat;
+        public PetItem Pet;
 
         public AnimalData()
         {
@@ -25,6 +28,7 @@ namespace AnimalHusbandryMod.animals.data
             Rabbit = new RabbitItem();
             Sheep = new SheepItem();
             Goat = new GoatItem();
+            Pet = new PetItem();
         }
 
         public AnimalItem getAnimalItem(Animal animalEnum)

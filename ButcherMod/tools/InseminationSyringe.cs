@@ -136,9 +136,18 @@ namespace AnimalHusbandryMod.tools
                 }
             }
 
+            
+
             who.Halt();
             int currentFrame = who.FarmerSprite.currentFrame;
-            who.FarmerSprite.animateOnce(287 + who.FacingDirection, 50f, 4);
+            if (this._animal != null)
+            {
+                who.FarmerSprite.animateOnce(287 + who.FacingDirection, 50f, 4);
+            }
+            else
+            {
+                who.FarmerSprite.animateOnce(new FarmerSprite.AnimationFrame[1] { new FarmerSprite.AnimationFrame(currentFrame, 0, false, who.FacingDirection == 3, new AnimatedSprite.endOfAnimationBehavior(StardewValley.Farmer.useTool), true) });
+            }
             who.FarmerSprite.oldFrame = currentFrame;
             who.UsingTool = true;
             who.CanMove = false;            

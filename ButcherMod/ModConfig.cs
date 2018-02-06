@@ -16,6 +16,7 @@ namespace AnimalHusbandryMod
         public bool DisableTomorrowBirthNotification;
         public bool DisablePregnancy;
         public bool DisableMeat;
+        public bool DisableTreats;
         public bool DisableRancherMeatPriceAjust;
 
 
@@ -29,6 +30,7 @@ namespace AnimalHusbandryMod
             this.DisableTomorrowBirthNotification = false;
             this.DisablePregnancy = false;
             this.DisableMeat = false;
+            this.DisableTreats = false;
             this.DisableRancherMeatPriceAjust = false;
         }
     }

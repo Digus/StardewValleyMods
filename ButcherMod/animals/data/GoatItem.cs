@@ -19,7 +19,7 @@ namespace AnimalHusbandryMod.animals.data
             MinimalNumberOfMeat = 3;
             MaximumNumberOfMeat = 8;
             MinimumDaysBetweenTreats = 4;
-            LikedTreats = new int[] { 78, 398, 613, 274 };
+            LikedTreats = new int[] { 78, 398, 613, 274, 436 };
             MinimumDaysUtillBirth = 10;
         }
     }

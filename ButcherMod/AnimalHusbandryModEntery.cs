@@ -58,6 +58,7 @@ namespace AnimalHusbandryMod
 
                 SaveEvents.AfterLoad += DataLoader.ToolsLoader.ReplaceOldTools;
                 SaveEvents.AfterLoad += (x, y) => FarmerLoader.LoadData();
+                SaveEvents.AfterLoad += (x, y) => DataLoader.ToolsLoader.LoadMail();
 
                 TimeEvents.AfterDayStarted += (x, y) => DataLoader.LivingWithTheAnimalsChannel.CheckChannelDay();
 

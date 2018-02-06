@@ -119,7 +119,9 @@ namespace AnimalHusbandryMod.animals
                     Game1.playSound("newRecipe");
                     Game1.playSound("money");
                     Game1.exitActiveMenu();
-
+                    Game1.player.Stamina -= ((float)4f - (float)Game1.player.FarmingLevel * 0.2f);
+                    Game1.player.Stamina -= ((float)4f - (float)Game1.player.FarmingLevel * 0.2f);
+                    Game1.player.gainExperience(0, 5);
                     MeatController.AddItemsToInventoryByMenuIfNecessary(MeatController.CreateMeat(this._farmAnimal));
                 }
                 else

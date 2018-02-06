@@ -97,7 +97,8 @@
 	"Tool.FeedingBasket.ItemConsumed": "Last {{itemName}} Consumed.",
 	"Tool.FeedingBasket.WantsTreatInDays":  "{{animalName}} would love another treat in {{numberOfDays}} days.",
 	"Tool.FeedingBasket.WantsTreatTomorrow":  "{{animalName}} would love a treat tomorrow.",
-	"Tool.FeedingBasket.WantsTreat":  "{{animalName}} would love a treat.",
+	"Tool.FeedingBasket.AlreadyAteTreatToday":  "{{animalName}} already ate a treat today.",
+	"Tool.FeedingBasket.OnlyBabiesCanEatMilk": "Only babies will accept milk as a treat.",
 	"Tool.FeedingBasket.Letter": "Dear Farmer @,^^-Marnie",
 	
 	//Menus
