@@ -321,7 +321,7 @@ namespace AnimalHusbandryMod.tools
                     double professionAjust = 1.0;
                     if (!_animal.isCoopDweller() && who.professions.Contains(3) || _animal.isCoopDweller() && who.professions.Contains(2))
                     {
-                        professionAjust += 0.25;
+                        professionAjust += DataLoader.ModConfig.PercentualAjustOnFriendshipInscreaseFromProfessions;
                     }
                     this._animal.friendshipTowardFarmer = Math.Min(1000, this._animal.friendshipTowardFarmer + (int)Math.Ceiling(professionAjust * this.attachments[0].price * (1.0 + this.attachments[0].quality * 0.25) / (this._animal.price / 1000.0)));
                 }
