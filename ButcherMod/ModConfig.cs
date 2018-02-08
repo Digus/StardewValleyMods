@@ -18,7 +18,10 @@ namespace AnimalHusbandryMod
         public bool DisableMeat;
         public bool DisableTreats;
         public bool DisableRancherMeatPriceAjust;
-
+        public bool DisableMoodInscreseWithTreats;
+        public bool DisableFriendshipInscreseWithTreats;
+        public bool EnableTreatsCountAsAnimalFeed;
+        public double PercentualAjustOnFriendshipInscreaseFromProfessions;
 
         public ModConfig()
         {
@@ -32,6 +35,10 @@ namespace AnimalHusbandryMod
             this.DisableMeat = false;
             this.DisableTreats = false;
             this.DisableRancherMeatPriceAjust = false;
+            this.DisableMoodInscreseWithTreats = false;
+            this.DisableFriendshipInscreseWithTreats = false;
+            this.EnableTreatsCountAsAnimalFeed = false;
+            this.PercentualAjustOnFriendshipInscreaseFromProfessions = 0.25;
         }
     }
 }

@@ -114,7 +114,7 @@ namespace AnimalHusbandryMod.tools
                     Game1.showRedMessage(DataLoader.i18n.Get("Tool.FeedingBasket.Empty"));
                     this._animal = null;
                 }
-                else if (!TreatsController.IsLikedTreat(this._animal, this.attachments[0].parentSheetIndex))
+                else if (!TreatsController.IsLikedTreat(this._animal, this.attachments[0].parentSheetIndex) && !TreatsController.IsLikedTreat(this._animal, this.attachments[0].Category))
                 {
                     dialogue = DataLoader.i18n.Get("Tool.FeedingBasket.NotLikeTreat", new  { itemName = this.attachments[0].DisplayName});
                 }
@@ -161,7 +161,7 @@ namespace AnimalHusbandryMod.tools
                     Game1.showRedMessage(DataLoader.i18n.Get("Tool.FeedingBasket.Empty"));
                     this._pet = null;
                 }
-                else if (!TreatsController.IsLikedTreatPet(this.attachments[0].parentSheetIndex))
+                else if (!TreatsController.IsLikedTreatPet(this.attachments[0].parentSheetIndex) && !TreatsController.IsLikedTreatPet(this.attachments[0].Category))
                 {
                     dialogue = DataLoader.i18n.Get("Tool.FeedingBasket.NotLikeTreat", new { itemName = this.attachments[0].DisplayName });
                 }
@@ -314,13 +314,30 @@ namespace AnimalHusbandryMod.tools
 
             if (this._animal != null)
             {
-
                 this._animal.doEmote(20, true);
-                this._animal.friendshipTowardFarmer = Math.Min(1000, this._animal.friendshipTowardFarmer + (int)Math.Ceiling(this.attachments[0].price * (1.0 + this.attachments[0].quality * 0.25) / (this._animal.price / 1000.0)));
-                this._animal.happiness = byte.MaxValue;
+
+                if (!DataLoader.ModConfig.DisableFriendshipInscreseWithTreats)
+                {
+                    double professionAjust = 1.0;
+                    if (!_animal.isCoopDweller() && who.professions.Contains(3) || _animal.isCoopDweller() && who.professions.Contains(2))
+                    {
+                        professionAjust += 0.25;
+                    }
+                    this._animal.friendshipTowardFarmer = Math.Min(1000, this._animal.friendshipTowardFarmer + (int)Math.Ceiling(professionAjust * this.attachments[0].price * (1.0 + this.attachments[0].quality * 0.25) / (this._animal.price / 1000.0)));
+                }
+                if (!DataLoader.ModConfig.DisableMoodInscreseWithTreats)
+                {
+                    this._animal.happiness = byte.MaxValue;
+                }
+
+                if (DataLoader.ModConfig.EnableTreatsCountAsAnimalFeed)
+                {
+                    this._animal.fullness = byte.MaxValue;
+                }
+
                 TreatsController.FeedAnimalTreat(this._animal, this.attachments[0]);
 
-                if (this.attachments[0].category == StardewValley.Object.MilkCategory)
+                if (this.attachments[0].Category == StardewValley.Object.MilkCategory)
                 {
                     this._animal.age = Math.Min(this._animal.ageWhenMature - 1, this._animal.age + 1);
                 }
@@ -331,14 +348,15 @@ namespace AnimalHusbandryMod.tools
                     Game1.showGlobalMessage(DataLoader.i18n.Get("Tool.FeedingBasket.ItemConsumed", new { itemName = this.attachments[0].DisplayName }));
                     this.attachments[0] = (StardewValley.Object)null;
                 }
-
-
-                this._animal = (FarmAnimal)null;
             }
-            if (this._pet != null)
+            else if (this._pet != null)
             {
                 this._pet.doEmote(20, true);
-                this._pet.friendshipTowardFarmer = Math.Min(Pet.maxFriendship, this._pet.friendshipTowardFarmer + 6);
+
+                if (!DataLoader.ModConfig.DisableFriendshipInscreseWithTreats)
+                {
+                    this._pet.friendshipTowardFarmer = Math.Min(Pet.maxFriendship, this._pet.friendshipTowardFarmer + 6);
+                }
                 TreatsController.FeedPetTreat(this.attachments[0]);
 
                 --this.attachments[0].Stack;
@@ -347,9 +365,9 @@ namespace AnimalHusbandryMod.tools
                     Game1.showGlobalMessage(DataLoader.i18n.Get("Tool.FeedingBasket.ItemConsumed", new { itemName = this.attachments[0].DisplayName }));
                     this.attachments[0] = (StardewValley.Object)null;
                 }
-
-                this._pet = null;
             }
+            this._animal = null;
+            this._pet = null;
 
             if (Game1.activeClickableMenu == null)
             {
@@ -369,6 +387,7 @@ namespace AnimalHusbandryMod.tools
                 || o.category == StardewValley.Object.VegetableCategory 
                 || o.category == StardewValley.Object.FruitsCategory 
                 || TreatsController.IsLikedTreat(o.parentSheetIndex)
+                || TreatsController.IsLikedTreat(o.Category)
                 )
             {
                 return true;
