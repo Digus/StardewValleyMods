@@ -67,7 +67,7 @@ namespace AnimalHusbandryMod
                     TimeEvents.AfterDayStarted += (x, y) => DataLoader.RecipeLoader.MeatFridayChannel.CheckChannelDay();
                 }
 
-                if (_meatCleaverSpawnKey != null || _inseminationSyringeSpawnKey != null)
+                if (_meatCleaverSpawnKey != null || _inseminationSyringeSpawnKey != null || _feedingBasketSpawnKey != null)
                 {
                     ControlEvents.KeyPressed += this.ControlEvents_KeyPress;
                 }

@@ -122,11 +122,11 @@ namespace AnimalHusbandryMod.animals
             {
                 if (DataLoader.ModConfig.DisableMeat)
                 {
-                    text = text.Split()[1];
+                    text = text.Split('|')[1];
                 }
                 else
                 {
-                    text = text.Split()[0];
+                    text = text.Split('|')[0];
                 }
             }
             CustomTVMod.showProgram(showSprite, text, CustomTVMod.endProgram);
