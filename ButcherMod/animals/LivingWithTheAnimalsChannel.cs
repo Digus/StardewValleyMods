@@ -15,7 +15,7 @@ namespace AnimalHusbandryMod.animals
 {
     public class LivingWithTheAnimalsChannel
     {
-        private TemporaryAnimatedSprite showSprite;
+        private TemporaryAnimatedSprite _showSprite;
 
         private readonly Dictionary<int, Episode> _episodes;
         public static readonly string LivingWithTheAnimals = "LivingWithTheAnimals";
@@ -54,7 +54,7 @@ namespace AnimalHusbandryMod.animals
             //WINTER 1
             /*02*/
             /*06*/
-            /*09*/_episodes.Add(27, new Episode("TV.LivingWithTheAnimals.Episode.AnimalProductQuality", false, false, false));
+            /*09*/_episodes.Add(27, new Episode("TV.LivingWithTheAnimals.Episode.ProfessionAnimalProductQuality", false, false, false));
             /*13*/
             /*16*/_episodes.Add(29, new Episode("TV.LivingWithTheAnimals.Episode.RabbitPregnancy", false, true, false));
             /*20*/
@@ -83,9 +83,9 @@ namespace AnimalHusbandryMod.animals
             /*06*/
             /*09*/_episodes.Add(51, new Episode("TV.LivingWithTheAnimals.Episode.Artichoke ", false, false, true));
             /*13*/_episodes.Add(52, new Episode("TV.LivingWithTheAnimals.Episode.Pumpkin ", false, false, true));
-            /*16*/
+            /*16*/_episodes.Add(53, new Episode("TV.LivingWithTheAnimals.Episode.PigsWinterPart1", false, true, false));
             /*20*/
-            /*23*/_episodes.Add(55, new Episode("TV.LivingWithTheAnimals.Episode.PigsWinterPart1", false, true, false));
+            /*23*/
             /*27*/_episodes.Add(56, new Episode("TV.LivingWithTheAnimals.Episode.PigWinterPart2", false, true, false));
             // WINTER 2
             /*02*/_episodes.Add(57, new Episode("TV.LivingWithTheAnimals.Episode.PigWinterPart3", false, true, true));
@@ -133,8 +133,8 @@ namespace AnimalHusbandryMod.animals
 
         private void ShowAnnouncement(TV tv, TemporaryAnimatedSprite sprite, StardewValley.Farmer farmer, string answer)
         {
-            showSprite = new TemporaryAnimatedSprite(DataLoader.LooseSprites, new Rectangle(0, 0, 42, 28), 150f, 2, 999999, tv.getScreenPosition(), false, false, (float)((double)(tv.boundingBox.Bottom - 1) / 10000.0 + 9.99999974737875E-06), 0.0f, Color.White, tv.getScreenSizeModifier(), 0.0f, 0.0f, 0.0f, false);
-            CustomTVMod.showProgram(showSprite, DataLoader.i18n.Get("TV.LivingWithTheAnimals.Announcement"), ShowPresentation);
+            _showSprite = new TemporaryAnimatedSprite(DataLoader.LooseSprites, new Rectangle(0, 0, 42, 28), 150f, 2, 999999, tv.getScreenPosition(), false, false, (float)((double)(tv.boundingBox.Bottom - 1) / 10000.0 + 9.99999974737875E-06), 0.0f, Color.White, tv.getScreenSizeModifier(), 0.0f, 0.0f, 0.0f, false);
+            CustomTVMod.showProgram(_showSprite, DataLoader.i18n.Get("TV.LivingWithTheAnimals.Announcement"), ShowPresentation);
         }
 
         private void ShowPresentation()
@@ -151,7 +151,7 @@ namespace AnimalHusbandryMod.animals
                     text = text.Split('|')[0];
                 }
             }
-            CustomTVMod.showProgram(showSprite, text, CustomTVMod.endProgram);
+            CustomTVMod.showProgram(_showSprite, text, CustomTVMod.endProgram);
         }
     }
 
