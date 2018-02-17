@@ -173,9 +173,10 @@ namespace AnimalHusbandryMod.tools
                 meatCleaverText = DataLoader.i18n.Get("Tool.MeatCleaver.Letter");
             }
 
-            bool MeatCleaverCondition(Letter l)
+
+            bool HasAnimal()
             {
-                bool hasAnimal = Game1.locations.Exists((location) =>
+                return Game1.locations.Exists((location) =>
                 {
                     if (location is Farm farm)
                     {
@@ -183,46 +184,11 @@ namespace AnimalHusbandryMod.tools
                     }
                     return false;
                 });
-                bool hasMeatCleaver = Game1.player.items.Exists(i => i is MeatCleaver);
-                hasMeatCleaver |= Game1.locations.Exists((location) =>
-                {
-                    if (location.objects.Values.ToList()
-                        .Exists((o) =>
-                        {
-                            if (o is Chest chest)
-                            {
-                                return chest.items.Exists((ci) => ci is MeatCleaver);
-                            }
-                            return false;
-                        }))
-                    {
-                        return true;
-                    }
-                    if (location is BuildableGameLocation bgl)
-                    {
-                        return bgl.buildings.Exists(((b) =>
-                        {
-                            if (b.indoors is GameLocation gl)
-                            {
-                                if (gl.objects.Values.ToList()
-                                    .Exists((o) =>
-                                    {
-                                        if (o is Chest chest)
-                                        {
-                                            return chest.items.Exists((ci) => ci is MeatCleaver);
-                                        }
-                                        return false;
-                                    }))
-                                {
-                                    return true;
-                                }
-                            }
-                            return false;
-                        }));
-                    }
-                    return false;
-                });
-                return hasAnimal && !hasMeatCleaver;
+            }
+
+            bool MeatCleaverCondition(Letter l)
+            {
+                return HasAnimal() && !HasTool(typeof(MeatCleaver));
             }
 
             List<string> validBuildingsForInsemination = new List<string>(new string[] { "Deluxe Barn", "Big Barn", "Deluxe Coop" });
@@ -240,46 +206,20 @@ namespace AnimalHusbandryMod.tools
                     }
                     return false;
                 });
-                bool hasInseminationSyringe = Game1.player.items.Exists(i => i is InseminationSyringe);
-                hasInseminationSyringe |= Game1.locations.Exists((location) =>
-                {
-                    if (location.objects.Values.ToList()
-                        .Exists((o) =>
-                        {
-                            if (o is Chest chest)
-                            {
-                                return chest.items.Exists((ci) => ci is InseminationSyringe);
-                            }
-                            return false;
-                        }))
-                    {
-                        return true;
-                    }
-                    if (location is BuildableGameLocation bgl)
-                    {
-                        return bgl.buildings.Exists(((b) =>
-                        {
-                            if (b.indoors is GameLocation gl)
-                            {
-                                if (gl.objects.Values.ToList()
-                                    .Exists((o) =>
-                                    {
-                                        if (o is Chest chest)
-                                        {
-                                            return chest.items.Exists((ci) => ci is InseminationSyringe);
-                                        }
-                                        return false;
-                                    }))
-                                {
-                                    return true;
-                                }
-                            }
-                            return false;
-                        }));
-                    }
-                    return false;
-                });
-                return hasAnimalInValidBuildings && !hasInseminationSyringe;
+               
+                return hasAnimalInValidBuildings && !HasTool(typeof(InseminationSyringe));
+            }
+
+            bool FeedingBasketCondition(Letter l)
+            {
+
+                return !Game1.player.mailReceived.Contains("feedingBasket") && Game1.player.getFriendshipHeartLevelForNPC("Marnie") >= 2 && (Game1.player.hasPet() || HasAnimal());
+            }
+
+            bool FeedingBasketRedeliveryCondition(Letter l)
+            {
+                
+                return Game1.player.mailReceived.Contains("feedingBasket") && !HasTool(typeof(FeedingBasket)) && Game1.player.getFriendshipHeartLevelForNPC("Marnie") >= 6;
             }
 
             if (!DataLoader.ModConfig.DisableMeat)
@@ -294,9 +234,71 @@ namespace AnimalHusbandryMod.tools
 
             if (!DataLoader.ModConfig.DisableTreats)
             {
-                MailDao.SaveLetter(new Letter("feedingBasket", DataLoader.i18n.Get("Tool.FeedingBasket.Letter"),
-                    new List<Item> {new FeedingBasket()}, (l) => true));
+                MailDao.SaveLetter
+                (
+                    new Letter
+                    (
+                        "feedingBasket",
+                        DataLoader.i18n.Get("Tool.FeedingBasket.Letter"),
+                        new List<Item> {new FeedingBasket()},
+                        FeedingBasketCondition,
+                        (l)=> Game1.player.mailReceived.Add(l.Id)
+                    )
+                );
+                MailDao.SaveLetter
+                (
+                    new Letter
+                    (
+                        "feedingBasketRedelivery",
+                        DataLoader.i18n.Get("Tool.FeedingBasket.LetterRedelivery"),
+                        new List<Item> { new FeedingBasket() },
+                        FeedingBasketRedeliveryCondition
+                    )
+                );
             }
+        }
+
+        private bool HasTool(Type toolClass)
+        {
+            bool hasInInventory = Game1.player.items.Exists(toolClass.IsInstanceOfType);
+            return hasInInventory || Game1.locations.Exists((location) =>
+            {
+                if (location.objects.Values.ToList()
+                    .Exists((o) =>
+                    {
+                        if (o is Chest chest)
+                        {
+                            return chest.items.Exists(toolClass.IsInstanceOfType);
+                        }
+                        return false;
+                    }))
+                {
+                    return true;
+                }
+                if (location is BuildableGameLocation bgl)
+                {
+                    return bgl.buildings.Exists(((b) =>
+                    {
+                        if (b.indoors is GameLocation gl)
+                        {
+                            if (gl.objects.Values.ToList()
+                                .Exists((o) =>
+                                {
+                                    if (o is Chest chest)
+                                    {
+                                        return chest.items.Exists(toolClass.IsInstanceOfType);
+                                    }
+                                    return false;
+                                }))
+                            {
+                                return true;
+                            }
+                        }
+                        return false;
+                    }));
+                }
+                return false;
+            });
         }
     }
 }

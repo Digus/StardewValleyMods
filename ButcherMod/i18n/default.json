@@ -140,7 +140,8 @@
 	"Tool.FeedingBasket.WantsTreatTomorrow":  "{{animalName}} would love a treat tomorrow.",
 	"Tool.FeedingBasket.AlreadyAteTreatToday":  "{{animalName}} already ate a treat today.",
 	"Tool.FeedingBasket.OnlyBabiesCanEatMilk": "Only babies will accept milk as a treat.",
-	"Tool.FeedingBasket.Letter": "Dear Farmer @,^^-Marnie",
+	"Tool.FeedingBasket.Letter": "Dear @,^Since we're becoming friends, I made this feeding basket specially for you. You can use it to give treats to your animals. ^Farm animals won't accept a treat everyday, but if you take a closer look at them, you'll know when they want more. ^Taking care of animals is no easy task, but this will help you win their heart. ^   -Marnie",
+	"Tool.FeedingBasket.LetterRedelivery": "Dear @,^I heard you lost your feeding basket. You should take better care of your tools. ^I was making this one for a good customer, but since you are a great friend, I will give it to you as a replacement. ^Be more careful this time. ^   -Marnie",
 	
 	//Menus
 	"Menu.AnimalQueryMenu.PregnancyBuildingLimit": "That building has no room for a pregnant animal.",
