@@ -232,6 +232,10 @@ namespace AnimalHusbandryMod.tools
                 MailDao.SaveLetter(new Letter("inseminationSyringe", DataLoader.i18n.Get("Tool.InseminationSyringe.Letter"), new List<Item> { new InseminationSyringe() }, InseminationSyringeCondition));
             }
 
+
+            MailDao.SaveLetter(new Letter("participantRibbon", DataLoader.i18n.Get("Tool.ParticipantRibbon.Letter"), new List<Item> { new ParticipantRibbon() }, (l)=> true));
+
+
             if (!DataLoader.ModConfig.DisableTreats)
             {
                 MailDao.SaveLetter

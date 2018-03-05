@@ -27,7 +27,7 @@ namespace AnimalHusbandryMod.tools
 
         public FeedingBasket() : base()
         {
-            this.name = "Insemination Syringe";
+            this.name = "Feeding Basket";
             this.initialParentTileIndex = InitialParentTileIndex;
             this.indexOfMenuItemView = IndexOfMenuItemView;
             this.stackable = false;

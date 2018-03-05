@@ -42,6 +42,8 @@ namespace AnimalHusbandryMod.common
 
             var editors = Helper.Content.AssetEditors;
 
+            editors.Add(new EventsLoader());
+
             if (!ModConfig.DisableMeat)
             {               
                 editors.Add(this);

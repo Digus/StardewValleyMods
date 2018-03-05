@@ -16,6 +16,7 @@ using StardewValley.Buildings;
 using StardewValley.Menus;
 using Harmony;
 using AnimalHusbandryMod.animals;
+using AnimalHusbandryMod.common;
 using AnimalHusbandryMod.farmer;
 using AnimalHusbandryMod.tools;
 using AnimalHusbandryMod.meats;
@@ -86,13 +87,17 @@ namespace AnimalHusbandryMod
                     }
                 };
 
+                var harmony = HarmonyInstance.Create("Digus.AnimalHusbandryMod");
                 if (!DataLoader.ModConfig.DisableRancherMeatPriceAjust)
                 {
-                    var harmony = HarmonyInstance.Create("Digus.AnimalHusbandryMod");
                     var sellToStorePrice = typeof(StardewValley.Object).GetMethod("sellToStorePrice");
-                    var prefix = typeof(MeatPriceOverrides).GetMethod("sellToStorePrice");
-                    harmony.Patch(sellToStorePrice, new HarmonyMethod(prefix), null);
+                    var sellToStorePricePrefix = typeof(MeatPriceOverrides).GetMethod("sellToStorePrice");
+                    harmony.Patch(sellToStorePrice, new HarmonyMethod(sellToStorePricePrefix), null);
                 }
+                //var addSpecificTemporarySprite = typeof(Event).GetMethod("addSpecificTemporarySprite");
+                var addSpecificTemporarySprite = this.Helper.Reflection.GetMethod(new Event(), "addSpecificTemporarySprite").MethodInfo;
+                var addSpecificTemporarySpritePostfix = typeof(EventsOverrides).GetMethod("addSpecificTemporarySprite");
+                harmony.Patch(addSpecificTemporarySprite, null, new HarmonyMethod(addSpecificTemporarySpritePostfix));
             }
         }
 

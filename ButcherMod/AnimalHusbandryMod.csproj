@@ -60,7 +60,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="animals\Animal.cs" />
+    <Compile Include="animals\AnimalContestController.cs" />
     <Compile Include="animals\AnimalStatus.cs" />
+    <Compile Include="animals\AnimalStatusController.cs" />
     <Compile Include="animals\data\AnimalBuildingData.cs" />
     <Compile Include="animals\data\AnimalData.cs" />
     <Compile Include="animals\data\AnimalItem.cs" />
@@ -76,6 +78,7 @@
     <Compile Include="animals\data\PetItem.cs" />
     <Compile Include="animals\data\PigItem.cs" />
     <Compile Include="animals\data\TreatItem.cs" />
+    <Compile Include="animals\EventsLoader.cs" />
     <Compile Include="animals\LivingWithTheAnimalsChannel.cs" />
     <Compile Include="animals\MeatController.cs" />
     <Compile Include="animals\PregnancyController.cs" />
@@ -83,6 +86,7 @@
     <Compile Include="animals\data\SheepItem.cs" />
     <Compile Include="animals\data\WoolAnimalItem.cs" />
     <Compile Include="animals\TreatsController.cs" />
+    <Compile Include="common\EventOverrides.cs" />
     <Compile Include="meats\MeatPriceOverrides.cs" />
     <Compile Include="ModConfig.cs" />
     <Compile Include="animals\data\RabbitItem.cs" />
@@ -100,6 +104,7 @@
     <Compile Include="recipes\RecipesLoader.cs" />
     <Compile Include="farmer\FarmerLoader.cs" />
     <Compile Include="farmer\FarmerData.cs" />
+    <Compile Include="tools\ParticipantRibbon.cs" />
     <Compile Include="tools\FeedingBasket.cs" />
     <Compile Include="tools\InseminationSyringe.cs" />
     <Compile Include="tools\MeatCleaver.cs" />

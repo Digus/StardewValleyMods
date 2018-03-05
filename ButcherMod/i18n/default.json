@@ -142,6 +142,12 @@
 	"Tool.FeedingBasket.OnlyBabiesCanEatMilk": "Only babies will accept milk as a treat.",
 	"Tool.FeedingBasket.Letter": "Dear @,^Since we're becoming friends, I made this feeding basket specially for you. You can use it to give treats to your animals. ^Farm animals won't accept a treat everyday, but if you take a closer look at them, you'll know when they want more. ^Taking care of animals is no easy task, but this will help you win their heart. ^   -Marnie",
 	"Tool.FeedingBasket.LetterRedelivery": "Dear @,^I heard you lost your feeding basket. You should take better care of your tools. ^I was making this one for a good customer, but since you are a great friend, I will give it to you as a replacement. ^Be more careful this time. ^   -Marnie",
+
+	"Tool.ParticipantRibbon.Name": "Participant Ribbon",
+	"Tool.ParticipantRibbon.Description": "Use this to choose an animal for the next contest.",
+	"Tool.ParticipantRibbon.CantBeBaby": "Babies can't participate in an animal contest.",
+	"Tool.ParticipantRibbon.HasAlreadyParticipatedContest": "{{animalName}} has already participated in the animal contest.",
+	"Tool.ParticipantRibbon.Letter": "Dear @,^Tomorrow we're having our {{season}} Animal Contest in the town square.^^If you want to participate, place this ribbon on one of your animals today and I'll bring it to the event tomorrow!^We'll choose the most well treated animal of Stardew Valley.^You can participate with your pet, but farm animals have more chance of winning.^Come to town before 9 AM if want to participate or just watch.^   -Mayor Lewis",
 	
 	//Menus
 	"Menu.AnimalQueryMenu.PregnancyBuildingLimit": "That building has no room for a pregnant animal.",
@@ -150,5 +156,9 @@
 	"Menu.AnimalQueryMenu.WantsTreat":  "It would love a treat now.",
 	"Menu.AnimalQueryMenu.WantsTreatTomorrow":  "It'll want a treat tomorrow.",
 	"Menu.AnimalQueryMenu.WantsTreatInDays":  "It'll want a treat in {{numberOfDays}} days.",
-	"Menu.AnimalQueryMenu.ExchangeAnimalForMeat":  "Exchange for meat."
+	"Menu.AnimalQueryMenu.ExchangeAnimalForMeat":  "Exchange for meat.",
+	"Menu.AnimalQueryMenu.Winner": "Winner of {{contestDate}}",
+	"Menu.AnimalQueryMenu.ContestParticipant": "Participant of {{contestDate}}",
+	"Menu.AnimalQueryMenu.ChangeParticipant": "Get Ribbon Back."
+
 }

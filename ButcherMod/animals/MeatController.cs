@@ -12,7 +12,7 @@ using Object = StardewValley.Object;
 
 namespace AnimalHusbandryMod.animals
 {
-    public class MeatController
+    public class MeatController : AnimalStatusController
     {
         public static List<Item> CreateMeat(FarmAnimal farmAnimal)
         {
@@ -185,6 +185,12 @@ namespace AnimalHusbandryMod.animals
 
         private static int ProduceQuality(Random random, FarmAnimal farmAnimal)
         {
+            AnimalStatus animalStatus = GetAnimalStatus(farmAnimal.myID);
+            if (animalStatus.HasWon??false)
+            {
+                return 4;
+            }
+
             double chance = (double)farmAnimal.friendshipTowardFarmer / 1000.0 - (1.0 - (double)farmAnimal.happiness / 225.0);
             if (!farmAnimal.isCoopDweller() && Game1.getFarmer(farmAnimal.ownerID).professions.Contains(3) ||
                 farmAnimal.isCoopDweller() && Game1.getFarmer(farmAnimal.ownerID).professions.Contains(2))

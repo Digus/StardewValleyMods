@@ -12,7 +12,7 @@ using Object = StardewValley.Object;
 
 namespace AnimalHusbandryMod.animals
 {
-    public class TreatsController
+    public class TreatsController : AnimalStatusController
     {
         public static bool IsLikedTreat(int id)
         {
@@ -34,7 +34,6 @@ namespace AnimalHusbandryMod.animals
 
         public static bool IsLikedTreat(FarmAnimal farmAnimal, int itemId)
         {
-            
             return GetTreatItem(farmAnimal).LikedTreats.Contains(itemId);
         }
 
@@ -92,18 +91,6 @@ namespace AnimalHusbandryMod.animals
         {
             Animal? foundAnimal = AnimalExtension.GetAnimalFromType(farmAnimal.type);
             return DataLoader.AnimalData.getAnimalItem((Animal)foundAnimal) as TreatItem;
-        }
-
-        private static AnimalStatus GetAnimalStatus(long id)
-        {
-            AnimalStatus animalStatus = FarmerLoader.FarmerData.AnimalData.Find(s => s.Id == id);
-            if (animalStatus == null)
-            {
-                animalStatus = new AnimalStatus(id);
-                FarmerLoader.FarmerData.AnimalData.Add(animalStatus);
-            }
-
-            return animalStatus;
         }
 
     }
