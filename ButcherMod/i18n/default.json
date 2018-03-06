@@ -129,6 +129,7 @@
 	"Tool.InseminationSyringe.BirthsTomorrow": "{{animalNames}} can give birth tomorrow. Make sure you have room for the babies" ,
 	"Tool.InseminationSyringe.ItemConsumed": "Last {{itemName}} Consumed.",
 	"Tool.InseminationSyringe.EggAnimal": "{{animalName}} can't be inseminated. You can place its egg on an incubator.",
+	"Tool.InseminationSyringe.CantBeInseminated": "{{animalName}} can't be inseminated.",
 	"Tool.InseminationSyringe.Letter": "Dear Farmer @,^^    We know you own a farm building capable of supporting pregnant animals.^    On our effort to solve the infertility problem of animals here, we invented a device to impregnate them using the products they produce.^    Unfortunately, it did not work for us. But it should work well in your world.^^^    We are giving it to you, in the hope that once you can control their reproduction, you will send us more animals.^    Barns can support a limited amount of pregnant animals depending on its size, but coops can support as many pregnant rabbits as it can fit.^    But make sure you always have room for the new borns before birth.^    Good luck with your new tool!^    -Your interdimensional friend",
 	
 	"Tool.FeedingBasket.Name": "Feeding Basket",

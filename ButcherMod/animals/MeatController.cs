@@ -14,6 +14,26 @@ namespace AnimalHusbandryMod.animals
 {
     public class MeatController
     {
+        public static bool CanGetMeatFrom(FarmAnimal farmAnimal)
+        {
+            try
+            {
+                return GetAnimalItem(farmAnimal) != null;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+        }
+
+        public static AnimalItem GetAnimalItem(FarmAnimal farmAnimal)
+        {
+            List<Item> itemsToReturn = new List<Item>();
+
+            Animal? foundAnimal = AnimalExtension.GetAnimalFromType(farmAnimal.type);
+            return DataLoader.AnimalData.getAnimalItem((Animal)foundAnimal);
+        }
+
         public static List<Item> CreateMeat(FarmAnimal farmAnimal)
         {
             List<Item> itemsToReturn = new List<Item>();

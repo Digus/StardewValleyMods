@@ -42,22 +42,35 @@ namespace AnimalHusbandryMod.animals
                     pregnantStatus = new ClickableTextureComponent(
                         new Microsoft.Xna.Framework.Rectangle(
                             this.xPositionOnScreen + AnimalQueryMenu.width + Game1.pixelZoom * 3,
-                            this.yPositionOnScreen + AnimalQueryMenu.height - Game1.tileSize * 2 -
-                            IClickableMenu.borderWidth + Game1.pixelZoom, Game1.pixelZoom * 11, Game1.pixelZoom * 11),
-                        DataLoader.LooseSprites, new Microsoft.Xna.Framework.Rectangle(34, 29, 11, 11), 4f, false);
+                            this.yPositionOnScreen + AnimalQueryMenu.height - Game1.tileSize * 2 - IClickableMenu.borderWidth + Game1.pixelZoom,
+                            Game1.pixelZoom * 11, Game1.pixelZoom * 11), DataLoader.LooseSprites,
+                        new Microsoft.Xna.Framework.Rectangle(34, 29, 11, 11), 4f, false);
                 }
             }
 
-            if (TreatsController.IsReadyForTreat(farmAnimal))
+            if (!DataLoader.ModConfig.DisableTreats && TreatsController.CanReceiveTreat(farmAnimal))
             {
-                treatStatus = new ClickableTextureComponent(new Microsoft.Xna.Framework.Rectangle(this.xPositionOnScreen + AnimalQueryMenu.width + Game1.tileSize + 4, this.yPositionOnScreen + AnimalQueryMenu.height - Game1.tileSize * 2 - IClickableMenu.borderWidth, Game1.tileSize, Game1.tileSize), DataLoader.ToolsSprites, new Microsoft.Xna.Framework.Rectangle(240, 0, 16, 16), 4f, false);
-            }
-            else
-            {
-                treatStatus = new ClickableTextureComponent(new Microsoft.Xna.Framework.Rectangle(this.xPositionOnScreen + AnimalQueryMenu.width + Game1.tileSize + 4, this.yPositionOnScreen + AnimalQueryMenu.height - Game1.tileSize * 2 - IClickableMenu.borderWidth, Game1.tileSize, Game1.tileSize), DataLoader.LooseSprites, new Microsoft.Xna.Framework.Rectangle(16, 28, 16, 16), 4f, false);
+                if (TreatsController.IsReadyForTreat(farmAnimal))
+                {
+                    treatStatus = new ClickableTextureComponent(
+                        new Microsoft.Xna.Framework.Rectangle(
+                            this.xPositionOnScreen + AnimalQueryMenu.width + Game1.tileSize + 4,
+                            this.yPositionOnScreen + AnimalQueryMenu.height - Game1.tileSize * 2 - IClickableMenu.borderWidth,
+                            Game1.tileSize, Game1.tileSize), DataLoader.ToolsSprites,
+                        new Microsoft.Xna.Framework.Rectangle(240, 0, 16, 16), 4f, false);
+                }
+                else
+                {
+                    treatStatus = new ClickableTextureComponent(
+                        new Microsoft.Xna.Framework.Rectangle(
+                            this.xPositionOnScreen + AnimalQueryMenu.width + Game1.tileSize + 4,
+                            this.yPositionOnScreen + AnimalQueryMenu.height - Game1.tileSize * 2 - IClickableMenu.borderWidth,
+                            Game1.tileSize, Game1.tileSize), DataLoader.LooseSprites,
+                        new Microsoft.Xna.Framework.Rectangle(16, 28, 16, 16), 4f, false);
+                }
             }
 
-            if (!DataLoader.ModConfig.DisableMeat)
+            if (!DataLoader.ModConfig.DisableMeat && MeatController.CanGetMeatFrom(farmAnimal))
             {
                 if (!this._farmAnimal.isBaby())
                 {

@@ -91,6 +91,10 @@ namespace AnimalHusbandryMod.tools
                     Game1.showRedMessage(DataLoader.i18n.Get("Tool.InseminationSyringe.Empty"));
                     this._animal = null;
                 }
+                else if (AnimalExtension.GetAnimalFromType(this._animal.type) ==  null)
+                {
+                    dialogue = DataLoader.i18n.Get("Tool.InseminationSyringe.CantBeInseminated", new { animalName = this._animal.displayName });
+                }
                 else if (IsEggAnimal(this._animal))
                 {
                     dialogue = DataLoader.i18n.Get("Tool.InseminationSyringe.EggAnimal", new { animalName = this._animal.displayName });
@@ -123,8 +127,11 @@ namespace AnimalHusbandryMod.tools
                 else
                 {
                     this._animal.doEmote(16, true);
-                    Cue animalSound = Game1.soundBank.GetCue(this._animal.sound);  
-                    animalSound.Play();
+                    if (this._animal.sound != null)
+                    {
+                        Cue animalSound = Game1.soundBank.GetCue(this._animal.sound);
+                        animalSound.Play();
+                    }
                     DelayedAction.playSoundAfterDelay("fishingRodBend", 300);
                     DelayedAction.playSoundAfterDelay("fishingRodBend", 1200);
                     this._animal.pauseTimer = 1500;

@@ -14,6 +14,18 @@ namespace AnimalHusbandryMod.animals
 {
     public class TreatsController
     {
+        public static bool CanReceiveTreat(FarmAnimal farmAnimal)
+        {
+            try
+            {
+                return GetTreatItem(farmAnimal) != null;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+        }
+
         public static bool IsLikedTreat(int id)
         {
             return DataLoader.AnimalData.Chicken.LikedTreats.Contains(id)
@@ -34,8 +46,14 @@ namespace AnimalHusbandryMod.animals
 
         public static bool IsLikedTreat(FarmAnimal farmAnimal, int itemId)
         {
-            
-            return GetTreatItem(farmAnimal).LikedTreats.Contains(itemId);
+            try
+            {
+                return GetTreatItem(farmAnimal).LikedTreats.Contains(itemId);
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
         }
 
         public static bool IsReadyForTreatPet()
@@ -55,7 +73,14 @@ namespace AnimalHusbandryMod.animals
 
         public static int DaysUntilNextTreat(FarmAnimal farmAnimal)
         {
-            return DaysUntilNextTreat(farmAnimal.myID, GetTreatItem(farmAnimal));
+            try
+            {
+                return DaysUntilNextTreat(farmAnimal.myID, GetTreatItem(farmAnimal));
+            }
+            catch (Exception e)
+            {
+                return 0;
+            }
         }
 
         public static int DaysUntilNextTreat(long id, TreatItem treatItem)

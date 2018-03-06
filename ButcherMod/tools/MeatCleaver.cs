@@ -75,16 +75,20 @@ namespace AnimalHusbandryMod.tools
                                 Microsoft.Xna.Framework.Audio.Cue hurtSound;
                                 if (!DataLoader.ModConfig.Softmode)
                                 {
-                                    hurtSound = Game1.soundBank.GetCue(farmAnimal.sound);
-                                    hurtSound.SetVariable("Pitch", 1800);
+                                    if (farmAnimal.sound != null)
+                                    {
+                                        hurtSound = Game1.soundBank.GetCue(farmAnimal.sound);
+                                        hurtSound.SetVariable("Pitch", 1800);
+                                        hurtSound.Play();
+                                    }
                                 }
                                 else
                                 {
                                     hurtSound = Game1.soundBank.GetCue("toolCharge");
                                     hurtSound.SetVariable("Pitch", 5000f);
+                                    hurtSound.Play();
                                 }
-
-                                hurtSound.Play();
+                                
                                 break;
                             }
                         }
@@ -104,19 +108,25 @@ namespace AnimalHusbandryMod.tools
                             else
                             {
                                 this._tempAnimal = farmAnimal;
+                                
                                 Microsoft.Xna.Framework.Audio.Cue hurtSound;
                                 if (!DataLoader.ModConfig.Softmode)
                                 {
-                                    hurtSound = Game1.soundBank.GetCue(farmAnimal.sound);
-                                    hurtSound.SetVariable("Pitch", 1800);
+                                    if (farmAnimal.sound != null)
+                                    {
+                                        hurtSound = Game1.soundBank.GetCue(farmAnimal.sound);
+                                        hurtSound.SetVariable("Pitch", 1800);
+                                        hurtSound.Play();
+                                    }
                                 }
                                 else
                                 {
                                     hurtSound = Game1.soundBank.GetCue("toolCharge");
                                     hurtSound.SetVariable("Pitch", 5000f);
+                                    hurtSound.Play();
                                 }
 
-                                hurtSound.Play();
+                                
                                 break;
                             }
                         }

@@ -184,7 +184,7 @@ namespace AnimalHusbandryMod.common
             string key = "Universal_" + taste;
             string valuesToAdd = values
                 .Where(v => !data[key].Contains(v))
-                .Aggregate((workingSentence,next)=> workingSentence + " " + next);
+                .Aggregate(string.Empty, (workingSentence,next)=> workingSentence + " " + next);
             if (valuesToAdd.Length > 0)
             {
                 data[key] += " " + valuesToAdd;
@@ -195,7 +195,7 @@ namespace AnimalHusbandryMod.common
         {
             string[] tastes = data[npc].Split('/');
             string currentValues = tastes[(int)taste];
-            string valuesToAdd = values.Where(v => !currentValues.Contains(v)).Aggregate((workingSentence, next) => workingSentence + " " + next);
+            string valuesToAdd = values.Where(v => !currentValues.Contains(v)).Aggregate(string.Empty, (workingSentence, next) => workingSentence + " " + next);
             if (valuesToAdd.Length > 0)
             {
                 currentValues += " " + valuesToAdd;

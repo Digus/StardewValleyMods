@@ -114,6 +114,10 @@ namespace AnimalHusbandryMod.tools
                     Game1.showRedMessage(DataLoader.i18n.Get("Tool.FeedingBasket.Empty"));
                     this._animal = null;
                 }
+                else if (!TreatsController.CanReceiveTreat(this._animal))
+                {
+                    dialogue = DataLoader.i18n.Get("Tool.FeedingBasket.NotLikeTreat", new { itemName = this.attachments[0].DisplayName });
+                }
                 else if (!TreatsController.IsLikedTreat(this._animal, this.attachments[0].parentSheetIndex) && !TreatsController.IsLikedTreat(this._animal, this.attachments[0].Category))
                 {
                     dialogue = DataLoader.i18n.Get("Tool.FeedingBasket.NotLikeTreat", new  { itemName = this.attachments[0].DisplayName});
@@ -124,7 +128,7 @@ namespace AnimalHusbandryMod.tools
                 }
                 else if (!TreatsController.IsReadyForTreat(this._animal))
                 {
-                    if (TreatsController.GetTreatItem(this._animal).MinimumDaysBetweenTreats == 1)
+                    if (TreatsController.GetTreatItem(this._animal)?.MinimumDaysBetweenTreats == 1)
                     {
                         dialogue = DataLoader.i18n.Get("Tool.FeedingBasket.AlreadyAteTreatToday", new { animalName = this._pet.displayName });
                     }
