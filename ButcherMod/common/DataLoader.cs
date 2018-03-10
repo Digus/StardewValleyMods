@@ -184,12 +184,14 @@ namespace AnimalHusbandryMod.common
         private static void AddUniversalGiftTaste(IDictionary<string, string> data, Taste taste, params string[] values)
         {
             string key = "Universal_" + taste;
+            string currentValues = data[key];
             string valuesToAdd = values
-                .Where(v => !data[key].Contains(v))
+                .Where(v => !currentValues.Contains(v))
                 .Aggregate(string.Empty, (workingSentence,next)=> workingSentence + " " + next);
             if (valuesToAdd.Length > 0)
             {
-                data[key] += " " + valuesToAdd;
+                currentValues += valuesToAdd;
+                data[key] = currentValues.Trim();
             }
         }
 
@@ -200,8 +202,8 @@ namespace AnimalHusbandryMod.common
             string valuesToAdd = values.Where(v => !currentValues.Contains(v)).Aggregate(string.Empty, (workingSentence, next) => workingSentence + " " + next);
             if (valuesToAdd.Length > 0)
             {
-                currentValues += " " + valuesToAdd;
-                tastes[(int)taste] = currentValues;
+                currentValues += valuesToAdd;
+                tastes[(int)taste] = currentValues.Trim();
                 data[npc] = String.Join("/",tastes);
             }
         }
