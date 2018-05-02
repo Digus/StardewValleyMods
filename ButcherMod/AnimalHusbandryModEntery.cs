@@ -15,11 +15,11 @@ using StardewValley;
 using StardewValley.Buildings;
 using StardewValley.Menus;
 using Harmony;
-using AnimalHusbandryMod.animals;
 using AnimalHusbandryMod.common;
 using AnimalHusbandryMod.farmer;
 using AnimalHusbandryMod.tools;
 using AnimalHusbandryMod.meats;
+using StardewValley.Characters;
 using DataLoader = AnimalHusbandryMod.common.DataLoader;
 
 namespace AnimalHusbandryMod
@@ -63,6 +63,8 @@ namespace AnimalHusbandryMod
 
                 TimeEvents.AfterDayStarted += (x, y) => DataLoader.LivingWithTheAnimalsChannel.CheckChannelDay();
 
+                TimeEvents.AfterDayStarted += (x, y) => EventsLoader.CheckEventDay();
+
                 if (!DataLoader.ModConfig.DisableMeat)
                 {
                     TimeEvents.AfterDayStarted += (x, y) => DataLoader.RecipeLoader.MeatFridayChannel.CheckChannelDay();
@@ -98,6 +100,10 @@ namespace AnimalHusbandryMod
                 var addSpecificTemporarySprite = this.Helper.Reflection.GetMethod(new Event(), "addSpecificTemporarySprite").MethodInfo;
                 var addSpecificTemporarySpritePostfix = typeof(EventsOverrides).GetMethod("addSpecificTemporarySprite");
                 harmony.Patch(addSpecificTemporarySprite, null, new HarmonyMethod(addSpecificTemporarySpritePostfix));
+
+                var petCheckAction = typeof(Pet).GetMethod("checkAction");
+                var petCheckActionPrefix = typeof(PetOverrides).GetMethod("checkAction");
+                harmony.Patch(petCheckAction, new HarmonyMethod(petCheckActionPrefix), null);
             }
         }
 

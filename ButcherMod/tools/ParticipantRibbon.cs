@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using AnimalHusbandryMod.animals;
 using AnimalHusbandryMod.common;
-using AnimalHusbandryMod.farmer;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
 using StardewValley;
 using StardewValley.Characters;
 using StardewValley.Locations;
@@ -115,8 +109,7 @@ namespace AnimalHusbandryMod.tools
                 else
                 {
                     this._animal.doEmote(8, true);
-                    Cue animalSound = Game1.soundBank.GetCue(this._animal.sound);
-                    animalSound.Play();
+                    this._animal.makeSound();
                     this._animal.pauseTimer = 200;
                 }
 

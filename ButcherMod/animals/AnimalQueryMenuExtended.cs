@@ -176,6 +176,11 @@ namespace AnimalHusbandryMod.animals
                     this.populateClickableComponentList();
                     this.currentlySnappedComponent = (ClickableComponent)this.noButton;
                     this.snapCursorToCurrentSnappedComponent();
+                } else if (this.animalContestIndicator?.containsPoint(x, y)??false && AnimalContestController.CanChangeParticipant(this._farmAnimal))
+                {
+                    this.animalContestIndicator = null;
+                    AnimalContestController.RemoveAnimalParticipant(this._farmAnimal);
+                    Game1.player.addItemByMenuIfNecessary(new ParticipantRibbon());
                 }
             }
 
@@ -257,12 +262,12 @@ namespace AnimalHusbandryMod.animals
                         else if (AnimalContestController.HasParticipated(this._farmAnimal) && AnimalContestController.HasWon(this._farmAnimal))
                         {
                             SDate date = AnimalContestController.GetParticipantDate(this._farmAnimal);
-                            _hoverText.SetValue(DataLoader.i18n.Get("Menu.AnimalQueryMenu.Winner", new { contestDate = Utility.getDateStringFor(date.Day, (date.DaysSinceStart / 28) % 4, date.Year) }));
+                            _hoverText.SetValue(DataLoader.i18n.Get("Menu.AnimalQueryMenu.Winner", new { contestDate = Utility.getDateStringFor(date.Day, Utility.getSeasonNumber(date.Season), date.Year) }));
                         }
                         else
                         {
                             SDate date = AnimalContestController.GetParticipantDate(this._farmAnimal);
-                            _hoverText.SetValue(DataLoader.i18n.Get("Menu.AnimalQueryMenu.ContestParticipant", new { contestDate = Utility.getDateStringFor(date.Day, (date.DaysSinceStart / 28) % 4, date.Year) }));
+                            _hoverText.SetValue(DataLoader.i18n.Get("Menu.AnimalQueryMenu.ContestParticipant", new { contestDate = Utility.getDateStringFor(date.Day, Utility.getSeasonNumber(date.Season), date.Year) }));
                         }
                     }
                 }

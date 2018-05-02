@@ -61,6 +61,7 @@
   <ItemGroup>
     <Compile Include="animals\Animal.cs" />
     <Compile Include="animals\AnimalContestController.cs" />
+    <Compile Include="animals\AnimalContestEventBuilder.cs" />
     <Compile Include="animals\AnimalStatus.cs" />
     <Compile Include="animals\AnimalStatusController.cs" />
     <Compile Include="animals\data\AnimalBuildingData.cs" />
@@ -78,9 +79,11 @@
     <Compile Include="animals\data\PetItem.cs" />
     <Compile Include="animals\data\PigItem.cs" />
     <Compile Include="animals\data\TreatItem.cs" />
-    <Compile Include="animals\EventsLoader.cs" />
+    <Compile Include="common\CustomEvent.cs" />
+    <Compile Include="common\EventsLoader.cs" />
     <Compile Include="animals\LivingWithTheAnimalsChannel.cs" />
     <Compile Include="animals\MeatController.cs" />
+    <Compile Include="animals\PetOverrides.cs" />
     <Compile Include="animals\PregnancyController.cs" />
     <Compile Include="animals\data\PregnancyItem.cs" />
     <Compile Include="animals\data\SheepItem.cs" />

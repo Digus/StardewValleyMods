@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using AnimalHusbandryMod.animals;
 using AnimalHusbandryMod.animals.data;
 using AnimalHusbandryMod.common;
 using PyTK.CustomElementHandler;

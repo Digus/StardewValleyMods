@@ -32,14 +32,23 @@ namespace AnimalHusbandryMod.animals
 
         public static bool CanChangeParticipant(FarmAnimal farmAnimal)
         {
-            return GetAnimalStatus(farmAnimal.myID).DayParticipatedContest > SDate.Now();
+            return CanChangeParticipant(farmAnimal.myID);
+        }
+
+        public static bool CanChangeParticipantPet()
+        {
+            return CanChangeParticipant(AnimalData.PetId);
+        }
+
+        private static bool CanChangeParticipant(long id)
+        {
+            return GetAnimalStatus(id).DayParticipatedContest > SDate.Now();
         }
 
         public static SDate GetParticipantDate(FarmAnimal farmAnimal)
         {
             return GetAnimalStatus(farmAnimal.myID).DayParticipatedContest;
         }
-
 
         public static void MakeAnimalParticipant(FarmAnimal farmAnimal)
         {
@@ -57,11 +66,27 @@ namespace AnimalHusbandryMod.animals
             animalStatus.DayParticipatedContest = GetNextContestDate();
         }
 
+        public static void RemoveAnimalParticipant(FarmAnimal farmAnimal)
+        {
+            RemoveAnimalParticipant(farmAnimal.myID);
+        }
+
+        public static void RemovePetParticipant()
+        {
+            RemoveAnimalParticipant(AnimalData.PetId);
+        }
+
+        private static void RemoveAnimalParticipant(long id)
+        {
+            AnimalStatus animalStatus = GetAnimalStatus(id);
+            animalStatus.DayParticipatedContest = null;
+        }
+
         public static SDate GetNextContestDate()
         {
             return ContestDays
                 .Select(d => new SDate(Convert.ToInt32(d.Split(' ')[0]), d.Split(' ')[1]))
-                .Where(d => d > SDate.Now()).OrderBy(d => d)
+                .Where(d => d >= SDate.Now()).OrderBy(d => d)
                 .DefaultIfEmpty(new SDate(Convert.ToInt32(ContestDays[0].Split(' ')[0]), ContestDays[0].Split(' ')[1]))
                 .FirstOrDefault();
         }

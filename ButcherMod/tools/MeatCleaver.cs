@@ -7,7 +7,6 @@ using StardewValley.Tools;
 using StardewValley;
 using StardewValley.Objects;
 using Object = StardewValley.Object;
-using AnimalHusbandryMod.animals;
 using AnimalHusbandryMod.animals.data;
 using AnimalHusbandryMod.common;
 using PyTK.CustomElementHandler;
