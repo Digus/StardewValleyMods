@@ -18,13 +18,12 @@ namespace MailFrameworkMod
         public static void SaveLetter(Letter letter)
         {
             if (Letters.Exists((l) => l.Id == letter.Id))
-            {
+            {         
                 Letters[Letters.FindIndex((l) => l.Id == letter.Id)] = letter;
             } else
-            {
+            {             
                 Letters.Add(letter);
             }
-            
         }
 
         /// <summary>

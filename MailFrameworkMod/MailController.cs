@@ -20,16 +20,16 @@ namespace MailFrameworkMod
         private static readonly List<Letter> Letters = new List<Letter>();
         private static Letter _shownLetter = null;
 
+        private static Queue<string> queue = new Queue<string>(Game1.mailbox);
+
         /// <summary>
         /// Call this method to update the mail box with new letters.
         /// </summary>
         public static void UpdateMailBox()
-        {
-            // CUSTOM
-            var queue = new Queue<string>(Game1.mailbox);
-
+        {            
             List<Letter> newLetters = MailDao.GetValidatedLetters();
             newLetters.RemoveAll((l)=>Letters.Contains(l));
+            // CUSTOM
             newLetters.ForEach((l) => queue.Enqueue(CustomMailId)); //=>Game1.mailbox.Enqueue(CustomMailId));            
             Letters.AddRange(newLetters);
             UpdateNextLetterId();
@@ -41,9 +41,7 @@ namespace MailFrameworkMod
         /// </summary>
         public static void UnloadMailBox()
         {
-            // CUSTOM
-            var queue = new Queue<string>(Game1.mailbox);
-
+            // CUSTOM    
             List<String> tempMailBox = new List<string>();
             while (Game1.mailbox.Count > 0)
             {
@@ -168,7 +166,6 @@ namespace MailFrameworkMod
         private static void UpdateNextLetterId()
         {
             // CUSTOM
-            var queue = new Queue<string>(Game1.mailbox);
             if (Game1.mailbox.Count > 0)
             {
                 // _nextLetterId = Game1.mailbox.Peek();
