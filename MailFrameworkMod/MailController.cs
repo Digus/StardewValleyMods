@@ -47,7 +47,8 @@ namespace MailFrameworkMod
             while (Game1.mailbox.Count > 0)
             {
                 //tempMailBox.Add(queue.Dequeue()); //Game1.mailbox.Dequeue());
-                tempMailBox.Add(Game1.mailbox.Last());
+                tempMailBox.Add(Game1.mailbox.First());
+                Game1.mailbox.Remove(Game1.mailbox.First());
             }
             foreach (Letter letter in Letters)
             {
@@ -173,7 +174,8 @@ namespace MailFrameworkMod
             {
                 // _nextLetterId = Game1.mailbox.Peek();
                 //_nextLetterId = queue.Peek();                
-                _nextLetterId = Game1.mailbox.Last();                
+                _nextLetterId = Game1.mailbox.First();    
+                
             }
             else
             {
