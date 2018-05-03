@@ -20,7 +20,7 @@ namespace MailFrameworkMod
         private static readonly List<Letter> Letters = new List<Letter>();
         private static Letter _shownLetter = null;
 
-        private static Queue<string> queue = new Queue<string>(Game1.mailbox);
+        //private static Queue<string> queue = new Queue<string>(Game1.mailbox);
 
         /// <summary>
         /// Call this method to update the mail box with new letters.
@@ -30,7 +30,8 @@ namespace MailFrameworkMod
             List<Letter> newLetters = MailDao.GetValidatedLetters();
             newLetters.RemoveAll((l)=>Letters.Contains(l));
             // CUSTOM
-            newLetters.ForEach((l) => queue.Enqueue(CustomMailId)); //=>Game1.mailbox.Enqueue(CustomMailId));            
+            // newLetters.ForEach((l) => queue.Enqueue(CustomMailId)); //=>Game1.mailbox.Enqueue(CustomMailId));            
+            newLetters.ForEach((l) => Game1.mailbox.Add(CustomMailId));
             Letters.AddRange(newLetters);
             UpdateNextLetterId();
         }
@@ -45,7 +46,8 @@ namespace MailFrameworkMod
             List<String> tempMailBox = new List<string>();
             while (Game1.mailbox.Count > 0)
             {
-                tempMailBox.Add(queue.Dequeue()); //Game1.mailbox.Dequeue());
+                //tempMailBox.Add(queue.Dequeue()); //Game1.mailbox.Dequeue());
+                tempMailBox.Add(Game1.mailbox.Last());
             }
             foreach (Letter letter in Letters)
             {
@@ -54,7 +56,8 @@ namespace MailFrameworkMod
             foreach (String mail in tempMailBox)
             {
                 //Game1.mailbox.Enqueue(mail);
-                queue.Enqueue(mail);
+                //queue.Enqueue(mail);
+                Game1.mailbox.Add(mail);
             }
             Letters.Clear();
         }
@@ -73,12 +76,12 @@ namespace MailFrameworkMod
         /// Don't do anything if there is already a letter being shown.
         /// </summary>
         public static void ShowLetter()
-        {
+        {            
             if (_shownLetter == null)
             {
                 if (Letters.Count > 0 && _nextLetterId == CustomMailId)
-                {
-                    _shownLetter = Letters.First();
+                {             
+                    _shownLetter = Letters.First();                 
                     var activeClickableMenu = new LetterViewerMenu(_shownLetter.Text.Replace("@", Game1.player.Name),_shownLetter.Id);
                     Game1.activeClickableMenu = activeClickableMenu;
                     _shownLetter.Items?.ForEach(
@@ -139,10 +142,10 @@ namespace MailFrameworkMod
                     ;
                 }
                 else
-                {
+                {                    
                     UpdateNextLetterId();
                 }
-            }
+            }            
         }
 
         /// <summary>
@@ -169,7 +172,8 @@ namespace MailFrameworkMod
             if (Game1.mailbox.Count > 0)
             {
                 // _nextLetterId = Game1.mailbox.Peek();
-                _nextLetterId = queue.Peek();
+                //_nextLetterId = queue.Peek();                
+                _nextLetterId = Game1.mailbox.Last();                
             }
             else
             {
