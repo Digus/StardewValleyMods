@@ -81,8 +81,9 @@ namespace MailFrameworkMod
         /// <param name="e"></param>
         private void MenuEvents_MenuChanged(object sender, EventArgsClickableMenuChanged e)
         {
-            
-            if (e.NewMenu is LetterViewerMenu && this.Helper.Reflection.GetPrivateValue<string>(e.NewMenu, "mailTitle") != null && MailController.HasCustomMail())
+
+            // CUSTOM if (e.NewMenu is LetterViewerMenu && this.Helper.Reflection.GetPrivateValue<string>(e.NewMenu, "mailTitle") != null && MailController.HasCustomMail())
+            if(e.NewMenu is LetterViewerMenu && this.Helper.Reflection.GetField<string>(e.NewMenu, "mailTitle").GetValue() != null && MailController.HasCustomMail())
             {
                 MailController.ShowLetter();
             }

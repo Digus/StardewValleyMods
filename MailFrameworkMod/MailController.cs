@@ -20,14 +20,18 @@ namespace MailFrameworkMod
         private static readonly List<Letter> Letters = new List<Letter>();
         private static Letter _shownLetter = null;
 
+        //private static Queue<string> queue = new Queue<string>(Game1.mailbox);
+
         /// <summary>
         /// Call this method to update the mail box with new letters.
         /// </summary>
         public static void UpdateMailBox()
-        {
+        {            
             List<Letter> newLetters = MailDao.GetValidatedLetters();
             newLetters.RemoveAll((l)=>Letters.Contains(l));
-            newLetters.ForEach((l) =>Game1.mailbox.Enqueue(CustomMailId));
+            // CUSTOM
+            // newLetters.ForEach((l) => queue.Enqueue(CustomMailId)); //=>Game1.mailbox.Enqueue(CustomMailId));            
+            newLetters.ForEach((l) => Game1.mailbox.Add(CustomMailId));
             Letters.AddRange(newLetters);
             UpdateNextLetterId();
         }
@@ -38,10 +42,13 @@ namespace MailFrameworkMod
         /// </summary>
         public static void UnloadMailBox()
         {
+            // CUSTOM    
             List<String> tempMailBox = new List<string>();
             while (Game1.mailbox.Count > 0)
             {
-                tempMailBox.Add(Game1.mailbox.Dequeue());
+                //tempMailBox.Add(queue.Dequeue()); //Game1.mailbox.Dequeue());
+                tempMailBox.Add(Game1.mailbox.First());
+                Game1.mailbox.Remove(Game1.mailbox.First());
             }
             foreach (Letter letter in Letters)
             {
@@ -49,7 +56,9 @@ namespace MailFrameworkMod
             }
             foreach (String mail in tempMailBox)
             {
-                Game1.mailbox.Enqueue(mail);
+                //Game1.mailbox.Enqueue(mail);
+                //queue.Enqueue(mail);
+                Game1.mailbox.Add(mail);
             }
             Letters.Clear();
         }
@@ -68,12 +77,12 @@ namespace MailFrameworkMod
         /// Don't do anything if there is already a letter being shown.
         /// </summary>
         public static void ShowLetter()
-        {
+        {            
             if (_shownLetter == null)
             {
                 if (Letters.Count > 0 && _nextLetterId == CustomMailId)
-                {
-                    _shownLetter = Letters.First();
+                {             
+                    _shownLetter = Letters.First();                 
                     var activeClickableMenu = new LetterViewerMenu(_shownLetter.Text.Replace("@", Game1.player.Name),_shownLetter.Id);
                     Game1.activeClickableMenu = activeClickableMenu;
                     _shownLetter.Items?.ForEach(
@@ -121,20 +130,23 @@ namespace MailFrameworkMod
                             }                            
                         }
                             
+                        // CUSTOM
                         MailFrameworkModEntery.ModHelper.Reflection
-                            .GetPrivateField<String>(activeClickableMenu, "cookingOrCrafting").SetValue(Game1.content.LoadString("Strings\\UI:LearnedRecipe_cooking"));
+                            //.GetPrivateField<String>(activeClickableMenu, "cookingOrCrafting").SetValue(Game1.content.LoadString("Strings\\UI:LearnedRecipe_cooking"));
+                            .GetField<String>(activeClickableMenu, "cookingOrCrafting").SetValue(Game1.content.LoadString("Strings\\UI:LearnedRecipe_cooking"));
                         MailFrameworkModEntery.ModHelper.Reflection
-                            .GetPrivateField<String>(activeClickableMenu, "learnedRecipe").SetValue(learnedRecipe);
+                            //.GetPrivateField<String>(activeClickableMenu, "learnedRecipe").SetValue(learnedRecipe);
+                            .GetField<String>(activeClickableMenu, "learnedRecipe").SetValue(learnedRecipe);
                     }
 
                     MenuEvents.MenuClosed += MenuEvents_MenuClosed;
                     ;
                 }
                 else
-                {
+                {                    
                     UpdateNextLetterId();
                 }
-            }
+            }            
         }
 
         /// <summary>
@@ -157,9 +169,13 @@ namespace MailFrameworkMod
         /// </summary>
         private static void UpdateNextLetterId()
         {
+            // CUSTOM
             if (Game1.mailbox.Count > 0)
             {
-                _nextLetterId = Game1.mailbox.Peek();
+                // _nextLetterId = Game1.mailbox.Peek();
+                //_nextLetterId = queue.Peek();                
+                _nextLetterId = Game1.mailbox.First();    
+                
             }
             else
             {
