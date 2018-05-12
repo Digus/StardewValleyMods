@@ -50,9 +50,10 @@ namespace MailFrameworkMod
                 {
                     condition = l.Condition(l);
                 }
-                catch (Exception ex)
+                catch (Exception e)
                 {
                     MailFrameworkModEntery.monitor.Log($"Error while validating letter '{l.Id}'. This letter will be ignored.", LogLevel.Error);
+                    MailFrameworkModEntery.monitor.Log($"Error: {e.Message}\n{e.StackTrace}", LogLevel.Trace);
                 }
 
                 return condition;

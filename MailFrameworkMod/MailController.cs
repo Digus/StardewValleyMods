@@ -27,7 +27,7 @@ namespace MailFrameworkMod
         {
             List<Letter> newLetters = MailDao.GetValidatedLetters();
             newLetters.RemoveAll((l)=>Letters.Contains(l));
-            newLetters.ForEach((l) =>Game1.mailbox.Enqueue(CustomMailId));
+            newLetters.ForEach((l) =>Game1.mailbox.Add(CustomMailId));
             Letters.AddRange(newLetters);
             UpdateNextLetterId();
         }
@@ -41,7 +41,8 @@ namespace MailFrameworkMod
             List<String> tempMailBox = new List<string>();
             while (Game1.mailbox.Count > 0)
             {
-                tempMailBox.Add(Game1.mailbox.Dequeue());
+                tempMailBox.Add(Game1.mailbox.First());
+                Game1.mailbox.RemoveAt(0);
             }
             foreach (Letter letter in Letters)
             {
@@ -49,7 +50,7 @@ namespace MailFrameworkMod
             }
             foreach (String mail in tempMailBox)
             {
-                Game1.mailbox.Enqueue(mail);
+                Game1.mailbox.Add(mail);
             }
             Letters.Clear();
         }
@@ -88,7 +89,7 @@ namespace MailFrameworkMod
                                     , 24 * Game1.pixelZoom
                                     , 24 * Game1.pixelZoom
                                 )
-                                , i
+                                , i.getOne()
 
                             )
                             {
@@ -122,9 +123,9 @@ namespace MailFrameworkMod
                         }
                             
                         MailFrameworkModEntery.ModHelper.Reflection
-                            .GetPrivateField<String>(activeClickableMenu, "cookingOrCrafting").SetValue(Game1.content.LoadString("Strings\\UI:LearnedRecipe_cooking"));
+                            .GetField<String>(activeClickableMenu, "cookingOrCrafting").SetValue(Game1.content.LoadString("Strings\\UI:LearnedRecipe_cooking"));
                         MailFrameworkModEntery.ModHelper.Reflection
-                            .GetPrivateField<String>(activeClickableMenu, "learnedRecipe").SetValue(learnedRecipe);
+                            .GetField<String>(activeClickableMenu, "learnedRecipe").SetValue(learnedRecipe);
                     }
 
                     MenuEvents.MenuClosed += MenuEvents_MenuClosed;
@@ -159,7 +160,7 @@ namespace MailFrameworkMod
         {
             if (Game1.mailbox.Count > 0)
             {
-                _nextLetterId = Game1.mailbox.Peek();
+                _nextLetterId = Game1.mailbox.First();
             }
             else
             {
