@@ -5,20 +5,20 @@
       "MajorVersion": 2,
       "MinorVersion": 2,
       "PatchVersion": 0,
-      "Build": "alfa.1"
+      "Build": "beta.1"
    },
    "Description": "Adds features related to animal husbandry.",
    "UniqueID": "DIGUS.ANIMALHUSBANDRYMOD",
    "EntryDll": "AnimalHusbandryMod.dll",
-   "MinimumApiVersion": "2.4",
+   "MinimumApiVersion": "2.6-beta",
    "Dependencies": [
 	   {
 		   "UniqueID": "Platonymous.Toolkit",
-		   "MinimumVersion": "0.7.0"
+		   "MinimumVersion": "0.9.2"
 	   }
 	   , {
 		   "UniqueID": "DIGUS.MailFrameworkMod",
-		   "MinimumVersion": "1.1.0"
+		   "MinimumVersion": "1.2.1-beta"
 	   }
    ],
    "UpdateKeys": [ "Nexus:1538" ]

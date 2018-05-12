@@ -133,7 +133,7 @@ namespace AnimalHusbandryMod.animals
 
         private void ShowAnnouncement(TV tv, TemporaryAnimatedSprite sprite, StardewValley.Farmer farmer, string answer)
         {
-            _showSprite = new TemporaryAnimatedSprite(DataLoader.LooseSprites, new Rectangle(0, 0, 42, 28), 150f, 2, 999999, tv.getScreenPosition(), false, false, (float)((double)(tv.boundingBox.Bottom - 1) / 10000.0 + 9.99999974737875E-06), 0.0f, Color.White, tv.getScreenSizeModifier(), 0.0f, 0.0f, 0.0f, false);
+            _showSprite = new TemporaryAnimatedSprite(DataLoader.LooseSpritesName, new Rectangle(0, 0, 42, 28), 150f, 2, 999999, tv.getScreenPosition(), false, false, (float)((double)(tv.boundingBox.Bottom - 1) / 10000.0 + 9.99999974737875E-06), 0.0f, Color.White, tv.getScreenSizeModifier(), 0.0f, 0.0f, 0.0f, false);
             CustomTVMod.showProgram(_showSprite, DataLoader.i18n.Get("TV.LivingWithTheAnimals.Announcement"), ShowPresentation);
         }
 

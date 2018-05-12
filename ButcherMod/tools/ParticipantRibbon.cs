@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using AnimalHusbandryMod.animals;
 using AnimalHusbandryMod.common;
 using Microsoft.Xna.Framework;
@@ -19,11 +20,16 @@ namespace AnimalHusbandryMod.tools
 
         public ParticipantRibbon() : base()
         {
-            this.name = "Participant Ribbon";
-            this.initialParentTileIndex = InitialParentTileIndex;
-            this.indexOfMenuItemView = IndexOfMenuItemView;
-            this.stackable = false;
-            this.currentParentTileIndex = InitialParentTileIndex;
+            this.Name = "Participant Ribbon";
+            this.initialParentTileIndex.Value = InitialParentTileIndex;
+            this.indexOfMenuItemView.Value = IndexOfMenuItemView;
+            this.Stackable = false;
+            this.CurrentParentTileIndex = InitialParentTileIndex;
+        }
+
+        public override Item getOne()
+        {
+            return (Item)new ParticipantRibbon();
         }
 
         protected override string loadDisplayName()
@@ -61,7 +67,7 @@ namespace AnimalHusbandryMod.tools
                     }
                     if (this._animal == null)
                     {
-                        foreach (Pet pet in location.characters.FindAll(i => i is Pet))
+                        foreach (Pet pet in location.characters.Where(i => i is Pet))
                         {
                             if (pet.GetBoundingBox().Intersects(rectangle))
                             {
@@ -84,7 +90,7 @@ namespace AnimalHusbandryMod.tools
                 }
                 else if (location is FarmHouse)
                 {
-                    foreach (Pet pet in location.characters.FindAll(i => i is Pet))
+                    foreach (Pet pet in location.characters.Where(i => i is Pet))
                     {
                         if (pet.GetBoundingBox().Intersects(rectangle))
                         {
@@ -134,7 +140,7 @@ namespace AnimalHusbandryMod.tools
                     _pet.Halt();
                     _pet.CurrentBehavior = 0;
                     _pet.Halt();
-                    _pet.sprite.setCurrentAnimation(new List<FarmerSprite.AnimationFrame>() { new FarmerSprite.AnimationFrame(18, 200) });
+                    _pet.Sprite.setCurrentAnimation(new List<FarmerSprite.AnimationFrame>() { new FarmerSprite.AnimationFrame(18, 200) });
 
                 }
 
@@ -181,8 +187,8 @@ namespace AnimalHusbandryMod.tools
 
         public override void DoFunction(GameLocation location, int x, int y, int power, StardewValley.Farmer who)
         {
-            this.currentParentTileIndex = InitialParentTileIndex;
-            this.indexOfMenuItemView = IndexOfMenuItemView;
+            this.CurrentParentTileIndex = InitialParentTileIndex;
+            this.indexOfMenuItemView.Value = IndexOfMenuItemView;
 
             if (this._animal != null)
             {
@@ -207,7 +213,7 @@ namespace AnimalHusbandryMod.tools
             {
                 who.Halt();
             }
-            who.usingTool = false;
+            who.UsingTool = false;
             who.canReleaseTool = true;
         }
     }

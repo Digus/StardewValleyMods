@@ -20,7 +20,7 @@ namespace AnimalHusbandryMod.animals
             {
                 return GetTreatItem(farmAnimal) != null;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return false;
             }
@@ -50,7 +50,7 @@ namespace AnimalHusbandryMod.animals
             {
                 return GetTreatItem(farmAnimal).LikedTreats.Contains(itemId);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return false;
             }
@@ -75,9 +75,9 @@ namespace AnimalHusbandryMod.animals
         {
             try
             {
-                return DaysUntilNextTreat(farmAnimal.myID, GetTreatItem(farmAnimal));
+                return DaysUntilNextTreat(farmAnimal.myID.Value, GetTreatItem(farmAnimal));
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return 0;
             }
@@ -94,7 +94,7 @@ namespace AnimalHusbandryMod.animals
 
         public static void FeedAnimalTreat(FarmAnimal farmAnimal, Object treat)
         {
-            FeedAnimalTreat(farmAnimal.myID, treat);
+            FeedAnimalTreat(farmAnimal.myID.Value, treat);
         }
 
         public static void FeedPetTreat(Object treat)
@@ -106,16 +106,16 @@ namespace AnimalHusbandryMod.animals
         {
             AnimalStatus animalStatus = GetAnimalStatus(id);
             animalStatus.LastDayFeedTreat = SDate.Now();
-            if (!animalStatus.FeedTreatsQuantity.ContainsKey(treat.parentSheetIndex))
+            if (!animalStatus.FeedTreatsQuantity.ContainsKey(treat.ParentSheetIndex))
             {
-                animalStatus.FeedTreatsQuantity[treat.parentSheetIndex] = 0;
+                animalStatus.FeedTreatsQuantity[treat.ParentSheetIndex] = 0;
             }
-            animalStatus.FeedTreatsQuantity[treat.parentSheetIndex]++;
+            animalStatus.FeedTreatsQuantity[treat.ParentSheetIndex]++;
         }
 
         public static TreatItem GetTreatItem(FarmAnimal farmAnimal)
         {
-            Animal? foundAnimal = AnimalExtension.GetAnimalFromType(farmAnimal.type);
+            Animal? foundAnimal = AnimalExtension.GetAnimalFromType(farmAnimal.type.Value);
             return DataLoader.AnimalData.getAnimalItem((Animal)foundAnimal) as TreatItem;
         }
 

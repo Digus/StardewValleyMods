@@ -24,6 +24,7 @@ namespace AnimalHusbandryMod.common
         public static AnimalData AnimalData;
         public static AnimalBuildingData AnimalBuildingData;
 
+        public static String LooseSpritesName;
         public static Texture2D LooseSprites;
         public static Texture2D ToolsSprites;
 
@@ -38,6 +39,7 @@ namespace AnimalHusbandryMod.common
             ModConfig = helper.ReadConfig<ModConfig>();
             i18n = Helper.Translation;
 
+            LooseSpritesName = Helper.Content.GetActualAssetKey("common/LooseSprites.png", ContentSource.ModFolder);
             LooseSprites = Helper.Content.Load<Texture2D>("common/LooseSprites.png");
 
             var editors = Helper.Content.AssetEditors;

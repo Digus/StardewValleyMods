@@ -12,9 +12,9 @@ namespace AnimalHusbandryMod.meats
     {
         public static bool sellToStorePrice(StardewValley.Object __instance, ref int __result)
         {
-            if (Game1.player.professions.Contains(0) && __instance.category == -14)
+            if (Game1.player.professions.Contains(0) && __instance.Category == -14)
             {
-                float num = (float)(int)((double)__instance.price * (1.0 + (double)__instance.quality * 0.25));
+                float num = (float)(int)((double)__instance.Price * (1.0 + (double)__instance.Quality * 0.25));
                 num *= 1.2f;
                 __result = (int)num;
                 return false;                

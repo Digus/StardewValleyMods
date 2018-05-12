@@ -19,8 +19,9 @@ namespace AnimalHusbandryMod.animals
                 __instance.playContentSound();
                 __instance.Halt();
                 __instance.CurrentBehavior = 0;
+                __instance.initiateCurrentBehavior();
                 __instance.Halt();
-                __instance.sprite.setCurrentAnimation(new List<FarmerSprite.AnimationFrame>() { new FarmerSprite.AnimationFrame(18, 200) });
+                __instance.Sprite.setCurrentAnimation(new List<FarmerSprite.AnimationFrame>() { new FarmerSprite.AnimationFrame(18, 200) });
                 var who = Game1.player;
                 who.Halt();
                 int currentFrame = who.FarmerSprite.currentFrame;

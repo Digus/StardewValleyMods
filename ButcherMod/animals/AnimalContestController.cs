@@ -17,22 +17,22 @@ namespace AnimalHusbandryMod.animals
 
         public static bool IsParticipant(FarmAnimal farmAnimal)
         {
-            return GetAnimalStatus(farmAnimal.myID).DayParticipatedContest != null;
+            return GetAnimalStatus(farmAnimal.myID.Value).DayParticipatedContest != null;
         }
 
         public static bool HasParticipated(FarmAnimal farmAnimal)
         {
-            return GetAnimalStatus(farmAnimal.myID).HasWon != null;
+            return GetAnimalStatus(farmAnimal.myID.Value).HasWon != null;
         }
 
         public static bool HasWon(FarmAnimal farmAnimal)
         {
-            return GetAnimalStatus(farmAnimal.myID).HasWon??false;
+            return GetAnimalStatus(farmAnimal.myID.Value).HasWon??false;
         }
 
         public static bool CanChangeParticipant(FarmAnimal farmAnimal)
         {
-            return CanChangeParticipant(farmAnimal.myID);
+            return CanChangeParticipant(farmAnimal.myID.Value);
         }
 
         public static bool CanChangeParticipantPet()
@@ -47,12 +47,12 @@ namespace AnimalHusbandryMod.animals
 
         public static SDate GetParticipantDate(FarmAnimal farmAnimal)
         {
-            return GetAnimalStatus(farmAnimal.myID).DayParticipatedContest;
+            return GetAnimalStatus(farmAnimal.myID.Value).DayParticipatedContest;
         }
 
         public static void MakeAnimalParticipant(FarmAnimal farmAnimal)
         {
-            MakeAnimalParticipant(farmAnimal.myID);
+            MakeAnimalParticipant(farmAnimal.myID.Value);
         }
 
         public static void MakePetParticipant()
@@ -68,7 +68,7 @@ namespace AnimalHusbandryMod.animals
 
         public static void RemoveAnimalParticipant(FarmAnimal farmAnimal)
         {
-            RemoveAnimalParticipant(farmAnimal.myID);
+            RemoveAnimalParticipant(farmAnimal.myID.Value);
         }
 
         public static void RemovePetParticipant()

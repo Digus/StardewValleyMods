@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using AnimalHusbandryMod.animals;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
@@ -32,6 +33,10 @@ namespace AnimalHusbandryMod.tools
             }
         }
 
+        public override Item getOne()
+        {
+            return (Item)new MeatCleaver();
+        }
 
         protected override string loadDisplayName()
         {
@@ -74,9 +79,9 @@ namespace AnimalHusbandryMod.tools
                                 Microsoft.Xna.Framework.Audio.Cue hurtSound;
                                 if (!DataLoader.ModConfig.Softmode)
                                 {
-                                    if (farmAnimal.sound != null)
+                                    if (farmAnimal.sound.Value != null)
                                     {
-                                        hurtSound = Game1.soundBank.GetCue(farmAnimal.sound);
+                                        hurtSound = Game1.soundBank.GetCue(farmAnimal.sound.Value);
                                         hurtSound.SetVariable("Pitch", 1800);
                                         hurtSound.Play();
                                     }
@@ -111,9 +116,9 @@ namespace AnimalHusbandryMod.tools
                                 Microsoft.Xna.Framework.Audio.Cue hurtSound;
                                 if (!DataLoader.ModConfig.Softmode)
                                 {
-                                    if (farmAnimal.sound != null)
+                                    if (farmAnimal.sound.Value != null)
                                     {
-                                        hurtSound = Game1.soundBank.GetCue(farmAnimal.sound);
+                                        hurtSound = Game1.soundBank.GetCue(farmAnimal.sound.Value);
                                         hurtSound.SetVariable("Pitch", 1800);
                                         hurtSound.Play();
                                     }
@@ -134,17 +139,13 @@ namespace AnimalHusbandryMod.tools
             }
 
             this.Update(who.facingDirection, 0, who);
-            if (this._tempAnimal != null && this._tempAnimal.age < (int)this._tempAnimal.ageWhenMature)
+            if (this._tempAnimal != null && this._tempAnimal.age.Value < (int)this._tempAnimal.ageWhenMature.Value)
             {
                 string dialogue = DataLoader.i18n.Get("Tool.MeatCleaver.TooYoung"+_sufix, new { animalName = this._tempAnimal.displayName });
                 DelayedAction.showDialogueAfterDelay(dialogue, 150);
                 this._tempAnimal = null;
             }
-            if (who.IsMainPlayer)
-            {
-                Game1.releaseUseToolButton();
-                return true;
-            }
+            who.EndUsingTool();
             return true;
         }
 
@@ -152,15 +153,15 @@ namespace AnimalHusbandryMod.tools
         {
             base.DoFunction(location, x, y, power, who);
             who.Stamina -= ((float)4f - (float)who.FarmingLevel * 0.2f);
-            if (this._animal != null && this._animal.type == "Dinosaur")
+            if (this._animal != null && this._animal.type.Value == "Dinosaur")
             {
                 return;
             }
 
-            if (this._animal != null && this._animal.age >= (int) this._animal.ageWhenMature)
+            if (this._animal != null && this._animal.age.Value >= (int) this._animal.ageWhenMature.Value)
             {
-                (this._animal.home.indoors as AnimalHouse).animalsThatLiveHere.Remove(this._animal.myID);
-                this._animal.health = -1;
+                (this._animal.home.indoors.Value as AnimalHouse)?.animalsThatLiveHere.Remove(this._animal.myID.Value);
+                this._animal.health.Value = -1;
                 int numClouds = this._animal.frontBackSourceRect.Width / 2;
                 int cloudSprite = !DataLoader.ModConfig.Softmode ? 5 : 10;
                 for (int i = 0; i < numClouds; i++)
@@ -205,8 +206,8 @@ namespace AnimalHusbandryMod.tools
                 (
                     new TemporaryAnimatedSprite
                     (
-                        this._animal.sprite.Texture
-                        ,this._animal.sprite.SourceRect
+                        this._animal.Sprite.textureName
+                        ,this._animal.Sprite.SourceRect
                         , this._animal.position
                         , this._animal.FacingDirection == Game1.left
                         , alfaFade
@@ -242,13 +243,13 @@ namespace AnimalHusbandryMod.tools
         public Dictionary<string, string> getAdditionalSaveData()
         {
             Dictionary<string, string> savedata = new Dictionary<string, string>();
-            savedata.Add("name", name);
+            savedata.Add("name", Name);
             return savedata;
         }
 
         public void rebuild(Dictionary<string, string> additionalSaveData, object replacement)
         {
-            this.name = additionalSaveData["name"];
+            this.Name = additionalSaveData["name"];
         }
     }
 }

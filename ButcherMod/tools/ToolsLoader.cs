@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 using MailFrameworkMod;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Netcode;
 using StardewModdingAPI;
 using StardewValley;
+using StardewValley.Buildings;
 using StardewValley.Locations;
 using StardewValley.Objects;
 using DataLoader = AnimalHusbandryMod.common.DataLoader;
@@ -100,13 +102,13 @@ namespace AnimalHusbandryMod.tools
 
         internal void ReplaceOldTools(object sender, EventArgs e)
         {
-            List<Item> inventory = Game1.player.items;
+            NetObjectList<Item> inventory = Game1.player.items;
             for (int i = 0; i < inventory.Count; i++)
             {
                 ReplaceIfOldItem(inventory, i);
 
             }
-            List<GameLocation> locations = Game1.locations;
+            IList<GameLocation> locations = Game1.locations;
             for (int i = 0; i < locations.Count; i++)
             {
                 var location = locations[i];
@@ -114,13 +116,13 @@ namespace AnimalHusbandryMod.tools
 
                 if (location is BuildableGameLocation bgl)
                 {
-                    bgl.buildings.ForEach(((b) =>
+                    foreach(Building b in bgl.buildings)
                     {
-                        if (b.indoors is GameLocation gl)
+                        if (b.indoors.Value is GameLocation gl)
                         {
                             ReplaceInLocationChests(gl);
                         }
-                    }));
+                    };
                 }
             }
         }
@@ -128,12 +130,12 @@ namespace AnimalHusbandryMod.tools
         private static void ReplaceInLocationChests(GameLocation location)
         {
             var objects = location.objects.Values;
-            for (int j = 0; j < objects.Count; j++)
+            for (int j = 0; j < objects.Count(); j++)
             {
                 var o = objects.ToList()[j];
                 if (o is Chest chest)
                 {
-                    List<Item> items = chest.items;
+                    NetObjectList<Item> items = chest.items;
                     for (int k = 0; k < items.Count; k++)
                     {
                         ReplaceIfOldItem(items, k);
@@ -142,7 +144,7 @@ namespace AnimalHusbandryMod.tools
             }
         }
 
-        private static void ReplaceIfOldItem(List<Item> items, int i)
+        private static void ReplaceIfOldItem(NetObjectList<Item> items, int i)
         {
             Item item = items[i];
             if (item != null)
@@ -176,11 +178,12 @@ namespace AnimalHusbandryMod.tools
 
             bool HasAnimal()
             {
-                return Game1.locations.Exists((location) =>
+                return Game1.locations.Any((location) =>
                 {
                     if (location is Farm farm)
                     {
-                        return farm.buildings.Exists((b => (b.indoors as AnimalHouse)?.animalsThatLiveHere.Count > 0));
+                        return farm.buildings
+                            .Any((b => (b.indoors.Value as AnimalHouse)?.animalsThatLiveHere.Count > 0));
                     }
                     return false;
                 });
@@ -194,32 +197,29 @@ namespace AnimalHusbandryMod.tools
             List<string> validBuildingsForInsemination = new List<string>(new string[] { "Deluxe Barn", "Big Barn", "Deluxe Coop" });
             bool InseminationSyringeCondition(Letter l)
             {
-                bool hasAnimalInValidBuildings = Game1.locations.Exists((location) =>
+                bool hasAnimalInValidBuildings = Game1.locations.Any((location) =>
                 {
                     if (location is Farm farm)
                     {
                         return farm.buildings
-                        .Exists((b) => 
-                        {
-                            return (b.indoors as AnimalHouse)?.animalsThatLiveHere.Count > 0 && validBuildingsForInsemination.Contains((b.indoors as AnimalHouse)?.name);
-                        });
+                        .Any((b) => (b.indoors.Value as AnimalHouse)?.animalsThatLiveHere.Count > 0 && validBuildingsForInsemination.Contains(((AnimalHouse) b.indoors.Value)?.Name));
                     }
                     return false;
                 });
                
-                return hasAnimalInValidBuildings && !HasTool(typeof(InseminationSyringe));
+                return Context.IsMainPlayer && hasAnimalInValidBuildings && !HasTool(typeof(InseminationSyringe));
             }
 
             bool FeedingBasketCondition(Letter l)
             {
 
-                return !Game1.player.mailReceived.Contains("feedingBasket") && Game1.player.getFriendshipHeartLevelForNPC("Marnie") >= 2 && (Game1.player.hasPet() || HasAnimal());
+                return Context.IsMainPlayer && !Game1.player.mailReceived.Contains("feedingBasket") && Game1.player.getFriendshipHeartLevelForNPC("Marnie") >= 2 && (Game1.player.hasPet() || HasAnimal());
             }
 
             bool FeedingBasketRedeliveryCondition(Letter l)
             {
                 
-                return Game1.player.mailReceived.Contains("feedingBasket") && !HasTool(typeof(FeedingBasket)) && Game1.player.getFriendshipHeartLevelForNPC("Marnie") >= 6;
+                return Context.IsMainPlayer && Game1.player.mailReceived.Contains("feedingBasket") && !HasTool(typeof(FeedingBasket)) && Game1.player.getFriendshipHeartLevelForNPC("Marnie") >= 6;
             }
 
             if (!DataLoader.ModConfig.DisableMeat)
@@ -233,7 +233,7 @@ namespace AnimalHusbandryMod.tools
             }
 
 
-            MailDao.SaveLetter(new Letter("participantRibbon", DataLoader.i18n.Get("Tool.ParticipantRibbon.Letter"), new List<Item> { new ParticipantRibbon() }, (l)=> true));
+            //MailDao.SaveLetter(new Letter("participantRibbon", DataLoader.i18n.Get("Tool.ParticipantRibbon.Letter"), new List<Item> { new ParticipantRibbon() }, (l)=> true));
 
 
             if (!DataLoader.ModConfig.DisableTreats)
@@ -264,15 +264,15 @@ namespace AnimalHusbandryMod.tools
 
         private bool HasTool(Type toolClass)
         {
-            bool hasInInventory = Game1.player.items.Exists(toolClass.IsInstanceOfType);
-            return hasInInventory || Game1.locations.Exists((location) =>
+            bool hasInInventory = Game1.player.Items.Any(toolClass.IsInstanceOfType);
+            return hasInInventory || Game1.locations.Any((location) =>
             {
                 if (location.objects.Values.ToList()
                     .Exists((o) =>
                     {
                         if (o is Chest chest)
                         {
-                            return chest.items.Exists(toolClass.IsInstanceOfType);
+                            return chest.items.Any(toolClass.IsInstanceOfType);
                         }
                         return false;
                     }))
@@ -281,16 +281,16 @@ namespace AnimalHusbandryMod.tools
                 }
                 if (location is BuildableGameLocation bgl)
                 {
-                    return bgl.buildings.Exists(((b) =>
+                    return bgl.buildings.Any(((b) =>
                     {
-                        if (b.indoors is GameLocation gl)
+                        if (b.indoors.Value is GameLocation gl)
                         {
                             if (gl.objects.Values.ToList()
                                 .Exists((o) =>
                                 {
                                     if (o is Chest chest)
                                     {
-                                        return chest.items.Exists(toolClass.IsInstanceOfType);
+                                        return chest.items.Any(toolClass.IsInstanceOfType);
                                     }
                                     return false;
                                 }))

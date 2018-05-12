@@ -65,7 +65,7 @@ namespace AnimalHusbandryMod.recipes
                                         && Game1.stats.GeodesCracked > 80;
             MailDao.SaveLetter(new Letter("glazedHamRecipe", DataLoader.i18n.Get("Cooking.GlazedHam.Letter"), Cooking.GlazedHam.GetDescription(), glazedHamCondition));
 
-            MailDao.SaveLetter(new Letter("cowboyDinnerkRecipe", DataLoader.i18n.Get("Cooking.CowboyDinner.Letter"), Cooking.CowboyDinner.GetDescription(), (letter) => !Game1.player.cookingRecipes.ContainsKey(letter.Recipe) && (Game1.getLocationFromName("ArchaeologyHouse") as LibraryMuseum)?.museumPieces.Count >= 70));
+            MailDao.SaveLetter(new Letter("cowboyDinnerkRecipe", DataLoader.i18n.Get("Cooking.CowboyDinner.Letter"), Cooking.CowboyDinner.GetDescription(), (letter) => !Game1.player.cookingRecipes.ContainsKey(letter.Recipe) && (Game1.getLocationFromName("ArchaeologyHouse") as LibraryMuseum)?.museumPieces.Count() >= 70));
             
             MailDao.SaveLetter(new Letter("rabbitStewRecipe", DataLoader.i18n.Get("Cooking.RabbitStew.Letter"), Cooking.RabbitStew.GetDescription(), (letter) => !Game1.player.cookingRecipes.ContainsKey(letter.Recipe) && GetNpcFriendship("Linus") >= 9 * 250 && (Game1.stats.TimesUnconscious >= 1 || Game1.player.deepestMineLevel >= 100)));
 
@@ -76,9 +76,9 @@ namespace AnimalHusbandryMod.recipes
 
         private int GetNpcFriendship(string name)
         {
-            if (Game1.player.friendships.ContainsKey(name))
+            if (Game1.player.friendshipData.ContainsKey(name))
             {
-                return Game1.player.friendships[name][0];
+                return Game1.player.friendshipData[name].Points;
             }
             else
             {

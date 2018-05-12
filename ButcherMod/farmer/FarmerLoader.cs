@@ -20,7 +20,10 @@ namespace AnimalHusbandryMod.farmer
 
         public static void SaveData()
         {
-            DataLoader.Helper.WriteJsonFile<FarmerData>($"data/farmers/{Constants.SaveFolderName}.json", FarmerData);
+            if (Context.IsMainPlayer)
+            {
+                DataLoader.Helper.WriteJsonFile<FarmerData>($"data/farmers/{Constants.SaveFolderName}.json", FarmerData);
+            }
         }
     }
 }

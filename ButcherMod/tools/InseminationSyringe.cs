@@ -26,14 +26,19 @@ namespace AnimalHusbandryMod.tools
 
         public InseminationSyringe() : base()
         {
-            this.name = "Insemination Syringe";
-            this.initialParentTileIndex = InitialParentTileIndex;
-            this.indexOfMenuItemView = IndexOfMenuItemView;
-            this.stackable = false;
-            this.currentParentTileIndex = initialParentTileIndex;
-            this.numAttachmentSlots = 1;
-            this.attachments = new StardewValley.Object[numAttachmentSlots];
-            this.category = -99;
+            this.Name = "Insemination Syringe";
+            this.initialParentTileIndex.Value = InitialParentTileIndex;
+            this.indexOfMenuItemView.Value = IndexOfMenuItemView;
+            this.Stackable = false;
+            this.CurrentParentTileIndex = initialParentTileIndex;
+            this.numAttachmentSlots.Value = 1;
+            this.attachments.SetCount(numAttachmentSlots);
+            this.Category = -99;
+        }
+
+        public override Item getOne()
+        {
+            return (Item)new InseminationSyringe();
         }
 
         protected override string loadDisplayName()
@@ -57,7 +62,7 @@ namespace AnimalHusbandryMod.tools
             y = (int)who.GetToolLocation(false).Y;
             Rectangle rectangle = new Rectangle(x - Game1.tileSize / 2, y - Game1.tileSize / 2, Game1.tileSize, Game1.tileSize);
 
-            if (!DataLoader.ModConfig.DisablePregnancy)
+            if (Context.IsMainPlayer && !DataLoader.ModConfig.DisablePregnancy)
             {
                 if (location is Farm)
                 {
@@ -91,7 +96,7 @@ namespace AnimalHusbandryMod.tools
                     Game1.showRedMessage(DataLoader.i18n.Get("Tool.InseminationSyringe.Empty"));
                     this._animal = null;
                 }
-                else if (AnimalExtension.GetAnimalFromType(this._animal.type) ==  null)
+                else if (AnimalExtension.GetAnimalFromType(this._animal.type.Value) ==  null)
                 {
                     dialogue = DataLoader.i18n.Get("Tool.InseminationSyringe.CantBeInseminated", new { animalName = this._animal.displayName });
                 }
@@ -103,9 +108,9 @@ namespace AnimalHusbandryMod.tools
                 {
                     dialogue = DataLoader.i18n.Get("Tool.InseminationSyringe.TooYoung", new { animalName = this._animal.displayName });
                 }                
-                else if (PregnancyController.IsAnimalPregnant(this._animal.myID))
+                else if (PregnancyController.IsAnimalPregnant(this._animal.myID.Value))
                 {
-                    int daysUtillBirth = PregnancyController.GetPregnancyItem(this._animal.myID).DaysUntilBirth;
+                    int daysUtillBirth = PregnancyController.GetPregnancyItem(this._animal.myID.Value).DaysUntilBirth;
                     if (daysUtillBirth > 1)
                     {
                         dialogue = DataLoader.i18n.Get("Tool.InseminationSyringe.AlreadyPregnant", new { animalName = this._animal.displayName, numberOfDays = daysUtillBirth });
@@ -117,7 +122,7 @@ namespace AnimalHusbandryMod.tools
                 else if (!CheckCorrectProduct(this._animal, this.attachments[0]))
                 {
                     var data = DataLoader.Helper.Content.Load<Dictionary<int, string>>(@"Data\ObjectInformation.xnb", ContentSource.GameContent);
-                    string produceName = data[this._animal.defaultProduceIndex].Split('/')[4];
+                    string produceName = data[this._animal.defaultProduceIndex.Value].Split('/')[4];
                     dialogue = DataLoader.i18n.Get("Tool.InseminationSyringe.CorrectItem", new { itemName = produceName });
                 }
                 else if (PregnancyController.CheckBuildingLimit(this._animal))
@@ -127,9 +132,9 @@ namespace AnimalHusbandryMod.tools
                 else
                 {
                     this._animal.doEmote(16, true);
-                    if (this._animal.sound != null)
+                    if (this._animal.sound.Value != null)
                     {
-                        Cue animalSound = Game1.soundBank.GetCue(this._animal.sound);
+                        Cue animalSound = Game1.soundBank.GetCue(this._animal.sound.Value);
                         animalSound.Play();
                     }
                     DelayedAction.playSoundAfterDelay("fishingRodBend", 300);
@@ -164,16 +169,18 @@ namespace AnimalHusbandryMod.tools
 
         public override void DoFunction(GameLocation location, int x, int y, int power, StardewValley.Farmer who)
         {
-            this.currentParentTileIndex = InitialParentTileIndex;
-            this.indexOfMenuItemView = IndexOfMenuItemView;
+            this.lastUser = who;
+            Game1.recentMultiplayerRandom = new Random((int)(short)Game1.random.Next((int)short.MinValue, 32768));
+            this.CurrentParentTileIndex = InitialParentTileIndex;
+            this.indexOfMenuItemView.Value = IndexOfMenuItemView;
 
             if (this._animal != null)
             {
-                Animal? foundAnimal = AnimalExtension.GetAnimalFromType(this._animal.type);
+                Animal? foundAnimal = AnimalExtension.GetAnimalFromType(this._animal.type.Value);
                 who.Stamina -= ((float) 4f - (float)who.FarmingLevel * 0.2f);
                 int daysUtillBirth = (DataLoader.AnimalData.getAnimalItem((Animal)foundAnimal) as ImpregnatableAnimalItem).MinimumDaysUtillBirth;
-                PregnancyController.AddPregancy(new PregnancyItem(this._animal.myID, daysUtillBirth, this._animal.allowReproduction));
-                this._animal.allowReproduction = false;
+                PregnancyController.AddPregancy(new PregnancyItem(this._animal.myID.Value, daysUtillBirth, this._animal.allowReproduction.Value));
+                this._animal.allowReproduction.Value = false;
                 --this.attachments[0].Stack;
                 if (this.attachments[0].Stack <= 0)
                 {
@@ -186,30 +193,33 @@ namespace AnimalHusbandryMod.tools
             if (Game1.activeClickableMenu == null)
             {
                 who.CanMove = true;
+                who.completelyStopAnimatingOrDoingAction();
             }
             else
             {
                 who.Halt();
             }                
-            who.usingTool = false;
+            who.UsingTool = false;
             who.canReleaseTool = true;
+
+            DataLoader.Helper.Reflection.GetMethod(this,"finish").Invoke();
         }        
 
         public bool CheckCorrectProduct(FarmAnimal animal, StardewValley.Object @object)
         {
-            switch (AnimalExtension.GetAnimalFromType(animal.type))
+            switch (AnimalExtension.GetAnimalFromType(animal.type.Value))
             {
                 case Animal.Cow:
                 case Animal.Goat:                    
-                        return animal.defaultProduceIndex == @object.ParentSheetIndex || animal.deluxeProduceIndex == @object.ParentSheetIndex;                    
+                        return animal.defaultProduceIndex.Value == @object.ParentSheetIndex || animal.deluxeProduceIndex.Value == @object.ParentSheetIndex;                    
                 default:                    
-                        return animal.defaultProduceIndex == @object.ParentSheetIndex;
+                        return animal.defaultProduceIndex.Value == @object.ParentSheetIndex;
             }
         }
 
         public bool IsEggAnimal(FarmAnimal animal)
         {
-            switch (AnimalExtension.GetAnimalFromType(animal.type))
+            switch (AnimalExtension.GetAnimalFromType(animal.type.Value))
             {
                 case Animal.Duck:
                 case Animal.Chicken:
@@ -222,7 +232,7 @@ namespace AnimalHusbandryMod.tools
 
         public override bool canThisBeAttached(StardewValley.Object o)
         {
-            if (o == null || o.category == - 6 || o.parentSheetIndex == 430 || o.parentSheetIndex == 440)
+            if (o == null || o.Category == - 6 || o.ParentSheetIndex == 430 || o.ParentSheetIndex == 440)
             {
                 return true;
             }
@@ -274,24 +284,24 @@ namespace AnimalHusbandryMod.tools
         public Dictionary<string, string> getAdditionalSaveData()
         {
             Dictionary<string, string> savedata = new Dictionary<string, string>();
-            savedata.Add("name", name);
+            savedata.Add("name", Name);
             return savedata;
         }
 
         public dynamic getReplacement()
         {
             FishingRod replacement = new FishingRod(1);
-            replacement.upgradeLevel = -1;
-            replacement.attachments = this.attachments;
+            replacement.UpgradeLevel = -1;
+            replacement.attachments.Set(this.attachments);
             return replacement;
         }
 
 
         public void rebuild(Dictionary<string, string> additionalSaveData, object replacement)
         {
-            this.attachments = (replacement as Tool).attachments;
+            this.attachments.Set((replacement as Tool)?.attachments);
 
-            this.name = additionalSaveData["name"];
+            this.Name = additionalSaveData["name"];
         }
     }
 }

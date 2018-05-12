@@ -12,6 +12,9 @@ using AnimalHusbandryMod.common;
 using PyTK.CustomElementHandler;
 using StardewValley.Characters;
 using StardewValley.Locations;
+using AnimalHusbandryMod.animals;
+using Netcode;
+using StardewModdingAPI;
 
 namespace AnimalHusbandryMod.tools
 {
@@ -26,14 +29,19 @@ namespace AnimalHusbandryMod.tools
 
         public FeedingBasket() : base()
         {
-            this.name = "Feeding Basket";
-            this.initialParentTileIndex = InitialParentTileIndex;
-            this.indexOfMenuItemView = IndexOfMenuItemView;
-            this.stackable = false;
-            this.currentParentTileIndex = initialParentTileIndex;
-            this.numAttachmentSlots = 1;
-            this.attachments = new StardewValley.Object[numAttachmentSlots];
-            this.category = -99;
+            this.Name = "Feeding Basket";
+            this.initialParentTileIndex.Value = InitialParentTileIndex;
+            this.indexOfMenuItemView.Value = IndexOfMenuItemView;
+            this.Stackable = false;
+            this.CurrentParentTileIndex = initialParentTileIndex;
+            this.numAttachmentSlots.Value = 1;
+            this.attachments.SetCount(numAttachmentSlots);
+            this.Category = -99;
+        }
+
+        public override Item getOne()
+        {
+            return (Item)new FeedingBasket();
         }
 
         protected override string loadDisplayName()
@@ -57,7 +65,7 @@ namespace AnimalHusbandryMod.tools
             y = (int)who.GetToolLocation(false).Y;
             Rectangle rectangle = new Rectangle(x - Game1.tileSize / 2, y - Game1.tileSize / 2, Game1.tileSize, Game1.tileSize);
 
-            if (!DataLoader.ModConfig.DisableTreats)
+            if (Context.IsMainPlayer && !DataLoader.ModConfig.DisableTreats)
             {
                 if (location is Farm)
                 {
@@ -71,7 +79,7 @@ namespace AnimalHusbandryMod.tools
                     }
                     if (this._animal == null)
                     {
-                        foreach (Pet pet in location.characters.FindAll(i => i is Pet))
+                        foreach (Pet pet in location.characters.Where(i => i is Pet))
                         {
                             if (pet.GetBoundingBox().Intersects(rectangle))
                             {
@@ -94,7 +102,7 @@ namespace AnimalHusbandryMod.tools
                 }
                 else if (location is FarmHouse)
                 {
-                    foreach (Pet pet in location.characters.FindAll(i => i is Pet))
+                    foreach (Pet pet in location.characters.Where(i => i is Pet))
                     {
                         if (pet.GetBoundingBox().Intersects(rectangle))
                         {
@@ -117,11 +125,11 @@ namespace AnimalHusbandryMod.tools
                 {
                     dialogue = DataLoader.i18n.Get("Tool.FeedingBasket.NotLikeTreat", new { itemName = this.attachments[0].DisplayName });
                 }
-                else if (!TreatsController.IsLikedTreat(this._animal, this.attachments[0].parentSheetIndex) && !TreatsController.IsLikedTreat(this._animal, this.attachments[0].Category))
+                else if (!TreatsController.IsLikedTreat(this._animal, this.attachments[0].ParentSheetIndex) && !TreatsController.IsLikedTreat(this._animal, this.attachments[0].Category))
                 {
                     dialogue = DataLoader.i18n.Get("Tool.FeedingBasket.NotLikeTreat", new  { itemName = this.attachments[0].DisplayName});
                 }
-                else if (this.attachments[0].category == StardewValley.Object.MilkCategory && !this._animal.isBaby())
+                else if (this.attachments[0].Category == StardewValley.Object.MilkCategory && !this._animal.isBaby())
                 {
                     dialogue = DataLoader.i18n.Get("Tool.FeedingBasket.OnlyBabiesCanEatMilk");
                 }
@@ -164,7 +172,7 @@ namespace AnimalHusbandryMod.tools
                     Game1.showRedMessage(DataLoader.i18n.Get("Tool.FeedingBasket.Empty"));
                     this._pet = null;
                 }
-                else if (!TreatsController.IsLikedTreatPet(this.attachments[0].parentSheetIndex) && !TreatsController.IsLikedTreatPet(this.attachments[0].Category))
+                else if (!TreatsController.IsLikedTreatPet(this.attachments[0].ParentSheetIndex) && !TreatsController.IsLikedTreatPet(this.attachments[0].Category))
                 {
                     dialogue = DataLoader.i18n.Get("Tool.FeedingBasket.NotLikeTreat", new { itemName = this.attachments[0].DisplayName });
                 }
@@ -189,8 +197,9 @@ namespace AnimalHusbandryMod.tools
                 {
                     _pet.Halt();
                     _pet.CurrentBehavior = 0;
+                    _pet.initiateCurrentBehavior();
                     _pet.Halt();
-                    _pet.sprite.setCurrentAnimation(new List<FarmerSprite.AnimationFrame>(){ new FarmerSprite.AnimationFrame(18, 200) });
+                    _pet.Sprite.setCurrentAnimation(new List<FarmerSprite.AnimationFrame>(){ new FarmerSprite.AnimationFrame(18, 200) });
 
                 }
 
@@ -249,13 +258,13 @@ namespace AnimalHusbandryMod.tools
                 Vector2 vectorFood = new Vector2((float) numX - 24, (float) numY - 10);
                 var foodScale = Game1.pixelZoom * 0.75f;
 
-                TemporaryAnimatedSprite basketSprite = new TemporaryAnimatedSprite(Game1.toolSpriteSheet,
-                    Game1.getSourceRectForStandardTileSheet(Game1.toolSpriteSheet, this.currentParentTileIndex, 16, 16),
+                TemporaryAnimatedSprite basketSprite = new TemporaryAnimatedSprite(Game1.toolSpriteSheetName,
+                    Game1.getSourceRectForStandardTileSheet(Game1.toolSpriteSheet, this.CurrentParentTileIndex, 16, 16),
                     750.0f, 1, 1, vectorBasket, false, false, ((float) boundingBox.Bottom + 0.1f) / 10000f, 0.0f,
                     Color.White, Game1.pixelZoom, 0.0f, 0.0f, 0.0f) {delayBeforeAnimationStart = 100};
                 who.currentLocation.temporarySprites.Add(basketSprite);
-                TemporaryAnimatedSprite foodSprite = new TemporaryAnimatedSprite(Game1.objectSpriteSheet,
-                    Game1.getSourceRectForStandardTileSheet(Game1.objectSpriteSheet,this.attachments[0].parentSheetIndex,
+                TemporaryAnimatedSprite foodSprite = new TemporaryAnimatedSprite(Game1.objectSpriteSheetName,
+                    Game1.getSourceRectForStandardTileSheet(Game1.objectSpriteSheet,this.attachments[0].ParentSheetIndex,
                     16, 16), 500.0f, 1, 1, vectorFood, false, false,((float) boundingBox.Bottom + 0.2f) / 10000f, 0.0f,
                     Color.White, foodScale, 0.0f, 0.0f, 0.0f) {delayBeforeAnimationStart = 100};
                 who.currentLocation.temporarySprites.Add(foodSprite);
@@ -263,14 +272,14 @@ namespace AnimalHusbandryMod.tools
                 for (int index = 0; index < 8; ++index)
                 {
                     Rectangle standardTileSheet = Game1.getSourceRectForStandardTileSheet(Game1.objectSpriteSheet,
-                        this.attachments[0].parentSheetIndex, 16, 16);
+                        this.attachments[0].ParentSheetIndex, 16, 16);
                     standardTileSheet.X += 8;
                     standardTileSheet.Y += 8;
 
                     standardTileSheet.Width = Game1.pixelZoom;
                     standardTileSheet.Height = Game1.pixelZoom;
                     TemporaryAnimatedSprite temporaryAnimatedSprite2 =
-                        new TemporaryAnimatedSprite(Game1.objectSpriteSheet, standardTileSheet, 400f, 1, 0,
+                        new TemporaryAnimatedSprite(Game1.objectSpriteSheetName, standardTileSheet, 400f, 1, 0,
                             vectorFood + new Vector2(12, 12), false, false,
                             ((float) boundingBox.Bottom + 0.2f) / 10000f, 0.0f, Color.White, (float) foodScale, 0.0f,
                             0.0f, 0.0f, false)
@@ -285,14 +294,14 @@ namespace AnimalHusbandryMod.tools
                 if (this._animal != null)
                 {
                     Game1.delayedActions.Add(new DelayedAction(300, new DelayedAction.delayedBehavior(() => {
-                        AnimalHusbandryModEntery.ModHelper.Reflection.GetField<bool>(this._animal, "isEating").SetValue(true);
-                        this._animal.sprite.loop = false;
+                        AnimalHusbandryModEntery.ModHelper.Reflection.GetField<NetBool>(this._animal, "isEating").GetValue().Value = true;
+                        this._animal.Sprite.loop = false;
                     })));
                 }
                 else if (this._pet != null)
                 {
                     
-                    _pet.sprite.setCurrentAnimation(new List<FarmerSprite.AnimationFrame>()
+                    _pet.Sprite.setCurrentAnimation(new List<FarmerSprite.AnimationFrame>()
                     {
                         new FarmerSprite.AnimationFrame(18, 300),
                         new FarmerSprite.AnimationFrame(17, 100),
@@ -302,7 +311,7 @@ namespace AnimalHusbandryMod.tools
                         new FarmerSprite.AnimationFrame(17, 100),
                         new FarmerSprite.AnimationFrame(18, 300)
                     });
-                    _pet.sprite.loop = false;
+                    _pet.Sprite.loop = false;
                 }
                 DelayedAction.playSoundAfterDelay("eat", 600);
             }
@@ -312,8 +321,10 @@ namespace AnimalHusbandryMod.tools
 
         public override void DoFunction(GameLocation location, int x, int y, int power, StardewValley.Farmer who)
         {
-            this.currentParentTileIndex = InitialParentTileIndex;
-            this.indexOfMenuItemView = IndexOfMenuItemView;
+            this.lastUser = who;
+            Game1.recentMultiplayerRandom = new Random((int)(short)Game1.random.Next((int)short.MinValue, 32768));
+            this.CurrentParentTileIndex = InitialParentTileIndex;
+            this.indexOfMenuItemView.Value = IndexOfMenuItemView;
 
             if (this._animal != null)
             {
@@ -326,23 +337,23 @@ namespace AnimalHusbandryMod.tools
                     {
                         professionAjust += DataLoader.ModConfig.PercentualAjustOnFriendshipInscreaseFromProfessions;
                     }
-                    this._animal.friendshipTowardFarmer = Math.Min(1000, this._animal.friendshipTowardFarmer + (int)Math.Ceiling(professionAjust * this.attachments[0].price * (1.0 + this.attachments[0].quality * 0.25) / (this._animal.price / 1000.0)));
+                    this._animal.friendshipTowardFarmer.Value = Math.Min(1000, this._animal.friendshipTowardFarmer.Value + (int)Math.Ceiling(professionAjust * this.attachments[0].Price * (1.0 + this.attachments[0].Quality * 0.25) / (this._animal.price.Value / 1000.0)));
                 }
                 if (!DataLoader.ModConfig.DisableMoodInscreseWithTreats)
                 {
-                    this._animal.happiness = byte.MaxValue;
+                    this._animal.happiness.Value = byte.MaxValue;
                 }
 
                 if (DataLoader.ModConfig.EnableTreatsCountAsAnimalFeed)
                 {
-                    this._animal.fullness = byte.MaxValue;
+                    this._animal.fullness.Value = byte.MaxValue;
                 }
 
                 TreatsController.FeedAnimalTreat(this._animal, this.attachments[0]);
 
                 if (this.attachments[0].Category == StardewValley.Object.MilkCategory)
                 {
-                    this._animal.age = Math.Min(this._animal.ageWhenMature - 1, this._animal.age + 1);
+                    this._animal.age.Value = Math.Min(this._animal.ageWhenMature.Value - 1, this._animal.age.Value + 1);
                 }
 
                 --this.attachments[0].Stack;
@@ -362,7 +373,7 @@ namespace AnimalHusbandryMod.tools
                 }
                 TreatsController.FeedPetTreat(this.attachments[0]);
 
-                --this.attachments[0].Stack;
+                //--this.attachments[0].Stack;
                 if (this.attachments[0].Stack <= 0)
                 {
                     Game1.showGlobalMessage(DataLoader.i18n.Get("Tool.FeedingBasket.ItemConsumed", new { itemName = this.attachments[0].DisplayName }));
@@ -375,21 +386,26 @@ namespace AnimalHusbandryMod.tools
             if (Game1.activeClickableMenu == null)
             {
                 who.CanMove = true;
+                who.completelyStopAnimatingOrDoingAction();
             }
             else
             {
                 who.Halt();
             }
-            who.usingTool = false;
+            who.UsingTool = false;
             who.canReleaseTool = true;
+
+            DataLoader.Helper.Reflection.GetMethod(this, "finish").Invoke();
         }
+
+        
 
         public override bool canThisBeAttached(StardewValley.Object o)
         {
             if (o == null 
-                || o.category == StardewValley.Object.VegetableCategory 
-                || o.category == StardewValley.Object.FruitsCategory 
-                || TreatsController.IsLikedTreat(o.parentSheetIndex)
+                || o.Category == StardewValley.Object.VegetableCategory 
+                || o.Category == StardewValley.Object.FruitsCategory 
+                || TreatsController.IsLikedTreat(o.ParentSheetIndex)
                 || TreatsController.IsLikedTreat(o.Category)
                 )
             {
@@ -443,24 +459,26 @@ namespace AnimalHusbandryMod.tools
         public Dictionary<string, string> getAdditionalSaveData()
         {
             Dictionary<string, string> savedata = new Dictionary<string, string>();
-            savedata.Add("name", name);
+            savedata.Add("name", this.Name);
             return savedata;
         }
 
         public dynamic getReplacement()
         {
-            FishingRod replacement = new FishingRod(2);
-            replacement.upgradeLevel = -1;
-            replacement.attachments = this.attachments;
+            FishingRod replacement = new FishingRod(2)
+            {
+                UpgradeLevel = -1
+            };
+            replacement.attachments.Set(this.attachments);
             return replacement;
         }
 
 
         public void rebuild(Dictionary<string, string> additionalSaveData, object replacement)
         {
-            this.attachments = (replacement as Tool).attachments;
+            this.attachments.Set((replacement as Tool).attachments);
 
-            this.name = additionalSaveData["name"];
+            this.Name = additionalSaveData["name"];
         }
     }
 }

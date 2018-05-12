@@ -12,6 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AnimalHusbandryMod.animals.data;
 using AnimalHusbandryMod.common;
+using Netcode;
 
 namespace AnimalHusbandryMod.animals
 {
@@ -54,13 +55,13 @@ namespace AnimalHusbandryMod.animals
 
         public static bool CheckBuildingLimit(FarmAnimal animal)
         {
-            return CheckBuildingLimit((AnimalHouse)animal.home.indoors);
+            return CheckBuildingLimit((AnimalHouse)animal.home.indoors.Value);
         }
 
         public static bool CheckBuildingLimit(AnimalHouse animalHouse)
         {
             int? limit = null;
-            switch (animalHouse.name)
+            switch (animalHouse.Name)
             {
                 case "Deluxe Barn":
                     {
@@ -186,7 +187,7 @@ namespace AnimalHusbandryMod.animals
                 if (parentAnimals.Count > 0)
                 {
                     parentAnimal = parentAnimals.Dequeue();
-                    if ((parentAnimal.home.indoors as AnimalHouse).isFull())
+                    if ((parentAnimal.home.indoors.Value as AnimalHouse).isFull())
                     {
                         if (!DataLoader.ModConfig.DisableFullBuildingForBirthNotification)
                         {
@@ -216,20 +217,22 @@ namespace AnimalHusbandryMod.animals
         private static void addNewHatchedAnimal(string name)
         {
             Building building = parentAnimal.home;
-            FarmAnimal farmAnimal = new FarmAnimal(parentAnimal.type, MultiplayerUtility.getNewID(), Game1.player.uniqueMultiplayerID)
+            FarmAnimal farmAnimal = new FarmAnimal(parentAnimal.type.Value, DataLoader.Helper.Reflection.GetField<Multiplayer>(typeof(Game1), "multiplayer").GetValue().getNewID(), (long)Game1.player.UniqueMultiplayerID)
             {
-                name = name,
+                Name = name,
                 displayName = name,
-                parentId = parentAnimal.myID,
+                
                 home = building,
-                homeLocation = new Vector2((float)building.tileX, (float)building.tileY)
+                
             };
-            farmAnimal.setRandomPosition(farmAnimal.home.indoors);
-            (building.indoors as AnimalHouse).animals.Add(farmAnimal.myID, farmAnimal);
-            (building.indoors as AnimalHouse).animalsThatLiveHere.Add(farmAnimal.myID);
+            farmAnimal.parentId.Value = parentAnimal.myID.Value;
+            farmAnimal.homeLocation.Value = new Vector2((float) building.tileX.Value, (float) building.tileY.Value);
+            farmAnimal.setRandomPosition(farmAnimal.home.indoors.Value);
+            (building.indoors.Value as AnimalHouse).animals.Add(farmAnimal.myID.Value, farmAnimal);
+            (building.indoors.Value as AnimalHouse).animalsThatLiveHere.Add(farmAnimal.myID.Value);
 
-            PregnancyItem pregnacyItem = PregnancyController.GetPregnancyItem(parentAnimal.myID);
-            parentAnimal.allowReproduction = pregnacyItem.AllowReproductionBeforeInsemination;
+            PregnancyItem pregnacyItem = PregnancyController.GetPregnancyItem(parentAnimal.myID.Value);
+            parentAnimal.allowReproduction.Value = pregnacyItem.AllowReproductionBeforeInsemination;
             PregnancyController.RemovePregnancyItem(pregnacyItem.Id);
             parentAnimal = null;
 

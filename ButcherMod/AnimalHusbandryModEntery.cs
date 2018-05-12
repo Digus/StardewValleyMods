@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using AnimalHusbandryMod.animals;
 using MailFrameworkMod;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -63,7 +64,7 @@ namespace AnimalHusbandryMod
 
                 TimeEvents.AfterDayStarted += (x, y) => DataLoader.LivingWithTheAnimalsChannel.CheckChannelDay();
 
-                TimeEvents.AfterDayStarted += (x, y) => EventsLoader.CheckEventDay();
+                //TimeEvents.AfterDayStarted += (x, y) => EventsLoader.CheckEventDay();
 
                 if (!DataLoader.ModConfig.DisableMeat)
                 {
@@ -97,13 +98,13 @@ namespace AnimalHusbandryMod
                     harmony.Patch(sellToStorePrice, new HarmonyMethod(sellToStorePricePrefix), null);
                 }
                 //var addSpecificTemporarySprite = typeof(Event).GetMethod("addSpecificTemporarySprite");
-                var addSpecificTemporarySprite = this.Helper.Reflection.GetMethod(new Event(), "addSpecificTemporarySprite").MethodInfo;
-                var addSpecificTemporarySpritePostfix = typeof(EventsOverrides).GetMethod("addSpecificTemporarySprite");
-                harmony.Patch(addSpecificTemporarySprite, null, new HarmonyMethod(addSpecificTemporarySpritePostfix));
+                //var addSpecificTemporarySprite = this.Helper.Reflection.GetMethod(new Event(), "addSpecificTemporarySprite").MethodInfo;
+                //var addSpecificTemporarySpritePostfix = typeof(EventsOverrides).GetMethod("addSpecificTemporarySprite");
+                //harmony.Patch(addSpecificTemporarySprite, null, new HarmonyMethod(addSpecificTemporarySpritePostfix));
 
-                var petCheckAction = typeof(Pet).GetMethod("checkAction");
-                var petCheckActionPrefix = typeof(PetOverrides).GetMethod("checkAction");
-                harmony.Patch(petCheckAction, new HarmonyMethod(petCheckActionPrefix), null);
+                //var petCheckAction = typeof(Pet).GetMethod("checkAction");
+                //var petCheckActionPrefix = typeof(PetOverrides).GetMethod("checkAction");
+                //harmony.Patch(petCheckAction, new HarmonyMethod(petCheckActionPrefix), null);
             }
         }
 

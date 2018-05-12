@@ -61,7 +61,7 @@ namespace AnimalHusbandryMod.recipes
 
         private void ShowQueenAnnouncement(TV tv, TemporaryAnimatedSprite sprite, StardewValley.Farmer farmer, string answer)
         {
-            _queenSprite = new TemporaryAnimatedSprite(Game1.mouseCursors, new Rectangle(602, 361, 42, 28), 150f, 2, 999999, tv.getScreenPosition(), false, false, (float)((double)(tv.boundingBox.Bottom - 1) / 10000.0 + 9.99999974737875E-06), 0.0f, Color.White, tv.getScreenSizeModifier(), 0.0f, 0.0f, 0.0f, false);
+            _queenSprite = new TemporaryAnimatedSprite(Game1.mouseCursorsName, new Rectangle(602, 361, 42, 28), 150f, 2, 999999, tv.getScreenPosition(), false, false, (float)((double)(tv.boundingBox.Bottom - 1) / 10000.0 + 9.99999974737875E-06), 0.0f, Color.White, tv.getScreenSizeModifier(), 0.0f, 0.0f, 0.0f, false);
             CustomTVMod.showProgram(_queenSprite, DataLoader.i18n.Get("TV.MeatFriday.Announcement"), ShowRecipePresentation);
         }
 

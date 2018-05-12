@@ -36,9 +36,9 @@ namespace AnimalHusbandryMod.animals
         public AnimalQueryMenuExtended(FarmAnimal farmAnimal) : base(farmAnimal)
         {
             _farmAnimal = farmAnimal;
-            if (!DataLoader.ModConfig.DisablePregnancy)
+            if (Context.IsMainPlayer && !DataLoader.ModConfig.DisablePregnancy)
             {
-                if (PregnancyController.IsAnimalPregnant(this._farmAnimal.myID))
+                if (PregnancyController.IsAnimalPregnant(this._farmAnimal.myID.Value))
                 {
                     this.allowReproductionButton = null;
                     pregnantStatus = new ClickableTextureComponent(
@@ -50,7 +50,7 @@ namespace AnimalHusbandryMod.animals
                 }
             }
 
-            if (!DataLoader.ModConfig.DisableTreats && TreatsController.CanReceiveTreat(farmAnimal))
+            if (Context.IsMainPlayer && !DataLoader.ModConfig.DisableTreats && TreatsController.CanReceiveTreat(farmAnimal))
             {
                 if (TreatsController.IsReadyForTreat(farmAnimal))
                 {
@@ -103,11 +103,11 @@ namespace AnimalHusbandryMod.animals
                 if 
                 (
                     buildingAt != null                     
-                    && buildingAt.buildingType.Contains(this._farmAnimal.buildingTypeILiveIn)
-                    && ! (buildingAt.indoors as AnimalHouse).isFull()
+                    && buildingAt.buildingType.Value.Contains(this._farmAnimal.buildingTypeILiveIn.Value)
+                    && ! ((AnimalHouse) buildingAt.indoors.Value).isFull()
                     && ! buildingAt.Equals((object)this._farmAnimal.home)
-                    && PregnancyController.IsAnimalPregnant(this._farmAnimal.myID)
-                    && PregnancyController.CheckBuildingLimit((buildingAt.indoors as AnimalHouse))
+                    && PregnancyController.IsAnimalPregnant(this._farmAnimal.myID.Value)
+                    && PregnancyController.CheckBuildingLimit(((AnimalHouse) buildingAt.indoors.Value))
                 )
                 {
                     if (this.okButton != null && this.okButton.containsPoint(x, y))
@@ -123,8 +123,8 @@ namespace AnimalHusbandryMod.animals
             {
                 if (this.yesButton.containsPoint(x, y))
                 {
-                    (this._farmAnimal.home.indoors as AnimalHouse).animalsThatLiveHere.Remove(this._farmAnimal.myID);
-                    this._farmAnimal.health = -1;
+                    (this._farmAnimal.home.indoors.Value as AnimalHouse)?.animalsThatLiveHere.Remove(this._farmAnimal.myID.Value);
+                    this._farmAnimal.health.Value = -1;
                     int num1 = this._farmAnimal.frontBackSourceRect.Width / 2;
                     for (int index = 0; index < num1; ++index)
                     {
@@ -197,10 +197,10 @@ namespace AnimalHusbandryMod.animals
                 Building buildingAt = locationFromName.getBuildingAt(tile);
                 if (buildingAt != null)
                     if( buildingAt.color.Equals(Color.LightGreen * 0.8f)
-                    && PregnancyController.IsAnimalPregnant(this._farmAnimal.myID)
-                    && PregnancyController.CheckBuildingLimit((buildingAt.indoors as AnimalHouse)))
+                    && PregnancyController.IsAnimalPregnant(this._farmAnimal.myID.Value)
+                    && PregnancyController.CheckBuildingLimit((buildingAt.indoors.Value as AnimalHouse)))
                 {
-                    buildingAt.color = Color.Red * 0.8f;
+                    buildingAt.color.Value = Color.Red * 0.8f;
                 }
             }
             else
@@ -219,7 +219,7 @@ namespace AnimalHusbandryMod.animals
                 {
                     if (this.pregnantStatus.containsPoint(x, y))
                     {
-                        int daysUtilBirth = PregnancyController.GetPregnancyItem(this._farmAnimal.myID).DaysUntilBirth;
+                        int daysUtilBirth = PregnancyController.GetPregnancyItem(this._farmAnimal.myID.Value).DaysUntilBirth;
                         if (daysUtilBirth > 1)
                         {
                             _hoverText.SetValue(DataLoader.i18n.Get("Menu.AnimalQueryMenu.DaysUntilBirth", new { numberOfDays = daysUtilBirth }));
@@ -284,16 +284,16 @@ namespace AnimalHusbandryMod.animals
             if (!movingAnimal && !Game1.globalFade)
             {
                 b.Draw(Game1.fadeToBlackRect, Game1.graphics.GraphicsDevice.Viewport.Bounds, Color.Black * 0.75f);
-                Game1.drawDialogueBox(this.xPositionOnScreen, this.yPositionOnScreen + Game1.tileSize * 2, AnimalQueryMenu.width, AnimalQueryMenu.height - Game1.tileSize * 2, false, true, (string)null, false);
-                if ((int)this._farmAnimal.harvestType != 2)
+                Game1.drawDialogueBox(this.xPositionOnScreen, this.yPositionOnScreen + 128, AnimalQueryMenu.width, AnimalQueryMenu.height - 128, false, true, (string)null, false);
+                if ((int)this._farmAnimal.harvestType.Value != 2)
                     this._textBox.Draw(b);
-                int num1 = (this._farmAnimal.age + 1) / 28 + 1;
+                int num1 = (this._farmAnimal.age.Value + 1) / 28 + 1;
                 string text1;
                 if (num1 > 1)
                     text1 = Game1.content.LoadString("Strings\\UI:AnimalQuery_AgeN", (object)num1);
                 else
                     text1 = Game1.content.LoadString("Strings\\UI:AnimalQuery_Age1");
-                if (this._farmAnimal.age < (int)this._farmAnimal.ageWhenMature)
+                if (this._farmAnimal.age.Value < (int)this._farmAnimal.ageWhenMature.Value)
                     text1 += Game1.content.LoadString("Strings\\UI:AnimalQuery_AgeBaby");
                 Utility.drawTextWithShadow(b, text1, Game1.smallFont, new Vector2((float)(this.xPositionOnScreen + IClickableMenu.spaceToClearSideBorder + Game1.tileSize / 2), (float)(this.yPositionOnScreen + IClickableMenu.spaceToClearTopBorder + Game1.tileSize / 4 + Game1.tileSize * 2)), Game1.textColor, 1f, -1f, -1, -1, 1f, 3);
                 int num2 = 0;
@@ -313,17 +313,12 @@ namespace AnimalHusbandryMod.animals
                 this.okButton.draw(b);
                 this.sellButton.draw(b);
                 this.moveHomeButton.draw(b);
-                if (this.allowReproductionButton != null)
-                    this.allowReproductionButton.draw(b);
+                allowReproductionButton?.draw(b);
                 // START pregancyStatus treatStatus meatButton
-                if (this.animalContestIndicator != null)
-                    this.animalContestIndicator.draw(b);
-                if (this.pregnantStatus != null)
-                    this.pregnantStatus.draw(b);
-                if (this.treatStatus != null)
-                    this.treatStatus.draw(b);
-                if (this.meatButton != null)
-                    this.meatButton.draw(b);
+                animalContestIndicator?.draw(b);
+                pregnantStatus?.draw(b);
+                treatStatus?.draw(b);
+                meatButton?.draw(b);
                 // END PregancyStatus
                 // ADDED || confirmingMeat
                 if (confirmingSell || confirmingMeat)
@@ -335,7 +330,7 @@ namespace AnimalHusbandryMod.animals
                     this.yesButton.draw(b);
                     this.noButton.draw(b);
                 }
-                else if (hoverText != null && hoverText.Length > 0)
+                else if (!string.IsNullOrEmpty(hoverText))
                     IClickableMenu.drawHoverText(b, hoverText, Game1.smallFont, 0, 0, -1, (string)null, -1, (string[])null, (Item)null, 0, -1, -1, -1, -1, 1f, (CraftingRecipe)null);
             }
             else if (!Game1.globalFade)
