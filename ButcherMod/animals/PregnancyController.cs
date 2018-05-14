@@ -216,8 +216,8 @@ namespace AnimalHusbandryMod.animals
 
         private static void addNewHatchedAnimal(string name)
         {
-            Building building = parentAnimal.home;
-            FarmAnimal farmAnimal = new FarmAnimal(parentAnimal.type.Value, DataLoader.Helper.Reflection.GetField<Multiplayer>(typeof(Game1), "multiplayer").GetValue().getNewID(), (long)Game1.player.UniqueMultiplayerID)
+            Building building = parentAnimal.home; 
+             FarmAnimal farmAnimal = new FarmAnimal(parentAnimal.type.Value, DataLoader.Helper.Multiplayer.GetNewID(), (long)Game1.player.UniqueMultiplayerID)
             {
                 Name = name,
                 displayName = name,

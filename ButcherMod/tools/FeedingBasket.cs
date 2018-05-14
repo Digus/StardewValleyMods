@@ -373,7 +373,7 @@ namespace AnimalHusbandryMod.tools
                 }
                 TreatsController.FeedPetTreat(this.attachments[0]);
 
-                //--this.attachments[0].Stack;
+                --this.attachments[0].Stack;
                 if (this.attachments[0].Stack <= 0)
                 {
                     Game1.showGlobalMessage(DataLoader.i18n.Get("Tool.FeedingBasket.ItemConsumed", new { itemName = this.attachments[0].DisplayName }));
@@ -469,7 +469,7 @@ namespace AnimalHusbandryMod.tools
             {
                 UpgradeLevel = -1
             };
-            replacement.attachments.Set(this.attachments);
+            replacement.attachments.Set(this.attachments.AsEnumerable());
             return replacement;
         }
 

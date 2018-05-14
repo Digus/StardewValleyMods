@@ -292,7 +292,7 @@ namespace AnimalHusbandryMod.tools
         {
             FishingRod replacement = new FishingRod(1);
             replacement.UpgradeLevel = -1;
-            replacement.attachments.Set(this.attachments);
+            replacement.attachments.Set(this.attachments.AsEnumerable());
             return replacement;
         }
 
