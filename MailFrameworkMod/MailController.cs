@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI.Events;
 using StardewValley;
 using StardewValley.BellsAndWhistles;
@@ -27,7 +28,7 @@ namespace MailFrameworkMod
         {
             List<Letter> newLetters = MailDao.GetValidatedLetters();
             newLetters.RemoveAll((l)=>Letters.Contains(l));
-            newLetters.ForEach((l) =>Game1.mailbox.Add(CustomMailId));
+            newLetters.ForEach((l) =>Game1.mailbox.Insert(0,CustomMailId));
             Letters.AddRange(newLetters);
             UpdateNextLetterId();
         }
@@ -75,7 +76,14 @@ namespace MailFrameworkMod
                 if (Letters.Count > 0 && _nextLetterId == CustomMailId)
                 {
                     _shownLetter = Letters.First();
-                    var activeClickableMenu = new LetterViewerMenu(_shownLetter.Text.Replace("@", Game1.player.Name),_shownLetter.Id);
+                    var activeClickableMenu = new LetterViewerMenuExtended(_shownLetter.Text.Replace("@", Game1.player.Name),_shownLetter.Id);
+                    MailFrameworkModEntery.ModHelper.Reflection.GetField<int>(activeClickableMenu,"whichBG").SetValue(_shownLetter.WhichBG);
+                    if (_shownLetter.LetterTexture != null)
+                    {
+                        MailFrameworkModEntery.ModHelper.Reflection.GetField<Texture2D>(activeClickableMenu, "letterTexture").SetValue(_shownLetter.LetterTexture);
+                    }
+                    activeClickableMenu.TextColor = _shownLetter.TextColor;
+                    
                     Game1.activeClickableMenu = activeClickableMenu;
                     _shownLetter.Items?.ForEach(
                         (i) => activeClickableMenu.itemsToGrab.Add
@@ -146,11 +154,14 @@ namespace MailFrameworkMod
         /// <param name="e"></param>
         private static void MenuEvents_MenuClosed(object sender, EventArgsClickableMenuClosed e)
         {
-            Letters.Remove(_shownLetter);
-            _shownLetter.Callback?.Invoke(_shownLetter);
+            if (_shownLetter != null)
+            { 
+                Letters.Remove(_shownLetter);
+                _shownLetter.Callback?.Invoke(_shownLetter);
+                _shownLetter = null;
+            }
             UpdateNextLetterId();
             MenuEvents.MenuClosed -= MenuEvents_MenuClosed;
-            _shownLetter = null;
         }
 
         /// <summary>
@@ -166,6 +177,25 @@ namespace MailFrameworkMod
             {
                 _nextLetterId = "none";
             }
+        }
+
+        public static bool mailbox(GameLocation __instance)
+        {
+            if (Game1.mailbox.Count > 0 && Game1.player.ActiveObject == null)
+            { 
+                if (Game1.mailbox.First<string>().Contains(CustomMailId))
+                {
+                    string index = Game1.mailbox.First<string>();
+                    Game1.mailbox.RemoveAt(0);
+                    MailController.ShowLetter();
+                    return false;
+                }
+                else
+                {
+                    MenuEvents.MenuClosed += MenuEvents_MenuClosed;
+                }
+            }
+            return true;
         }
     }
 }

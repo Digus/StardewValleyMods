@@ -55,6 +55,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="0Harmony, Version=1.1.0.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>G:\Program Files (x86)\Steam\steamapps\common\Stardew Valley\Mods\PyTK\0Harmony.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -67,6 +72,7 @@
   <ItemGroup>
     <Compile Include="DataLoader.cs" />
     <Compile Include="Letter.cs" />
+    <Compile Include="LetterViewerMenuExtended.cs" />
     <Compile Include="MailController.cs" />
     <Compile Include="MailDao.cs" />
     <Compile Include="MailFrameworkModEntery.cs" />

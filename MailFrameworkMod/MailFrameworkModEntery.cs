@@ -4,8 +4,10 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Harmony;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
+using StardewValley;
 using StardewValley.Menus;
 
 namespace MailFrameworkMod
@@ -28,11 +30,30 @@ namespace MailFrameworkMod
             ModHelper = helper;
             monitor = Monitor;
             TimeEvents.AfterDayStarted += TimeEvents_AfterDayStarted;
-            SaveEvents.AfterLoad += SaveEvents_AfterLoad;
             SaveEvents.AfterReturnToTitle += SaveEvents_AfterReturnToTitle;
             SaveEvents.BeforeSave += TimeEvents_BeforeSave;
             var editors = helper.Content.AssetEditors;
             editors.Add(new DataLoader());
+
+           
+            try
+            {
+                var harmony = HarmonyInstance.Create("Digus.MailFrameworkMod");
+
+                var gameLocaltionMailbox = typeof(GameLocation).GetMethod("mailbox");
+                var mailControllerMailbox = typeof(MailController).GetMethod("mailbox");
+                harmony.Patch(gameLocaltionMailbox, new HarmonyMethod(mailControllerMailbox), null);
+                
+                var gameLetterViewerMenuGetTextColor = typeof(LetterViewerMenu).GetMethod("getTextColor", BindingFlags.NonPublic | BindingFlags.Instance);
+                var letterViewerMenuExtendedGetTextColor = typeof(LetterViewerMenuExtended).GetMethod("GetTextColor");
+                harmony.Patch(gameLetterViewerMenuGetTextColor, new HarmonyMethod(letterViewerMenuExtendedGetTextColor), null);
+            }
+            catch (Exception e)
+            {
+                Monitor.Log("Erro patching the GameLocation 'mailbox' Method. Applying old method of listening to menu change events.",LogLevel.Warn);
+                Monitor.Log(e.Message+e.StackTrace,LogLevel.Trace);
+                SaveEvents.AfterLoad += SaveEvents_AfterLoad;
+            }
         }
 
         /// <summary>
