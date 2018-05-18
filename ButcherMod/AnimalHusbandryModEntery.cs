@@ -82,21 +82,37 @@ namespace AnimalHusbandryMod
                     SaveEvents.BeforeSave += (x, y) => PregnancyController.UpdatePregnancy();
                 }
 
-                MenuEvents.MenuChanged += (s, e) =>
-                {
-                    if (e.NewMenu is AnimalQueryMenu && !(e.NewMenu is AnimalQueryMenuExtended))
-                    {
-                        Game1.activeClickableMenu = new AnimalQueryMenuExtended(this.Helper.Reflection.GetField<FarmAnimal>(e.NewMenu, "animal").GetValue());
-                    }
-                };
+                
 
                 var harmony = HarmonyInstance.Create("Digus.AnimalHusbandryMod");
+
+                try
+                {
+                    var farmAnimalPet = typeof(FarmAnimal).GetMethod("pet");
+                    var animalQueryMenuExtendedPet = typeof(AnimalQueryMenuExtended).GetMethod("Pet");
+                    harmony.Patch(farmAnimalPet, new HarmonyMethod(animalQueryMenuExtendedPet), null);
+                }
+                catch (Exception)
+                {
+                    Monitor.Log("Erro patching the FarmAnimal 'pet' Method. Applying old method of opening the extended animal query menu.", LogLevel.Warn);
+                    MenuEvents.MenuChanged += (s, e) =>
+                    {
+                        if (e.NewMenu is AnimalQueryMenu && !(e.NewMenu is AnimalQueryMenuExtended))
+                        {
+                            Game1.activeClickableMenu = new AnimalQueryMenuExtended(this.Helper.Reflection.GetField<FarmAnimal>(e.NewMenu, "animal").GetValue());
+                        }
+                    };
+                }
+
                 if (!DataLoader.ModConfig.DisableRancherMeatPriceAjust)
                 {
                     var sellToStorePrice = typeof(StardewValley.Object).GetMethod("sellToStorePrice");
                     var sellToStorePricePrefix = typeof(MeatPriceOverrides).GetMethod("sellToStorePrice");
                     harmony.Patch(sellToStorePrice, new HarmonyMethod(sellToStorePricePrefix), null);
                 }
+
+                
+
                 //var addSpecificTemporarySprite = typeof(Event).GetMethod("addSpecificTemporarySprite");
                 //var addSpecificTemporarySprite = this.Helper.Reflection.GetMethod(new Event(), "addSpecificTemporarySprite").MethodInfo;
                 //var addSpecificTemporarySpritePostfix = typeof(EventsOverrides).GetMethod("addSpecificTemporarySprite");

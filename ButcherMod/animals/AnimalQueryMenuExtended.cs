@@ -342,5 +342,56 @@ namespace AnimalHusbandryMod.animals
             }
             this.drawMouse(b);
         }
+
+        public static bool Pet(FarmAnimal __instance, ref Farmer who)
+        {
+            if (!who.FarmerSprite.PauseForSingleAnimation
+                && !(Game1.timeOfDay >= 1900 && !__instance.isMoving()))
+            {
+                if (!__instance.wasPet.Value
+                    && (
+                        (who.professions.Contains(3) && !__instance.isCoopDweller())
+                        || (who.professions.Contains(2) && __instance.isCoopDweller())
+                    )
+                )
+                {
+                    var ajust = ((uint) (__instance.happiness.Value) + (uint) Math.Max(5, 40 - (int) (__instance.happinessDrain.Value)) );
+                    if (ajust > byte.MaxValue)
+                    {
+                        __instance.happiness.Value -= (byte)(ajust - byte.MaxValue);
+                    }
+                }
+                else if(__instance.wasPet.Value
+                        &&(
+                            who.ActiveObject == null 
+                            || who.ActiveObject.ParentSheetIndex != 178)
+                        )
+                {
+                    who.Halt();
+                    who.faceGeneralDirection(__instance.Position, 0, false);
+                    __instance.Halt();
+                    __instance.Sprite.StopAnimation();
+                    __instance.uniqueFrameAccumulator = -1;
+                    switch (Game1.player.FacingDirection)
+                    {
+                        case 0:
+                            __instance.Sprite.currentFrame = 0;
+                            break;
+                        case 1:
+                            __instance.Sprite.currentFrame = 12;
+                            break;
+                        case 2:
+                            __instance.Sprite.currentFrame = 8;
+                            break;
+                        case 3:
+                            __instance.Sprite.currentFrame = 4;
+                            break;
+                    }
+                    Game1.activeClickableMenu = (IClickableMenu)new AnimalQueryMenuExtended(__instance);
+                    return false;
+                }
+            }
+            return true;
+        }
     }
 }
