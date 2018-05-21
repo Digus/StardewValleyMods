@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AnimalHusbandryMod.common;
 using AnimalHusbandryMod.animals.data;
+using AnimalHusbandryMod.meats;
 using Microsoft.Xna.Framework;
 using StardewValley;
 using StardewValley.Menus;
@@ -16,6 +17,10 @@ namespace AnimalHusbandryMod.animals
     {
         public static bool CanGetMeatFrom(FarmAnimal farmAnimal)
         {
+            if (farmAnimal.type.Value == "Dinosaur" && !DataLoader.ModConfig.DisableMeatFromDinosaur)
+            {
+                return true;
+            }
             try
             {
                 return GetAnimalItem(farmAnimal) != null;
@@ -40,7 +45,7 @@ namespace AnimalHusbandryMod.animals
 
             Animal animal;
             Animal? foundAnimal = AnimalExtension.GetAnimalFromType(farmAnimal.type.Value);
-            if (foundAnimal == null || foundAnimal == Animal.Dinosaur)
+            if (foundAnimal == null) 
             {
                 return itemsToReturn;
             }
@@ -49,12 +54,35 @@ namespace AnimalHusbandryMod.animals
                 animal = (Animal)foundAnimal;
             }
 
-            AnimalItem animalItem = DataLoader.AnimalData.getAnimalItem(animal);
-            int debrisType = (int)animal.GetMeat();
-            int meatPrice = DataLoader.MeatData.getMeatItem(animal.GetMeat()).Price;
-            int minimumNumberOfMeat = animalItem.MinimalNumberOfMeat;
-            int maxNumberOfMeat = animalItem.MaximumNumberOfMeat;
-            int numberOfMeat = minimumNumberOfMeat;
+            AnimalItem animalItem;
+            Meat meat;
+            int minimumNumberOfMeat;
+            int maxNumberOfMeat;
+            int meatPrice;
+            if (animal == Animal.Dinosaur)
+            {
+                if (DataLoader.ModConfig.DisableMeatFromDinosaur)
+                {
+                    return itemsToReturn;
+                }
+                animalItem = null;
+                var meats = Enum.GetValues(typeof(Meat));
+                meat = ((Meat)meats.GetValue(new Random((int)farmAnimal.myID.Value).Next(meats.Length)));
+                minimumNumberOfMeat = 1;
+                meatPrice = DataLoader.MeatData.getMeatItem(meat).Price;
+                maxNumberOfMeat = 1 + (1300 / meatPrice);
+            }
+            else
+            {
+                animalItem = DataLoader.AnimalData.getAnimalItem(animal);
+                meat = animal.GetMeat();
+                minimumNumberOfMeat = animalItem.MinimalNumberOfMeat;
+                meatPrice = DataLoader.MeatData.getMeatItem(meat).Price;
+                maxNumberOfMeat = animalItem.MaximumNumberOfMeat;
+                
+            }
+            var debrisType = (int)meat;
+            var numberOfMeat = minimumNumberOfMeat;
 
             numberOfMeat += (int)((farmAnimal.getSellPrice() / ((double)farmAnimal.price.Value) - 0.3) * (maxNumberOfMeat - minimumNumberOfMeat));
 

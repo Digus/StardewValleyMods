@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace AnimalHusbandryMod.meats
 {
-    public class MeatPriceOverrides
+    public class MeatOverrides
     {
         public static bool sellToStorePrice(StardewValley.Object __instance, ref int __result)
         {
@@ -20,6 +20,29 @@ namespace AnimalHusbandryMod.meats
                 return false;                
             }
             return true;            
+        }
+
+        public static bool isPotentialBasicShippedCategory(ref int index, ref string category, ref bool __result)
+        {
+            int.TryParse(category, out var categoryInt);
+            if  (categoryInt == -14)
+            {
+                __result = true;
+                return false;
+            }
+
+            return true;
+        }
+
+        public static bool countsForShippedCollection(StardewValley.Object __instance, ref bool __result)
+        {
+            if (__instance.Category == -14)
+            {
+                __result = true;
+                return false;
+            }
+
+            return true;
         }
     }
 }

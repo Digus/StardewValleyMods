@@ -107,8 +107,20 @@ namespace AnimalHusbandryMod
                 if (!DataLoader.ModConfig.DisableRancherMeatPriceAjust)
                 {
                     var sellToStorePrice = typeof(StardewValley.Object).GetMethod("sellToStorePrice");
-                    var sellToStorePricePrefix = typeof(MeatPriceOverrides).GetMethod("sellToStorePrice");
+                    var sellToStorePricePrefix = typeof(MeatOverrides).GetMethod("sellToStorePrice");
                     harmony.Patch(sellToStorePrice, new HarmonyMethod(sellToStorePricePrefix), null);
+                }
+
+                if (!DataLoader.ModConfig.DisableMeat)
+                {
+                    var objectIsPotentialBasicShippedCategory = typeof(StardewValley.Object).GetMethod("isPotentialBasicShippedCategory");
+                    var meatOverridesIsPotentialBasicShippedCategory = typeof(MeatOverrides).GetMethod("isPotentialBasicShippedCategory");
+                    harmony.Patch(objectIsPotentialBasicShippedCategory, new HarmonyMethod(meatOverridesIsPotentialBasicShippedCategory), null);
+
+                    var objectCountsForShippedCollection = typeof(StardewValley.Object).GetMethod("countsForShippedCollection");
+                    var meatOverridesCountsForShippedCollection = typeof(MeatOverrides).GetMethod("countsForShippedCollection");
+                    harmony.Patch(objectCountsForShippedCollection, new HarmonyMethod(meatOverridesCountsForShippedCollection), null);
+                    
                 }
 
                 
