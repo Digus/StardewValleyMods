@@ -110,7 +110,7 @@
     <Compile Include="animals\data\WoolAnimalItem.cs" />
     <Compile Include="animals\TreatsController.cs" />
     <Compile Include="common\EventOverrides.cs" />
-    <Compile Include="meats\MeatPriceOverrides.cs" />
+    <Compile Include="meats\MeatOverrides.cs" />
     <Compile Include="ModConfig.cs" />
     <Compile Include="animals\data\RabbitItem.cs" />
     <Compile Include="recipes\RecipeAttribute.cs" />
@@ -154,7 +154,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="common\CustomLetterTexture.png" />
+    <Content Include="common\CustomLetterBG.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="common\LooseSprites.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

@@ -153,7 +153,7 @@ namespace AnimalHusbandryMod.tools
         {
             base.DoFunction(location, x, y, power, who);
             who.Stamina -= ((float)4f - (float)who.FarmingLevel * 0.2f);
-            if (this._animal != null && this._animal.type.Value == "Dinosaur")
+            if (this._animal != null && this._animal.type.Value == "Dinosaur" && DataLoader.ModConfig.DisableMeatFromDinosaur)
             {
                 return;
             }

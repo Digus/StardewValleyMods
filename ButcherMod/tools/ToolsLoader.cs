@@ -20,11 +20,14 @@ namespace AnimalHusbandryMod.tools
     {
         private readonly Texture2D _toolsSpriteSheet;
         private readonly Texture2D _menuTilesSpriteSheet;
+        private readonly Texture2D _customLetterBG;
 
-        public ToolsLoader(Texture2D toolsSpriteSheet, Texture2D menuTilesSpriteSheet)
+
+        public ToolsLoader(Texture2D toolsSpriteSheet, Texture2D menuTilesSpriteSheet, Texture2D customLetterBG)
         {
             _toolsSpriteSheet = toolsSpriteSheet;
             _menuTilesSpriteSheet = menuTilesSpriteSheet;
+            _customLetterBG = customLetterBG;
         }
 
         public bool CanEdit<T>(IAssetInfo asset)
@@ -224,12 +227,18 @@ namespace AnimalHusbandryMod.tools
 
             if (!DataLoader.ModConfig.DisableMeat)
             {
-                MailDao.SaveLetter(new Letter("meatCleaver", meatCleaverText, new List<Item> { new MeatCleaver() }, MeatCleaverCondition));
+                Letter meatCleaverLetter = new Letter("meatCleaver", meatCleaverText, new List<Item> { new MeatCleaver() }, MeatCleaverCondition);
+                meatCleaverLetter.LetterTexture = _customLetterBG;
+                meatCleaverLetter.TextColor = 7;
+                MailDao.SaveLetter(meatCleaverLetter);
             }
             
             if (!DataLoader.ModConfig.DisablePregnancy)
             {
-                MailDao.SaveLetter(new Letter("inseminationSyringe", DataLoader.i18n.Get("Tool.InseminationSyringe.Letter"), new List<Item> { new InseminationSyringe() }, InseminationSyringeCondition));
+                Letter inseminationSyringeLetter = new Letter("inseminationSyringe", DataLoader.i18n.Get("Tool.InseminationSyringe.Letter"), new List<Item> { new InseminationSyringe() }, InseminationSyringeCondition);
+                inseminationSyringeLetter.LetterTexture = _customLetterBG;
+                inseminationSyringeLetter.TextColor = 7;
+                MailDao.SaveLetter(inseminationSyringeLetter);
             }
 
 

@@ -21,6 +21,7 @@ namespace AnimalHusbandryMod
         public bool DisableMoodInscreseWithTreats;
         public bool DisableFriendshipInscreseWithTreats;
         public bool EnableTreatsCountAsAnimalFeed;
+        public bool DisableMeatFromDinosaur;
         public double PercentualAjustOnFriendshipInscreaseFromProfessions;
 
         public ModConfig()
@@ -38,6 +39,7 @@ namespace AnimalHusbandryMod
             this.DisableMoodInscreseWithTreats = false;
             this.DisableFriendshipInscreseWithTreats = false;
             this.EnableTreatsCountAsAnimalFeed = false;
+            this.DisableMeatFromDinosaur = false;
             this.PercentualAjustOnFriendshipInscreaseFromProfessions = 0.25;
         }
     }

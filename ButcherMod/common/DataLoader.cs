@@ -52,7 +52,7 @@ namespace AnimalHusbandryMod.common
             }
 
             ToolsSprites = Helper.Content.Load<Texture2D>("tools/Tools.png");
-            ToolsLoader = new ToolsLoader(ToolsSprites, Helper.Content.Load<Texture2D>("tools/MenuTiles.png"));   
+            ToolsLoader = new ToolsLoader(ToolsSprites, Helper.Content.Load<Texture2D>("tools/MenuTiles.png"), Helper.Content.Load<Texture2D>("common/CustomLetterBG.png"));   
             editors.Add(ToolsLoader);
             ToolsLoader.LoadMail();
 
