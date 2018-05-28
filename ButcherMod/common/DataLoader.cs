@@ -69,6 +69,13 @@ namespace AnimalHusbandryMod.common
             AnimalData = DataLoader.Helper.ReadJsonFile<AnimalData>("data\\animals.json") ?? new AnimalData();
             DataLoader.Helper.WriteJsonFile("data\\animals.json", AnimalData);
 
+            CookingData = Helper.ReadJsonFile<CookingData>("data\\cooking.json") ?? new CookingData();
+            if (CookingData.Meatloaf.Recipe == null)
+            {
+                CookingData.CloneRecipeAndAmount(new CookingData());
+            }
+            Helper.WriteJsonFile("data\\cooking.json", CookingData);
+
             LivingWithTheAnimalsChannel = new LivingWithTheAnimalsChannel();
         }
 
@@ -94,8 +101,6 @@ namespace AnimalHusbandryMod.common
                 data[(int)Meat.Mutton] = Meat.Mutton.GetObjectString();
 
                 //COOKING
-                CookingData = Helper.ReadJsonFile<CookingData>("data\\cooking.json") ?? new CookingData();
-                Helper.WriteJsonFile("data\\cooking.json", CookingData);
 
                 data[(int)Cooking.Meatloaf] = Cooking.Meatloaf.GetObjectString();
                 data[(int)Cooking.OrangeChicken] = Cooking.OrangeChicken.GetObjectString();

@@ -21,8 +21,11 @@ namespace AnimalHusbandryMod.cooking
         public int Defense;
         public int Attack;
         public int Duration;
+        public string Recipe;
+        public int Amount;
 
-        public CookingItem(int price, int edibility, int farming, int fishing, int mining, int luck, int foraging, int maxEnergy, int magnetism, int speed, int defense, int attack, int duration)
+        public CookingItem(int price, int edibility, int farming, int fishing, int mining, int luck, int foraging, int maxEnergy, int magnetism, int speed, int defense, int attack, int duration, string recipe, int amount
+        )
         {
             Price = price;
             Edibility = edibility;
@@ -37,11 +40,19 @@ namespace AnimalHusbandryMod.cooking
             Defense = defense;
             Attack = attack;
             Duration = duration;
+            Recipe = recipe;
+            Amount = amount;
         }
 
         public string FillObjectString(string objectString)
         {
             return String.Format(objectString, Price, Edibility, Farming, Fishing, Mining, Luck, Foraging, MaxEnergy, Magnetism, Speed, Defense, Attack, Duration);
+        }
+
+        public void CopyRecipeAndAmount(CookingItem cookingItem)
+        {
+            Recipe = cookingItem.Recipe;
+            Amount = cookingItem.Amount;
         }
     }
 }

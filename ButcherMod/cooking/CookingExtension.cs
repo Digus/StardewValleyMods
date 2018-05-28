@@ -52,7 +52,8 @@ namespace AnimalHusbandryMod.cooking
 
         public static string GetRecipeString(this Cooking value)
         {
-            var recipeString = value.GetRecipe();
+            var cookingItem = DataLoader.CookingData.getCookingItem(value);
+            var recipeString = $"{cookingItem.Recipe}/1 10/{(int) value} {cookingItem.Amount}/default";
             if (LocalizedContentManager.CurrentLanguageCode != LocalizedContentManager.LanguageCode.en){
                 recipeString += "/" + DataLoader.i18n.Get($"Cooking.{value}.Name");
             }
