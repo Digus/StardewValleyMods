@@ -288,19 +288,18 @@ namespace AnimalHusbandryMod.tools
             return savedata;
         }
 
-        public dynamic getReplacement()
+        public object getReplacement()
         {
-            FishingRod replacement = new FishingRod(1);
-            replacement.UpgradeLevel = -1;
-            replacement.attachments.Set(this.attachments.AsEnumerable());
+            var replacement = new StardewValley.Objects.Chest(true);
+            if (attachments.Count() > 0)
+                replacement.addItem(attachments[0]);
             return replacement;
         }
 
-
         public void rebuild(Dictionary<string, string> additionalSaveData, object replacement)
         {
-            this.attachments.Set((replacement as Tool)?.attachments);
-
+            if (replacement is StardewValley.Objects.Chest c && c.items.Count > 0)
+                this.attachments.Add((StardewValley.Object)c.items[0]);
             this.Name = additionalSaveData["name"];
         }
     }
