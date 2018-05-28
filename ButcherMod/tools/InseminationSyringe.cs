@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using AnimalHusbandryMod.animals.data;
 using AnimalHusbandryMod.common;
 using PyTK.CustomElementHandler;
+using StardewValley.Objects;
 
 namespace AnimalHusbandryMod.tools
 {
@@ -290,16 +291,24 @@ namespace AnimalHusbandryMod.tools
 
         public object getReplacement()
         {
-            var replacement = new StardewValley.Objects.Chest(true);
+            var replacement = new Chest(true);
             if (attachments.Count() > 0)
+            {
                 replacement.addItem(attachments[0]);
+            }
             return replacement;
         }
 
         public void rebuild(Dictionary<string, string> additionalSaveData, object replacement)
         {
-            if (replacement is StardewValley.Objects.Chest c && c.items.Count > 0)
+            if (replacement is Chest c && c.items.Any())
+            {
                 this.attachments.Add((StardewValley.Object)c.items[0]);
+            }
+            else if (replacement is Tool tool)
+            {
+                this.attachments.Set(tool.attachments);
+            }
             this.Name = additionalSaveData["name"];
         }
     }
