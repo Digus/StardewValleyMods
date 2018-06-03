@@ -16,6 +16,7 @@ namespace MailFrameworkMod
     {
         public static IModHelper ModHelper;
         public static IMonitor monitor;
+        public static ModConfig ModConfig;
 
         /*********
         ** Public methods
@@ -29,31 +30,46 @@ namespace MailFrameworkMod
         {
             ModHelper = helper;
             monitor = Monitor;
+            ModConfig = helper.ReadConfig<ModConfig>();
             TimeEvents.AfterDayStarted += TimeEvents_AfterDayStarted;
             SaveEvents.AfterReturnToTitle += SaveEvents_AfterReturnToTitle;
             SaveEvents.BeforeSave += TimeEvents_BeforeSave;
             var editors = helper.Content.AssetEditors;
             editors.Add(new DataLoader());
-
            
             try
             {
                 var harmony = HarmonyInstance.Create("Digus.MailFrameworkMod");
 
-                var gameLocaltionMailbox = typeof(GameLocation).GetMethod("mailbox");
-                var mailControllerMailbox = typeof(MailController).GetMethod("mailbox");
-                harmony.Patch(gameLocaltionMailbox, new HarmonyMethod(mailControllerMailbox), null);
-                
                 var gameLetterViewerMenuGetTextColor = typeof(LetterViewerMenu).GetMethod("getTextColor", BindingFlags.NonPublic | BindingFlags.Instance);
                 var letterViewerMenuExtendedGetTextColor = typeof(LetterViewerMenuExtended).GetMethod("GetTextColor");
                 harmony.Patch(gameLetterViewerMenuGetTextColor, new HarmonyMethod(letterViewerMenuExtendedGetTextColor), null);
+
+                if (!ModConfig.UseOldMethodOfOpeningCustomMail)
+                {
+                    var gameLocaltionMailbox = typeof(GameLocation).GetMethod("mailbox");
+                    var mailControllerMailbox = typeof(MailController).GetMethod("mailbox");
+                    harmony.Patch(gameLocaltionMailbox, new HarmonyMethod(mailControllerMailbox), null);
+                }
+                else
+                {
+                    WatchLetterMenu();
+                }
             }
             catch (Exception e)
             {
                 Monitor.Log("Erro patching the GameLocation 'mailbox' Method. Applying old method of listening to menu change events.",LogLevel.Warn);
                 Monitor.Log(e.Message+e.StackTrace,LogLevel.Trace);
-                SaveEvents.AfterLoad += SaveEvents_AfterLoad;
+                WatchLetterMenu();
             }
+        }
+
+        /// <summary>
+        /// Old method of opening custom mails.
+        /// </summary>
+        private void WatchLetterMenu()
+        {
+            SaveEvents.AfterLoad += SaveEvents_AfterLoad;
         }
 
         /// <summary>

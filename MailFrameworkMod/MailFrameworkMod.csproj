@@ -76,6 +76,7 @@
     <Compile Include="MailController.cs" />
     <Compile Include="MailDao.cs" />
     <Compile Include="MailFrameworkModEntery.cs" />
+    <Compile Include="ModConfig.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

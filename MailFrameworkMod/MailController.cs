@@ -28,9 +28,18 @@ namespace MailFrameworkMod
         {
             List<Letter> newLetters = MailDao.GetValidatedLetters();
             newLetters.RemoveAll((l)=>Letters.Contains(l));
-            newLetters.ForEach((l) =>Game1.mailbox.Insert(0,CustomMailId));
-            Letters.AddRange(newLetters);
-            UpdateNextLetterId();
+            try
+            {
+                if (Game1.mailbox != null)
+                {
+                    newLetters.ForEach((l) => Game1.mailbox.Insert(0, CustomMailId));
+                    Letters.AddRange(newLetters);
+                }
+            }
+            finally
+            {
+                UpdateNextLetterId();
+            }
         }
 
 
@@ -40,18 +49,21 @@ namespace MailFrameworkMod
         public static void UnloadMailBox()
         {
             List<String> tempMailBox = new List<string>();
-            while (Game1.mailbox.Count > 0)
+            if (Game1.mailbox != null)
             {
-                tempMailBox.Add(Game1.mailbox.First());
-                Game1.mailbox.RemoveAt(0);
-            }
-            foreach (Letter letter in Letters)
-            {
-                tempMailBox.Remove(CustomMailId);
-            }
-            foreach (String mail in tempMailBox)
-            {
-                Game1.mailbox.Add(mail);
+                while (Game1.mailbox.Count > 0)
+                {
+                    tempMailBox.Add(Game1.mailbox.First());
+                    Game1.mailbox.RemoveAt(0);
+                }
+                foreach (Letter letter in Letters)
+                {
+                    tempMailBox.Remove(CustomMailId);
+                }
+                foreach (String mail in tempMailBox)
+                {
+                    Game1.mailbox.Add(mail);
+                }
             }
             Letters.Clear();
         }
@@ -110,30 +122,58 @@ namespace MailFrameworkMod
                     if (_shownLetter.Recipe != null)
                     {
                         string recipe = _shownLetter.Recipe;
-                        if (!Game1.player.cookingRecipes.ContainsKey(recipe))
+                        Dictionary<string, string> cookingData = MailFrameworkModEntery.ModHelper.Content.Load<Dictionary<string, string>>("Data\\CookingRecipes", ContentSource.GameContent);
+                        Dictionary<string, string> craftingData = MailFrameworkModEntery.ModHelper.Content.Load<Dictionary<string, string>>("Data\\CraftingRecipes", ContentSource.GameContent);
+                        string recipeString = null;
+                        int dataArrayI18NSize = 0;
+                        string cookingOrCraftingText = null;
+                        if (cookingData.ContainsKey(recipe))
                         {
-                            Game1.player.cookingRecipes.Add(recipe, 0);
+                            if (!Game1.player.cookingRecipes.ContainsKey(recipe))
+                            {
+                                Game1.player.cookingRecipes.Add(recipe, 0);
+                            }
+                            recipeString = cookingData[recipe];
+                            dataArrayI18NSize = 5;
+                            cookingOrCraftingText = Game1.content.LoadString("Strings\\UI:LearnedRecipe_cooking");
+                        }
+                        else if (craftingData.ContainsKey(recipe))
+                        {
+                            if (!Game1.player.craftingRecipes.ContainsKey(recipe))
+                            {
+                                Game1.player.craftingRecipes.Add(recipe, 0);
+                            }
+                            recipeString = craftingData[recipe];
+                            dataArrayI18NSize = 6;
+                            cookingOrCraftingText = Game1.content.LoadString("Strings\\UI:LearnedRecipe_crafting");
+                        }
+                        else
+                        {
+                            MailFrameworkModEntery.monitor.Log($"The recipe '{recipe}' was not found. The mail will ignore it.", LogLevel.Warn);
                         }
 
-                        string learnedRecipe = recipe;
-                        
-                        if (LocalizedContentManager.CurrentLanguageCode != LocalizedContentManager.LanguageCode.en)
+                        if (recipeString != null)
                         {
-                            string recipeString = Game1.content.Load<Dictionary<string, string>>("Data\\CookingRecipes")[recipe];
-                            string[] strArray = recipeString.Split('/');
-                            if (strArray.Length < 5)
+                            string learnedRecipe = recipe;
+                            if (LocalizedContentManager.CurrentLanguageCode != LocalizedContentManager.LanguageCode.en)
                             {
-                                MailFrameworkModEntery.monitor.Log($"The recipe '{recipe}' does not have a internationalized name. The default name will be used.", LogLevel.Warn);
+                                string[] strArray = recipeString.Split('/');
+                                if (strArray.Length < dataArrayI18NSize)
+                                {
+                                    MailFrameworkModEntery.monitor.Log($"The recipe '{recipe}' does not have a internationalized name. The default name will be used.", LogLevel.Warn);
+                                }
+                                else
+                                {
+                                    learnedRecipe = strArray[strArray.Length - 1];
+                                }
                             }
-                            else {
-                                learnedRecipe = strArray[strArray.Length - 1];
-                            }                            
-                        }
+
                             
-                        MailFrameworkModEntery.ModHelper.Reflection
-                            .GetField<String>(activeClickableMenu, "cookingOrCrafting").SetValue(Game1.content.LoadString("Strings\\UI:LearnedRecipe_cooking"));
-                        MailFrameworkModEntery.ModHelper.Reflection
-                            .GetField<String>(activeClickableMenu, "learnedRecipe").SetValue(learnedRecipe);
+                            MailFrameworkModEntery.ModHelper.Reflection
+                                .GetField<String>(activeClickableMenu, "cookingOrCrafting").SetValue(cookingOrCraftingText);
+                            MailFrameworkModEntery.ModHelper.Reflection
+                                .GetField<String>(activeClickableMenu, "learnedRecipe").SetValue(learnedRecipe);
+                        }
                     }
 
                     MenuEvents.MenuClosed += MenuEvents_MenuClosed;
@@ -169,19 +209,22 @@ namespace MailFrameworkMod
         /// </summary>
         private static void UpdateNextLetterId()
         {
-            if (Game1.mailbox.Count > 0)
+            if (Game1.mailbox != null)
             {
-                _nextLetterId = Game1.mailbox.First();
-            }
-            else
-            {
-                _nextLetterId = "none";
+                if (Game1.mailbox.Count > 0)
+                {
+                    _nextLetterId = Game1.mailbox.First();
+                }
+                else
+                {
+                    _nextLetterId = "none";
+                }
             }
         }
 
         public static bool mailbox(GameLocation __instance)
         {
-            if (Game1.mailbox.Count > 0 && Game1.player.ActiveObject == null)
+            if (Game1.mailbox != null && Game1.mailbox.Count > 0 && Game1.player.ActiveObject == null)
             { 
                 if (Game1.mailbox.First<string>().Contains(CustomMailId))
                 {
