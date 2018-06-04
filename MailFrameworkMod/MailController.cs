@@ -32,7 +32,18 @@ namespace MailFrameworkMod
             {
                 if (Game1.mailbox != null)
                 {
-                    newLetters.ForEach((l) => Game1.mailbox.Insert(0, CustomMailId));
+                    newLetters.ForEach((l) =>
+                    {
+                        if (Game1.mailbox.Count > 0)
+                        {
+                            Game1.mailbox.Insert(0, CustomMailId);
+                        }
+                        else
+                        {
+                            Game1.mailbox.Add(CustomMailId);
+                        }
+                        
+                    });
                     Letters.AddRange(newLetters);
                 }
             }
