@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI.Events;
 using StardewValley;
-using StardewValley.BellsAndWhistles;
 using StardewValley.Menus;
 using StardewModdingAPI;
 
@@ -30,21 +27,18 @@ namespace MailFrameworkMod
             newLetters.RemoveAll((l)=>Letters.Contains(l));
             try
             {
-                if (Game1.mailbox != null)
+                while (Game1.mailbox.Contains(null))
                 {
+                    Game1.mailbox.Remove(null);
+                }
+                if (newLetters.Count > 0) {
+                    IList<string> mailbox = new List<string>(Game1.mailbox);
                     newLetters.ForEach((l) =>
                     {
-                        if (Game1.mailbox.Count > 0)
-                        {
-                            Game1.mailbox.Insert(0, CustomMailId);
-                        }
-                        else
-                        {
-                            Game1.mailbox.Add(CustomMailId);
-                        }
-                        
+                        mailbox.Insert(0, CustomMailId);
+                        Letters.Add(l);
                     });
-                    Letters.AddRange(newLetters);
+                    Game1.player.mailbox.Set(mailbox);
                 }
             }
             finally
@@ -60,22 +54,20 @@ namespace MailFrameworkMod
         public static void UnloadMailBox()
         {
             List<String> tempMailBox = new List<string>();
-            if (Game1.mailbox != null)
+            while (Game1.mailbox.Count > 0)
             {
-                while (Game1.mailbox.Count > 0)
-                {
-                    tempMailBox.Add(Game1.mailbox.First());
-                    Game1.mailbox.RemoveAt(0);
-                }
-                foreach (Letter letter in Letters)
-                {
-                    tempMailBox.Remove(CustomMailId);
-                }
-                foreach (String mail in tempMailBox)
-                {
-                    Game1.mailbox.Add(mail);
-                }
+                tempMailBox.Add(Game1.mailbox.First());
+                Game1.mailbox.RemoveAt(0);
             }
+            foreach (Letter letter in Letters)
+            {
+                tempMailBox.Remove(CustomMailId);
+            }
+            foreach (String mail in tempMailBox)
+            {
+                Game1.mailbox.Add(mail);
+            }
+            
             Letters.Clear();
         }
 
@@ -178,7 +170,6 @@ namespace MailFrameworkMod
                                     learnedRecipe = strArray[strArray.Length - 1];
                                 }
                             }
-
                             
                             MailFrameworkModEntery.ModHelper.Reflection
                                 .GetField<String>(activeClickableMenu, "cookingOrCrafting").SetValue(cookingOrCraftingText);
@@ -188,7 +179,6 @@ namespace MailFrameworkMod
                     }
 
                     MenuEvents.MenuClosed += MenuEvents_MenuClosed;
-                    ;
                 }
                 else
                 {
@@ -220,26 +210,26 @@ namespace MailFrameworkMod
         /// </summary>
         private static void UpdateNextLetterId()
         {
-            if (Game1.mailbox != null)
+            if (Game1.mailbox.Count > 0)
             {
-                if (Game1.mailbox.Count > 0)
-                {
-                    _nextLetterId = Game1.mailbox.First();
-                }
-                else
-                {
-                    _nextLetterId = "none";
-                }
+                _nextLetterId = Game1.mailbox.First();
+            }
+            else
+            {
+                _nextLetterId = "none";
             }
         }
 
         public static bool mailbox(GameLocation __instance)
         {
-            if (Game1.mailbox != null && Game1.mailbox.Count > 0 && Game1.player.ActiveObject == null)
-            { 
-                if (Game1.mailbox.First<string>().Contains(CustomMailId))
+            if (Game1.mailbox.Count > 0 && Game1.player.ActiveObject == null)
+            {
+                if (Game1.mailbox.First<string>() == null)
                 {
-                    string index = Game1.mailbox.First<string>();
+                    Game1.mailbox.RemoveAt(0);
+                    return false;
+                } else if (Game1.mailbox.First<string>().Contains(CustomMailId))
+                {
                     Game1.mailbox.RemoveAt(0);
                     MailController.ShowLetter();
                     return false;
