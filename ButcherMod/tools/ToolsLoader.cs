@@ -229,7 +229,7 @@ namespace AnimalHusbandryMod.tools
             {
                 Letter meatCleaverLetter = new Letter("meatCleaver", meatCleaverText, new List<Item> { new MeatCleaver() }, MeatCleaverCondition);
                 meatCleaverLetter.LetterTexture = _customLetterBG;
-                meatCleaverLetter.TextColor = 7;
+                meatCleaverLetter.TextColor = 4;
                 MailDao.SaveLetter(meatCleaverLetter);
             }
             
@@ -237,7 +237,7 @@ namespace AnimalHusbandryMod.tools
             {
                 Letter inseminationSyringeLetter = new Letter("inseminationSyringe", DataLoader.i18n.Get("Tool.InseminationSyringe.Letter"), new List<Item> { new InseminationSyringe() }, InseminationSyringeCondition);
                 inseminationSyringeLetter.LetterTexture = _customLetterBG;
-                inseminationSyringeLetter.TextColor = 7;
+                inseminationSyringeLetter.TextColor = 4;
                 MailDao.SaveLetter(inseminationSyringeLetter);
             }
 

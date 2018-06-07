@@ -9,6 +9,7 @@ using AnimalHusbandryMod.recipes;
 using AnimalHusbandryMod.tools;
 using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
+using StardewValley;
 using Object = StardewValley.Object;
 
 namespace AnimalHusbandryMod.common

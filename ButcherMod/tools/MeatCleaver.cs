@@ -206,7 +206,7 @@ namespace AnimalHusbandryMod.tools
                 (
                     new TemporaryAnimatedSprite
                     (
-                        this._animal.Sprite.textureName
+                        this._animal.Sprite.textureName.Value
                         ,this._animal.Sprite.SourceRect
                         , this._animal.position
                         , this._animal.FacingDirection == Game1.left
