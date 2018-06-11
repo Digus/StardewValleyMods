@@ -5,9 +5,9 @@
 		"MajorVersion": 1,
 		"MinorVersion": 3,
 		"PatchVersion": 0,
-		"Build": "beta.5"
+		"Build": "beta.6"
 	},
-	"MinimumApiVersion": "2.6-beta.14",
+	"MinimumApiVersion": "2.6-beta.15",
 	"Description": "Utility classes to send mail in the game.",
 	"UniqueID": "DIGUS.MailFrameworkMod",
 	"EntryDll": "MailFrameworkMod.dll",

@@ -170,11 +170,19 @@ namespace MailFrameworkMod
                                     learnedRecipe = strArray[strArray.Length - 1];
                                 }
                             }
-                            
-                            MailFrameworkModEntery.ModHelper.Reflection
-                                .GetField<String>(activeClickableMenu, "cookingOrCrafting").SetValue(cookingOrCraftingText);
-                            MailFrameworkModEntery.ModHelper.Reflection
-                                .GetField<String>(activeClickableMenu, "learnedRecipe").SetValue(learnedRecipe);
+
+                            if (MailFrameworkModEntery.ModHelper.Reflection.GetMethod(activeClickableMenu, "getTextColor").Invoke<int>() == -1)
+                            {
+                                MailFrameworkModEntery.ModHelper.Reflection
+                                    .GetField<String>(activeClickableMenu, "cookingOrCrafting").SetValue(cookingOrCraftingText);
+                                MailFrameworkModEntery.ModHelper.Reflection
+                                    .GetField<String>(activeClickableMenu, "learnedRecipe").SetValue(learnedRecipe);
+                            }
+                            else
+                            {
+                                activeClickableMenu.CookingOrCrafting = cookingOrCraftingText;
+                                activeClickableMenu.LearnedRecipe = learnedRecipe;
+                            }
                         }
                     }
 
