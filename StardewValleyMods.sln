@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnimalHusbandryMod", "Butch
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MailFrameworkMod", "MailFrameworkMod\MailFrameworkMod.csproj", "{9AB101DD-FB56-4441-8180-783405D2D2F0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EverlastingBaitsAndUnbreakableTacklesMod", "EverlastingBaitsUnbreakableTacklesMod\EverlastingBaitsAndUnbreakableTacklesMod.csproj", "{3A15291C-575C-49DC-928F-F88BF8F91C53}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WaterRetainingFieldMod", "WaterRetainingFieldMod\WaterRetainingFieldMod.csproj", "{FCAFBC46-6562-4BD5-9DCC-3B5A2689EABC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,6 +35,22 @@ Global
 		{9AB101DD-FB56-4441-8180-783405D2D2F0}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9AB101DD-FB56-4441-8180-783405D2D2F0}.Release|x86.ActiveCfg = Release|x86
 		{9AB101DD-FB56-4441-8180-783405D2D2F0}.Release|x86.Build.0 = Release|x86
+		{3A15291C-575C-49DC-928F-F88BF8F91C53}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A15291C-575C-49DC-928F-F88BF8F91C53}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A15291C-575C-49DC-928F-F88BF8F91C53}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{3A15291C-575C-49DC-928F-F88BF8F91C53}.Debug|x86.Build.0 = Debug|Any CPU
+		{3A15291C-575C-49DC-928F-F88BF8F91C53}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A15291C-575C-49DC-928F-F88BF8F91C53}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3A15291C-575C-49DC-928F-F88BF8F91C53}.Release|x86.ActiveCfg = Release|Any CPU
+		{3A15291C-575C-49DC-928F-F88BF8F91C53}.Release|x86.Build.0 = Release|Any CPU
+		{FCAFBC46-6562-4BD5-9DCC-3B5A2689EABC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FCAFBC46-6562-4BD5-9DCC-3B5A2689EABC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FCAFBC46-6562-4BD5-9DCC-3B5A2689EABC}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{FCAFBC46-6562-4BD5-9DCC-3B5A2689EABC}.Debug|x86.Build.0 = Debug|Any CPU
+		{FCAFBC46-6562-4BD5-9DCC-3B5A2689EABC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FCAFBC46-6562-4BD5-9DCC-3B5A2689EABC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FCAFBC46-6562-4BD5-9DCC-3B5A2689EABC}.Release|x86.ActiveCfg = Release|Any CPU
+		{FCAFBC46-6562-4BD5-9DCC-3B5A2689EABC}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
