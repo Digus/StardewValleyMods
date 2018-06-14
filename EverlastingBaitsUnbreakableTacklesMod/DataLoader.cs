@@ -22,7 +22,7 @@ namespace EverlastingBaitsAndUnbreakableTacklesMod
             I18N = helper.Translation;
 
             
-            AddLetter(BaitTackle.EverlastingBait, (l)=>Game1.player.FishingLevel >= 10 && GetNpcFriendship("Willy") >= 10 * 250 && !Game1.player.craftingRecipes.ContainsKey(BaitTackle.EverlastingBait.GetDescription()));
+            AddLetter(BaitTackle.EverlastingBait, (l)=> Game1.player.FishingLevel >= 10 && GetNpcFriendship("Willy") >= 10 * 250 && !Game1.player.craftingRecipes.ContainsKey(BaitTackle.EverlastingBait.GetDescription()));
             AddLetter(BaitTackle.EverlastingWildBait, (l)=> Game1.player.craftingRecipes.ContainsKey("Wild Bait") && Game1.player.craftingRecipes.ContainsKey(BaitTackle.EverlastingBait.GetDescription()) && Game1.player.craftingRecipes[BaitTackle.EverlastingBait.GetDescription()] > 0 && GetNpcFriendship("Linus") >= 10 * 250 && !Game1.player.craftingRecipes.ContainsKey(BaitTackle.EverlastingWildBait.GetDescription()));
             AddLetter(BaitTackle.EverlastingMagnet, (l)=> Game1.player.FishingLevel >= 10  && GetNpcFriendship("Wizard") >= 10 * 250 && !Game1.player.craftingRecipes.ContainsKey(BaitTackle.EverlastingMagnet.GetDescription()), null,2);
             MailDao.SaveLetter
