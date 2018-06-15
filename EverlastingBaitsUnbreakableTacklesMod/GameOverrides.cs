@@ -95,5 +95,38 @@ namespace EverlastingBaitsAndUnbreakableTacklesMod
             }
             return true;
         }
+
+        public static void BobberBar(BobberBar __instance, ref float fishSize)
+        {
+            if (fishSize >= DataLoader.ModConfig.IridiumQualityFishMinimumSize)
+            {
+                if (Game1.player.CurrentTool is FishingRod fishingRod)
+                {
+                    if (DataLoader.ModConfig.IridiumQualityFishOnlyWithIridiumQualityBait || DataLoader.ModConfig.IridiumQualityFishOnlyWithWildBait)
+                    {
+                        if (fishingRod.attachments[0] != null)
+                        {
+                            if (DataLoader.ModConfig.IridiumQualityFishOnlyWithIridiumQualityBait && fishingRod.attachments[0].Quality != 4)
+                            {
+                                return;
+                            }
+                            if (DataLoader.ModConfig.IridiumQualityFishOnlyWithWildBait && fishingRod.attachments[0].ParentSheetIndex != 774)
+                            {
+                                return;
+                            }
+                        }
+                        else
+                        {
+                            return;
+                        }
+                    }
+
+                    if (Game1.random.NextDouble() < fishSize / 2.0)
+                    {
+                        DataLoader.Helper.Reflection.GetField<int>(__instance, "fishQuality").SetValue(4);
+                    }
+                }
+            }
+        }
     }
 }

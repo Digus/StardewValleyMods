@@ -54,6 +54,7 @@
     <Compile Include="DataLoader.cs" />
     <Compile Include="GameOverrides.cs" />
     <Compile Include="EverlastingBaitsAndUnbreakableTacklesModEntery.cs" />
+    <Compile Include="ModConfig.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

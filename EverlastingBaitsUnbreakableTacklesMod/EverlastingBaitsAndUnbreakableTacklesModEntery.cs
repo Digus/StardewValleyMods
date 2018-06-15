@@ -39,6 +39,13 @@ namespace EverlastingBaitsAndUnbreakableTacklesMod
             var gameOverridesTryToReceiveActiveObject = typeof(GameOverrides).GetMethod("TryToReceiveActiveObject");
             harmony.Patch(npcTryToReceiveActiveObject, new HarmonyMethod(gameOverridesTryToReceiveActiveObject), null);
 
+            if (!DataLoader.ModConfig.DisableIridiumQualityFish)
+            {
+                var bobberBarConstructor = typeof(BobberBar).GetConstructor(new []{ typeof(int), typeof(float), typeof(bool), typeof(int)});
+                var gameOverridesBobberBar = typeof(GameOverrides).GetMethod("BobberBar");
+                harmony.Patch(bobberBarConstructor, null, new HarmonyMethod(gameOverridesBobberBar));
+            }
+
             helper.ConsoleCommands.Add("player_addallbaitstacklesrecipes",
                 "Add all everlasting baits and unbreakable tackles recipes to the player.", AddAllBaitTackleRecipes);
             helper.ConsoleCommands.Add("player_getallbaitstackles", "Get all everlasting baits and unbreakable tackles.",GetAllBaitTackle);

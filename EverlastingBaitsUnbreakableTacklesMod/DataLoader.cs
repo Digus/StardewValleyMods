@@ -12,16 +12,31 @@ namespace EverlastingBaitsAndUnbreakableTacklesMod
     {
         public static IModHelper Helper;
         public static ITranslationHelper I18N;
+        public static ModConfig ModConfig;
 
         public DataLoader(IModHelper helper)
         {
             Helper = helper;
+            I18N = helper.Translation;
+            ModConfig = helper.ReadConfig<ModConfig>();
 
             var editors = Helper.Content.AssetEditors;
             editors.Add(this);
-            I18N = helper.Translation;
 
-            
+            if (!ModConfig.DisableIridiumQualityFish)
+            {
+                MailDao.SaveLetter
+                (
+                    new Letter
+                    (
+                        "IridiumQualityFishWithWildBait"
+                        ,I18N.Get("IridiumQualityFishWithWildBait.Letter")
+                        ,(l)=> !Game1.player.mailReceived.Contains(l.Id) && Game1.player.craftingRecipes.ContainsKey("Wild Bait") && Game1.player.FishingLevel >= 4
+                        ,(l)=> Game1.player.mailReceived.Add(l.Id)
+                    )
+                );
+            }
+
             AddLetter(BaitTackle.EverlastingBait, (l)=> Game1.player.FishingLevel >= 10 && GetNpcFriendship("Willy") >= 10 * 250 && !Game1.player.craftingRecipes.ContainsKey(BaitTackle.EverlastingBait.GetDescription()));
             AddLetter(BaitTackle.EverlastingWildBait, (l)=> Game1.player.craftingRecipes.ContainsKey("Wild Bait") && Game1.player.craftingRecipes.ContainsKey(BaitTackle.EverlastingBait.GetDescription()) && Game1.player.craftingRecipes[BaitTackle.EverlastingBait.GetDescription()] > 0 && GetNpcFriendship("Linus") >= 10 * 250 && !Game1.player.craftingRecipes.ContainsKey(BaitTackle.EverlastingWildBait.GetDescription()));
             AddLetter(BaitTackle.EverlastingMagnet, (l)=> Game1.player.FishingLevel >= 10  && GetNpcFriendship("Wizard") >= 10 * 250 && !Game1.player.craftingRecipes.ContainsKey(BaitTackle.EverlastingMagnet.GetDescription()), null,2);
@@ -32,10 +47,7 @@ namespace EverlastingBaitsAndUnbreakableTacklesMod
                     "UnbreakableTackleIntroduction"
                     , I18N.Get("UnbreakableTackleIntroduction.Letter")
                     , (l)=> !Game1.player.mailReceived.Contains(l.Id) && Game1.player.achievements.Contains(21) && Game1.player.FishingLevel >= 8 && GetNpcFriendship("Willy") >= 6 * 250 && GetNpcFriendship("Clint") >= 6 * 250
-                    , (l)=>
-                    {
-                        Game1.player.mailReceived.Add(l.Id);
-                    }
+                    , (l)=> Game1.player.mailReceived.Add(l.Id)
                 )
             );
             AddLetter
