@@ -5,7 +5,7 @@
       "MajorVersion": 2,
       "MinorVersion": 2,
       "PatchVersion": 0,
-      "Build": "beta.5"
+      "Build": "beta.6"
    },
    "Description": "Adds features related to animal husbandry.",
    "UniqueID": "DIGUS.ANIMALHUSBANDRYMOD",
@@ -14,7 +14,7 @@
    "Dependencies": [
 	   {
 		   "UniqueID": "Platonymous.Toolkit",
-		   "MinimumVersion": "0.9.9"
+		   "MinimumVersion": "1.2.3"
 	   }
 	   , {
 		   "UniqueID": "DIGUS.MailFrameworkMod",

@@ -273,7 +273,7 @@ namespace AnimalHusbandryMod.tools
 
         private bool HasTool(Type toolClass)
         {
-            bool hasInInventory = Game1.player.Items.Any(toolClass.IsInstanceOfType);
+            bool hasInInventory = Game1.player.Items.Any(toolClass.IsInstanceOfType) || Game1.player.Items.Any((i) => i.Name.Contains(toolClass.FullName));
             return hasInInventory || Game1.locations.Any((location) =>
             {
                 if (location.objects.Values.ToList()
@@ -281,7 +281,7 @@ namespace AnimalHusbandryMod.tools
                     {
                         if (o is Chest chest)
                         {
-                            return chest.items.Any(toolClass.IsInstanceOfType);
+                            return chest.items.Any(toolClass.IsInstanceOfType) || chest.items.Any((i)=>i.Name.Contains(toolClass.FullName));
                         }
                         return false;
                     }))
@@ -299,7 +299,7 @@ namespace AnimalHusbandryMod.tools
                                 {
                                     if (o is Chest chest)
                                     {
-                                        return chest.items.Any(toolClass.IsInstanceOfType);
+                                        return chest.items.Any(toolClass.IsInstanceOfType) || chest.items.Any((i) => i.Name.Contains(toolClass.FullName));
                                     }
                                     return false;
                                 }))
