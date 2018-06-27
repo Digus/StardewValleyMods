@@ -13,12 +13,16 @@ namespace EverlastingBaitsAndUnbreakableTacklesMod
         public static IModHelper Helper;
         public static ITranslationHelper I18N;
         public static ModConfig ModConfig;
+        public static CraftingData CraftingData;
 
         public DataLoader(IModHelper helper)
         {
             Helper = helper;
             I18N = helper.Translation;
             ModConfig = helper.ReadConfig<ModConfig>();
+
+            CraftingData = DataLoader.Helper.ReadJsonFile<CraftingData>("data\\CraftingRecipes.json") ?? new CraftingData();
+            DataLoader.Helper.WriteJsonFile("data\\CraftingRecipes.json", CraftingData);
 
             var editors = Helper.Content.AssetEditors;
             editors.Add(this);
@@ -139,16 +143,16 @@ namespace EverlastingBaitsAndUnbreakableTacklesMod
             if (asset.AssetNameEquals("Data\\CraftingRecipes"))
             {
                 var data = asset.AsDictionary<string, string>().Data;
-                AddRecipeData(data, BaitTackle.EverlastingBait, "684 10 74 1");
-                AddRecipeData(data, BaitTackle.EverlastingWildBait, "771 100 684 50 766 20 74 1");
-                AddRecipeData(data, BaitTackle.EverlastingMagnet, "335 10 74 1");
-                AddRecipeData(data, BaitTackle.UnbreakableSpinner, "335 4 337 2");
-                AddRecipeData(data, BaitTackle.UnbreakableLeadBobber, "117 1 337 3");
-                AddRecipeData(data, BaitTackle.UnbreakableTrapBobber, "334 2 92 20 369 5 309 1 337 3");
-                AddRecipeData(data, BaitTackle.UnbreakableCorkBobber, "388 20 709 10 766 20 557 1 337 4");
-                AddRecipeData(data, BaitTackle.UnbreakableTreasureHunter, "336 8 337 4");
-                AddRecipeData(data, BaitTackle.UnbreakableBarbedHook, "334 2 335 2 336 2 337 5");
-                AddRecipeData(data, BaitTackle.UnbreakableDressedSpinner, "335 4 428 2 66 1 62 1 60 1 70 1 68 1 64 1 337 5");
+                AddRecipeData(data, BaitTackle.EverlastingBait, CraftingData.EverlastingBait);
+                AddRecipeData(data, BaitTackle.EverlastingWildBait, CraftingData.EverlastingWildBait);
+                AddRecipeData(data, BaitTackle.EverlastingMagnet, CraftingData.EverlastingMagnet);
+                AddRecipeData(data, BaitTackle.UnbreakableSpinner, CraftingData.UnbreakableSpinner);
+                AddRecipeData(data, BaitTackle.UnbreakableLeadBobber, CraftingData.UnbreakableLeadBobber);
+                AddRecipeData(data, BaitTackle.UnbreakableTrapBobber, CraftingData.UnbreakableTrapBobber);
+                AddRecipeData(data, BaitTackle.UnbreakableCorkBobber, CraftingData.UnbreakableCorkBobber);
+                AddRecipeData(data, BaitTackle.UnbreakableTreasureHunter, CraftingData.UnbreakableTreasureHunter);
+                AddRecipeData(data, BaitTackle.UnbreakableBarbedHook, CraftingData.UnbreakableBarbedHook);
+                AddRecipeData(data, BaitTackle.UnbreakableDressedSpinner, CraftingData.UnbreakableDressedSpinner);
             }
         }
 
