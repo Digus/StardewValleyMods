@@ -348,20 +348,7 @@ namespace AnimalHusbandryMod.animals
             if (!who.FarmerSprite.PauseForSingleAnimation
                 && !(Game1.timeOfDay >= 1900 && !__instance.isMoving()))
             {
-                if (!__instance.wasPet.Value
-                    && (
-                        (who.professions.Contains(3) && !__instance.isCoopDweller())
-                        || (who.professions.Contains(2) && __instance.isCoopDweller())
-                    )
-                )
-                {
-                    var ajust = ((uint) (__instance.happiness.Value) + (uint) Math.Max(5, 40 - (int) (__instance.happinessDrain.Value)) );
-                    if (ajust > byte.MaxValue)
-                    {
-                        __instance.happiness.Value -= (byte)(ajust - byte.MaxValue);
-                    }
-                }
-                else if(__instance.wasPet.Value
+                if(__instance.wasPet.Value
                         &&(
                             who.ActiveObject == null 
                             || who.ActiveObject.ParentSheetIndex != 178)
