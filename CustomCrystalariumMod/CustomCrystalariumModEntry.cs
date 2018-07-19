@@ -27,6 +27,12 @@ namespace CustomCrystalariumMod
             var objectOverridesPerformObjectDropInAction = typeof(ObjectOverrides).GetMethod("PerformObjectDropInAction");
             harmony.Patch(objectPerformObjectDropInAction, new HarmonyMethod(objectOverridesPerformObjectDropInAction), null);
 
+            if (DataLoader.ModConfig.GetObjectBackOnChange && !DataLoader.ModConfig.GetObjectBackImmediately)
+            {
+                var objectPerformRemoveAction = typeof(Object).GetMethod("performRemoveAction");
+                var objectOverridesPerformRemoveAction = typeof(ObjectOverrides).GetMethod("PerformRemoveAction");
+                harmony.Patch(objectPerformRemoveAction, new HarmonyMethod(objectOverridesPerformRemoveAction), null);
+            }
         }
     }
 }
