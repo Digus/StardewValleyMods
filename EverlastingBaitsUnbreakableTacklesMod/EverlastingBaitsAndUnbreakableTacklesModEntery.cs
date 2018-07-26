@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using Harmony;
 using StardewModdingAPI;
+using StardewModdingAPI.Events;
 using StardewValley;
 using StardewValley.Menus;
 using StardewValley.Tools;
@@ -13,11 +14,14 @@ namespace EverlastingBaitsAndUnbreakableTacklesMod
     public class EverlastingBaitsAndUnbreakableTacklesModEntery : Mod
     {
         public static IMonitor ModMonitor;
+        internal static DataLoader DataLoader;
 
         public override void Entry(IModHelper helper)
         {
             ModMonitor = Monitor;
-            new DataLoader(helper);
+            DataLoader = new DataLoader(helper);
+
+            SaveEvents.AfterLoad += (x,y) => DataLoader.ReloadQuestWhenClient();
 
             var harmony = HarmonyInstance.Create("Digus.InfiniteBaitAndLureMod");
 
@@ -47,51 +51,12 @@ namespace EverlastingBaitsAndUnbreakableTacklesMod
             }
 
             helper.ConsoleCommands.Add("player_addallbaitstacklesrecipes",
-                "Add all everlasting baits and unbreakable tackles recipes to the player.", AddAllBaitTackleRecipes);
-            helper.ConsoleCommands.Add("player_getallbaitstackles", "Get all everlasting baits and unbreakable tackles.",GetAllBaitTackle);
+                "Add all everlasting baits and unbreakable tackles recipes to the player.", Commands.AddAllBaitTackleRecipes);
+            helper.ConsoleCommands.Add("player_getallbaitstackles", "Get all everlasting baits and unbreakable tackles.", Commands.GetAllBaitTackle);
+            helper.ConsoleCommands.Add("player_addquestfortackle", "Adds a quest for the specified unbreakable tackles.\n\nUsage: player_addsQuestForTackle <value>\n- value: name of the tackle. ex. Unbreakable Trap Bobber", Commands.AddsQuestForTackle);
+            helper.ConsoleCommands.Add("player_removeblankquests", "Remove all blank quests from player log.", Commands.RemoveBlankQuests);
         }
 
-        private static void AddAllBaitTackleRecipes(string command, string[] args)
-        {
-            if (Context.IsWorldReady)
-            {
-                foreach (BaitTackle baitTackle in Enum.GetValues(typeof(BaitTackle)))
-                {
-                    if (!Game1.player.craftingRecipes.ContainsKey(baitTackle.GetDescription()))
-                    {
-                        Game1.player.craftingRecipes.Add(baitTackle.GetDescription(), 0);
-                        ModMonitor.Log($"Added {baitTackle.GetDescription()} recipe to the player.", LogLevel.Info);
-                    }
-                }
-            }
-            else
-            {
-                ModMonitor.Log("No player loaded to add the recipes.", LogLevel.Info);
-            }
-        }
-
-        private static void GetAllBaitTackle(string command, string[] args)
-        {
-            if (Context.IsWorldReady)
-            {
-                if (Game1.activeClickableMenu == null)
-                {
-                    IList<Item> baitsTackles = new List<Item>();
-                    foreach (BaitTackle baitTackle in Enum.GetValues(typeof(BaitTackle)))
-                    {
-                        baitsTackles.Add(new Object((int)baitTackle, 1, false, -1, 4));
-                    }
-                    Game1.activeClickableMenu = new ItemGrabMenu(baitsTackles);
-                }
-                else
-                {
-                    ModMonitor.Log("Close all menus to use this command.", LogLevel.Info);
-                }
-            }
-            else
-            {
-                ModMonitor.Log("No player loaded to get the baits and tackles.", LogLevel.Info);
-            }
-        }
+        
     }
 }

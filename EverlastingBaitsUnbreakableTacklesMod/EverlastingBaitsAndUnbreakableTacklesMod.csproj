@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="BaitTackle.cs" />
     <Compile Include="BaitTackleExtension.cs" />
+    <Compile Include="Commands.cs" />
     <Compile Include="DataLoader.cs" />
     <Compile Include="GameOverrides.cs" />
     <Compile Include="EverlastingBaitsAndUnbreakableTacklesModEntery.cs" />

@@ -112,20 +112,52 @@ namespace EverlastingBaitsAndUnbreakableTacklesMod
             );
         }
 
-        private static void LoadTackleQuest(BaitTackle baitTackle)
+        public void ReloadQuestWhenClient()
+        {
+            if (!Context.IsMainPlayer)
+            {
+                foreach (Quest quest in Game1.player.questLog)
+                {
+                    if (Enum.IsDefined(typeof(BaitTackle), quest.id.Value))
+                    {
+                        LoadQuestText(quest);
+                    }
+                }
+            }
+        }
+
+        public static void LoadTackleQuest(BaitTackle baitTackle)
         {
             Quest quest = new Quest();
+            quest.id.Value = (int)baitTackle;
             quest.questType.Value = 1;
-            string baitTackleName = I18N.Get($"{baitTackle.ToString()}.Name");
-            quest.questTitle = baitTackleName;
-            quest.questDescription = I18N.Get("Quest.Description", new { Item = baitTackleName });
-            quest.currentObjective = I18N.Get("Quest.FirstObjective", new {Item = baitTackleName });
+            LoadQuestText(quest);
             quest.showNew.Value = true;
             quest.moneyReward.Value = 0;
             quest.rewardDescription.Value = (string) null;
             quest.canBeCancelled.Value = false;
             Game1.player.questLog.Add(quest);
             Game1.addHUDMessage(new HUDMessage(Game1.content.LoadString("Strings\\StringsFromCSFiles:Farmer.cs.2011"), 2));
+        }
+
+        private static void LoadQuestText(Quest quest)
+        {
+            BaitTackle baitTackle = (BaitTackle)quest.id.Value;
+            string baitTackleName = I18N.Get($"{baitTackle.ToString()}.Name");
+            quest.questTitle = baitTackleName;
+            quest.questDescription = I18N.Get("Quest.Description", new {Item = baitTackleName});
+            string questObjective;
+            if (Game1.player.craftingRecipes.ContainsKey(baitTackle.GetDescription()) &&
+                Game1.player.craftingRecipes[baitTackle.GetDescription()] > 0)
+            {
+                questObjective = "Quest.LastObjective";
+            }
+            else
+            {
+                questObjective = "Quest.FirstObjective";
+            }
+
+            quest.currentObjective = I18N.Get(questObjective, new { Item = baitTackleName });
         }
 
         private void AddLetter(BaitTackle baitTackle, Func<Letter, bool> condition, Action<Letter> callback = null,int whichBG = 0)
