@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WaterRetainingFieldMod", "W
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomCrystalariumMod", "CustomCrystalariumMod\CustomCrystalariumMod.csproj", "{3D06B5D6-9D1C-46B2-83E8-A1EBCC7D5FC9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CropTransplantMod", "CropTransplantMod\CropTransplantMod.csproj", "{0BD2ED3E-EB53-4003-93E7-C46B9E95AC9F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -61,6 +63,14 @@ Global
 		{3D06B5D6-9D1C-46B2-83E8-A1EBCC7D5FC9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3D06B5D6-9D1C-46B2-83E8-A1EBCC7D5FC9}.Release|x86.ActiveCfg = Release|Any CPU
 		{3D06B5D6-9D1C-46B2-83E8-A1EBCC7D5FC9}.Release|x86.Build.0 = Release|Any CPU
+		{0BD2ED3E-EB53-4003-93E7-C46B9E95AC9F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0BD2ED3E-EB53-4003-93E7-C46B9E95AC9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0BD2ED3E-EB53-4003-93E7-C46B9E95AC9F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{0BD2ED3E-EB53-4003-93E7-C46B9E95AC9F}.Debug|x86.Build.0 = Debug|Any CPU
+		{0BD2ED3E-EB53-4003-93E7-C46B9E95AC9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0BD2ED3E-EB53-4003-93E7-C46B9E95AC9F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0BD2ED3E-EB53-4003-93E7-C46B9E95AC9F}.Release|x86.ActiveCfg = Release|Any CPU
+		{0BD2ED3E-EB53-4003-93E7-C46B9E95AC9F}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
