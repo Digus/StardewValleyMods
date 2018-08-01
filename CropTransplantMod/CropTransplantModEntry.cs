@@ -21,38 +21,33 @@ namespace CropTransplantMod
             var harmony = HarmonyInstance.Create("Digus.CustomCrystalariumMod");
 
             var utilityTryToPlaceItem = typeof(Utility).GetMethod("tryToPlaceItem");
-            var objectOverridesTryToPlaceItem = typeof(ObjectOverrides).GetMethod("TryToPlaceItem");
+            var objectOverridesTryToPlaceItem = typeof(TransplantOverrides).GetMethod("TryToPlaceItem");
             harmony.Patch(utilityTryToPlaceItem, new HarmonyMethod(objectOverridesTryToPlaceItem), null);
 
             var utilityCanGrabSomethingFromHere = typeof(Utility).GetMethod("canGrabSomethingFromHere");
-            var objectOverridesCanGrabSomethingFromHere = typeof(ObjectOverrides).GetMethod("CanGrabSomethingFromHere");
+            var objectOverridesCanGrabSomethingFromHere = typeof(TransplantOverrides).GetMethod("CanGrabSomethingFromHere");
             harmony.Patch(utilityCanGrabSomethingFromHere, new HarmonyMethod(objectOverridesCanGrabSomethingFromHere), null);
 
+            var utilityPlayerCanPlaceItemHere = typeof(Utility).GetMethod("playerCanPlaceItemHere");
+            var objectOverridesPlayerCanPlaceItemHere = typeof(TransplantOverrides).GetMethod("PlayerCanPlaceItemHere");
+            harmony.Patch(utilityPlayerCanPlaceItemHere, new HarmonyMethod(objectOverridesPlayerCanPlaceItemHere), null);
+
             var hoeDirtPerformUseAction = typeof(HoeDirt).GetMethod("performUseAction");
-            var objectOverridesPerformUseAction = typeof(ObjectOverrides).GetMethod("PerformUseAction");
+            var objectOverridesPerformUseAction = typeof(TransplantOverrides).GetMethod("PerformUseAction");
             harmony.Patch(hoeDirtPerformUseAction, new HarmonyMethod(objectOverridesPerformUseAction), null);
 
             var game1PressUseToolButton = typeof(Game1).GetMethod("pressUseToolButton");
-            var objectOverridesPressUseToolButton = typeof(ObjectOverrides).GetMethod("PressUseToolButton");
+            var objectOverridesPressUseToolButton = typeof(TransplantOverrides).GetMethod("PressUseToolButton");
             harmony.Patch(game1PressUseToolButton, new HarmonyMethod(objectOverridesPressUseToolButton), null);
-
-            var utilityPlayerCanPlaceItemHere = typeof(Utility).GetMethod("playerCanPlaceItemHere");
-            var objectOverridesPlayerCanPlaceItemHere = typeof(ObjectOverrides).GetMethod("PlayerCanPlaceItemHere");
-            harmony.Patch(utilityPlayerCanPlaceItemHere, new HarmonyMethod(objectOverridesPlayerCanPlaceItemHere), null);
 
             SaveEvents.BeforeSave += (x, y) =>
             {
                 if (Game1.player.ActiveObject is HeldIndoorPot pot)
                 {
-                    Game1.player.ActiveObject = ObjectOverrides.RegularPotObject;
-                    ObjectOverrides.CurrentHeldIndoorPot = null;
+                    Game1.player.ActiveObject = TransplantOverrides.RegularPotObject;
+                    TransplantOverrides.CurrentHeldIndoorPot = null;
                 }
             };
-
-            var temp = typeof(Crop).GetMethod("drawWithOffset");
-            var temp2 = typeof(ObjectOverrides).GetMethod("drawWithOffset");
-            harmony.Patch(temp, new HarmonyMethod(temp2), null);
-
         }
     }
 }

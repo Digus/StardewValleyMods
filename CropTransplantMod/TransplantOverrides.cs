@@ -9,17 +9,17 @@ using Object = StardewValley.Object;
 
 namespace CropTransplantMod
 {
-    internal class ObjectOverrides
+    internal class TransplantOverrides
     {
         internal static Object RegularPotObject =  null;
         internal static HeldIndoorPot CurrentHeldIndoorPot = null;
-        internal static bool shakeFlag = false;
+        internal static bool ShakeFlag = false;
 
-        public static bool drawWithOffset(ref HoeDirt __instance, Vector2 tileLocation, Vector2 offset)
-        {
-            return true;
-        }
-
+        /// <summary>
+        /// Override to lift the pot back when an empty spot on the tool bar is selected.
+        /// </summary>
+        /// <param name="__result"></param>
+        /// <returns></returns>
         public static bool PressUseToolButton( ref bool __result)
         {
             if (Game1.fadeToBlack)
@@ -45,15 +45,17 @@ namespace CropTransplantMod
                     {
                         pot.performRemoveAction(pot.TileLocation, Game1.currentLocation);
                         Game1.currentLocation.Objects.Remove(pot.TileLocation);
-                        if (pot.hoeDirt.Value.crop != null )
+                        HoeDirt potHoeDirt = pot.hoeDirt.Value;
+                        if (potHoeDirt.crop != null )
                         {
                             CurrentHeldIndoorPot = new HeldIndoorPot(pot.TileLocation);
                             RegularPotObject = new Object(Vector2.Zero, 62, false);
                             Game1.player.ActiveObject = CurrentHeldIndoorPot;
-                            GameEvents.UpdateTick += tickUpdate;
-                            CurrentHeldIndoorPot.hoeDirt.Value.crop = pot.hoeDirt.Value.crop;
-                            CurrentHeldIndoorPot.hoeDirt.Value.fertilizer.Value = pot.hoeDirt.Value.fertilizer.Value;
-                            shakeCrop(CurrentHeldIndoorPot.hoeDirt.Value, pot.TileLocation);
+                            GameEvents.UpdateTick += TickUpdate;
+                            HoeDirt holdenHoeDirt = CurrentHeldIndoorPot.hoeDirt.Value;
+                            holdenHoeDirt.crop = potHoeDirt.crop;
+                            holdenHoeDirt.fertilizer.Value = potHoeDirt.fertilizer.Value;
+                            ShakeCrop(holdenHoeDirt, pot.TileLocation);
                             Game1.player.Stamina -= ((float)4f - (float)Game1.player.FarmingLevel * 0.2f);
                         }
                         else
@@ -70,9 +72,19 @@ namespace CropTransplantMod
             return true;
         }
 
+        /// <summary>
+        /// Override to ajust the original tool tip for the pot.
+        /// </summary>
+        /// <param name="location"></param>
+        /// <param name="item"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="f"></param>
+        /// <param name="__result"></param>
+        /// <returns></returns>
         public static bool PlayerCanPlaceItemHere(ref GameLocation location, Item item, ref int x, ref int y, ref Farmer f, ref bool __result)
         {
-            if (item != null && item is Object object1 && object1.ParentSheetIndex == 62 && object1.bigCraftable.Value && !(object1 is HeldIndoorPot))
+            if (item != null && item is Object object1 && IsGardenPot(object1) && !(object1 is HeldIndoorPot))
             {
                 if ((Game1.eventUp || f.bathingClothes.Value) || !Utility.withinRadiusOfPlayer(x, y, 1, f) && (!Utility.withinRadiusOfPlayer(x, y, 2, f) || !Game1.isAnyGamePadButtonBeingPressed() || (double)Game1.mouseCursorTransparency != 0.0))
                     return true;
@@ -91,16 +103,26 @@ namespace CropTransplantMod
             return true;
         }
 
+        /// <summary>
+        /// Override to not show the harvest tooltip while holding the pot.
+        /// Override to change the tooltip when grabing the pot from the ground. 
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="who"></param>
+        /// <param name="__result"></param>
+        /// <returns></returns>
         public static bool CanGrabSomethingFromHere(int x, int y, ref Farmer who, ref bool __result)
         {
             if (Game1.currentLocation == null)
                 return false;
             Vector2 index = new Vector2((float)(x / 64), (float)(y / 64));
-            if (who.ActiveObject is IndoorPot || (who.ActiveObject is Object object1 && object1.ParentSheetIndex == 62 && object1.bigCraftable.Value))
+            Object activeObject = who.ActiveObject;
+            if (activeObject is IndoorPot || IsGardenPot(activeObject))
             {
                 __result = false;
                 return false;
-            } else if (who.CurrentTool == null && who.ActiveObject == null && Game1.currentLocation.Objects.ContainsKey(index) && Game1.currentLocation.Objects[index] is IndoorPot pot)
+            } else if (who.CurrentTool == null && activeObject == null && Game1.currentLocation.Objects.ContainsKey(index) && Game1.currentLocation.Objects[index] is IndoorPot pot)
             {
                 Game1.mouseCursorTransparency = !Utility.tileWithinRadiusOfPlayer((int)index.X, (int)index.Y, 1, who) ? 0.5f : 1f;
                 Game1.mouseCursor = 2;
@@ -110,9 +132,15 @@ namespace CropTransplantMod
             return true;
         }
 
+        /// <summary>
+        /// Override to not let you harvest while holding the pot
+        /// </summary>
+        /// <param name="__result"></param>
+        /// <returns></returns>
         public static bool PerformUseAction(ref bool __result)
         {
-            if (Game1.player.ActiveObject is IndoorPot || (Game1.player.ActiveObject is Object object1 && object1.ParentSheetIndex == 62 && object1.bigCraftable.Value))
+            Object activeObject = Game1.player.ActiveObject;
+            if (activeObject is IndoorPot || IsGardenPot(activeObject))
             {
                 __result = false;
                 return false;
@@ -120,9 +148,17 @@ namespace CropTransplantMod
             return true;
         }
 
+        /// <summary>
+        /// Override to get or place a crop from/to the ground, from/into the pot.
+        /// </summary>
+        /// <param name="location"></param>
+        /// <param name="item"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
         public static bool TryToPlaceItem(ref GameLocation location, Item item, ref int x, ref int y)
         {
-            if (Utility.withinRadiusOfPlayer(x, y, 1, Game1.player) && item is Object object1 && object1.ParentSheetIndex == 62 && object1.bigCraftable.Value)
+            if (Utility.withinRadiusOfPlayer(x, y, 1, Game1.player) && item is Object object1 && IsGardenPot(object1))
             {
                 Vector2 tileLocation = new Vector2((float) (x / 64), (float) (y / 64));
                 if (location.isTileHoeDirt(tileLocation))
@@ -138,10 +174,11 @@ namespace CropTransplantMod
                                 CurrentHeldIndoorPot = new HeldIndoorPot(tileLocation);
                                 RegularPotObject = Game1.player.ActiveObject;
                                 Game1.player.ActiveObject = CurrentHeldIndoorPot;
-                                GameEvents.UpdateTick += tickUpdate;
-                                CurrentHeldIndoorPot.hoeDirt.Value.crop = hoeDirt.crop;
-                                CurrentHeldIndoorPot.hoeDirt.Value.fertilizer.Value = hoeDirt.fertilizer.Value;
-                                shakeCrop(CurrentHeldIndoorPot.hoeDirt.Value, tileLocation);
+                                GameEvents.UpdateTick += TickUpdate;
+                                HoeDirt potHoeDirt = CurrentHeldIndoorPot.hoeDirt.Value;
+                                potHoeDirt.crop = hoeDirt.crop;
+                                potHoeDirt.fertilizer.Value = hoeDirt.fertilizer.Value;
+                                ShakeCrop(potHoeDirt, tileLocation);
                                 hoeDirt.crop = null;
                                 hoeDirt.fertilizer.Value = 0;
                                 Game1.player.Stamina -= ((float) 4f - (float) Game1.player.FarmingLevel * 0.2f);
@@ -156,9 +193,9 @@ namespace CropTransplantMod
                                 && !location.farmers.Any(f=>f.GetBoundingBox().Intersects(new Microsoft.Xna.Framework.Rectangle((int)tileLocation.X * 64, (int)tileLocation.Y * 64, 64, 64))))
                             {
                                 hoeDirt.crop = heldPot.hoeDirt.Value.crop;
-                                shakeCrop(hoeDirt, tileLocation);
+                                ShakeCrop(hoeDirt, tileLocation);
                                 hoeDirt.fertilizer.Value = heldPot.hoeDirt.Value.fertilizer.Value;
-                                GameEvents.UpdateTick -= tickUpdate;
+                                GameEvents.UpdateTick -= TickUpdate;
                                 Game1.player.ActiveObject = RegularPotObject;
                                 location.playSound("dirtyHit");
                                 return false;
@@ -171,7 +208,7 @@ namespace CropTransplantMod
             return true;
         }
 
-        internal static void shakeCrop(HoeDirt hoeDirt, Vector2? tileLocation = null)
+        internal static void ShakeCrop(HoeDirt hoeDirt, Vector2? tileLocation = null)
         {
             var maxShake = hoeDirt.getMaxShake();
             if (hoeDirt.crop != null && hoeDirt.crop.currentPhase.Value != 0 && (double) maxShake == 0.0)
@@ -185,20 +222,21 @@ namespace CropTransplantMod
                 hoeDirt.shake(
                     (float)(0.392699092626572 / (double)((5 + farmer.addedSpeed) / speedOfCollision) -(speedOfCollision > 2 ? (double)hoeDirt.crop.currentPhase.Value * 3.14159274101257 / 64.0: 0.0))
                     , (float)Math.PI / 80f / (float)((5 + farmer.addedSpeed) / speedOfCollision)
-                    ,tileLocation.HasValue ? (double)farmer.lastPosition.X > (double)tileLocation.Value.X * 64.0 + 32.0 : farmer.FacingDirection == 1 ? true : farmer.FacingDirection == 3 ? false : shakeFlag = !shakeFlag);
+                    ,tileLocation.HasValue ? (double)farmer.lastPosition.X > (double)tileLocation.Value.X * 64.0 + 32.0 : farmer.FacingDirection == 1 ? true : farmer.FacingDirection == 3 ? false : ShakeFlag = !ShakeFlag);
             }
         }
 
-        private static void tickUpdate(object sender, EventArgs e)
+        private static void TickUpdate(object sender, EventArgs e)
         {
             if (Game1.player.ActiveObject is HeldIndoorPot heldPot)
             {
-                if (heldPot.hoeDirt.Value.crop != null)
+                HoeDirt potHoeDirt = heldPot.hoeDirt.Value;
+                if (potHoeDirt.crop != null)
                 {
-                    heldPot.hoeDirt.Value.tickUpdate(Game1.currentGameTime, heldPot.TileLocation, Game1.currentLocation);
+                    potHoeDirt.tickUpdate(Game1.currentGameTime, heldPot.TileLocation, Game1.currentLocation);
                     if (Game1.player.isMoving())
                     {
-                        shakeCrop(heldPot.hoeDirt.Value);
+                        ShakeCrop(potHoeDirt);
                     }
                 }
             }
@@ -219,10 +257,18 @@ namespace CropTransplantMod
                 Game1.player.removeItemFromInventory(CurrentHeldIndoorPot);
                 Game1.player.addItemToInventory(RegularPotObject, heldIndorPotInveotryPosition);
                 CurrentHeldIndoorPot = null;
-                GameEvents.UpdateTick -= tickUpdate;
+                GameEvents.UpdateTick -= TickUpdate;
             }
         }
 
+        private static bool IsGardenPot(Object o)
+        {
+            return o is Object object1 && object1.ParentSheetIndex == 62 && object1.bigCraftable.Value;
+        }
+
+        /// <summary>
+        /// An used method for a lifting animation.
+        /// </summary>
         private static void showAnimation()
         {
             Game1.player.canMove = false;

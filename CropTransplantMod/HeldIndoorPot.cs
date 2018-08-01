@@ -31,7 +31,7 @@ namespace CropTransplantMod
                 {
                     pot.hoeDirt.Value.crop = this.hoeDirt.Value.crop;
                     pot.hoeDirt.Value.fertilizer.Value = this.hoeDirt.Value.fertilizer.Value;
-                    ObjectOverrides.shakeCrop(pot.hoeDirt.Value, index1);
+                    TransplantOverrides.ShakeCrop(pot.hoeDirt.Value, index1);
                 }
             }
             return result;
@@ -107,7 +107,7 @@ namespace CropTransplantMod
 
         public override void draw(SpriteBatch spriteBatch, int x, int y, float alpha = 1)
         {
-            
+            //Empty to avoid drawing the HoeDirty out of place.
         }
     }
 }

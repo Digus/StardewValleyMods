@@ -55,7 +55,7 @@
     <Compile Include="ModConfig.cs" />
     <Compile Include="CropTransplantModEntry.cs" />
     <Compile Include="DataLoader.cs" />
-    <Compile Include="ObjectOverrides.cs" />
+    <Compile Include="TransplantOverrides.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
