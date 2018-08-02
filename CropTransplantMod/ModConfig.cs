@@ -6,10 +6,12 @@ namespace CropTransplantMod
     {
 
         public bool GetGradenPotEarlier;
+        public float TransplantEnergyCost;
 
         public ModConfig()
         {
             GetGradenPotEarlier = false;
+            TransplantEnergyCost = 4f;
         }
     }
 }

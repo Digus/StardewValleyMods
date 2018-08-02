@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Harmony;
 using Microsoft.Xna.Framework;
 using StardewModdingAPI.Events;
 using StardewValley;
@@ -50,13 +51,13 @@ namespace CropTransplantMod
                         {
                             CurrentHeldIndoorPot = new HeldIndoorPot(pot.TileLocation);
                             RegularPotObject = new Object(Vector2.Zero, 62, false);
-                            Game1.player.ActiveObject = CurrentHeldIndoorPot;
-                            GameEvents.UpdateTick += TickUpdate;
                             HoeDirt holdenHoeDirt = CurrentHeldIndoorPot.hoeDirt.Value;
                             holdenHoeDirt.crop = potHoeDirt.crop;
                             holdenHoeDirt.fertilizer.Value = potHoeDirt.fertilizer.Value;
                             ShakeCrop(holdenHoeDirt, pot.TileLocation);
-                            Game1.player.Stamina -= ((float)4f - (float)Game1.player.FarmingLevel * 0.2f);
+                            Game1.player.Stamina -= ((float)DataLoader.ModConfig.TransplantEnergyCost - (float)Game1.player.FarmingLevel * DataLoader.ModConfig.TransplantEnergyCost / 20f);
+                            Game1.player.ActiveObject = CurrentHeldIndoorPot;
+                            GameEvents.UpdateTick += TickUpdate;
                         }
                         else
                         {
@@ -84,7 +85,7 @@ namespace CropTransplantMod
         /// <returns></returns>
         public static bool PlayerCanPlaceItemHere(ref GameLocation location, Item item, ref int x, ref int y, ref Farmer f, ref bool __result)
         {
-            if (item != null && item is Object object1 && IsGardenPot(object1) && !(object1 is HeldIndoorPot))
+            if (item != null && item is Object object1 && IsGardenPot(object1) && !(object1 is HeldIndoorPot) && object1.stack.Value == 1)
             {
                 if ((Game1.eventUp || f.bathingClothes.Value) || !Utility.withinRadiusOfPlayer(x, y, 1, f) && (!Utility.withinRadiusOfPlayer(x, y, 2, f) || !Game1.isAnyGamePadButtonBeingPressed() || (double)Game1.mouseCursorTransparency != 0.0))
                     return true;
@@ -155,7 +156,8 @@ namespace CropTransplantMod
         /// <param name="item"></param>
         /// <param name="x"></param>
         /// <param name="y"></param>
-        /// <returns></returns>
+        /// <returns></returns> 
+        [HarmonyPriority(800)]
         public static bool TryToPlaceItem(ref GameLocation location, Item item, ref int x, ref int y)
         {
             if (Utility.withinRadiusOfPlayer(x, y, 1, Game1.player) && item is Object object1 && IsGardenPot(object1))
@@ -171,18 +173,22 @@ namespace CropTransplantMod
                             if (!(Game1.player.ActiveObject is HeldIndoorPot heldPot) ||
                                 heldPot.hoeDirt.Value.crop == null)
                             {
-                                CurrentHeldIndoorPot = new HeldIndoorPot(tileLocation);
-                                RegularPotObject = Game1.player.ActiveObject;
-                                Game1.player.ActiveObject = CurrentHeldIndoorPot;
-                                GameEvents.UpdateTick += TickUpdate;
-                                HoeDirt potHoeDirt = CurrentHeldIndoorPot.hoeDirt.Value;
-                                potHoeDirt.crop = hoeDirt.crop;
-                                potHoeDirt.fertilizer.Value = hoeDirt.fertilizer.Value;
-                                ShakeCrop(potHoeDirt, tileLocation);
-                                hoeDirt.crop = null;
-                                hoeDirt.fertilizer.Value = 0;
-                                Game1.player.Stamina -= ((float) 4f - (float) Game1.player.FarmingLevel * 0.2f);
-                                location.playSound("dirtyHit");
+                                if (Game1.player.ActiveObject.stack.Value == 1)
+                                {
+                                    CurrentHeldIndoorPot = new HeldIndoorPot(tileLocation);
+                                    RegularPotObject = Game1.player.ActiveObject;
+                                    Game1.player.ActiveObject = null;
+                                    Game1.player.ActiveObject = CurrentHeldIndoorPot;
+                                    GameEvents.UpdateTick += TickUpdate;
+                                    HoeDirt potHoeDirt = CurrentHeldIndoorPot.hoeDirt.Value;
+                                    potHoeDirt.crop = hoeDirt.crop;
+                                    potHoeDirt.fertilizer.Value = hoeDirt.fertilizer.Value;
+                                    ShakeCrop(potHoeDirt, tileLocation);
+                                    hoeDirt.crop = null;
+                                    hoeDirt.fertilizer.Value = 0;
+                                    Game1.player.Stamina -= ((float)DataLoader.ModConfig.TransplantEnergyCost - (float)Game1.player.FarmingLevel * DataLoader.ModConfig.TransplantEnergyCost/20f);
+                                    location.playSound("dirtyHit");
+                                }
                                 return false;
                             }
                         }
@@ -196,6 +202,7 @@ namespace CropTransplantMod
                                 ShakeCrop(hoeDirt, tileLocation);
                                 hoeDirt.fertilizer.Value = heldPot.hoeDirt.Value.fertilizer.Value;
                                 GameEvents.UpdateTick -= TickUpdate;
+                                Game1.player.ActiveObject = null;
                                 Game1.player.ActiveObject = RegularPotObject;
                                 location.playSound("dirtyHit");
                                 return false;
@@ -242,7 +249,7 @@ namespace CropTransplantMod
             }
             else
             {
-                if (CurrentHeldIndoorPot != null && Game1.player.getIndexOfInventoryItem(CurrentHeldIndoorPot) != -1)
+                if (CurrentHeldIndoorPot != null && Game1.player.getIndexOfInventoryItem(CurrentHeldIndoorPot) != -1 && Game1.player.items[Game1.player.getIndexOfInventoryItem(CurrentHeldIndoorPot)] is HeldIndoorPot)
                 {
                     var f = Game1.player;
                     Multiplayer multiplayer = DataLoader.Helper.Reflection.GetField<Multiplayer>(typeof(Game1), "multiplayer").GetValue();
@@ -252,10 +259,11 @@ namespace CropTransplantMod
                     });
                     Grass.grassSound = Game1.soundBank.GetCue("grassyStep");
                     Grass.grassSound.Play();
+                    int heldIndorPotInveotryPosition = Game1.player.getIndexOfInventoryItem(CurrentHeldIndoorPot);
+                    Game1.player.removeItemFromInventory(CurrentHeldIndoorPot);
+                    Game1.player.addItemToInventory(RegularPotObject, heldIndorPotInveotryPosition);
                 }
-                int heldIndorPotInveotryPosition = Game1.player.getIndexOfInventoryItem(CurrentHeldIndoorPot);
-                Game1.player.removeItemFromInventory(CurrentHeldIndoorPot);
-                Game1.player.addItemToInventory(RegularPotObject, heldIndorPotInveotryPosition);
+                
                 CurrentHeldIndoorPot = null;
                 GameEvents.UpdateTick -= TickUpdate;
             }
