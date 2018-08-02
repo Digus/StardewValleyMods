@@ -259,16 +259,18 @@ namespace AnimalHusbandryMod.tools
                 Vector2 vectorFood = new Vector2((float) numX - 24, (float) numY - 10);
                 var foodScale = Game1.pixelZoom * 0.75f;
 
+                Multiplayer multiplayer = DataLoader.Helper.Reflection.GetField<Multiplayer>(typeof(Game1), "multiplayer").GetValue();
+
                 TemporaryAnimatedSprite basketSprite = new TemporaryAnimatedSprite(Game1.toolSpriteSheetName,
                     Game1.getSourceRectForStandardTileSheet(Game1.toolSpriteSheet, this.CurrentParentTileIndex, 16, 16),
                     750.0f, 1, 1, vectorBasket, false, false, ((float) boundingBox.Bottom + 0.1f) / 10000f, 0.0f,
                     Color.White, Game1.pixelZoom, 0.0f, 0.0f, 0.0f) {delayBeforeAnimationStart = 100};
-                who.currentLocation.temporarySprites.Add(basketSprite);
+                multiplayer.broadcastSprites(who.currentLocation, new TemporaryAnimatedSprite[1]{basketSprite});
                 TemporaryAnimatedSprite foodSprite = new TemporaryAnimatedSprite(Game1.objectSpriteSheetName,
                     Game1.getSourceRectForStandardTileSheet(Game1.objectSpriteSheet,this.attachments[0].ParentSheetIndex,
                     16, 16), 500.0f, 1, 1, vectorFood, false, false,((float) boundingBox.Bottom + 0.2f) / 10000f, 0.0f,
                     Color.White, foodScale, 0.0f, 0.0f, 0.0f) {delayBeforeAnimationStart = 100};
-                who.currentLocation.temporarySprites.Add(foodSprite);
+                multiplayer.broadcastSprites(who.currentLocation, new TemporaryAnimatedSprite[1] { foodSprite });
 
                 for (int index = 0; index < 8; ++index)
                 {
@@ -289,7 +291,7 @@ namespace AnimalHusbandryMod.tools
                             acceleration = new Vector2(0.0f, 0.5f),
                             delayBeforeAnimationStart = 600
                         };
-                    who.currentLocation.temporarySprites.Add(temporaryAnimatedSprite2);
+                    multiplayer.broadcastSprites(who.currentLocation, new TemporaryAnimatedSprite[1] { temporaryAnimatedSprite2 });
                 }
 
                 if (this._animal != null)

@@ -164,29 +164,34 @@ namespace AnimalHusbandryMod.tools
                 this._animal.health.Value = -1;
                 int numClouds = this._animal.frontBackSourceRect.Width / 2;
                 int cloudSprite = !DataLoader.ModConfig.Softmode ? 5 : 10;
+                Multiplayer multiplayer = DataLoader.Helper.Reflection.GetField<Multiplayer>(typeof(Game1), "multiplayer").GetValue();
                 for (int i = 0; i < numClouds; i++)
                 {
                     int nonRedness = Game1.random.Next(0, 80);
                     Color cloudColor = new Color(255, 255 - nonRedness, 255 - nonRedness); ;
+
                     
-                    Game1.currentLocation.temporarySprites.Add
-                    (
-                        new TemporaryAnimatedSprite
-                        (
-                            cloudSprite
-                            ,this._animal.position +new Vector2(Game1.random.Next(-Game1.tileSize / 2, this._animal.frontBackSourceRect.Width * 3)
-                            ,Game1.random.Next(-Game1.tileSize / 2, this._animal.frontBackSourceRect.Height * 3))
-                            ,cloudColor
-                            , 8
-                            , false,
-                            Game1.random.NextDouble() < .5 ? 50 : Game1.random.Next(30, 200), 0, Game1.tileSize
-                            , -1
-                            ,Game1.tileSize, Game1.random.NextDouble() < .5 ? 0 : Game1.random.Next(0, 600)
-                        )
-                        {
-                            scale = Game1.random.Next(2, 5) * .25f,
-                            alpha = Game1.random.Next(2, 5) * .25f,
-                            motion = new Vector2(0, (float) -Game1.random.NextDouble())
+
+                    multiplayer.broadcastSprites(
+                        Game1.player.currentLocation
+                        , new TemporaryAnimatedSprite[1]{
+                            new TemporaryAnimatedSprite
+                            (
+                                cloudSprite
+                                ,this._animal.position +new Vector2(Game1.random.Next(-Game1.tileSize / 2, this._animal.frontBackSourceRect.Width * 3)
+                                ,Game1.random.Next(-Game1.tileSize / 2, this._animal.frontBackSourceRect.Height * 3))
+                                ,cloudColor
+                                , 8
+                                , false,
+                                Game1.random.NextDouble() < .5 ? 50 : Game1.random.Next(30, 200), 0, Game1.tileSize
+                                , -1
+                                ,Game1.tileSize, Game1.random.NextDouble() < .5 ? 0 : Game1.random.Next(0, 600)
+                            )
+                            {
+                                scale = Game1.random.Next(2, 5) * .25f,
+                                alpha = Game1.random.Next(2, 5) * .25f,
+                                motion = new Vector2(0, (float) -Game1.random.NextDouble())
+                            }
                         }
                     );
                 }
@@ -202,19 +207,21 @@ namespace AnimalHusbandryMod.tools
                     animalColor = Color.White;
                     alfaFade = .050f;
                 }
-                Game1.currentLocation.temporarySprites.Add
-                (
-                    new TemporaryAnimatedSprite
-                    (
-                        this._animal.Sprite.textureName.Value
-                        ,this._animal.Sprite.SourceRect
-                        , this._animal.position
-                        , this._animal.FacingDirection == Game1.left
-                        , alfaFade
-                        , animalColor
-                    )
-                    {
-                        scale = 4f
+                multiplayer.broadcastSprites(
+                    Game1.player.currentLocation
+                    , new TemporaryAnimatedSprite[1]{
+                        new TemporaryAnimatedSprite
+                        (
+                            this._animal.Sprite.textureName.Value
+                            ,this._animal.Sprite.SourceRect
+                            , this._animal.position
+                            , this._animal.FacingDirection == Game1.left
+                            , alfaFade
+                            , animalColor
+                        )
+                        {
+                            scale = 4f
+                        }
                     }
                 );
                 if (!DataLoader.ModConfig.Softmode)
