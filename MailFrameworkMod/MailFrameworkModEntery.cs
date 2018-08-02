@@ -15,7 +15,7 @@ namespace MailFrameworkMod
     public class MailFrameworkModEntery : Mod
     {
         public static IModHelper ModHelper;
-        public static IMonitor monitor;
+        public static IMonitor ModMonitor;
         public static ModConfig ModConfig;
 
         /*********
@@ -29,14 +29,17 @@ namespace MailFrameworkMod
         public override void Entry(IModHelper helper)
         {
             ModHelper = helper;
-            monitor = Monitor;
+            ModMonitor = Monitor;
             ModConfig = helper.ReadConfig<ModConfig>();
             TimeEvents.AfterDayStarted += TimeEvents_AfterDayStarted;
             SaveEvents.AfterReturnToTitle += SaveEvents_AfterReturnToTitle;
             SaveEvents.BeforeSave += TimeEvents_BeforeSave;
             var editors = helper.Content.AssetEditors;
             editors.Add(new DataLoader());
-           
+
+            helper.ConsoleCommands.Add("player_addreceivedmail", "Adds a mail as received.\n\nUsage: player_addreceivedmail <value>\n- value: name of the mail.", Commands.AddsReceivedMail);
+            helper.ConsoleCommands.Add("player_removereceivedmail", "Remove a mail from the list of received mail.\n\nUsage: player_removereceivedmail <value>\n- value: name of the mail.", Commands.RemoveReceivedMail);
+
             try
             {
                 var harmony = HarmonyInstance.Create("Digus.MailFrameworkMod");

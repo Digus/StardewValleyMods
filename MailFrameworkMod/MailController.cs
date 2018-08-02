@@ -152,7 +152,7 @@ namespace MailFrameworkMod
                         }
                         else
                         {
-                            MailFrameworkModEntery.monitor.Log($"The recipe '{recipe}' was not found. The mail will ignore it.", LogLevel.Warn);
+                            MailFrameworkModEntery.ModMonitor.Log($"The recipe '{recipe}' was not found. The mail will ignore it.", LogLevel.Warn);
                         }
 
                         if (recipeString != null)
@@ -163,7 +163,7 @@ namespace MailFrameworkMod
                                 string[] strArray = recipeString.Split('/');
                                 if (strArray.Length < dataArrayI18NSize)
                                 {
-                                    MailFrameworkModEntery.monitor.Log($"The recipe '{recipe}' does not have a internationalized name. The default name will be used.", LogLevel.Warn);
+                                    MailFrameworkModEntery.ModMonitor.Log($"The recipe '{recipe}' does not have a internationalized name. The default name will be used.", LogLevel.Warn);
                                 }
                                 else
                                 {
