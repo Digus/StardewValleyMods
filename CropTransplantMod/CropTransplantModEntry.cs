@@ -36,9 +36,20 @@ namespace CropTransplantMod
             var objectOverridesPerformUseAction = typeof(TransplantOverrides).GetMethod("PerformUseAction");
             harmony.Patch(hoeDirtPerformUseAction, new HarmonyMethod(objectOverridesPerformUseAction), null);
 
+            var fruitTreePerformUseAction = typeof(FruitTree).GetMethod("performUseAction");
+            var transplantOverridesFruitTreePerformUseAction = typeof(TransplantOverrides).GetMethod("FruitTreePerformUseAction");
+            harmony.Patch(fruitTreePerformUseAction, null, new HarmonyMethod(transplantOverridesFruitTreePerformUseAction));
+
             var game1PressUseToolButton = typeof(Game1).GetMethod("pressUseToolButton");
             var objectOverridesPressUseToolButton = typeof(TransplantOverrides).GetMethod("PressUseToolButton");
             harmony.Patch(game1PressUseToolButton, new HarmonyMethod(objectOverridesPressUseToolButton), null);
+
+            if (DataLoader.ModConfig.EnableSoilTileUnderTrees)
+            {
+                var treeDraw = typeof(Tree).GetMethod("draw");
+                var transplantOverridesPreTreeDraw = typeof(TransplantOverrides).GetMethod("PreTreeDraw");
+                harmony.Patch(treeDraw, new HarmonyMethod(transplantOverridesPreTreeDraw), null);
+            }
 
             SaveEvents.BeforeSave += (x, y) =>
             {

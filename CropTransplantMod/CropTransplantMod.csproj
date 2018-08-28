@@ -68,6 +68,7 @@
     <ProjectReference Include="..\MailFrameworkMod\MailFrameworkMod.csproj">
       <Project>{9ab101dd-fb56-4441-8180-783405d2d2f0}</Project>
       <Name>MailFrameworkMod</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

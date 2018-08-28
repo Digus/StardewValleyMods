@@ -7,12 +7,15 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StardewValley;
 using StardewValley.Objects;
+using StardewValley.TerrainFeatures;
 using Object = StardewValley.Object;
 
 namespace CropTransplantMod
 {
     public class HeldIndoorPot : IndoorPot
     {
+        public TerrainFeature tree = null;
+
         public HeldIndoorPot():base()
         {
         }
@@ -21,8 +24,19 @@ namespace CropTransplantMod
         {
         }
 
+        public bool IsHoldingSomething()
+        {
+            return this.hoeDirt.Value.crop != null || this.tree != null;
+        }
+
         public override bool placementAction(GameLocation location, int x, int y, Farmer who = null)
         {
+            if (!DataLoader.ModConfig.EnablePlacementOfCropsOutsideOutOfTheFarm && !Game1.player.currentLocation.IsFarm && Game1.player.currentLocation.IsOutdoors)
+            {
+                Game1.showRedMessage(Game1.content.LoadString("Strings\\StringsFromCSFiles:HoeDirt.cs.13919"));
+                return false;
+            }
+
             bool result = base.placementAction(location, x, y, who);
             if (this.hoeDirt.Value.crop != null)
             {
@@ -67,6 +81,16 @@ namespace CropTransplantMod
                 }
                 spriteBatch.Draw(Game1.mouseCursors, new Vector2((float)((double)objectPosition.X + 4.0), (float)(objectPosition.Y + 52)), new Rectangle?(new Rectangle(173 + num / 2 * 16, 466 + num % 2 * 16, 13, 13)), Color.White, 0.0f, Vector2.Zero, 4f, SpriteEffects.None, Math.Max(0.0f, (float)(f.getStandingY() + 2) / 10000f)+0.0001f);
             }
+
+            if (this.tree is Tree tree)
+            {
+                drawTree(tree, spriteBatch, objectPosition);
+            }
+            else if (this.tree is FruitTree fruitTreetree)
+            {
+                drawFruitTree(fruitTreetree, spriteBatch, objectPosition);
+            }
+
             if (this.hoeDirt.Value.crop != null)
                 DrawWithOffset(this.hoeDirt.Value.crop, spriteBatch, objectPosition, this.hoeDirt.Value.state.Value != 1 || this.hoeDirt.Value.crop.currentPhase.Value != 0 || this.hoeDirt.Value.crop.raisedSeeds.Value ? Color.White : new Color(180, 100, 200) * 1f, this.hoeDirt.Value.getShakeRotation(), new Vector2(32f, 72),f);
             if (this.heldObject.Value == null)
@@ -108,6 +132,181 @@ namespace CropTransplantMod
         public override void draw(SpriteBatch spriteBatch, int x, int y, float alpha = 1)
         {
             //Empty to avoid drawing the HoeDirty out of place.
+        }
+
+        public void drawTree(Tree treeToDraw, SpriteBatch spriteBatch, Vector2 tileLocation)
+        {
+            Microsoft.Xna.Framework.Rectangle boundingBox;
+            Texture2D texture = DataLoader.Helper.Reflection.GetField<Lazy<Texture2D>>(treeToDraw, "texture").GetValue().Value;
+            List<Leaf> leaves = DataLoader.Helper.Reflection.GetField<List<Leaf>>(treeToDraw, "leaves").GetValue();
+            float shakeRotation = DataLoader.Helper.Reflection.GetField<float>(treeToDraw, "shakeRotation").GetValue();
+            if (treeToDraw.growthStage.Value < 5)
+            {
+                Microsoft.Xna.Framework.Rectangle rectangle = Microsoft.Xna.Framework.Rectangle.Empty;
+                switch (treeToDraw.growthStage.Value)
+                {
+                    case 0:
+                        rectangle = new Microsoft.Xna.Framework.Rectangle(32, 128, 16, 16);
+                        break;
+                    case 1:
+                        rectangle = new Microsoft.Xna.Framework.Rectangle(0, 128, 16, 16);
+                        break;
+                    case 2:
+                        rectangle = new Microsoft.Xna.Framework.Rectangle(16, 128, 16, 16);
+                        break;
+                    default:
+                        rectangle = new Microsoft.Xna.Framework.Rectangle(0, 96, 16, 32);
+                        break;
+                }
+                SpriteBatch spriteBatch1 = spriteBatch;
+                Microsoft.Xna.Framework.Rectangle? sourceRectangle = new Microsoft.Xna.Framework.Rectangle?(rectangle);
+                Color white = Color.White;
+                Vector2 origin = new Vector2(8f, treeToDraw.growthStage.Value >= 3 ? 32f : 16f);
+                double num1 = 4.0;
+                int num2 = treeToDraw.flipped.Value ? 1 : 0;
+                spriteBatch1.Draw(texture, tileLocation + new Vector2(32,96), sourceRectangle, white, (float)shakeRotation, origin, (float)num1, (SpriteEffects)num2, Math.Max(0.0f, (float)(Game1.player.getStandingY() + 2) / 10000f) + 0.0002f);
+            }
+            else
+            {
+                if (!treeToDraw.stump.Value)
+                {
+                    spriteBatch.Draw(Game1.mouseCursors, tileLocation + new Vector2(-51, 150), new Microsoft.Xna.Framework.Rectangle?(Tree.shadowSourceRect), Color.White * (1.570796f - Math.Abs(shakeRotation)), 0.0f, Vector2.Zero, 4f, treeToDraw.flipped.Value ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 1E-06f);
+                    SpriteBatch spriteBatch1 = spriteBatch;
+                    Microsoft.Xna.Framework.Rectangle? sourceRectangle = new Microsoft.Xna.Framework.Rectangle?(Tree.treeTopSourceRect);
+                    Color color = Color.White;
+                    Vector2 origin = new Vector2(24f, 96f);
+                    double num1 = 4.0;
+                    int num2 = treeToDraw.flipped.Value ? 1 : 0;
+                    boundingBox = this.getBoundingBox(tileLocation);
+                    double num3 = Math.Max(0.0f, (float)(Game1.player.getStandingY() + 2) / 10000f) + 0.0003f;
+                    spriteBatch1.Draw(texture, tileLocation + new Vector2(32, 96), sourceRectangle, color, (float)shakeRotation, origin, (float)num1, (SpriteEffects)num2, (float)num3);
+                }
+                if (treeToDraw.health.Value > -99.0)
+                {
+                    SpriteBatch spriteBatch1 = spriteBatch;
+                    Microsoft.Xna.Framework.Rectangle? sourceRectangle = new Microsoft.Xna.Framework.Rectangle?(Tree.stumpSourceRect);
+                    Color color = Color.White;
+                    double num1 = 0.0;
+                    Vector2 zero = Vector2.Zero;
+                    double num2 = 4.0;
+                    int num3 = treeToDraw.flipped.Value ? 1 : 0;
+                    boundingBox = this.getBoundingBox(tileLocation);
+                    double num4 = Math.Max(0.0f, (float)(Game1.player.getStandingY() + 2) / 10000f) + 0.0002f;
+                    spriteBatch1.Draw(texture, tileLocation + new Vector2(0, -32), sourceRectangle, color, (float)num1, zero, (float)num2, (SpriteEffects)num3, (float)num4);
+                }
+                if (treeToDraw.stump.Value && treeToDraw.health.Value < 4.0 && treeToDraw.health.Value > -99.0)
+                {
+                    SpriteBatch spriteBatch1 = spriteBatch;
+                    Microsoft.Xna.Framework.Rectangle? sourceRectangle = new Microsoft.Xna.Framework.Rectangle?(new Microsoft.Xna.Framework.Rectangle(Math.Min(2, (int)(3.0 - treeToDraw.health.Value)) * 16, 144, 16, 16));
+                    Color color = Color.White;
+                    double num1 = 0.0;
+                    Vector2 zero = Vector2.Zero;
+                    double num2 = 4.0;
+                    int num3 = treeToDraw.flipped.Value ? 1 : 0;
+                    boundingBox = this.getBoundingBox(tileLocation);
+                    double num4 = Math.Max(0.0f, (float)(Game1.player.getStandingY() + 2) / 10000f) + 0.0004f;
+                    spriteBatch1.Draw(texture, tileLocation + new Vector2(0, 32), sourceRectangle, color, (float)num1, zero, (float)num2, (SpriteEffects)num3, (float)num4);
+                }
+            }
+            foreach (Leaf leaf in leaves)
+            {
+                SpriteBatch spriteBatch1 = spriteBatch;
+                Vector2 local = Game1.GlobalToLocal(Game1.viewport, leaf.position);
+                Microsoft.Xna.Framework.Rectangle? sourceRectangle = new Microsoft.Xna.Framework.Rectangle?(new Microsoft.Xna.Framework.Rectangle(16 + leaf.type % 2 * 8, 112 + leaf.type / 2 * 8, 8, 8));
+                Color white = Color.White;
+                double rotation = (double)leaf.rotation;
+                Vector2 zero = Vector2.Zero;
+                double num1 = 4.0;
+                int num2 = 0;
+                boundingBox = this.getBoundingBox(tileLocation);
+                double num3 = Math.Max(0.0f, (float)(Game1.player.getStandingY() + 2) / 10000f) + 0.0005f;
+                spriteBatch1.Draw(texture, local, sourceRectangle, white, (float)rotation, zero, (float)num1, (SpriteEffects)num2, (float)num3);
+            }
+        }
+
+        public void drawFruitTree(FruitTree treeToDraw, SpriteBatch spriteBatch, Vector2 tileLocation)
+        {
+            List<Leaf> leaves = DataLoader.Helper.Reflection.GetField<List<Leaf>>(treeToDraw, "leaves").GetValue();
+            float shakeRotation = DataLoader.Helper.Reflection.GetField<float>(treeToDraw, "shakeRotation").GetValue();
+            Rectangle boundingBox;
+            if (treeToDraw.growthStage.Value < 4)
+            {
+                //Vector2 vector2 = new Vector2((float)Math.Max(-8.0, Math.Min(64.0, Math.Sin((double)tileLocation.X * 200.0 / (2.0 * Math.PI)) * -16.0)), (float)Math.Max(-8.0, Math.Min(64.0, Math.Sin((double)tileLocation.X * 200.0 / (2.0 * Math.PI)) * -16.0))) / 2f;
+                Rectangle rectangle = Rectangle.Empty;
+                switch (treeToDraw.growthStage.Value)
+                {
+                    case 0:
+                        rectangle = new Rectangle(0, treeToDraw.treeType.Value * 5 * 16, 48, 80);
+                        break;
+                    case 1:
+                        rectangle = new Rectangle(48, treeToDraw.treeType.Value * 5 * 16, 48, 80);
+                        break;
+                    case 2:
+                        rectangle = new Rectangle(96, treeToDraw.treeType.Value * 5 * 16, 48, 80);
+                        break;
+                    default:
+                        rectangle = new Rectangle(144, treeToDraw.treeType.Value * 5 * 16, 48, 80);
+                        break;
+                }
+                SpriteBatch spriteBatch1 = spriteBatch;
+                Texture2D texture = FruitTree.texture;
+                //Vector2 local = Game1.GlobalToLocal(Game1.viewport, new Vector2((float)((double)tileLocation.X * 64.0 + 32.0) + vector2.X, (float)((double)tileLocation.Y * 64.0 - (double)rectangle.Height + 128.0) + vector2.Y));
+                Rectangle? sourceRectangle = new Rectangle?(rectangle);
+                Color white = Color.White;
+                Vector2 origin = new Vector2(24f, 80f);
+                double num1 = 4.0;
+                int num2 = treeToDraw.flipped.Value  ? 1 : 0;
+                boundingBox = this.getBoundingBox(tileLocation);
+                double num3 = Math.Max(0.0f, (float) (Game1.player.getStandingY() + 2) / 10000f) + 0.0002f;
+                spriteBatch1.Draw(texture, tileLocation + new Vector2(32, 96), sourceRectangle, white, (float)shakeRotation, origin, (float)num1, (SpriteEffects)num2, (float)num3);
+            }
+            else
+            {
+                if (!treeToDraw.stump.Value)
+                {
+                    spriteBatch.Draw(Game1.mouseCursors, tileLocation + new Vector2(-51, 150), new Rectangle?(Tree.shadowSourceRect), Color.White * (1.570796f - Math.Abs(shakeRotation)), 0.0f, Vector2.Zero, 4f, treeToDraw.flipped.Value ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 1E-06f);
+                    SpriteBatch spriteBatch1 = spriteBatch;
+                    Texture2D texture = FruitTree.texture;
+                    Rectangle? sourceRectangle = new Rectangle?(new Rectangle((12 + (treeToDraw.GreenHouseTree ? 1 : Utility.getSeasonNumber(Game1.currentSeason)) * 3) * 16, treeToDraw.treeType.Value * 5 * 16, 48, 64));
+                    Color color = treeToDraw.struckByLightningCountdown.Value > 0 ? Color.Gray : Color.White;
+                    Vector2 origin = new Vector2(24f, 80f);
+                    double num1 = 4.0;
+                    int num2 = treeToDraw.flipped.Value  ? 1 : 0;
+                    boundingBox = this.getBoundingBox(tileLocation);
+                    double num3 = Math.Max(0.0f, (float)(Game1.player.getStandingY() + 2) / 10000f) + 0.0003f;
+                    spriteBatch1.Draw(texture, tileLocation + new Vector2(32, 96), sourceRectangle, color, (float)shakeRotation, origin, (float)num1, (SpriteEffects)num2, (float)num3);
+                }
+                if (treeToDraw.health.Value > -99.0)
+                {
+                    SpriteBatch spriteBatch1 = spriteBatch;
+                    Texture2D texture = FruitTree.texture;
+                    Rectangle? sourceRectangle = new Rectangle?(new Rectangle(384, treeToDraw.treeType.Value * 5 * 16 + 48, 48, 32));
+                    Color color = treeToDraw.struckByLightningCountdown.Value > 0 ? Color.Gray : Color.White;
+                    double num1 = 0.0;
+                    Vector2 origin = new Vector2(24f, 32f);
+                    double num2 = 4.0;
+                    int num3 = treeToDraw.flipped.Value  ? 1 : 0;
+                    double num4;
+                    boundingBox = this.getBoundingBox(tileLocation);
+                    num4 = Math.Max(0.0f, (float)(Game1.player.getStandingY() + 2) / 10000f) + 0.0002f;
+                    spriteBatch1.Draw(texture, tileLocation + new Vector2(32, 96), sourceRectangle, color, (float)num1, origin, (float)num2, (SpriteEffects)num3, (float)num4);
+                }
+            }
+            foreach (Leaf leaf in leaves)
+            {
+                SpriteBatch spriteBatch1 = spriteBatch;
+                Texture2D texture = FruitTree.texture;
+                Vector2 local = Game1.GlobalToLocal(Game1.viewport, leaf.position);
+                Rectangle? sourceRectangle = new Rectangle?(new Rectangle((24 + Utility.getSeasonNumber(Game1.currentSeason)) * 16, treeToDraw.treeType.Value * 5 * 16, 8, 8));
+                Color white = Color.White;
+                double rotation = (double)leaf.rotation;
+                Vector2 zero = Vector2.Zero;
+                double num1 = 4.0;
+                int num2 = 0;
+                boundingBox = this.getBoundingBox(tileLocation);
+                double num3 = Math.Max(0.0f, (float)(Game1.player.getStandingY() + 2) / 10000f) + 0.0004f;
+                spriteBatch1.Draw(texture, local, sourceRectangle, white, (float)rotation, zero, (float)num1, (SpriteEffects)num2, (float)num3);
+            }
         }
     }
 }
