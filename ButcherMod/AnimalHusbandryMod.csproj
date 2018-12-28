@@ -59,7 +59,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="PyTK">
-      <HintPath>H:\Projetos\Stardew-Valley-Mods-Platonymous\PyTK\bin\Release\PyTK.dll</HintPath>
+      <HintPath>$(GamePath)\Mods\PyTK\PyTK.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
