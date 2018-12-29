@@ -18,25 +18,6 @@ namespace AnimalHusbandryMod
         public bool DisableFriendshipInscreseWithTreats;
         public bool EnableTreatsCountAsAnimalFeed;
         public bool DisableMeatFromDinosaur;
-        public double PercentualAjustOnFriendshipInscreaseFromProfessions;
-
-        public ModConfig()
-        {
-            this.Softmode = false;
-            this.AddMeatCleaverToInventoryKey = null;
-            this.AddInseminationSyringeToInventoryKey = null;
-            this.AddFeedingBasketToInventoryKey = null;
-            this.DisableFullBuildingForBirthNotification = false;
-            this.DisableTomorrowBirthNotification = false;
-            this.DisablePregnancy = false;
-            this.DisableMeat = false;
-            this.DisableTreats = false;
-            this.DisableRancherMeatPriceAjust = false;
-            this.DisableMoodInscreseWithTreats = false;
-            this.DisableFriendshipInscreseWithTreats = false;
-            this.EnableTreatsCountAsAnimalFeed = false;
-            this.DisableMeatFromDinosaur = false;
-            this.PercentualAjustOnFriendshipInscreaseFromProfessions = 0.25;
-        }
+        public double PercentualAjustOnFriendshipInscreaseFromProfessions = 0.25;
     }
 }
