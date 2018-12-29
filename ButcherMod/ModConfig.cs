@@ -1,17 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using StardewModdingAPI;
 
 namespace AnimalHusbandryMod
 {
     public class ModConfig
     {
         public bool Softmode;
-        public string AddMeatCleaverToInventoryKey;
-        public string AddInseminationSyringeToInventoryKey;
-        public string AddFeedingBasketToInventoryKey;
+        public SButton? AddMeatCleaverToInventoryKey;
+        public SButton? AddInseminationSyringeToInventoryKey;
+        public SButton? AddFeedingBasketToInventoryKey;
         public bool DisableFullBuildingForBirthNotification;
         public bool DisableTomorrowBirthNotification;
         public bool DisablePregnancy;
