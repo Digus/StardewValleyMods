@@ -1,9 +1,7 @@
 ﻿using StardewModdingAPI;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using StardewValley;
 
 namespace MailFrameworkMod
 {
@@ -17,6 +15,9 @@ namespace MailFrameworkMod
         /// <param name="letter"> The letter to be saved.</param>
         public static void SaveLetter(Letter letter)
         {
+            if (Game1.objectInformation == null)
+                throw new NotImplementedException("Can't add a letter before the game is launched.");
+
             if (Letters.Exists((l) => l.Id == letter.Id))
             {
                 Letters[Letters.FindIndex((l) => l.Id == letter.Id)] = letter;

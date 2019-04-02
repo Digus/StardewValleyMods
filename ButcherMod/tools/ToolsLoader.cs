@@ -103,7 +103,7 @@ namespace AnimalHusbandryMod.tools
             }
         }
 
-        internal void ReplaceOldTools(object sender, EventArgs e)
+        internal void ReplaceOldTools()
         {
             IList<Item> inventory = Game1.player.Items;
             for (int i = 0; i < inventory.Count; i++)
