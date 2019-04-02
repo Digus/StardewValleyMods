@@ -36,9 +36,10 @@ namespace CustomCaskMod
 
             var harmony = HarmonyInstance.Create("Digus.CustomCaskMod");
 
-            var caskPerformObjectDropInAction = typeof(Cask).GetMethod("performObjectDropInAction");
-            var caskOverridesPerformObjectDropInAction = typeof(CaskOverrides).GetMethod("PerformObjectDropInAction");
-            harmony.Patch(caskPerformObjectDropInAction, new HarmonyMethod(caskOverridesPerformObjectDropInAction), null);
+            harmony.Patch(
+                original: AccessTools.Method(typeof(Cask), nameof(Cask.performObjectDropInAction)),
+                prefix: new HarmonyMethod(typeof(CaskOverrides), nameof(CaskOverrides.PerformObjectDropInAction))
+            );
         }
     }
 }

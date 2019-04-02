@@ -1,5 +1,4 @@
-﻿using System.Reflection;
-using Harmony;
+﻿using Harmony;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley;
@@ -46,27 +45,33 @@ namespace EverlastingBaitsAndUnbreakableTacklesMod
 
             var harmony = HarmonyInstance.Create("Digus.InfiniteBaitAndLureMod");
 
-            var fishingRodDoDoneFishing = typeof(FishingRod).GetMethod("doDoneFishing", BindingFlags.NonPublic | BindingFlags.Instance);
-            var fishingRodOverridesDoDoneFishing = typeof(GameOverrides).GetMethod("DoDoneFishing");
-            harmony.Patch(fishingRodDoDoneFishing, new HarmonyMethod(fishingRodOverridesDoDoneFishing), null);
+            harmony.Patch(
+                original: AccessTools.Method(typeof(FishingRod), "doDoneFishing"),
+                prefix: new HarmonyMethod(typeof(GameOverrides), nameof(GameOverrides.DoDoneFishing))
+            );
 
-            var craftingRecipeCreateItem = typeof(CraftingRecipe).GetMethod("createItem");
-            var fishingRodOverridesCreateItem = typeof(GameOverrides).GetMethod("CreateItem");
-            harmony.Patch(craftingRecipeCreateItem, new HarmonyMethod(fishingRodOverridesCreateItem), null);
+            harmony.Patch(
+                original: AccessTools.Method(typeof(CraftingRecipe), nameof(CraftingRecipe.createItem)),
+                prefix: new HarmonyMethod(typeof(GameOverrides), nameof(GameOverrides.CreateItem))
+            );
 
-            var craftingPageClickCraftingRecipe = typeof(CraftingPage).GetMethod("clickCraftingRecipe", BindingFlags.NonPublic | BindingFlags.Instance);
-            var gameOverridesClickCraftingRecipe = typeof(GameOverrides).GetMethod("ClickCraftingRecipe");
-            harmony.Patch(craftingPageClickCraftingRecipe, new HarmonyMethod(gameOverridesClickCraftingRecipe), null);
+            harmony.Patch(
+                original: AccessTools.Method(typeof(CraftingPage), "clickCraftingRecipe"),
+                prefix: new HarmonyMethod(typeof(GameOverrides), nameof(GameOverrides.ClickCraftingRecipe))
+            );
+            
+            harmony.Patch(
+                original: AccessTools.Method(typeof(NPC), nameof(NPC.tryToReceiveActiveObject)),
+                prefix: new HarmonyMethod(typeof(GameOverrides), nameof(GameOverrides.TryToReceiveActiveObject))
+            );
 
-            var npcTryToReceiveActiveObject = typeof(NPC).GetMethod("tryToReceiveActiveObject");
-            var gameOverridesTryToReceiveActiveObject = typeof(GameOverrides).GetMethod("TryToReceiveActiveObject");
-            harmony.Patch(npcTryToReceiveActiveObject, new HarmonyMethod(gameOverridesTryToReceiveActiveObject), null);
 
             if (!DataLoader.ModConfig.DisableIridiumQualityFish)
             {
-                var bobberBarConstructor = typeof(BobberBar).GetConstructor(new[] { typeof(int), typeof(float), typeof(bool), typeof(int) });
-                var gameOverridesBobberBar = typeof(GameOverrides).GetMethod("BobberBar");
-                harmony.Patch(bobberBarConstructor, null, new HarmonyMethod(gameOverridesBobberBar));
+                harmony.Patch(
+                    original: AccessTools.Constructor(typeof(BobberBar), new[] { typeof(int), typeof(float), typeof(bool), typeof(int) }),
+                    postfix: new HarmonyMethod(typeof(GameOverrides), nameof(GameOverrides.BobberBar))
+                );
             }
         }
 

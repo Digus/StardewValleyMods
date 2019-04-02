@@ -1,14 +1,15 @@
 ﻿using System;
 using AnimalHusbandryMod.animals;
+using AnimalHusbandryMod.farmer;
+using AnimalHusbandryMod.meats;
+using AnimalHusbandryMod.tools;
+using Harmony;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley;
 using StardewValley.Menus;
-using Harmony;
-using AnimalHusbandryMod.farmer;
-using AnimalHusbandryMod.tools;
-using AnimalHusbandryMod.meats;
 using DataLoader = AnimalHusbandryMod.common.DataLoader;
+using SObject = StardewValley.Object;
 
 namespace AnimalHusbandryMod
 {
@@ -74,9 +75,10 @@ namespace AnimalHusbandryMod
 
                 try
                 {
-                    var farmAnimalPet = typeof(FarmAnimal).GetMethod("pet");
-                    var animalQueryMenuExtendedPet = typeof(AnimalQueryMenuExtended).GetMethod("Pet");
-                    harmony.Patch(farmAnimalPet, new HarmonyMethod(animalQueryMenuExtendedPet), null);
+                    harmony.Patch(
+                        original: AccessTools.Method(typeof(FarmAnimal), nameof(FarmAnimal.pet)),
+                        prefix: new HarmonyMethod(typeof(AnimalQueryMenuExtended), nameof(AnimalQueryMenuExtended.Pet))
+                    );
                 }
                 catch (Exception)
                 {
@@ -92,30 +94,33 @@ namespace AnimalHusbandryMod
 
                 if (!DataLoader.ModConfig.DisableRancherMeatPriceAjust)
                 {
-                    var sellToStorePrice = typeof(StardewValley.Object).GetMethod("sellToStorePrice");
-                    var sellToStorePricePrefix = typeof(MeatOverrides).GetMethod("sellToStorePrice");
-                    harmony.Patch(sellToStorePrice, new HarmonyMethod(sellToStorePricePrefix), null);
+                    harmony.Patch(
+                        original: AccessTools.Method(typeof(SObject), nameof(SObject.sellToStorePrice)),
+                        prefix: new HarmonyMethod(typeof(MeatOverrides), nameof(MeatOverrides.sellToStorePrice))
+                    );
                 }
 
                 if (!DataLoader.ModConfig.DisableMeat)
                 {
-                    var objectIsPotentialBasicShippedCategory = typeof(StardewValley.Object).GetMethod("isPotentialBasicShippedCategory");
-                    var meatOverridesIsPotentialBasicShippedCategory = typeof(MeatOverrides).GetMethod("isPotentialBasicShippedCategory");
-                    harmony.Patch(objectIsPotentialBasicShippedCategory, new HarmonyMethod(meatOverridesIsPotentialBasicShippedCategory), null);
-
-                    var objectCountsForShippedCollection = typeof(StardewValley.Object).GetMethod("countsForShippedCollection");
-                    var meatOverridesCountsForShippedCollection = typeof(MeatOverrides).GetMethod("countsForShippedCollection");
-                    harmony.Patch(objectCountsForShippedCollection, new HarmonyMethod(meatOverridesCountsForShippedCollection), null);
+                    harmony.Patch(
+                        original: AccessTools.Method(typeof(SObject), nameof(SObject.isPotentialBasicShippedCategory)),
+                        prefix: new HarmonyMethod(typeof(MeatOverrides), nameof(MeatOverrides.isPotentialBasicShippedCategory))
+                    );
+                    harmony.Patch(
+                        original: AccessTools.Method(typeof(SObject), nameof(SObject.countsForShippedCollection)),
+                        prefix: new HarmonyMethod(typeof(MeatOverrides), nameof(MeatOverrides.countsForShippedCollection))
+                    );
                 }
 
-                //var addSpecificTemporarySprite = typeof(Event).GetMethod("addSpecificTemporarySprite");
-                //var addSpecificTemporarySprite = this.Helper.Reflection.GetMethod(new Event(), "addSpecificTemporarySprite").MethodInfo;
-                //var addSpecificTemporarySpritePostfix = typeof(EventsOverrides).GetMethod("addSpecificTemporarySprite");
-                //harmony.Patch(addSpecificTemporarySprite, null, new HarmonyMethod(addSpecificTemporarySpritePostfix));
+                //harmony.Patch(
+                //    original: AccessTools.Method(typeof(Event), "addSpecificTemporarySprite"),
+                //    transpiler: new HarmonyMethod(typeof(EventsOverrides), nameof(EventsOverrides.addSpecificTemporarySprite))
+                //);
 
-                //var petCheckAction = typeof(Pet).GetMethod("checkAction");
-                //var petCheckActionPrefix = typeof(PetOverrides).GetMethod("checkAction");
-                //harmony.Patch(petCheckAction, new HarmonyMethod(petCheckActionPrefix), null);
+                //harmony.Patch(
+                //    original: AccessTools.Method(typeof(Pet), nameof(Pet.checkAction)),
+                //    prefix: new HarmonyMethod(typeof(PetOverrides), nameof(PetOverrides.checkAction))
+                //);
             }
         }
 

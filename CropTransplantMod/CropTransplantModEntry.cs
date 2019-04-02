@@ -40,35 +40,42 @@ namespace CropTransplantMod
 
             var harmony = HarmonyInstance.Create("Digus.CustomCrystalariumMod");
 
-            var utilityTryToPlaceItem = typeof(Utility).GetMethod("tryToPlaceItem");
-            var objectOverridesTryToPlaceItem = typeof(TransplantOverrides).GetMethod("TryToPlaceItem");
-            harmony.Patch(utilityTryToPlaceItem, new HarmonyMethod(objectOverridesTryToPlaceItem), null);
+            harmony.Patch(
+                original: AccessTools.Method(typeof(Utility), nameof(Utility.tryToPlaceItem)),
+                prefix: new HarmonyMethod(typeof(TransplantOverrides), nameof(TransplantOverrides.TryToPlaceItem))
+            );
 
-            var utilityCanGrabSomethingFromHere = typeof(Utility).GetMethod("canGrabSomethingFromHere");
-            var objectOverridesCanGrabSomethingFromHere = typeof(TransplantOverrides).GetMethod("CanGrabSomethingFromHere");
-            harmony.Patch(utilityCanGrabSomethingFromHere, new HarmonyMethod(objectOverridesCanGrabSomethingFromHere), null);
+            harmony.Patch(
+                original: AccessTools.Method(typeof(Utility), nameof(Utility.canGrabSomethingFromHere)),
+                prefix: new HarmonyMethod(typeof(TransplantOverrides), nameof(TransplantOverrides.CanGrabSomethingFromHere))
+            );
 
-            var utilityPlayerCanPlaceItemHere = typeof(Utility).GetMethod("playerCanPlaceItemHere");
-            var objectOverridesPlayerCanPlaceItemHere = typeof(TransplantOverrides).GetMethod("PlayerCanPlaceItemHere");
-            harmony.Patch(utilityPlayerCanPlaceItemHere, new HarmonyMethod(objectOverridesPlayerCanPlaceItemHere), null);
+            harmony.Patch(
+                original: AccessTools.Method(typeof(Utility), nameof(Utility.playerCanPlaceItemHere)),
+                prefix: new HarmonyMethod(typeof(TransplantOverrides), nameof(TransplantOverrides.PlayerCanPlaceItemHere))
+            );
 
-            var hoeDirtPerformUseAction = typeof(HoeDirt).GetMethod("performUseAction");
-            var objectOverridesPerformUseAction = typeof(TransplantOverrides).GetMethod("PerformUseAction");
-            harmony.Patch(hoeDirtPerformUseAction, new HarmonyMethod(objectOverridesPerformUseAction), null);
+            harmony.Patch(
+                original: AccessTools.Method(typeof(HoeDirt), nameof(HoeDirt.performUseAction)),
+                prefix: new HarmonyMethod(typeof(TransplantOverrides), nameof(TransplantOverrides.PerformUseAction))
+            );
 
-            var fruitTreePerformUseAction = typeof(FruitTree).GetMethod("performUseAction");
-            var transplantOverridesFruitTreePerformUseAction = typeof(TransplantOverrides).GetMethod("FruitTreePerformUseAction");
-            harmony.Patch(fruitTreePerformUseAction, null, new HarmonyMethod(transplantOverridesFruitTreePerformUseAction));
+            harmony.Patch(
+                original: AccessTools.Method(typeof(FruitTree), nameof(FruitTree.performUseAction)),
+                prefix: new HarmonyMethod(typeof(TransplantOverrides), nameof(TransplantOverrides.FruitTreePerformUseAction))
+            );
 
-            var game1PressUseToolButton = typeof(Game1).GetMethod("pressUseToolButton");
-            var objectOverridesPressUseToolButton = typeof(TransplantOverrides).GetMethod("PressUseToolButton");
-            harmony.Patch(game1PressUseToolButton, new HarmonyMethod(objectOverridesPressUseToolButton), null);
+            harmony.Patch(
+                original: AccessTools.Method(typeof(Game1), nameof(Game1.pressUseToolButton)),
+                prefix: new HarmonyMethod(typeof(TransplantOverrides), nameof(TransplantOverrides.PressUseToolButton))
+            );
 
             if (DataLoader.ModConfig.EnableSoilTileUnderTrees)
             {
-                var treeDraw = typeof(Tree).GetMethod("draw");
-                var transplantOverridesPreTreeDraw = typeof(TransplantOverrides).GetMethod("PreTreeDraw");
-                harmony.Patch(treeDraw, new HarmonyMethod(transplantOverridesPreTreeDraw), null);
+                harmony.Patch(
+                    original: AccessTools.Method(typeof(Tree), nameof(Tree.draw)),
+                    prefix: new HarmonyMethod(typeof(TransplantOverrides), nameof(TransplantOverrides.PreTreeDraw))
+                );
             }
         }
 

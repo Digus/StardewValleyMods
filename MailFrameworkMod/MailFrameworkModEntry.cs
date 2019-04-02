@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using Harmony;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
@@ -56,15 +53,17 @@ namespace MailFrameworkMod
             {
                 var harmony = HarmonyInstance.Create("Digus.MailFrameworkMod");
 
-                var gameLetterViewerMenuGetTextColor = typeof(LetterViewerMenu).GetMethod("getTextColor", BindingFlags.NonPublic | BindingFlags.Instance);
-                var letterViewerMenuExtendedGetTextColor = typeof(LetterViewerMenuExtended).GetMethod("GetTextColor");
-                harmony.Patch(gameLetterViewerMenuGetTextColor, new HarmonyMethod(letterViewerMenuExtendedGetTextColor), null);
+                harmony.Patch(
+                    original: AccessTools.Method(typeof(LetterViewerMenu), "getTextColor"), 
+                    prefix: new HarmonyMethod(typeof(LetterViewerMenuExtended), nameof(LetterViewerMenuExtended.GetTextColor))
+                );
 
                 if (!ModConfig.UseOldMethodOfOpeningCustomMail)
                 {
-                    var gameLocaltionMailbox = typeof(GameLocation).GetMethod("mailbox");
-                    var mailControllerMailbox = typeof(MailController).GetMethod("mailbox");
-                    harmony.Patch(gameLocaltionMailbox, new HarmonyMethod(mailControllerMailbox), null);
+                    harmony.Patch(
+                        original: AccessTools.Method(typeof(GameLocation), nameof(GameLocation.mailbox)),
+                        prefix: new HarmonyMethod(typeof(MailController), nameof(MailController.mailbox))
+                    );
                 }
                 else
                 {

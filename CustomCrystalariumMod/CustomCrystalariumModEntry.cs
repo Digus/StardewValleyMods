@@ -1,8 +1,7 @@
-﻿using System.Reflection;
-using Harmony;
+﻿using Harmony;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
-using StardewValley;
+using SObject = StardewValley.Object;
 
 namespace CustomCrystalariumMod
 {
@@ -37,19 +36,22 @@ namespace CustomCrystalariumMod
 
             var harmony = HarmonyInstance.Create("Digus.CustomCrystalariumMod");
 
-            var objectGetMinutesForCrystalarium = typeof(Object).GetMethod("getMinutesForCrystalarium", BindingFlags.NonPublic | BindingFlags.Instance);
-            var objectOverridesGetMinutesForCrystalarium = typeof(ObjectOverrides).GetMethod("GetMinutesForCrystalarium");
-            harmony.Patch(objectGetMinutesForCrystalarium, new HarmonyMethod(objectOverridesGetMinutesForCrystalarium), null);
+            harmony.Patch(
+                original: AccessTools.Method(typeof(SObject), "getMinutesForCrystalarium"),
+                prefix: new HarmonyMethod(typeof(ObjectOverrides), nameof(ObjectOverrides.GetMinutesForCrystalarium))
+            );
 
-            var objectPerformObjectDropInAction = typeof(Object).GetMethod("performObjectDropInAction");
-            var objectOverridesPerformObjectDropInAction = typeof(ObjectOverrides).GetMethod("PerformObjectDropInAction");
-            harmony.Patch(objectPerformObjectDropInAction, new HarmonyMethod(objectOverridesPerformObjectDropInAction), null);
+            harmony.Patch(
+                original: AccessTools.Method(typeof(SObject), nameof(SObject.performObjectDropInAction)),
+                prefix: new HarmonyMethod(typeof(ObjectOverrides), nameof(ObjectOverrides.PerformObjectDropInAction))
+            );
 
             if (DataLoader.ModConfig.GetObjectBackOnChange && !DataLoader.ModConfig.GetObjectBackImmediately)
             {
-                var objectPerformRemoveAction = typeof(Object).GetMethod("performRemoveAction");
-                var objectOverridesPerformRemoveAction = typeof(ObjectOverrides).GetMethod("PerformRemoveAction");
-                harmony.Patch(objectPerformRemoveAction, new HarmonyMethod(objectOverridesPerformRemoveAction), null);
+                harmony.Patch(
+                    original: AccessTools.Method(typeof(SObject), nameof(SObject.performRemoveAction)),
+                    prefix: new HarmonyMethod(typeof(ObjectOverrides), nameof(ObjectOverrides.PerformRemoveAction))
+                );
             }
         }
     }
