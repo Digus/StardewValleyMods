@@ -52,8 +52,8 @@ namespace MailFrameworkMod
                 }
                 catch (Exception e)
                 {
-                    MailFrameworkModEntery.ModMonitor.Log($"Error while validating letter '{l.Id}'. This letter will be ignored.", LogLevel.Error);
-                    MailFrameworkModEntery.ModMonitor.Log($"Error: {e.Message}\n{e.StackTrace}", LogLevel.Trace);
+                    MailFrameworkModEntry.ModMonitor.Log($"Error while validating letter '{l.Id}'. This letter will be ignored.", LogLevel.Error);
+                    MailFrameworkModEntry.ModMonitor.Log($"Error: {e.Message}\n{e.StackTrace}", LogLevel.Trace);
                 }
 
                 return condition;

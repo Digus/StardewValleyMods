@@ -7,7 +7,7 @@ using StardewValley.Tools;
 
 namespace EverlastingBaitsAndUnbreakableTacklesMod
 {
-    public class EverlastingBaitsAndUnbreakableTacklesModEntery : Mod
+    public class EverlastingBaitsAndUnbreakableTacklesModEntry : Mod
     {
         public static IMonitor ModMonitor;
         internal static DataLoader DataLoader;

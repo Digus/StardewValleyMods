@@ -12,7 +12,7 @@ using DataLoader = AnimalHusbandryMod.common.DataLoader;
 
 namespace AnimalHusbandryMod
 {
-    public class AnimalHusbandryModEntery : Mod
+    public class AnimalHusbandryModEntry : Mod
     {
 
         internal static IModHelper ModHelper;
@@ -82,7 +82,7 @@ namespace AnimalHusbandryMod
                 }
                 catch (Exception)
                 {
-                    Monitor.Log("Erro patching the FarmAnimal 'pet' Method. Applying old method of opening the extended animal query menu.", LogLevel.Warn);
+                    Monitor.Log("Error patching the FarmAnimal 'pet' Method. Applying old method of opening the extended animal query menu.", LogLevel.Warn);
                     helper.Events.Display.MenuChanged += (s, e) =>
                     {
                         if (e.NewMenu is AnimalQueryMenu && !(e.NewMenu is AnimalQueryMenuExtended))

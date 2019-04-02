@@ -10,7 +10,7 @@ using StardewValley.Menus;
 
 namespace MailFrameworkMod
 {
-    public class MailFrameworkModEntery : Mod
+    public class MailFrameworkModEntry : Mod
     {
         public static IModHelper ModHelper;
         public static IMonitor ModMonitor;
@@ -59,7 +59,7 @@ namespace MailFrameworkMod
             }
             catch (Exception e)
             {
-                Monitor.Log("Erro patching the GameLocation 'mailbox' Method. Applying old method of listening to menu change events.",LogLevel.Warn);
+                Monitor.Log("Error patching the GameLocation 'mailbox' Method. Applying old method of listening to menu change events.",LogLevel.Warn);
                 Monitor.Log(e.Message+e.StackTrace,LogLevel.Trace);
                 WatchLetterMenu();
             }
