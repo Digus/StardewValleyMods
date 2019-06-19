@@ -67,8 +67,6 @@ namespace AnimalHusbandryMod
                 _inseminationSyringeSpawnKey = DataLoader.ModConfig.AddInseminationSyringeToInventoryKey;
                 _feedingBasketSpawnKey = DataLoader.ModConfig.AddFeedingBasketToInventoryKey;
 
-                //TimeEvents.AfterDayStarted += (x, y) => EventsLoader.CheckEventDay();
-
                 if (!DataLoader.ModConfig.DisableMeat)
                     ModHelper.ConsoleCommands.Add("player_addallmeatrecipes", "Add all meat recipes to the player.", DataLoader.RecipeLoader.AddAllMeatRecipes);
 
@@ -116,15 +114,29 @@ namespace AnimalHusbandryMod
                     );
                 }
 
-                //harmony.Patch(
-                //    original: AccessTools.Method(typeof(Event), "addSpecificTemporarySprite"),
-                //    transpiler: new HarmonyMethod(typeof(EventsOverrides), nameof(EventsOverrides.addSpecificTemporarySprite))
-                //);
+                harmony.Patch(
+                    original: AccessTools.Method(typeof(Event), "addSpecificTemporarySprite"),
+                    postfix: new HarmonyMethod(typeof(EventsOverrides), nameof(EventsOverrides.addSpecificTemporarySprite))
+                );
+                harmony.Patch(
+                    original: AccessTools.Method(typeof(Event), nameof(Event.skipEvent)),
+                    postfix: new HarmonyMethod(typeof(EventsOverrides), nameof(EventsOverrides.skipEvent))
+                );
 
-                //harmony.Patch(
-                //    original: AccessTools.Method(typeof(Pet), nameof(Pet.checkAction)),
-                //    prefix: new HarmonyMethod(typeof(PetOverrides), nameof(PetOverrides.checkAction))
-                //);
+                harmony.Patch(
+                    original: AccessTools.Method(typeof(Pet), nameof(Pet.checkAction)),
+                    prefix: new HarmonyMethod(typeof(PetOverrides), nameof(PetOverrides.checkAction))
+                );
+
+                harmony.Patch(
+                    original: AccessTools.Method(typeof(Pet), nameof(Pet.update), new []{typeof(GameTime),typeof(GameLocation)}),
+                    prefix: new HarmonyMethod(typeof(PetOverrides), nameof(PetOverrides.update))
+                );
+
+                harmony.Patch(
+                    original: AccessTools.Method(typeof(FarmAnimal), nameof(FarmAnimal.dayUpdate)),
+                    postfix: new HarmonyMethod(typeof(FarmAnimalOverrides), nameof(FarmAnimalOverrides.dayUpdate))
+                );
             }
         }
 
@@ -170,7 +182,7 @@ namespace AnimalHusbandryMod
             if (!_isEnabled)
                 return;
 
-            //EventsLoader.CheckUnseenEvents();
+            EventsLoader.CheckUnseenEvents();
 
             if (!DataLoader.ModConfig.DisablePregnancy)
             {

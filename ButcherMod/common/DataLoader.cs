@@ -74,7 +74,7 @@ namespace AnimalHusbandryMod.common
 
             // add editors (must happen *after* data is initialised above, since SMAPI may reload affected assets immediately)
             var editors = Helper.Content.AssetEditors;
-            //editors.Add(new EventsLoader());
+            editors.Add(new EventsLoader());
             editors.Add(ToolsLoader);
             if (!ModConfig.DisableMeat)
             {

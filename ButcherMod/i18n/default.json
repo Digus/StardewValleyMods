@@ -106,6 +106,7 @@
 	"TV.LivingWithTheAnimals.Episode.PigWinterPart4": "I hope you didn't get too attached to your winter animal, you'll soon need to make room in your barn for the new piglet.",
 	"TV.LivingWithTheAnimals.Episode.PigWinterPart5": "With your new piglet born, have you given it a treat yet? You still have time to give 3 more treats before spring, so it can start the year finding truffles like a champion.",
 	"TV.LivingWithTheAnimals.Episode.Retirement": "Folks, I've got an announcement to make. This is the last new episode of Livin' With The Animals before my retirement. I'm going to live with my twin brother on his farm, he sure needs my help with his animals. Oh, and I've been told the station's going to start playing reruns next year. Take care! ",
+	"TV.LivingWithTheAnimals.Episode.SpringAnimalContestFertilityBonus": "Spring is comming to an end, you know what that means? At that time most farm communities organize their own Spring Animal Contest. It is said that farm animals that win this contest become more fertily, giving birth one day earlier than usual.",
 	// Tools
 	"Tool.MeatCleaver.Name": "Meat Cleaver",
 	"Tool.MeatCleaver.Description": "Turn your animals into meat.",
@@ -148,7 +149,7 @@
 	"Tool.ParticipantRibbon.Description": "Use this to choose an animal for the next contest.",
 	"Tool.ParticipantRibbon.CantBeBaby": "Babies can't participate in an animal contest.",
 	"Tool.ParticipantRibbon.HasAlreadyParticipatedContest": "{{animalName}} has already participated in the animal contest.",
-	"Tool.ParticipantRibbon.Letter": "Dear @,^Tomorrow we're having our {{season}} Animal Contest in the town square.^^If you want to participate, place this ribbon on one of your animals today and I'll bring it to the event tomorrow!^We'll choose the most well treated animal of Stardew Valley.^You can participate with your pet, but farm animals have more chance of winning.^Come to town before 9 AM if want to participate or just watch.^   -Mayor Lewis",
+	"Tool.ParticipantRibbon.Letter": "Dear @,^Tomorrow we're having our {{season}} Animal Contest in the town square.^^If you want to participate, place this ribbon on one of your animals today and I'll bring it to the event tomorrow!^We'll choose the most well treated animal of Stardew Valley.^You can participate with your pet, but farm animals have more chance of winning.^Come to town before 10 AM if want to participate or just watch.^   -Mayor Lewis",
 	
 	//Menus
 	"Menu.AnimalQueryMenu.PregnancyBuildingLimit": "That building has no room for a pregnant animal.",
@@ -158,8 +159,8 @@
 	"Menu.AnimalQueryMenu.WantsTreatTomorrow":  "It'll want a treat tomorrow.",
 	"Menu.AnimalQueryMenu.WantsTreatInDays":  "It'll want a treat in {{numberOfDays}} days.",
 	"Menu.AnimalQueryMenu.ExchangeAnimalForMeat":  "Exchange for meat.",
-	"Menu.AnimalQueryMenu.Winner": "Winner of {{contestDate}}",
-	"Menu.AnimalQueryMenu.ContestParticipant": "Participant of {{contestDate}}",
+	"Menu.AnimalQueryMenu.Winner": "Winner of {{season}} Animal Contest\n{{contestDate}}",
+	"Menu.AnimalQueryMenu.ContestParticipant": "Participant of {{season}} Animal Contest\n{{contestDate}}",
 	"Menu.AnimalQueryMenu.ChangeParticipant": "Get Ribbon Back."
 
 }

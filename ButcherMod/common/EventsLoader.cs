@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AnimalHusbandryMod.animals;
+using AnimalHusbandryMod.farmer;
 using StardewModdingAPI;
 using StardewModdingAPI.Utilities;
 using StardewValley;
@@ -12,6 +13,8 @@ namespace AnimalHusbandryMod.common
 {
     public class EventsLoader : IAssetEditor
     {
+        private static readonly List<CustomEvent> CustomEvents = new List<CustomEvent>();
+
         public bool CanEdit<T>(IAssetInfo asset)
         {
             return asset.AssetNameEquals("Data\\Events\\Town");
@@ -22,20 +25,37 @@ namespace AnimalHusbandryMod.common
             if (asset.AssetNameEquals("Data\\Events\\Town"))
             {
                 var data = asset.AsDictionary<string, string>().Data;
-                string key = "2677835/z spring summer winter/u 26/t 600 900";
-                if (!data.ContainsKey(key))
+                foreach (CustomEvent customEvent in CustomEvents)
                 {
-                    data[key] = "none/-100 -100/farmer 25 65 1 Lewis 28 63 2 dog 29 63 2/faceDirection Dog 2/showFrame Dog 23/specificTemporarySprite animalCompetition/addTemporaryActor White_Chicken 16 16 29 65 0 false Animal farmChicken/showFrame farmChicken 8/skippable/viewport 28 65 true/move farmer 3 0 1/faceDirection farmer 0/speak Lewis \"@! You're here!#$b#Okay... I guess I'd better introduce my pieces. Wish me luck!\"/pause 300/speak Lewis \"Umm... Okay everyone!\"/pause 20000/globalFade/viewport -1000 -1000/end";
+                    data[customEvent.Key] = customEvent.Script;
                 }
             }
         }
 
         public static void CheckEventDay()
         {
+            CustomEvents.Clear();
             if (SDate.Now() == AnimalContestController.GetNextContestDate())
             {
+                AnimalContestController.CleanTemporaryParticipant();
+                CustomEvents.Add(AnimalContestEventBuilder.CreateEvent());
                 DataLoader.Helper.Content.InvalidateCache("Data\\Events\\Town");
             }
+        }
+
+        public static void CheckUnseenEvents()
+        {
+            CustomEvents.ForEach(e =>
+            {
+                var id = Convert.ToInt32(e.Key.Split('/')[0]);
+                if (!Game1.player.eventsSeen.Contains(id))
+                {
+                    if (FarmerLoader.FarmerData.AnimalContestData.Find(i => i.EventId == id) is var animalContestInfo && animalContestInfo != null)
+                    {
+                        AnimalContestController.EndEvent(animalContestInfo, false);
+                    }
+                }
+            });
         }
     }
 }

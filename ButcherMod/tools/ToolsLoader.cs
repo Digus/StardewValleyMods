@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AnimalHusbandryMod.animals;
 using MailFrameworkMod;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -242,7 +243,17 @@ namespace AnimalHusbandryMod.tools
             }
 
 
-            //MailDao.SaveLetter(new Letter("participantRibbon", DataLoader.i18n.Get("Tool.ParticipantRibbon.Letter"), new List<Item> { new ParticipantRibbon() }, (l)=> true));
+            MailDao.SaveLetter
+            (
+                new Letter
+                (
+                    "participantRibbon"
+                    , DataLoader.i18n.Get("Tool.ParticipantRibbon.Letter")
+                    , new List<Item> {new ParticipantRibbon()}
+                    , (l) => !Game1.player.mailReceived.Contains(l.Id+AnimalContestController.GetNextContestDateKey())
+                    , (l) => Game1.player.mailReceived.Add(l.Id+AnimalContestController.GetNextContestDateKey())
+                )
+            );
 
 
             if (!DataLoader.ModConfig.DisableTreats)

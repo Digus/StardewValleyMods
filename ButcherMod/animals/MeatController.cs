@@ -234,7 +234,7 @@ namespace AnimalHusbandryMod.animals
         private static int ProduceQuality(Random random, FarmAnimal farmAnimal)
         {
             AnimalStatus animalStatus = GetAnimalStatus(farmAnimal.myID.Value);
-            if (animalStatus.HasWon??false)
+            if ((animalStatus.HasWon??false) && animalStatus.DayParticipatedContest.Season == "fall")
             {
                 return 4;
             }

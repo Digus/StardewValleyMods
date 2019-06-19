@@ -180,6 +180,11 @@ namespace AnimalHusbandryMod.tools
                 Animal? foundAnimal = AnimalExtension.GetAnimalFromType(this._animal.type.Value);
                 who.Stamina -= ((float) 4f - (float)who.FarmingLevel * 0.2f);
                 int daysUtillBirth = (DataLoader.AnimalData.getAnimalItem((Animal)foundAnimal) as ImpregnatableAnimalItem).MinimumDaysUtillBirth;
+                if (AnimalContestController.HasWon(_animal) &&
+                    AnimalContestController.GetParticipantDate(_animal).Season == "spring")
+                {
+                    daysUtillBirth -=  (int)Math.Round(daysUtillBirth/10.0,MidpointRounding.AwayFromZero);
+                }
                 PregnancyController.AddPregancy(new PregnancyItem(this._animal.myID.Value, daysUtillBirth, this._animal.allowReproduction.Value));
                 this._animal.allowReproduction.Value = false;
                 --this.attachments[0].Stack;
