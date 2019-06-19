@@ -1,12 +1,15 @@
 ﻿using System;
 using AnimalHusbandryMod.animals;
+using AnimalHusbandryMod.common;
 using AnimalHusbandryMod.farmer;
 using AnimalHusbandryMod.meats;
 using AnimalHusbandryMod.tools;
 using Harmony;
+using Microsoft.Xna.Framework;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley;
+using StardewValley.Characters;
 using StardewValley.Menus;
 using DataLoader = AnimalHusbandryMod.common.DataLoader;
 using SObject = StardewValley.Object;
@@ -22,7 +25,7 @@ namespace AnimalHusbandryMod
         private SButton? _meatCleaverSpawnKey;
         private SButton? _inseminationSyringeSpawnKey;
         private SButton? _feedingBasketSpawnKey;
-        private bool IsEnabled = true;
+        private bool _isEnabled = true;
 
 
         /*********
@@ -38,6 +41,7 @@ namespace AnimalHusbandryMod
             helper.Events.GameLoop.GameLaunched += OnGameLaunched;
             helper.Events.GameLoop.SaveLoaded += OnSaveLoaded;
             helper.Events.GameLoop.DayStarted += OnDayStarted;
+            helper.Events.GameLoop.Saving += OnSaving;
         }
 
 
@@ -54,7 +58,7 @@ namespace AnimalHusbandryMod
                 Monitor.Log("Animal Husbandry Mod can't run along side its older version, ButcherMod. " +
                     "You need to copy the 'data' directory from the ButcherMod directory, into the AnimalHusbandryMod directory, then delete the ButcherMod directory. " +
                     "Animal Husbandry Mod won't load until this is done.", LogLevel.Error);
-                IsEnabled = false;
+                _isEnabled = false;
             }
             else
             {
@@ -129,7 +133,7 @@ namespace AnimalHusbandryMod
         /// <param name="e">The event data.</param>
         private void OnSaveLoaded(object sender, SaveLoadedEventArgs e)
         {
-            if (!IsEnabled)
+            if (!_isEnabled)
                 return;
 
             DataLoader.ToolsLoader.ReplaceOldTools();
@@ -142,15 +146,34 @@ namespace AnimalHusbandryMod
         /// <param name="e">The event data.</param>
         private void OnDayStarted(object sender, DayStartedEventArgs e)
         {
-            if (!IsEnabled)
+            if (!_isEnabled)
                 return;
+
+            EventsLoader.CheckEventDay();
 
             DataLoader.LivingWithTheAnimalsChannel.CheckChannelDay();
             if (!DataLoader.ModConfig.DisableMeat)
+            {
                 DataLoader.RecipeLoader.MeatFridayChannel.CheckChannelDay();
+            }
             if (!DataLoader.ModConfig.DisablePregnancy)
             {
                 PregnancyController.CheckForBirth();
+            }
+        }
+
+        /// <summary>Raised before the game is saved.</summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnSaving(object sender, SavingEventArgs e)
+        {
+            if (!_isEnabled)
+                return;
+
+            //EventsLoader.CheckUnseenEvents();
+
+            if (!DataLoader.ModConfig.DisablePregnancy)
+            {
                 PregnancyController.UpdatePregnancy();
             }
         }
@@ -160,7 +183,7 @@ namespace AnimalHusbandryMod
         /// <param name="e">The event data.</param>
         private void OnButtonPressed(object sender, ButtonPressedEventArgs e)
         {
-            if (!IsEnabled || !Context.IsWorldReady)
+            if (!_isEnabled || !Context.IsWorldReady)
                 return;
 
             if (e.Button == _meatCleaverSpawnKey)

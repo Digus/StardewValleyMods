@@ -110,7 +110,7 @@ namespace AnimalHusbandryMod.animals
             else
             {
                 AnimalHusbandryModEntry.monitor.Log($"The animal id '{id}' was not found in the game and its pregnancy data is being discarted.", LogLevel.Warn);
-                PregnancyController.RemovePregnancyItem(id);
+                RemovePregnancyItem(id);
                 return null;
             }
                 
