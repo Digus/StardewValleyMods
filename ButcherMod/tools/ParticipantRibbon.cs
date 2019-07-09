@@ -3,6 +3,8 @@ using System.Linq;
 using AnimalHusbandryMod.animals;
 using AnimalHusbandryMod.common;
 using Microsoft.Xna.Framework;
+using PyTK.CustomElementHandler;
+using StardewModdingAPI;
 using StardewValley;
 using StardewValley.Characters;
 using StardewValley.Locations;
@@ -10,7 +12,7 @@ using StardewValley.Tools;
 
 namespace AnimalHusbandryMod.tools
 {
-    public class ParticipantRibbon : MilkPail
+    public class ParticipantRibbon : MilkPail, ISaveElement
     {
         private FarmAnimal _animal;
         private Pet _pet;
@@ -53,7 +55,7 @@ namespace AnimalHusbandryMod.tools
             y = (int)who.GetToolLocation(false).Y;
             Rectangle rectangle = new Rectangle(x - Game1.tileSize / 2, y - Game1.tileSize / 2, Game1.tileSize, Game1.tileSize);
 
-            if (!DataLoader.ModConfig.DisableTreats)
+            if (Context.IsMainPlayer && !DataLoader.ModConfig.DisableTreats)
             {
                 if (location is Farm)
                 {
@@ -215,6 +217,23 @@ namespace AnimalHusbandryMod.tools
             }
             who.UsingTool = false;
             who.canReleaseTool = true;
+        }
+
+        public object getReplacement()
+        {
+            return new Object(168, 1);
+        }
+
+        public Dictionary<string, string> getAdditionalSaveData()
+        {
+            Dictionary<string, string> savedata = new Dictionary<string, string>();
+            savedata.Add("name", Name);
+            return savedata;
+        }
+
+        public void rebuild(Dictionary<string, string> additionalSaveData, object replacement)
+        {
+            this.Name = additionalSaveData["name"];
         }
     }
 }

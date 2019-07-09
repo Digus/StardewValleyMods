@@ -18,19 +18,24 @@ namespace AnimalHusbandryMod.common
 {
     public class EventsOverrides
     {
-        private static String spring_outdoorsTileSheetName = "maps/spring_outdoorsTileSheet";
-        private static String summer_outdoorsTileSheetName = "maps/summer_outdoorsTileSheet";
-        private static String fall_outdoorsTileSheetName = "maps/fall_outdoorsTileSheet";
-        private static String winter_outdoorsTileSheetName = "maps/winter_outdoorsTileSheet";
-        private static String spring_towntName = "maps/spring_town";
-        private static String summer_towntName = "maps/winter_town";
-        private static String fall_towntName = "maps/fall_town";
-        private static String winter_towntName = "maps/winter_town";
-        private static String looseSprites_cursorsName = "LooseSprites/Cursors";
-        private static String tileSheets_critters = "TileSheets/critters";
-        private static String townInterior = "maps/townInterior";
-        private static String looseSprites_temporary_sprites_1 = "LooseSprites/temporary_sprites_1";
-        
+        private const String spring_outdoorsTileSheetName = "maps/spring_outdoorsTileSheet";
+        private const String summer_outdoorsTileSheetName = "maps/summer_outdoorsTileSheet";
+        private const String fall_outdoorsTileSheetName = "maps/fall_outdoorsTileSheet";
+        private const String winter_outdoorsTileSheetName = "maps/winter_outdoorsTileSheet";
+        private const String spring_towntName = "maps/spring_town";
+        private const String summer_towntName = "maps/winter_town";
+        private const String fall_towntName = "maps/fall_town";
+        private const String winter_towntName = "maps/winter_town";
+        private const String looseSprites_cursorsName = "LooseSprites/Cursors";
+        private const String tileSheets_critters = "TileSheets/critters";
+        private const String townInterior = "maps/townInterior";
+        private const String looseSprites_temporary_sprites_1 = "LooseSprites/temporary_sprites_1";
+
+        private static readonly Vector2 BirdOffset = new Vector2(-9f, -20f);
+        private static readonly Vector2 FrogOffset = new Vector2(-3f, -4f);
+        private static readonly Vector2 SquirrelOffset = new Vector2(-6f, -20f);
+        private static readonly Vector2 CrabOffset = new Vector2(0f, -6f);
+
 
         public static void addSpecificTemporarySprite(Event __instance, ref string key, GameLocation location, string[] split)
         {
@@ -168,6 +173,17 @@ namespace AnimalHusbandryMod.common
                 addTemporarySprite(location, DataLoader.LooseSpritesName, BottonLeft, 24, 69);
                 addTemporarySprite(location, DataLoader.LooseSpritesName, BottonRight, 25, 69);
             }
+            else if (key == "animalCompetitionJoshDogOut")
+            {
+                location.removeTemporarySpritesWithID(1);
+                location.TemporarySprites.Add(new TemporaryAnimatedSprite(looseSprites_cursorsName,
+                    new Microsoft.Xna.Framework.Rectangle(324, 1916, 12, 20), 500f, 6, 9999,
+                    new Vector2(31f, 65f) * (float)Game1.tileSize + new Vector2(3f, 3f) * 4f, false, false,
+                    (float)((66 * Game1.tileSize) / 10000f) + 0.00002f, 0.0f, Color.White, (float)Game1.pixelZoom, 0.0f, 0.0f, 0.0f, false)
+                {
+                    id = 10f
+                });
+            }
             else if (key == "animalCompetitionJoshDog")
             {
                 String townTextureName = null;
@@ -220,20 +236,12 @@ namespace AnimalHusbandryMod.common
                     });
                 };
                 AddDogEyesHidden(0);
-
-                //location.TemporarySprites.Add(new TemporaryAnimatedSprite(looseSprites_cursorsName,
-                //    new Microsoft.Xna.Framework.Rectangle(324, 1916, 12, 20), 500f, 6, 9999,
-                //    new Vector2(31f, 65f) * (float) Game1.tileSize + new Vector2(3f, 3f) * 4f, false, false,
-                //    (float)((66 * Game1.tileSize) / 10000f)+0.00002f , 0.0f, Color.White, (float) Game1.pixelZoom, 0.0f, 0.0f, 0.0f, false)
-                //{
-                //    id=1f
-                //});
             }
             else if (key == "animalCompetitionFrogShow")
             {
                 location.TemporarySprites.Add(new TemporaryAnimatedSprite(tileSheets_critters,
                     new Microsoft.Xna.Framework.Rectangle(0, 240, 16, 16), 500f, 1, 9999,
-                    new Vector2(29f, 64f) * (float)Game1.tileSize + new Vector2(-3f, -4f) * 4f, false, false,
+                    new Vector2(29f, 64f) * (float)Game1.tileSize + FrogOffset * 4f, false, false,
                     (float)((64 * Game1.tileSize) / 10000f) + 0.00002f, 0.0f, Color.White, (float)Game1.pixelZoom, 0.0f, 0.0f, 0.0f, false)
                 {
                     id=2
@@ -243,7 +251,7 @@ namespace AnimalHusbandryMod.common
             {
                 location.TemporarySprites.Add(new TemporaryAnimatedSprite(tileSheets_critters,
                     new Microsoft.Xna.Framework.Rectangle(64, 240, 16, 16), 100f, 4, 1,
-                    new Vector2(29f, 64f) * (float)Game1.tileSize + new Vector2(-3f, -4f) * 4f, false, false,
+                    new Vector2(29f, 64f) * (float)Game1.tileSize + FrogOffset * 4f, false, false,
                     (float)((64 * Game1.tileSize) / 10000f) + 0.00003f, 0.0f, Color.White, (float)Game1.pixelZoom, 0.0f, 0.0f, 0.0f, false));
             }
             else if (key == "animalCompetitionFrogRun")
@@ -251,7 +259,7 @@ namespace AnimalHusbandryMod.common
                 location.removeTemporarySpritesWithID(2);
                 location.TemporarySprites.Add(new TemporaryAnimatedSprite(tileSheets_critters,
                     new Microsoft.Xna.Framework.Rectangle(0, 240, 16, 16), 100f, 4, 5,
-                    new Vector2(29f, 64f) * (float)Game1.tileSize + new Vector2(-3f, -4f) * 4f, false, false,
+                    new Vector2(29f, 64f) * (float)Game1.tileSize + FrogOffset * 4f, false, false,
                     (float)((64 * Game1.tileSize) / 10000f) + 0.00002f, 0.0f, Color.White, (float)Game1.pixelZoom, 0.0f, 0.0f, 0.0f, false)
                 {
                     motion = new Vector2(5f,0f)
@@ -264,7 +272,7 @@ namespace AnimalHusbandryMod.common
                 {
                     location.TemporarySprites.Add(new TemporaryAnimatedSprite(tileSheets_critters,
                         new Microsoft.Xna.Framework.Rectangle(0, 192, 32, 32), 200f, 2, 4,
-                        new Vector2(29f, 64f) * (float) Game1.tileSize + new Vector2(-6f, -20f) * 4f, false, false,
+                        new Vector2(29f, 64f) * (float) Game1.tileSize + SquirrelOffset * 4f, false, false,
                         (float) ((64 * Game1.tileSize) / 10000f) + 0.00002f, 0.0f, Color.White, (float) Game1.pixelZoom,
                         0.0f, 0.0f, 0.0f, false)
                     {
@@ -276,7 +284,7 @@ namespace AnimalHusbandryMod.common
                 {
                     location.TemporarySprites.Add(new TemporaryAnimatedSprite(tileSheets_critters,
                         new Microsoft.Xna.Framework.Rectangle(0, 192, 32, 32), 2500f, 1, 1,
-                        new Vector2(29f, 64f) * (float) Game1.tileSize + new Vector2(-6f, -20f) * 4f, false, false,
+                        new Vector2(29f, 64f) * (float) Game1.tileSize + SquirrelOffset * 4f, false, false,
                         (float) ((64 * Game1.tileSize) / 10000f) + 0.00002f, 0.0f, Color.White, (float) Game1.pixelZoom,
                         0.0f, 0.0f, 0.0f, false)
                     {
@@ -292,7 +300,7 @@ namespace AnimalHusbandryMod.common
                 location.removeTemporarySpritesWithID(3);
                 location.TemporarySprites.Add(new TemporaryAnimatedSprite(tileSheets_critters,
                     new Microsoft.Xna.Framework.Rectangle(64, 192, 32, 32), 50f, 6, 8,
-                    new Vector2(29f, 64f) * (float)Game1.tileSize + new Vector2(-6f, -20f) * 4f, false, false,
+                    new Vector2(29f, 64f) * (float)Game1.tileSize + SquirrelOffset * 4f, false, false,
                     (float)((64 * Game1.tileSize) / 10000f) + 0.00002f, 0.0f, Color.White, (float)Game1.pixelZoom,
                     0.0f, 0.0f, 0.0f, false)
                 {
@@ -306,7 +314,7 @@ namespace AnimalHusbandryMod.common
                 {
                     location.TemporarySprites.Add(new TemporaryAnimatedSprite(tileSheets_critters,
                         new Microsoft.Xna.Framework.Rectangle(160, 64, 32, 32), 2500f, 1, 1,
-                        new Vector2(29f, 64f) * (float)Game1.tileSize + new Vector2(-6f, -20f) * 4f, false, true,
+                        new Vector2(29f, 64f) * (float)Game1.tileSize + BirdOffset * 4f, false, true,
                         (float)((64 * Game1.tileSize) / 10000f) + 0.00002f, 0.0f, Color.White, (float)Game1.pixelZoom,
                         0.0f, 0.0f, 0.0f, false)
                     {
@@ -318,7 +326,7 @@ namespace AnimalHusbandryMod.common
                 {
                     location.TemporarySprites.Add(new TemporaryAnimatedSprite(tileSheets_critters,
                         new Microsoft.Xna.Framework.Rectangle(0, 96, 32, 32), 1500f, 1, 1,
-                        new Vector2(29f, 64f) * (float)Game1.tileSize + new Vector2(-6f, -20f) * 4f, false, true,
+                        new Vector2(29f, 64f) * (float)Game1.tileSize + BirdOffset * 4f, false, true,
                         (float)((64 * Game1.tileSize) / 10000f) + 0.00002f, 0.0f, Color.White, (float)Game1.pixelZoom,
                         0.0f, 0.0f, 0.0f, false)
                     {
@@ -334,7 +342,7 @@ namespace AnimalHusbandryMod.common
                 location.removeTemporarySpritesWithID(4);
                 location.TemporarySprites.Add(new TemporaryAnimatedSprite(tileSheets_critters,
                     new Microsoft.Xna.Framework.Rectangle(32, 96, 32, 32), 60f, 3, 18,
-                    new Vector2(29f, 64f) * (float)Game1.tileSize + new Vector2(-6f, -20f) * 4f, false, true,
+                    new Vector2(29f, 64f) * (float)Game1.tileSize + BirdOffset * 4f, false, true,
                     (float)((64 * Game1.tileSize) / 10000f) + 0.00003f, 0.0f, Color.White, (float)Game1.pixelZoom, 0.0f, 0.0f, 0.0f, false)
                 {
                     pingPong = true,
@@ -354,7 +362,7 @@ namespace AnimalHusbandryMod.common
                         return;
                     }
                     Game1.playSound("batFlap");
-                    Vector2 position = lastSprite == null ? new Vector2(29f, 64f) * (float)Game1.tileSize + new Vector2(-6f, -20f) * 4f : lastSprite.Position;
+                    Vector2 position = lastSprite == null ? new Vector2(29f, 64f) * (float)Game1.tileSize + BirdOffset * 4f : lastSprite.Position;
                     lastSprite = new TemporaryAnimatedSprite(tileSheets_critters,
                         new Microsoft.Xna.Framework.Rectangle(32, 96, 32, 32), 60f, 3, 1,
                         position, false, true,
@@ -429,7 +437,7 @@ namespace AnimalHusbandryMod.common
             {
                 location.TemporarySprites.Add(new TemporaryAnimatedSprite(looseSprites_temporary_sprites_1,
                     new Microsoft.Xna.Framework.Rectangle(259, 146, 18, 18), 250f, 3, 99999,
-                    new Vector2(31f, 65f) * (float)Game1.tileSize, false, false,
+                    new Vector2(31f, 66f) * (float)Game1.tileSize + CrabOffset * 4f, false, false,
                     0.000001f, 0.0f, Color.White,
                     (float)Game1.pixelZoom, 0.0f, 0.0f, 0.0f, false)
                 {

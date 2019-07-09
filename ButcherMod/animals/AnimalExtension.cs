@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AnimalHusbandryMod.common;
 
 namespace AnimalHusbandryMod.animals
 {
@@ -28,6 +29,16 @@ namespace AnimalHusbandryMod.animals
                 }
             }
             return null;
+        }
+
+        public static string GetBabyAnimalName(this Animal value)
+        {
+            return DataLoader.i18n.Get($"Animal.{value.ToString()}.BabyName");
+        }
+
+        public static string GetBabyAnimalNameByType(string type)
+        {
+            return GetAnimalFromType(type)?.GetBabyAnimalName();
         }
     }
 }

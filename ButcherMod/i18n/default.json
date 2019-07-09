@@ -161,6 +161,14 @@
 	"Menu.AnimalQueryMenu.ExchangeAnimalForMeat":  "Exchange for meat.",
 	"Menu.AnimalQueryMenu.Winner": "Winner of {{season}} Animal Contest\n{{contestDate}}",
 	"Menu.AnimalQueryMenu.ContestParticipant": "Participant of {{season}} Animal Contest\n{{contestDate}}",
-	"Menu.AnimalQueryMenu.ChangeParticipant": "Get Ribbon Back."
+	"Menu.AnimalQueryMenu.ChangeParticipant": "Get Ribbon Back.",
 
+	"Animal.Cow.BabyName": "calf",
+	"Animal.Pig.BabyName": "piglet",
+	"Animal.Chicken.BabyName": "chick",
+	"Animal.Duck.BabyName": "duckling",
+	"Animal.Rabbit.BabyName": "bunny",
+	"Animal.Sheep.BabyName": "lamb",
+	"Animal.Goat.BabyName": "kid",
+	"Animal.Dinosaur.BabyName": "hatchling"
 }

@@ -6,6 +6,7 @@ using AnimalHusbandryMod.meats;
 using AnimalHusbandryMod.tools;
 using Harmony;
 using Microsoft.Xna.Framework;
+using PyTK.CustomElementHandler;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley;
@@ -72,6 +73,9 @@ namespace AnimalHusbandryMod
 
                 if (_meatCleaverSpawnKey != null || _inseminationSyringeSpawnKey != null || _feedingBasketSpawnKey != null)
                     Helper.Events.Input.ButtonPressed += this.OnButtonPressed;
+
+
+                SaveHandler.BeforeRemoving += (s, e) => { if(Context.IsMainPlayer) ItemUtility.RemoveItemAnywhere(typeof(ParticipantRibbon));};
 
                 var harmony = HarmonyInstance.Create("Digus.AnimalHusbandryMod");
 

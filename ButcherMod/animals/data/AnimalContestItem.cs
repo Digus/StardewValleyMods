@@ -13,18 +13,19 @@ namespace AnimalHusbandryMod.animals.data
         public int EventId;
         [JsonProperty]
         private string _date;
+        public List<string> Contenders;
+        public string VicentAnimal;
+        public string MarnieAnimal;
+        public string Winner;
+        public long? ParticipantId;
+        public AnimalContestScore FarmAnimalScore;
+
         [JsonIgnore]
         public SDate Date
         {
             get => _date == null ? null : new SDate(Convert.ToInt32(_date.Split(' ')[0]), _date.Split(' ')[1], Convert.ToInt32(_date.Split(' ')[2].Replace("Y", "")));
             set => _date = value?.ToString();
         }
-        public List<string> Contenders;
-
-        public string VicentAnimal;
-        public string MarnieAnimal;
-        public string Winner;
-        public long? ParticipantId;
 
         public AnimalContestItem(int eventId, SDate date, List<string> contenders, string vicentAnimal, string marnieAnimal)
         {

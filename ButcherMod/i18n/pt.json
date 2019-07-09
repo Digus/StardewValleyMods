@@ -153,5 +153,14 @@
     "Menu.AnimalQueryMenu.ExchangeAnimalForMeat":  "Trocar por carne.",
     "Menu.AnimalQueryMenu.Winner": "Vencedor em {{contestDate}}",
     "Menu.AnimalQueryMenu.ContestParticipant": "Participou em {{contestDate}}",
-    "Menu.AnimalQueryMenu.ChangeParticipant": "Pegar de volta."
+    "Menu.AnimalQueryMenu.ChangeParticipant": "Pegar de volta.",
+
+    "Animal.Cow.BabyName": "bezerrinha",
+    "Animal.Pig.BabyName": "leitoazinha",
+    "Animal.Chicken.BabyName": "pintinho",
+    "Animal.Duck.BabyName": "patinha",
+    "Animal.Rabbit.BabyName": "coelhinha",
+    "Animal.Sheep.BabyName": "cordeirinha",
+    "Animal.Goat.BabyName": "cabritinha",
+    "Animal.Dinosaur.BabyName": "dinossaurinha"
 }
