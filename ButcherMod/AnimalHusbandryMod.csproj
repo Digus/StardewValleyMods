@@ -93,6 +93,7 @@
     <Compile Include="animals\data\PetItem.cs" />
     <Compile Include="animals\data\PigItem.cs" />
     <Compile Include="animals\data\TreatItem.cs" />
+    <Compile Include="animals\EmilysParrotDancer.cs" />
     <Compile Include="animals\FarmAnimalOverrides.cs" />
     <Compile Include="common\CustomEvent.cs" />
     <Compile Include="common\EventGreenSlime.cs" />

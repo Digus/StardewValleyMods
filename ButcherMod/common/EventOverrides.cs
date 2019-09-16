@@ -173,9 +173,30 @@ namespace AnimalHusbandryMod.common
                 addTemporarySprite(location, DataLoader.LooseSpritesName, BottonLeft, 24, 69);
                 addTemporarySprite(location, DataLoader.LooseSpritesName, BottonRight, 25, 69);
             }
+            else if (key == "animalCompetitionJoshDogSteak")
+            {
+                location.removeTemporarySpritesWithID(10);
+                location.TemporarySprites.Add(new TemporaryAnimatedSprite(looseSprites_cursorsName,
+                    new Microsoft.Xna.Framework.Rectangle(324, 1936, 12, 20), 80f, 4, 99999,
+                    new Vector2(31f, 65f) * (float)Game1.tileSize + new Vector2(3f, 3f) * 4f, false, false,
+                    (float)((66 * Game1.tileSize) / 10000f) + 0.00002f, 0.0f, Color.White, (float)Game1.pixelZoom, 0.0f, 0.0f, 0.0f, false)
+                {
+                    id = 11f
+                });
+                location.TemporarySprites.Add(new TemporaryAnimatedSprite(looseSprites_cursorsName,
+                    new Microsoft.Xna.Framework.Rectangle(497, 1918, 11, 11), 999f, 1, 9999,
+                    new Vector2(30f, 66f) * (float)Game1.tileSize + new Vector2(32f, -8f), false, false,
+                    1f, 0.0f, Color.White, (float)Game1.pixelZoom, 0.0f, 0.0f, 0.0f, false)
+                {
+                    id = 12f
+                });
+
+            }
             else if (key == "animalCompetitionJoshDogOut")
             {
                 location.removeTemporarySpritesWithID(1);
+                location.removeTemporarySpritesWithID(12);
+                location.removeTemporarySpritesWithID(11);
                 location.TemporarySprites.Add(new TemporaryAnimatedSprite(looseSprites_cursorsName,
                     new Microsoft.Xna.Framework.Rectangle(324, 1916, 12, 20), 500f, 6, 9999,
                     new Vector2(31f, 65f) * (float)Game1.tileSize + new Vector2(3f, 3f) * 4f, false, false,
@@ -244,7 +265,7 @@ namespace AnimalHusbandryMod.common
                     new Vector2(29f, 64f) * (float)Game1.tileSize + FrogOffset * 4f, false, false,
                     (float)((64 * Game1.tileSize) / 10000f) + 0.00002f, 0.0f, Color.White, (float)Game1.pixelZoom, 0.0f, 0.0f, 0.0f, false)
                 {
-                    id=2
+                    id = 2
                 });
             }
             else if (key == "animalCompetitionFrogCroak")
@@ -337,6 +358,36 @@ namespace AnimalHusbandryMod.common
                 };
                 AddStillBird(0);
             }
+            else if (key == "animalCompetitionWildBird")
+            {
+                Action<int> addSleepBird = null;
+                void AddStillBird(int x)
+                {
+                    location.TemporarySprites.Add(new TemporaryAnimatedSprite(tileSheets_critters,
+                        new Microsoft.Xna.Framework.Rectangle(160, 128, 32, 32), 2500f, 1, 1,
+                        new Vector2(34f, 66f) * (float)Game1.tileSize + BirdOffset * 4f, false, true,
+                        (float)((64 * Game1.tileSize) / 10000f) + 0.00002f, 0.0f, Color.White, (float)Game1.pixelZoom,
+                        0.0f, 0.0f, 0.0f, false)
+                    {
+                        id = 7,
+                        endFunction = new TemporaryAnimatedSprite.endBehavior(addSleepBird)
+                    });
+                }
+                addSleepBird = (int x) =>
+                {
+                    location.TemporarySprites.Add(new TemporaryAnimatedSprite(tileSheets_critters,
+                        new Microsoft.Xna.Framework.Rectangle(0, 160, 32, 32), 1500f, 1, 1,
+                        new Vector2(34f, 66f) * (float)Game1.tileSize + BirdOffset * 4f, false, true,
+                        (float)((64 * Game1.tileSize) / 10000f) + 0.00002f, 0.0f, Color.White, (float)Game1.pixelZoom,
+                        0.0f, 0.0f, 0.0f, false)
+                    {
+                        id = 7,
+                        endFunction = new TemporaryAnimatedSprite.endBehavior((Action<int>)AddStillBird)
+
+                    });
+                };
+                AddStillBird(0);
+            }
             else if (key == "animalCompetitionBirdFly2")
             {
                 location.removeTemporarySpritesWithID(4);
@@ -420,6 +471,52 @@ namespace AnimalHusbandryMod.common
                     0.000001f, 0.0f, Color.White,
                     (float)Game1.pixelZoom, 0.0f, 0.0f, 0.0f, false));
                 location.TemporarySprites.Add(new EmilysParrot(new Vector2(34, 64) * (float)Game1.tileSize + new Vector2(4f, 8f) * 4f));
+            }
+            else if (key == "animalCompetitionEmilyParrotAction")
+            {
+                if (location.getTemporarySpriteByID(5858585) is EmilysParrot emilysParrot)
+                {
+                    emilysParrot.doAction();
+                }
+            }
+            else if (key == "animalCompetitionEmilyBoomBox")
+            {
+                location.TemporarySprites.Add(new TemporaryAnimatedSprite(looseSprites_cursorsName,
+                    new Microsoft.Xna.Framework.Rectangle(586, 1871, 24, 14), 9999f, 1, 999,
+                    new Vector2(33f, 65f) * (float)Game1.tileSize, false, false,
+                    0.0000009f, 0.0f, Color.White,
+                    (float)Game1.pixelZoom, 0.0f, 0.0f, 0.0f, false)
+                {
+                    id = 6
+                });
+            }
+            else if (key == "animalCompetitionEmilyBoomBoxStart")
+            {
+                location.getTemporarySpriteByID(6).pulse = true;
+                location.getTemporarySpriteByID(6).pulseTime = 420f;
+            }
+            else if (key == "animalCompetitionEmilyBoomBoxStop")
+            {
+                location.getTemporarySpriteByID(6).pulse=false;
+                location.getTemporarySpriteByID(6).scale = 4f;
+            }
+            else if (key == "animalCompetitionEmilyParrotDance")
+            {
+                if (location.getTemporarySpriteByID(5858585) is EmilysParrot emilysParrot)
+                {
+                    Vector2 position = emilysParrot.initialPosition;
+                    location.removeTemporarySpritesWithID(5858585);
+                    location.TemporarySprites.Add(new EmilysParrotDancer(position));
+                }
+            }
+            else if (key == "animalCompetitionEmilyParrotStopDance")
+            {
+                if (location.getTemporarySpriteByID(5858586) is EmilysParrotDancer emilysParrotDancer)
+                {
+                    Vector2 position = emilysParrotDancer.initialPosition;
+                    location.removeTemporarySpritesWithID(5858586);
+                    location.TemporarySprites.Add(new EmilysParrot(position));
+                }
             }
             else if (key == "animalCompetitionMaruRobot")
             {

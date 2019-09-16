@@ -17,7 +17,7 @@ namespace AnimalHusbandryMod.animals
     {
         public static readonly IList<string> Seasons = new ReadOnlyCollection<string>(new List<string>() {"spring", "summer", "fall", "winter"});
 
-        public static readonly string[] PossibleThirdContenders = new[] {"Jodi", "Linus", "Shane", "Emily"};
+        public static readonly string[] PossibleThirdContenders = new[] { "Shane", "Jodi", "Emily"};
         public static readonly string[] PossibleSecondContenders = new[] { "Jas", "Alex", "Abigail", "Willy", "Maru" };
         public static readonly string[] PossibleAnimals = { "White_Cow", "Brown_Cow", "Goat", "Sheep", "Pig", "Brown_Chicken", "White_Chicken", "Duck", "Rabbit" };
         public static readonly int MinPointsToPossibleWin = 11;
@@ -135,9 +135,14 @@ namespace AnimalHusbandryMod.animals
                 initialPosition.Append($" Shane 24 70 0");
             }
 
+            bool linusAlternateAnimal = false;
             if (!contenders.Contains("Linus"))
             {
                 initialPosition.Append($" Linus 37 70 3");
+            }
+            else
+            {
+                linusAlternateAnimal = history.Count(h => h.Contenders.Contains("Linus")) % 2 == new Random((int)Game1.uniqueIDForThisGame).Next(2);
             }
 
             initialPosition.Append($" Vincent 28 80 0");
@@ -163,7 +168,7 @@ namespace AnimalHusbandryMod.animals
                 }
             }
             initialPosition.Append("/specificTemporarySprite animalCompetition/broadcastEvent/skippable");
-            initialPosition.Append(GetContendersAnimalPosition(contenders, marnieAnimal, isPlayerJustWatching));
+            initialPosition.Append(GetContendersAnimalPosition(contenders, marnieAnimal, isPlayerJustWatching, linusAlternateAnimal));
 
             initialPosition.Append("/viewport 28 65 true");
 
@@ -216,11 +221,11 @@ namespace AnimalHusbandryMod.animals
 
             //if (history.Count == 0)
             //{
-            //    eventAction.Append("/speak Lewis \"We're gethered here today to bring back an old tradition, the Animal Contest!#$b#We stopped doing it because almost no one was interested in participating.$s#$b#But now that we have again a thriving farm in the valley I hope we can do the contest every spring and fall.$h\"");
+            //    eventAction.Append("/speak Lewis \"We're gethered here today to bring back an old tradition, the Stardew Valley Animal Contest!#$b#We stopped doing it because almost no one was interested in participating.$s#$b#But now that we have again a thriving farm in the valley I hope we can do the contest every spring and fall.$h\"");
             //}
             //else
             //{
-            //    eventAction.Append("/speak Lewis \"We're gethered here again for our traditional Animal Contest!#$b#It makes me really happy to see all of you're still interested in participating.$h#$b#Let's hope we can do this a lot more times.\"");
+            //    eventAction.Append("/speak Lewis \"We're gethered here again for our traditional Stardew Valley Animal Contest!#$b#It makes me really happy to see all of you're still interested in participating.$h#$b#Let's hope we can do this a lot more times.\"");
             //}
 
             //eventAction.Append(GetVincentAct(vincentAnimal, history.Count%5 == 4, !history.Exists(h => h.VicentAnimal == vincentAnimal.ToString())));
@@ -252,15 +257,46 @@ namespace AnimalHusbandryMod.animals
                 case "Abigail":
                     eventAction.Append(GetAbigailAct(animalContestInfo, !history.Exists(h => h.Contenders.Contains("Abigail"))));
                     break;
+                case "Maru":
+                    eventAction.Append(GetMaruAct(animalContestInfo, !history.Exists(h => h.Contenders.Contains("Maru"))));
+                    break;
             }
 
-
-            eventAction.Append($"/speak Lewis \"And the winner is...#$b#{(animalContestInfo.Winner=="Farmer"?"@":animalContestInfo.Winner)}!\"");
+            eventAction.Append("/faceDirection Lewis 1/move Lewis 3 0 1/faceDirection Lewis 0");
+            switch (contenders[2])
+            {
+                case "Jodi":
+                    eventAction.Append(GetJodiAct(animalContestInfo, !history.Exists(h => h.Contenders.Contains("Jodi"))));
+                    break;
+                case "Shane":
+                    eventAction.Append(GetShaneAct(animalContestInfo, !history.Exists(h => h.Contenders.Contains("Shane"))));
+                    break;
+                case "Emily":
+                    eventAction.Append(GetEmilyAct(animalContestInfo, !history.Exists(h => h.Contenders.Contains("Emily"))));
+                    break;
+                case "Linus":
+                    eventAction.Append(GetLinusAct(animalContestInfo, linusAlternateAnimal));
+                    break;
+            }
+            eventAction.Append("/faceDirection Lewis 3/faceDirection Lewis 2/speak Lewis \"Well folks, that's all the participants for this season Stardew Valley Animal Contest!#$b#I'll anounce the winner shortly.\"");
+            eventAction.Append("/faceDirection Lewis 3/move Lewis -6 0 3/faceDirection Lewis 0/move Lewis 0 -4 0/faceDirection Lewis 3/faceDirection Lewis 2");
+            
+            eventAction.Append($"/speak Lewis \"Before annoucing the winner I want to thank you all for comming!$h#$b#");
+            if (history.Count == 0)
+            {
+                eventAction.Append($"The contest was a major success and it means a lot to me that we were able to bring it back.$h\"");
+            }
+            else
+            {
+                eventAction.Append($"The contest was a major success and it's getting better everytime.$h\"");
+            }
+            String winnerAnimalName = animalContestInfo.Winner == "Farmer" ? farmAnimal.displayName : animalContestInfo.Winner == "Emily" ? "the unnamed parrot" : "%name";
+            eventAction.Append($"/pause 200/speak Lewis \"But without further ado, the winner is...#$b#{(animalContestInfo.Winner=="Farmer"?"@":animalContestInfo.Winner)} with {winnerAnimalName}!$h\"");
 
             eventAction.Append($"/pause 4000/globalFade/viewport -1000 -1000");
             if (animalContestInfo.Winner == "Farmer")
             {
-                eventAction.Append($"/playSound reward/message \"{farmAnimal.displayName} got a {(contestDate.Season=="spring"? "fertility": "production")} bonus.\"");
+                eventAction.Append($"/playSound reward/message \"{farmAnimal.displayName} got a {(contestDate.Season=="spring" || contestDate.Season == "summer" ? "fertility": "production")} bonus.\"");
             }
             eventAction.Append("/specificTemporarySprite animalCompetitionEnding/end");
 
@@ -308,7 +344,7 @@ namespace AnimalHusbandryMod.animals
             return animalContestInfo;
         }
 
-        private static string GetContendersAnimalPosition(string[] contenders, string marnieAnimal, bool isPlayerJustWatching)
+        private static string GetContendersAnimalPosition(string[] contenders, string marnieAnimal, bool isPlayerJustWatching, bool linusAlternateAnimal)
         {
             StringBuilder sb = new StringBuilder();
             bool isMarnieAnimalSmall = IsAnimalSmall(marnieAnimal);
@@ -336,7 +372,14 @@ namespace AnimalHusbandryMod.animals
             }
             if (contenders.Contains("Linus"))
             {
-                sb.Append("/specificTemporarySprite animalCompetitionRabbitShow 34 66 true");
+                if (!linusAlternateAnimal)
+                {
+                    sb.Append("/specificTemporarySprite animalCompetitionRabbitShow 34 66 true");
+                }
+                else
+                {
+                    sb.Append("/specificTemporarySprite animalCompetitionWildBird");
+                }
             }
             if (contenders.Contains("Shane"))
             {
@@ -461,7 +504,7 @@ namespace AnimalHusbandryMod.animals
                         vicentAct.Append("/speak Lewis \"Oh, it's a rabbit. Did you mother bought you one from Marnie?\"");
                         vicentAct.Append("/faceDirection Vincent 0/speak Vincent \"No, Linus tought me how to catch it.\"");
                         vicentAct.Append("/jump Lewis/emote Lewis 16/speak Lewis \"You cautch a wild rabbit? I'm impressed.\"");
-                        vicentAct.Append("/speak Linus \"He is quite good at it, but never learned how to befriend one so it would stay put.$h\"");
+                        vicentAct.Append("/speak Linus \"He's quite good at it, but never learned how to befriend one so it would stay put.$h\"");
                         vicentAct.Append("/faceDirection Vincent 1");
                     }
                     else
@@ -711,11 +754,10 @@ namespace AnimalHusbandryMod.animals
         private static string GetAlexAct(AnimalContestItem animalContestInfo, bool isFirstTime)
         {
             StringBuilder alexAct = new StringBuilder();
-            alexAct.Append("/emote Lewis 8");
             if (isFirstTime)
             {
-                alexAct.Append("/speak Lewis \"Did you brought Dusty's box? But where is it?\"");
-                alexAct.Append("/speak Alex \"Inside the box, there's to much people here and it is a little shy.\"");
+                alexAct.Append("/emote Lewis 8/speak Lewis \"Did you brought Dusty's box? But where is it?\"");
+                alexAct.Append("/speak Alex \"Inside the box, there's to much people here and it's a little shy.\"");
                 alexAct.Append("/speak Lewis \"Alex, I can't evaluete it inside the box.$u\"");
                 alexAct.Append("/speak Alex \"Come here Dusty, it's okay boy.$h\"/playSound dogWhining/pause 1000/specificTemporarySprite animalCompetitionJoshDogOut/pause 1000");
                 alexAct.Append("/speak Lewis \"It's not totaly out but that will do. What are you feeding it?\"");
@@ -727,14 +769,14 @@ namespace AnimalHusbandryMod.animals
             }
             else
             {
-                alexAct.Append("/speak Lewis \"So, Dusty is still\"");
-                alexAct.Append("/speak Alex \"Come here Dusty, it's okay boy.$h\"/playSound dogWhining/pause 1000/specificTemporarySprite animalCompetitionJoshDogOut/pause 1000");
-                alexAct.Append("/speak Lewis \"\"");
-                alexAct.Append("/speak Alex \"\"");
-                alexAct.Append("/speak Lewis \"\"");
-                alexAct.Append("/speak Alex \"\"");
-                alexAct.Append("/speak Lewis \"\"");
-                alexAct.Append("/emote Alex 12");
+                alexAct.Append("/speak Lewis \"So, is Dusty still shy?\"");
+                alexAct.Append("/speak Alex \"I don't know, I guess it just likes the box.#$b#Come here Dusty, show youself.\"/pause 500/specificTemporarySprite animalCompetitionJoshDogOut/pause 1000");
+                alexAct.Append("/speak Lewis \"I can see it listens to your calls just fine. Does it know any other tricks?\"");
+                alexAct.Append("/speak Alex \"Yes, I can make it slobber.\"/pause 300/showFrame Alex 26/pause 100/specificTemporarySprite animalCompetitionJoshDogSteak/playSound dwop");
+                alexAct.Append("/pause 1000/speak Lewis \"That's not a trick Alex. Any dog will slobber for a steak.$u\"");
+                alexAct.Append("/speak Alex \"Not as happily as Dusty.$h\"/playSound dogWhining");
+                alexAct.Append("/speak Lewis \"I guess it's still only eating steaks.$s#$b#As I said before, you need to teach Dusty how to eat properly.#$b#I'll see the next participant.\"");
+                alexAct.Append("/pause 300/specificTemporarySprite animalCompetitionJoshDogOut/pause 100/showFrame Alex 4/emote Alex 12");
             }
             return alexAct.ToString();
         }
@@ -768,23 +810,176 @@ namespace AnimalHusbandryMod.animals
             StringBuilder abigailAct = new StringBuilder();
             if (isFirstTime)
             {
-                abigailAct.Append("/jump Lewis/emote Lewis 16/speak Lewis \"\"");
-                abigailAct.Append("/speak Abigail \"\"");
-                abigailAct.Append("/speak Lewis \"\"");
-                abigailAct.Append("/pause 800/playSound eat/jump Lewis/textAboveHead Lewis \"Youch!\"/speak Lewis \"\"");
-                abigailAct.Append("/speak Abigail \"\"");
-                abigailAct.Append("/speak Lewis \"$u#$b#I'll see the next participant.\"");
+                abigailAct.Append("/jump Lewis/emote Lewis 16/speak Lewis \"There's a monster in town! Everyone stay safe while we deal with it!$4\"");
+                abigailAct.Append("/speak Abigail \"It's not a monster, it's my pet!\"");
+                abigailAct.Append("/emote Lewis 12/speak Lewis \"When you said you were going to bring a pet I thought you ment David.$u#$b#You can't bring a slime to town Abigail, it's dangerous.\"");
+                abigailAct.Append("/speak Abigail \"This one is very docile, it's been here for quite a while and as you can see, it didn't attack anyone.$h\"");
+                abigailAct.Append("/speak Lewis \"This isn't up for debate. Slimes are monsters, not animals. I'm disquilifing it.#$b#Now keep it under control and be glad I don't call Marlon to deal with it.\"");
+                abigailAct.Append("/speak Abigail \"*murmuring* That's rubbish!$a\"");
+                abigailAct.Append("/textAboveHead Pierre \"Abigail!\"/emote Abigail 16");
+                abigailAct.Append("/speak Lewis \"Let's see the next participant.\"");
             }
             else
             {
-                abigailAct.Append("/jump Lewis/emote Lewis 16/speak Lewis \"\"");
-                abigailAct.Append("/speak Abigail \"\"");
-                abigailAct.Append("/speak Lewis \"\"");
-                abigailAct.Append("/pause 800/playSound eat/jump Lewis/textAboveHead Lewis \"Youch!\"/speak Lewis \"\"");
-                abigailAct.Append("/speak Abigail \"\"");
-                abigailAct.Append("/speak Lewis \"$u#$b#I'll see the next participant.\"");
+                abigailAct.Append("/emote Lewis 16/speak Lewis \"You brought an slime again Abigail. Why can't you just bring your guinea pig?$u\"");
+                abigailAct.Append("/speak Abigail \"I didn't bring it as my pet. I bought it as my farm animal.\"");
+                abigailAct.Append("/speak Lewis \"I've already said it, slimes aren't animals, they're monsters.\"");
+                abigailAct.Append("/speak Abigail \"But they can also be raised in farms. @ even have a Slime Hutch for them.\"");
+                abigailAct.Append("/emote farmer 16/speak Lewis \"Well... they're still not animals, and still very much dangerous.#$b#Even so, you don't have a Slime Hutch, do you? You just brought a recently befriended slime from the mines, right?\"");
+                abigailAct.Append("/speak Abigail \"Well...$h\"");
+                abigailAct.Append("/speak Lewis \"I see... So that ends this discussion.#$b#I'll see the next participant.\"");
+                abigailAct.Append("/emote Abigail 28");
             }
             return abigailAct.ToString();
+        }
+
+        private static string GetMaruAct(AnimalContestItem animalContestInfo, bool isFirstTime)
+        {
+            StringBuilder maruAct = new StringBuilder();
+            if (isFirstTime)
+            {
+                maruAct.Append("/emote Lewis 8/speak Lewis \"What is this Maru? If your pet is inside you'll have take it out so I can do the evaluation.\"");
+                maruAct.Append("/speak Maru \"This's my pet. It's called Partner Eletronic Trinket, or P.E.T.\"");
+                maruAct.Append("/speak Lewis \"As interesting as your P.E.T. looks like, the contest is for animals only.\"");
+                maruAct.Append("/speak Maru \"The invitation say farm animals and pets. Some pet robots are being made now a days.$3#$b#So I'm trying to build my own.\"");
+                maruAct.Append("/speak Lewis \"The invitation also say Stardew Valley ANIMAL Contest. So you know it isn't for robot pets.#$b#Anyway, how would I evaluate it? Can it do tricks?\"");
+                maruAct.Append("/speak Maru \"I'm still working on tricks, but it already eats treats. It likes oil, grease and batteries.$h\"");
+                maruAct.Append("/speak Lewis \"Well, a pet needs to know some tricks. So I'm disquilifing it.#$b#I'll see the next participant.\"");
+                maruAct.Append("/emote Maru 28");
+            }
+            else
+            {
+                maruAct.Append("/emote Lewis 16/speak Lewis \"You brought your robot again Maru? I already said the contest is for animals only.\"");
+                maruAct.Append("/speak Maru \"You said you disqualified it because it didn't know any tricks.$3#$b#I have programed some tricks.\"");
+                maruAct.Append("/speak Lewis \"Hmm... okay, show us the tricks.$s\"");
+                maruAct.Append("/speak Maru \"P.E.T., say good morning to everyone.\"/pause 500/message \"Good morning to everyone.\"");
+                maruAct.Append("/speak Lewis \"That's nice.$h\"");
+                maruAct.Append("/speak Maru \"P.E.T., who is the best mayor?\"/pause 500/message \"Animals.\"");
+                maruAct.Append("/emote Lewis 12/speak Maru \"P.E.T., that's the awnser to what does Marnie like the most.$9\"/pause 500/message \"Lewis.\"");
+                maruAct.Append("/emote Marnie 16/speak Lewis \"That's enought Maru. I'll see the next participant.$u\"");
+                maruAct.Append("/emote Maru 28");
+            }
+            return maruAct.ToString();
+        }
+
+        private static string GetJodiAct(AnimalContestItem animalContestInfo, bool isFirstTime)
+        {
+            StringBuilder jodiAct = new StringBuilder();
+            if (isFirstTime)
+            {
+                jodiAct.Append("/speak Lewis \"Hi Jodi. It's nice to see you're raising animals too.\"");
+                jodiAct.Append("/speak Jodi \"Just chickens though. I don't have space in my backward for bigger animals.\"");
+                jodiAct.Append("/speak Lewis \"Have you ever considered having a farm here in the valley?#$b#With your garden experience I'm sure you can grow crops too.#$b#The town could certenly use the cash from more business taxes$h.\"");
+                jodiAct.Append("/speak Jodi \"To have some chickens for their eggs is nice. To grow some vegetables in the garden would be too.#$b#But I don't have time for a full farm having a family to take care of. Maybe one day...$s\"");
+                jodiAct.Append("/speak Lewis \"Okay then, let's take a look at your chicken.\"");
+                jodiAct.Append("/pause 1000/speak Lewis \"You still got some learn to do Jodi, but for a first timer you did great. I'm sure next time you might have a chance of winning.\"");
+            }
+            else
+            {
+                jodiAct.Append("/speak Lewis \"Hi Jodi. It's nice to see you back again in the contest.\"");
+                jodiAct.Append("/speak Jodi \"I've been learning a thing or two about raising chickens.#$b#It's not that different from taking care of the boys.$h\"");
+                if (Game1.player.isMarried() && "Sam".Equals(Game1.player.spouse))
+                {
+                    jodiAct.Append("/speak Sam \"Mom, I'm already marriaged.$s\"");
+                    string complement = "";
+                    if (Game1.year > 1)
+                    {
+                        complement = "I was talking about your father and your brother. But";
+                    }
+                    else
+                    {
+                        complement = "Well,";
+                    }
+                    jodiAct.Append($"/speak Jodi \"{complement} I took care of you for years anyway.$4#$b#So I know what I'm talking about.\"");
+                }
+                else
+                {
+                    jodiAct.Append("/showFrame Sam 33/textAboveHead Sam \"Mom!\"/pause 1000/showFrame Sam 12");
+                }
+                jodiAct.Append("/speak Lewis \"*chuckle* I can imagine that.$h#$b#But let's take a look at the chicken now, shall we?\"");
+                jodiAct.Append("/pause 1500/speak Lewis \"You were not kidding Jodi. That's a well treated chicken we have here.$h#$b#Your family is very luck to have you.\"");
+                
+            }
+            jodiAct.Append("/speak Jodi \"Thanks Lewis, that's kind of you to say.\"");
+            return jodiAct.ToString();
+        }
+
+        private static string GetShaneAct(AnimalContestItem animalContestInfo, bool isFirstTime)
+        {
+            StringBuilder shaneAct = new StringBuilder();
+            if (isFirstTime)
+            {
+                shaneAct.Append("/speak Lewis \"Hello Shane. I want to congratulate you on your blue hens project.#$b#Marnie told me about it. It's truly amazing.$h\"");
+                shaneAct.Append("/speak Shane \"It took some months, but I think it was worth it.$h\"");
+                shaneAct.Append("/speak Lewis \"I'm always pleased to see the younger generations engaged in projects that can contribute to the valley.\"");
+                shaneAct.Append("/speak Shane \"Thank you Lewis. Your words mean a lot to me.$6\"");
+                shaneAct.Append("/speak Lewis \"Now let's see if you're as good at preparing hens for the contest as you are at mixing their colors.\"");
+                shaneAct.Append("/pause 1500/speak Lewis \"You did great of a first timer, but you're still missing a thing or two.\"");
+                shaneAct.Append("/speak Shane \"This hen was one of the first to have the blue color. So I know it's not as young as required.#$b#It also had to have a specific diet. So I couldn't give it as much treats as I wanted.\"");
+                shaneAct.Append("/speak Lewis \"Oh, I see Marnie has thought you well. I'm sure you'll do better next time then.\"");
+            }
+            else
+            {
+                shaneAct.Append("/speak Lewis \"Great to see you at the contest again, Shane.\"");
+                shaneAct.Append("/speak Shane \"I really enjoy taking care of hens. They help me stay upright.$h\"");
+                shaneAct.Append("/speak Lewis \"Good to know, and how is Charlie doing?\"");
+                shaneAct.Append("/speak Shane \"It's better than ever. It's a pity it's too old to compete.\"");
+                shaneAct.Append("/speak Lewis \"The rule is like that to motivate people to take good care of new animals.#$b#But I see it isn't necessary in your case.$h#$b#Let's take a look at the hen you brougth this time.\"");
+                shaneAct.Append("/pause 1500/speak Lewis \"I can see the passion you show for chickens is reciprocal.$h\"");
+            }
+            return shaneAct.ToString();
+        }
+
+        private static string GetEmilyAct(AnimalContestItem animalContestInfo, bool isFirstTime)
+        {
+            StringBuilder emilyAct = new StringBuilder();
+            if (isFirstTime)
+            {
+                emilyAct.Append("/jump Lewis/emote Lewis 16/speak Lewis \"Wow Emily! What a wondeful looking parrot you have here. What's its name?$h\"");
+                emilyAct.Append("/speak Emily \"He isn't mine nor does he have a name.$3\"");
+                emilyAct.Append("/speak Lewis \"I don't get it. If it isn't yours, why did you bring it to the contest?\"");
+                emilyAct.Append("/speak Emily \"Because he lives with me and can't fly. But once I told him about the contest he wanted to come.\"");
+                emilyAct.Append("/speak Lewis \"Well, I never saw a case like this. But there's no rules against it.#$b#Does it know any tricks?\"");
+                emilyAct.Append("/speak Emily \"Why don't you as him yourself?\"");
+                emilyAct.Append("/emote Lewis 8/speak Lewis \"Er... do you know any tricks?\"");
+                emilyAct.Append("/pause 500/specificTemporarySprite animalCompetitionEmilyParrotAction");
+                emilyAct.Append("/pause 1000/speak Lewis \"Nice, you awnsered me, any more tricks?$h\"");
+                emilyAct.Append("/pause 1500/specificTemporarySprite animalCompetitionEmilyParrotAction");
+                emilyAct.Append("/pause 1500/speak Emily \"It's my fault, I should have talked to him how the contest work, so he could prepare better.$s\"");
+                emilyAct.Append("/speak Lewis \"That's okay. I liked the little fellow.$h#$b#I'm sure it'll do better next time.\"");
+            }
+            else
+            {
+                emilyAct.Append("/speak Lewis \"Back again with your unnamed friend, Emily?\"");
+                emilyAct.Append("/speak Emily \"Yes, he was very exited to come back.$h\"");
+                emilyAct.Append("/speak Lewis \"Have you learned any more tricks, little fellow?\"");
+                emilyAct.Append("/specificTemporarySprite animalCompetitionEmilyParrotAction");
+                emilyAct.Append("/speak Emily \"I'll let him show you.$h\"");
+                emilyAct.Append("/faceDirection Emily 0/specificTemporarySprite animalCompetitionEmilyBoomBox/playMusic EmilyDance/pause 4460/faceDirection Emily 1 true");
+                emilyAct.Append("/specificTemporarySprite animalCompetitionEmilyBoomBoxStart/specificTemporarySprite animalCompetitionEmilyParrotDance");
+                emilyAct.Append("/pause 10000/faceDirection Emily 0 true/pause 500/specificTemporarySprite animalCompetitionEmilyParrotStopDance");
+                emilyAct.Append("/stopMusic/specificTemporarySprite animalCompetitionEmilyBoomBoxStop/pause 500/faceDirection Emily 1/pause 500");
+                emilyAct.Append("/speak Lewis \"That was wonderful.$h#$b#I know it isn't your pet, but I'll evaluate it as such since you brought it, okay Emily?\"");
+                emilyAct.Append("/speak Emily \"That's fine, we know the rules.\"");
+                emilyAct.Append("/pause 1000/speak Lewis \"I can see you treat your guest really well.\"");
+            }
+            return emilyAct.ToString();
+        }
+
+        private static string GetLinusAct(AnimalContestItem animalContestInfo, bool alternate)
+        {
+            StringBuilder linusAct = new StringBuilder();
+            if (!alternate)
+            {
+                linusAct.Append("/speak Lewis \"\"");
+                linusAct.Append("/speak Linus \"\"");
+            }
+            else
+            {
+                linusAct.Append("/speak Lewis \"\"");
+                linusAct.Append("/speak Linus \"\"");
+            }
+            return linusAct.ToString();
         }
 
         private static string GetSecondContender(List<AnimalContestItem> history, bool removeJasFromPool)
@@ -796,11 +991,11 @@ namespace AnimalHusbandryMod.animals
             }
             if (!Game1.player.eventsSeen.Contains(2481135))
             {
-                //contendersPool.Remove("Alex");
+                contendersPool.Remove("Alex");
             }
-            if (!Game1.player.eventsSeen.Contains(4))
+            if (!Game1.player.eventsSeen.Contains(4) || (history.Exists(i=> i.Contenders.Contains("Abigail")) && !Game1.player.mailReceived.Contains("slimeHutchBuilt")))
             {
-                //contendersPool.Remove("Abigail");
+                contendersPool.Remove("Abigail");
             }
             if (!Game1.player.eventsSeen.Contains(711130))
             {
@@ -811,8 +1006,7 @@ namespace AnimalHusbandryMod.animals
                 contendersPool.RemoveAll(history.Last().Contenders.Contains);
                 contendersPool.Sort((c1, c2) => history.Sum(d => d.Contenders.Count(c3 => c1 == c3)) - history.Sum(d => d.Contenders.Count(c3 => c2 == c3)));
             }
-            //TODO - remove, only for test.
-            return "Abigail"; //contendersPool.DefaultIfEmpty(removeJasFromPool? "Maru" : "Jas").FirstOrDefault();
+            return contendersPool.DefaultIfEmpty(removeJasFromPool? "Maru" : "Jas").FirstOrDefault();
         }
 
         private static string GetThirdContender(List<AnimalContestItem> history)
