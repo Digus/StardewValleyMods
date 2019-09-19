@@ -6,6 +6,7 @@ using System.Text;
 using AnimalHusbandryMod.animals.data;
 using AnimalHusbandryMod.common;
 using AnimalHusbandryMod.farmer;
+using StardewModdingAPI;
 using StardewModdingAPI.Utilities;
 using StardewValley;
 using StardewValley.Characters;
@@ -28,6 +29,7 @@ namespace AnimalHusbandryMod.animals
 
         public static CustomEvent CreateEvent()
         {
+            ITranslationHelper i18n= DataLoader.i18n;
             SDate contestDate = AnimalContestController.GetNextContestDate();
             int eventId = GetEventId(contestDate);
             string key = GenerateKey(eventId, contestDate);
@@ -61,15 +63,19 @@ namespace AnimalHusbandryMod.animals
             string marnieAnimal = ChooseMarnieAnimal(random, history);
             VincentAnimal vincentAnimal = ChooseVincentAnimal(random, history);
 
-            AnimalContestItem animalContestInfo = new AnimalContestItem(eventId, contestDate, contenders.ToList(), vincentAnimal.ToString(), marnieAnimal);
-            animalContestInfo.ParticipantId = isParticipantPet? AnimalData.PetId : farmAnimal?.myID.Value;
+            AnimalContestItem animalContestInfo = new AnimalContestItem(eventId, contestDate, contenders.ToList(), vincentAnimal.ToString(), marnieAnimal)
+            {
+                ParticipantId = isParticipantPet ? AnimalData.PetId : farmAnimal?.myID.Value
+            };
             animalContestInfo = PickTheWinner(animalContestInfo, history, participantAnimalStatus, farmAnimal, contenders[2]);
 
             // Deciding who will be present
             bool isHaleyPresent = Game1.player.eventsSeen.Contains(14);
-            bool isKentPresent = Game1.year > 1;
+            bool isKentPresent = Game1.year > 1 && contenders.Contains("Jodi");
             bool isSebastianPresent = vincentAnimal == VincentAnimal.Frog || contenders.Contains("Abigail");
             bool isDemetriusPresent = contenders.Contains("Maru");
+            bool isClintPresent = contenders.Contains("Emily");
+            bool isLeahPresent = Game1.player.eventsSeen.Contains(53); 
 
             StringBuilder initialPosition = new StringBuilder();
             initialPosition.Append("none/-100 -100");
@@ -114,6 +120,10 @@ namespace AnimalHusbandryMod.animals
             {
                 initialPosition.Append($" Haley 22 68 1");
             }
+            if (isLeahPresent)
+            {
+                initialPosition.Append($" Leah 22 70 0");
+            }
             if (isSebastianPresent)
             {
                 initialPosition.Append($" Sebastian 37 67 3");
@@ -121,6 +131,10 @@ namespace AnimalHusbandryMod.animals
             if (isDemetriusPresent)
             {
                 initialPosition.Append($" Demetrius 32 70 0");
+            }
+            if (isClintPresent)
+            {
+                initialPosition.Append($" Clint 34 70 0");
             }
             if (isPlayerJustWatching)
             {
@@ -201,42 +215,42 @@ namespace AnimalHusbandryMod.animals
 
             if (!isPlayerJustWatching)
             {
-                eventAction.Append("/speak Lewis \"@! You're here!$h#$b#Well folks, now that all competitors are here, let's get started.\"");
+                eventAction.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.Lewis.PlayerParticipant")}\"");
             }
             else
             {
-                eventAction.Append("/speak Lewis \"@! You came!$h#$b#Well folks, I think we are ready, let's get started.\"");
+                eventAction.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.Lewis.PlayerWatching")}\"");
             }
 
-            //eventAction.Append("/pause 500/emote Lewis 40/speak Lewis \"Ahem... Attention everyone!$u!\"");
-            //eventAction.Append($"/faceDirection {contenders[0]} 0 true");
-            //eventAction.Append($"/faceDirection {contenders[1]} 0");
-            //eventAction.Append($"/faceDirection {contenders[2]} 0 true");
-            //eventAction.Append($"/faceDirection Pierre 0 true");
-            //if (!contenders.Contains("Willy"))
-            //{
-            //    initialPosition.Append($"/faceDirection Willy 3");
-            //}
-            //eventAction.Append($"/faceDirection Caroline 0");
+            eventAction.Append($"/pause 500/emote Lewis 40/speak Lewis \"{i18n.Get("AnimalContest.Dialog.Lewis.Attention")}\"");
+            eventAction.Append($"/faceDirection {contenders[0]} 0 true");
+            eventAction.Append($"/faceDirection {contenders[1]} 0");
+            eventAction.Append($"/faceDirection {contenders[2]} 0 true");
+            eventAction.Append($"/faceDirection Pierre 0 true");
+            if (!contenders.Contains("Willy"))
+            {
+                initialPosition.Append($"/faceDirection Willy 3");
+            }
+            eventAction.Append($"/faceDirection Caroline 0");
 
-            //if (history.Count == 0)
-            //{
-            //    eventAction.Append("/speak Lewis \"We're gethered here today to bring back an old tradition, the Stardew Valley Animal Contest!#$b#We stopped doing it because almost no one was interested in participating.$s#$b#But now that we have again a thriving farm in the valley I hope we can do the contest every spring and fall.$h\"");
-            //}
-            //else
-            //{
-            //    eventAction.Append("/speak Lewis \"We're gethered here again for our traditional Stardew Valley Animal Contest!#$b#It makes me really happy to see all of you're still interested in participating.$h#$b#Let's hope we can do this a lot more times.\"");
-            //}
+            if (history.Count == 0)
+            {
+                eventAction.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.Lewis.IntroductionFirstTime")}\"");
+            }
+            else
+            {
+                eventAction.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.Lewis.IntroductionOtherTimes")}\"");
+            }
 
-            //eventAction.Append(GetVincentAct(vincentAnimal, history.Count%5 == 4, !history.Exists(h => h.VicentAnimal == vincentAnimal.ToString())));
+            eventAction.Append(GetVincentAct(vincentAnimal, history.Count % 5 == 4, !history.Exists(h => h.VicentAnimal == vincentAnimal.ToString())));
 
-            //eventAction.Append("/speak Lewis \"Shall we continue then.#$b#As I was saying before, I'll start by evaluting every participant for their own merrits.#$b#After that I will annonce who owns the greatest animal of Stardew Valley.#$b#So, let's get started.\"");
+            eventAction.Append("/speak Lewis \"Shall we continue then.#$b#As I was saying before, I'll start by evaluting every participant for their own merrits.#$b#After that I will annonce who owns the greatest animal of Stardew Valley.#$b#So, let's get started.\"");
             eventAction.Append("/move Lewis 0 4 2/move Lewis -5 0 3/faceDirection Lewis 0");
-            //eventAction.Append(GetMarieAct(marnieAnimal, history.Count == 0));
+            eventAction.Append(GetMarieAct(marnieAnimal, history.Count == 0));
             eventAction.Append("/faceDirection Lewis 1/move Lewis 3 0 1/faceDirection Lewis 0");
             if (!isPlayerJustWatching)
             {
-                //eventAction.Append(GetPlayerEvalutionAct(animalContestInfo, farmAnimal));
+                eventAction.Append(GetPlayerEvalutionAct(animalContestInfo, farmAnimal));
             }
             else
             {
@@ -280,7 +294,7 @@ namespace AnimalHusbandryMod.animals
             }
             eventAction.Append("/faceDirection Lewis 3/faceDirection Lewis 2/speak Lewis \"Well folks, that's all the participants for this season Stardew Valley Animal Contest!#$b#I'll anounce the winner shortly.\"");
             eventAction.Append("/faceDirection Lewis 3/move Lewis -6 0 3/faceDirection Lewis 0/move Lewis 0 -4 0/faceDirection Lewis 3/faceDirection Lewis 2");
-            
+
             eventAction.Append($"/speak Lewis \"Before annoucing the winner I want to thank you all for comming!$h#$b#");
             if (history.Count == 0)
             {
@@ -292,8 +306,56 @@ namespace AnimalHusbandryMod.animals
             }
             String winnerAnimalName = animalContestInfo.Winner == "Farmer" ? farmAnimal.displayName : animalContestInfo.Winner == "Emily" ? "the unnamed parrot" : "%name";
             eventAction.Append($"/pause 200/speak Lewis \"But without further ado, the winner is...#$b#{(animalContestInfo.Winner=="Farmer"?"@":animalContestInfo.Winner)} with {winnerAnimalName}!$h\"");
+            eventAction.Append("/playMusic event1/emote Alex 56 true");
+            if (animalContestInfo.Winner == "Farmer")
+            {
+                eventAction.Append("/emote farmer 32 true/pause 500/emote participant 20 true/pause 1000");
+                if (Game1.player.getFriendshipHeartLevelForNPC("Pierre")>=4)
+                {
+                    eventAction.Append($"/textAboveHead Pierre \"Congrats {Game1.player.Name}!\"/pause 1000");
+                }
+                if (Game1.player.getFriendshipHeartLevelForNPC("Gus") >= 4)
+                {
+                    eventAction.Append($"/textAboveHead Gus \"Great {Game1.player.Name}!\"/pause 1000");
+                }
+            }
+            else if (animalContestInfo.Winner == "Marnie")
+            {
+                eventAction.Append("/specificTemporarySprite animalCompetitionMarnieWinning/warp Marnie -2000 -2000/emote marnieAnimal 20 true/pause 500");
+                eventAction.Append("/emote Jas 32 true/pause 1000/textAboveHead Shane \"Congrats Marnie!\"/pause 1000");
+            }
+            else if (animalContestInfo.Winner == "Shane")
+            {
+                eventAction.Append("/emote Shane 16 true/emote shaneAnimal 20 true");
+                eventAction.Append("/pause 500/emote Jas 32 true/pause 500/textAboveHead Marnie \"Well deserved!\"/pause 1000");
+            }
+            else if (animalContestInfo.Winner == "Emily")
+            {
+                eventAction.Append("/specificTemporarySprite animalCompetitionEmilyParrotAction/emote Emily 20 true");
+                eventAction.Append("/textAboveHead Clint \"Yeah!\"/pause 500");
+                if (isHaleyPresent)
+                {
+                    eventAction.Append("/textAboveHead Haley \"Congrats sis!\"/pause 500");
+                }
+                eventAction.Append("/pause 1000/textAboveHead Gus \"Great, Emily!\"/pause 1000");
+            }
+            else if (animalContestInfo.Winner == "Jodi")
+            {
+                eventAction.Append("/emote jodiAnimal 20 true/emote Jodi 32 true");
+                eventAction.Append("/pause 1000/textAboveHead Sam \"Great, mom!\"/pause 1500/textAboveHead Caroline \"Good job!\"/pause 1500");
+                if (isKentPresent)
+                {
+                    eventAction.Append("/textAboveHead Kent \"Congrats honey!\"/pause 1000");
+                }
+            }
+            eventAction.Append("/textAboveHead Evelyn \"Congrats dear!\"");
 
-            eventAction.Append($"/pause 4000/globalFade/viewport -1000 -1000");
+            eventAction.Append($"/pause 3000/speak Lewis \"Well, that's it for this Animal Contest folks.\"/faceDirection Lewis 3/move Lewis -2 0 3 true");
+            if (animalContestInfo.Winner != "Marnie")
+            {
+                eventAction.Append($"/faceDirection Marnie 0/move Marnie 0 -2 0 true");
+            }
+            eventAction.Append($"/pause 1500/showFrame Lewis 16/globalFade/viewport -1000 -1000");
             if (animalContestInfo.Winner == "Farmer")
             {
                 eventAction.Append($"/playSound reward/message \"{farmAnimal.displayName} got a {(contestDate.Season=="spring" || contestDate.Season == "summer" ? "fertility": "production")} bonus.\"");
@@ -340,7 +402,6 @@ namespace AnimalHusbandryMod.animals
             {
                 animalContestInfo.Winner = "Marnie";
             }
-
             return animalContestInfo;
         }
 

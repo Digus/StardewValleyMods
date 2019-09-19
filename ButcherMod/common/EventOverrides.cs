@@ -541,6 +541,13 @@ namespace AnimalHusbandryMod.common
                     pingPong = true
                 });
             }
+            else if (key == "animalCompetitionMarnieWinning")
+            {
+                location.TemporarySprites.Add(new TemporaryAnimatedSprite(looseSprites_cursorsName, new Microsoft.Xna.Framework.Rectangle(558, 1425, 20, 26), 400f, 3, 99999, new Vector2(24f, 65f) * 64f, false, false, 0.416f, 0.0f, Color.White, 4f, 0.0f, 0.0f, 0.0f, false)
+                {
+                    pingPong = true
+                });
+            }
             else if (key == "animalCompetitionEnding")
             {
                 AnimalContestController.EndEvent(FarmerLoader.FarmerData.AnimalContestData.Last());

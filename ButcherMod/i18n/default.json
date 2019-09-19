@@ -163,6 +163,7 @@
 	"Menu.AnimalQueryMenu.ContestParticipant": "Participant of {{season}} Animal Contest\n{{contestDate}}",
 	"Menu.AnimalQueryMenu.ChangeParticipant": "Get Ribbon Back.",
 
+	//Animals
 	"Animal.Cow.BabyName": "calf",
 	"Animal.Pig.BabyName": "piglet",
 	"Animal.Chicken.BabyName": "chick",
@@ -170,5 +171,12 @@
 	"Animal.Rabbit.BabyName": "bunny",
 	"Animal.Sheep.BabyName": "lamb",
 	"Animal.Goat.BabyName": "kid",
-	"Animal.Dinosaur.BabyName": "hatchling"
+	"Animal.Dinosaur.BabyName": "hatchling",
+
+	//Animal Contest
+	"AnimalContest.Dialog.Lewis.PlayerParticipant":  "@! You're here!$h#$b#Well folks, now that all competitors are here, let's get started.",
+	"AnimalContest.Dialog.Lewis.PlayerWatching":  "@! You came!$h#$b#Well folks, I think we're ready, let's get started.",
+	"AnimalContest.Dialog.Lewis.Attention":  "Ahem... Attention everyone!$u!",
+	"AnimalContest.Dialog.Lewis.IntroductionFirstTime":  "We're gethered here today to bring back an old tradition, the Stardew Valley Animal Contest!#$b#We stopped doing it because almost no one was interested in participating.$s#$b#But now that we have again a thriving farm in the valley I hope we can do the contest every spring and fall.$h!",
+	"AnimalContest.Dialog.Lewis.IntroductionOtherTimes":  "We're gethered here again for our traditional Stardew Valley Animal Contest!#$b#It makes me really happy to see all of you're still interested in participating.$h#$b#Let's hope we can do this a lot more times."
 }
