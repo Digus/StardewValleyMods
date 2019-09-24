@@ -1,17 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics.PerformanceData;
 using System.Linq;
 using System.Text;
 using AnimalHusbandryMod.animals.data;
+using AnimalHusbandryMod.animals.events;
 using AnimalHusbandryMod.common;
 using AnimalHusbandryMod.farmer;
 using StardewModdingAPI;
 using StardewModdingAPI.Utilities;
 using StardewValley;
-using StardewValley.Characters;
-using StardewValley.Locations;
 
 namespace AnimalHusbandryMod.animals
 {
@@ -19,8 +17,8 @@ namespace AnimalHusbandryMod.animals
     {
         public static readonly IList<string> Seasons = new ReadOnlyCollection<string>(new List<string>() {"spring", "summer", "fall", "winter"});
 
-        public static readonly string[] PossibleThirdContenders = new[] { "Shane", "Jodi", "Emily"};
-        public static readonly string[] PossibleSecondContenders = new[] { "Jas", "Alex", "Abigail", "Willy", "Maru" };
+        public static readonly IAnimalContestAct[] PossibleThirdContenders = new IAnimalContestAct[] { new ShaneAct(), new JodiAct(), new EmilyAct()};
+        public static readonly IAnimalContestAct[] PossibleSecondContenders = new IAnimalContestAct[] { new JasAct(),new AlexAct(), new AbigailAct(), new WillyAct(), new MaruAct() };
         public static readonly string[] PossibleAnimals = { "White_Cow", "Brown_Cow", "Goat", "Sheep", "Pig", "Brown_Chicken", "White_Chicken", "Duck", "Rabbit" };
         public static readonly int MinPointsToPossibleWin = 11;
         public static readonly int MinPointsToGaranteeWin = 14;
@@ -35,7 +33,6 @@ namespace AnimalHusbandryMod.animals
             SDate contestDate = AnimalContestController.GetNextContestDate();
             int eventId = GetEventId(contestDate);
             string key = GenerateKey(eventId, contestDate);
-            //string key = "2677835/z spring summer winter/u 17/t 600 900
 
             Random random = new Random((int)((long)Game1.uniqueIDForThisGame * 100000 + contestDate.Year* 1000 + Utility.getSeasonNumber(contestDate.Season) *100 + contestDate.Day));
 
@@ -183,7 +180,7 @@ namespace AnimalHusbandryMod.animals
                     initialPosition.Append($"/addTemporaryActor {playerAnimalTextureName} {(isPlayerAnimalSmall? SmallSize : BigSize)} {(isPlayerAnimalSmall?26:25)} 66 0 false Animal participant/showFrame participant 0");
                 }
             }
-            initialPosition.Append("/specificTemporarySprite animalCompetition/broadcastEvent/skippable");
+            initialPosition.Append("/specificTemporarySprite animalContest/broadcastEvent/skippable");
             initialPosition.Append(GetContendersAnimalPosition(contenders, marnieAnimal, isPlayerJustWatching, linusAlternateAnimal));
 
             initialPosition.Append("/viewport 28 65 true");
@@ -244,11 +241,11 @@ namespace AnimalHusbandryMod.animals
                 eventAction.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.Lewis.IntroductionOtherTimes")}\"");
             }
 
-            eventAction.Append(GetVincentAct(vincentAnimal, history.Count % 5 == 4, !history.Exists(h => h.VicentAnimal == vincentAnimal.ToString())));
+            eventAction.Append(new VincentAct().GetAct(animalContestInfo, history));
 
             eventAction.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.Lewis.ContestExplanation")}\"");
             eventAction.Append("/move Lewis 0 4 2/move Lewis -5 0 3/faceDirection Lewis 0");
-            eventAction.Append(GetMarieAct(marnieAnimal, history.Count == 0));
+            eventAction.Append(new MarnieAct().GetAct(animalContestInfo, history));
             eventAction.Append("/faceDirection Lewis 1/move Lewis 3 0 1/faceDirection Lewis 0");
             if (!isPlayerJustWatching)
             {
@@ -256,44 +253,12 @@ namespace AnimalHusbandryMod.animals
             }
             else
             {
-                eventAction.Append(GetJasAct(animalContestInfo, !history.Exists(h => h.Contenders.Contains("Jas"))));
+                eventAction.Append(new JasAct().GetAct(animalContestInfo, history));
             }
             eventAction.Append("/faceDirection Lewis 1/move Lewis 5 0 1/faceDirection Lewis 0");
-            switch (contenders[1])
-            {
-                case "Jas":
-                    eventAction.Append(GetJasAct(animalContestInfo, !history.Exists(h => h.Contenders.Contains("Jas"))));
-                    break;
-                case "Alex":
-                    eventAction.Append(GetAlexAct(animalContestInfo, !history.Exists(h => h.Contenders.Contains("Alex"))));
-                    break;
-                case "Willy":
-                    eventAction.Append(GetWillyAct(animalContestInfo, !history.Exists(h => h.Contenders.Contains("Willy"))));
-                    break;
-                case "Abigail":
-                    eventAction.Append(GetAbigailAct(animalContestInfo, !history.Exists(h => h.Contenders.Contains("Abigail"))));
-                    break;
-                case "Maru":
-                    eventAction.Append(GetMaruAct(animalContestInfo, !history.Exists(h => h.Contenders.Contains("Maru"))));
-                    break;
-            }
-
+            eventAction.Append(PossibleSecondContenders.First(c => c.NpcName.Equals(contenders[1])).GetAct(animalContestInfo, history));
             eventAction.Append("/faceDirection Lewis 1/move Lewis 3 0 1/faceDirection Lewis 0");
-            switch (contenders[2])
-            {
-                case "Jodi":
-                    eventAction.Append(GetJodiAct(animalContestInfo, !history.Exists(h => h.Contenders.Contains("Jodi"))));
-                    break;
-                case "Shane":
-                    eventAction.Append(GetShaneAct(animalContestInfo, !history.Exists(h => h.Contenders.Contains("Shane"))));
-                    break;
-                case "Emily":
-                    eventAction.Append(GetEmilyAct(animalContestInfo, !history.Exists(h => h.Contenders.Contains("Emily"))));
-                    break;
-                case "Linus":
-                    eventAction.Append(GetLinusAct(animalContestInfo, linusAlternateAnimal));
-                    break;
-            }
+            eventAction.Append(PossibleThirdContenders.First(c=>c.NpcName.Equals(contenders[2])).GetAct(animalContestInfo, history));
             eventAction.Append($"/faceDirection Lewis 3/faceDirection Lewis 2/speak Lewis \"{i18n.Get("AnimalContest.Dialog.Lewis.Closure")}\"");
             eventAction.Append("/faceDirection Lewis 3/move Lewis -6 0 3/faceDirection Lewis 0/move Lewis 0 -4 0/faceDirection Lewis 3/faceDirection Lewis 2");
 
@@ -324,7 +289,7 @@ namespace AnimalHusbandryMod.animals
             }
             else if (animalContestInfo.Winner == "Marnie")
             {
-                eventAction.Append("/specificTemporarySprite animalCompetitionMarnieWinning/warp Marnie -2000 -2000/emote marnieAnimal 20 true/pause 500");
+                eventAction.Append("/specificTemporarySprite animalContestMarnieWinning/warp Marnie -2000 -2000/emote marnieAnimal 20 true/pause 500");
                 eventAction.Append($"/emote Jas 32 true/pause 1000/textAboveHead Shane \"{i18n.Get("AnimalContest.Dialog.Shane.MarnieCongrats")}\"/pause 1000");
             }
             else if (animalContestInfo.Winner == "Shane")
@@ -334,7 +299,7 @@ namespace AnimalHusbandryMod.animals
             }
             else if (animalContestInfo.Winner == "Emily")
             {
-                eventAction.Append("/specificTemporarySprite animalCompetitionEmilyParrotAction/emote Emily 20 true");
+                eventAction.Append("/specificTemporarySprite animalContestEmilyParrotAction/emote Emily 20 true");
                 eventAction.Append($"/textAboveHead Clint \"{i18n.Get("AnimalContest.Dialog.Clint.EmilyContrats")}\"/pause 500");
                 if (isHaleyPresent)
                 {
@@ -365,7 +330,7 @@ namespace AnimalHusbandryMod.animals
                 string bonusType = contestDate.Season == "spring" || contestDate.Season == "summer" ? "fertility" : "production";
                 eventAction.Append($"/playSound reward/message \"{i18n.Get("AnimalContest.Message.Reward", new { animalName = farmAnimal.displayName, bonusType })}\"");
             }
-            eventAction.Append("/specificTemporarySprite animalCompetitionEnding/end");
+            eventAction.Append("/specificTemporarySprite animalContestEnding/end");
 
             string script = initialPosition.ToString() + eventAction.ToString();
             
@@ -417,7 +382,7 @@ namespace AnimalHusbandryMod.animals
             sb.Append($"/addTemporaryActor {marnieAnimal} {(isMarnieAnimalSmall ? SmallSize : BigSize)} {(isMarnieAnimalSmall ? 23 : 22)} 66 0 false Animal marnieAnimal/showFrame marnieAnimal 0");
             if (contenders.Contains("Alex"))
             {
-                sb.Append("/specificTemporarySprite animalCompetitionJoshDog");
+                sb.Append("/specificTemporarySprite animalContestJoshDog");
             }
             if (contenders.Contains("Jodi"))
             {
@@ -425,7 +390,7 @@ namespace AnimalHusbandryMod.animals
             }
             if (contenders.Contains("Jas") || isPlayerJustWatching)
             {
-                string jasAnimal = GetJasAnimal(marnieAnimal);
+                string jasAnimal = JasAct.GetJasAnimal(marnieAnimal);
                 bool isJasAnimalSmall = IsAnimalSmall(jasAnimal);
                 if (isPlayerJustWatching)
                 {
@@ -440,11 +405,11 @@ namespace AnimalHusbandryMod.animals
             {
                 if (!linusAlternateAnimal)
                 {
-                    sb.Append("/specificTemporarySprite animalCompetitionRabbitShow 34 66 true");
+                    sb.Append("/specificTemporarySprite animalContestRabbitShow 34 66 true");
                 }
                 else
                 {
-                    sb.Append("/specificTemporarySprite animalCompetitionWildBird");
+                    sb.Append("/specificTemporarySprite animalContestWildBird");
                 }
             }
             if (contenders.Contains("Shane"))
@@ -453,19 +418,19 @@ namespace AnimalHusbandryMod.animals
             }
             if (contenders.Contains("Emily"))
             {
-                sb.Append("/specificTemporarySprite animalCompetitionEmilyParrot");
+                sb.Append("/specificTemporarySprite animalContestEmilyParrot");
             }
             if (contenders.Contains("Maru"))
             {
-                sb.Append("/specificTemporarySprite animalCompetitionMaruRobot");
+                sb.Append("/specificTemporarySprite animalContestMaruRobot");
             }
             if (contenders.Contains("Abigail"))
             {
-                sb.Append("/specificTemporarySprite animalCompetitionAbigailSlime");
+                sb.Append("/specificTemporarySprite animalContestAbigailSlime");
             }
             if (contenders.Contains("Willy"))
             {
-                sb.Append("/specificTemporarySprite animalCompetitionWillyCrab");
+                sb.Append("/specificTemporarySprite animalContestWillyCrab");
             }
             return sb.ToString();
         }
@@ -474,198 +439,7 @@ namespace AnimalHusbandryMod.animals
         {
             return Array.IndexOf(PossibleAnimals, animal) > 4;
         }
-
-        private static string GetVincentAct(VincentAnimal vincentAnimal, bool isLate, bool isAnimalFirstTime)
-        {
-
-            StringBuilder vicentAct = new StringBuilder();
-            vicentAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.VincentAct.Lewis.Begin1")}\"");
-            if (isLate)
-            {
-                vicentAct.Append($"/pause 2000/emote Lewis 40/pause 1000/speak Lewis \"{i18n.Get("AnimalContest.Dialog.VincentAct.Lewis.Alternate1")}\"/emote Jodi 28 true/pause 1000");
-            }
-            vicentAct.Append($"/speak Vincent \"{i18n.Get("AnimalContest.Dialog.VincentAct.Vincent.Wait")}\"");
-            if (isLate)
-            {
-                vicentAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.VincentAct.Lewis.Alternate2")}\"/emote Jodi 16 true");
-            }
-            vicentAct.Append($"/speed Vincent 5/move Vincent 0 -16 0/speak Vincent \"{i18n.Get("AnimalContest.Dialog.VincentAct.Vincent.Begin1")}\"");
-            vicentAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.VincentAct.Lewis.Begin2")}\"");
-            vicentAct.Append($"/speak Vincent \"{i18n.Get("AnimalContest.Dialog.VincentAct.Vincent.Begin2")}\"");
-            if (isAnimalFirstTime)
-            {
-                vicentAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.VincentAct.Lewis.FirstTime")}\"");
-                vicentAct.Append($"/speak Vincent \"{i18n.Get("AnimalContest.Dialog.VincentAct.Vincent.FirstTime")}\"/faceDirection Vincent 1/pause 400");
-            }
-            else
-            {
-                vicentAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.VincentAct.Lewis.OtherTimes")}\"");
-                vicentAct.Append($"/speak Vincent \"{i18n.Get("AnimalContest.Dialog.VincentAct.Vincent.OtherTimes")}\"/faceDirection Vincent 1/pause 400");
-            }
-
-            switch (vincentAnimal)
-            {
-                case VincentAnimal.Frog:
-                    vicentAct.Append($"/specificTemporarySprite animalCompetitionFrogShow");
-                    if (isAnimalFirstTime)
-                    {
-                        vicentAct.Append($"/emote Lewis 8/jump Lewis/speak Lewis \"{i18n.Get("AnimalContest.Dialog.VincentAct.Frog.Lewis.FirstTime1")}\"");
-                        vicentAct.Append($"/faceDirection Vincent 0/speak Vincent \"{i18n.Get("AnimalContest.Dialog.VincentAct.Frog.Vincent.FirstTime1")}\"");
-                        vicentAct.Append($"/specificTemporarySprite animalCompetitionFrogCroak/playSound croak");
-                        vicentAct.Append($"/animate Lewis true false 1000 24/emote Lewis 12/speak Lewis \"{i18n.Get("AnimalContest.Dialog.VincentAct.Frog.Lewis.FirstTime2")}\"");
-                        vicentAct.Append($"/speak Vincent \"{i18n.Get("AnimalContest.Dialog.VincentAct.Frog.Vincent.FirstTime2")}\"");
-                        vicentAct.Append($"/emote Lewis 16/speak Lewis \"{i18n.Get("AnimalContest.Dialog.VincentAct.Frog.Lewis.FirstTime3")}\"");
-                        vicentAct.Append($"/speak Vincent \"{i18n.Get("AnimalContest.Dialog.VincentAct.Frog.Vincent.FirstTime3")}\"/faceDirection Vincent 1");
-                    }
-                    else
-                    {
-                        vicentAct.Append($"/emote Lewis 12/speak Lewis \"{i18n.Get("AnimalContest.Dialog.VincentAct.Frog.Lewis.OtherTime1")}\"");
-                        vicentAct.Append($"/speak Sebastian \"{i18n.Get("AnimalContest.Dialog.VincentAct.Frog.Sebastian.OtherTimes")}\"");
-                        vicentAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.VincentAct.Frog.Lewis.OtherTimes2")}\"");
-                        vicentAct.Append($"/speak Vincent \"{i18n.Get("AnimalContest.Dialog.VincentAct.Frog.Vincent.OtherTimes")}\"");
-                    }
-                    vicentAct.Append($"/pause 500/specificTemporarySprite animalCompetitionFrogCroak/playSound croak");
-                    vicentAct.Append($"/pause 2000/specificTemporarySprite animalCompetitionFrogRun");
-                break;
-                case VincentAnimal.Squirrel:
-                    vicentAct.Append($"/specificTemporarySprite animalCompetitionSquirrelShow");
-                    if (isAnimalFirstTime)
-                    {
-                        vicentAct.Append($"/emote Lewis 8/jump Lewis/speak Lewis \"{i18n.Get("AnimalContest.Dialog.VincentAct.Squirrel.Lewis.FirstTime")}\"");
-                        vicentAct.Append($"/faceDirection Vincent 0/speak Vincent \"{i18n.Get("AnimalContest.Dialog.VincentAct.Squirrel.Vincent.FirstTime")}\"");
-                        vicentAct.Append($"/animate Sam false false 2000 33/textAboveHead Sam \"{i18n.Get("AnimalContest.Dialog.VincentAct.Squirrel.Sam.FirstTime")}\"/faceDirection Vincent 1/jump Vincent");
-                    }
-                    else
-                    {
-                        vicentAct.Append($"/emote Lewis 12/speak Lewis \"{i18n.Get("AnimalContest.Dialog.VincentAct.Squirrel.Lewis.OtherTimes1")}\"");
-                        vicentAct.Append($"/faceDirection Vincent 0/speak Vincent \"{i18n.Get("AnimalContest.Dialog.VincentAct.Squirrel.Vincent.OtherTimes1")}\"");
-                        vicentAct.Append($"/speak Jas \"{i18n.Get("AnimalContest.Dialog.VincentAct.Squirrel.Jas.OtherTimes")}\"");
-                        vicentAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.VincentAct.Squirrel.Lewis.OtherTimes2")}\"");
-                        vicentAct.Append($"/speak Jodi \"{i18n.Get("AnimalContest.Dialog.VincentAct.Squirrel.Jodi.OtherTimes")}\"");
-                        vicentAct.Append($"/faceDirection Vincent 1/textAboveHead Vincent \"{i18n.Get("AnimalContest.Dialog.VincentAct.Squirrel.Vincent.OtherTimes2")}\"");
-                    }
-                    vicentAct.Append($"/pause 2000/specificTemporarySprite animalCompetitionSquirrelRun");
-                    break;
-                case VincentAnimal.Bird:
-                    vicentAct.Append($"/specificTemporarySprite animalCompetitionBirdShow");
-                    if (isAnimalFirstTime)
-                    {
-                        vicentAct.Append($"/emote Lewis 8/speak Lewis \"{i18n.Get("AnimalContest.Dialog.VincentAct.Bird.Lewis.FirstTime")}\"");
-                        vicentAct.Append($"/faceDirection Vincent 0/speak Vincent \"{i18n.Get("AnimalContest.Dialog.VincentAct.Bird.Vincent.FirstTime")}\"/faceDirection Vincent 1/pause 500");
-                    }
-                    else
-                    {
-                        vicentAct.Append($"/emote Lewis 12/speak Lewis \"{i18n.Get("AnimalContest.Dialog.VincentAct.Bird.Lewis.OtherTimes")}\"");
-                        vicentAct.Append($"/faceDirection Vincent 0/speak Vincent \"{i18n.Get("AnimalContest.Dialog.VincentAct.Bird.Vincent.OtherTimes1")}\"/faceDirection Vincent 1/pause 4000");
-                        vicentAct.Append($"/textAboveHead Vincent \"{i18n.Get("AnimalContest.Dialog.VincentAct.Bird.Vincent.OtherTimes2")}\"/pause 500");
-                    }
-                    vicentAct.Append("/specificTemporarySprite animalCompetitionBirdFly2");
-                    break;
-                case VincentAnimal.Rabbit:
-                    vicentAct.Append("/specificTemporarySprite animalCompetitionRabbitShow 29 64 false true");
-                    if (isAnimalFirstTime)
-                    {
-                        vicentAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.VincentAct.Rabbit.Lewis.FirstTime1")}\"");
-                        vicentAct.Append($"/faceDirection Vincent 0/speak Vincent \"{i18n.Get("AnimalContest.Dialog.VincentAct.Rabbit.Vincent.FirstTime")}\"");
-                        vicentAct.Append($"/jump Lewis/emote Lewis 16/speak Lewis \"{i18n.Get("AnimalContest.Dialog.VincentAct.Rabbit.Lewis.FirstTime")}\"");
-                        vicentAct.Append($"/speak Linus \"{i18n.Get("AnimalContest.Dialog.VincentAct.Rabbit.Linus.FirstTime2")}\"");
-                        vicentAct.Append("/faceDirection Vincent 1");
-                    }
-                    else
-                    {
-                        vicentAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.VincentAct.Rabbit.Lewis.OtherTimes1")}\"");
-                        vicentAct.Append($"/faceDirection Vincent 0/animate Vincent false true 100 16 17/speak Vincent \"{i18n.Get("AnimalContest.Dialog.VincentAct.Rabbit.Vincent.OtherTimes1")}\"");
-                        vicentAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.VincentAct.Rabbit.Lewis.OtherTimes2")}\"");
-                        vicentAct.Append($"/stopAnimation Vincent/speak Vincent \"{i18n.Get("AnimalContest.Dialog.VincentAct.Rabbit.Vincent.OtherTimes2")}\"/faceDirection Vincent 1/pause 500/playSound eat");
-                    }
-                    vicentAct.Append($"/pause 1000/specificTemporarySprite animalCompetitionRabbitRun");
-                    break;
-            }
-            vicentAct.Append($"/pause 500/textAboveHead Vincent \"{i18n.Get("AnimalContest.Dialog.VincentAct.Vincent.Wait")}\"/speed Vincent 5/move Vincent 22 0 1 true/pause 2000");
-            vicentAct.Append($"/emote Lewis 40");
-
-            return vicentAct.ToString();
-        }
-
-        private static string GetMarieAct(string marnieAnimal, bool isFirstTime)
-        {
-            StringBuilder marnieAct = new StringBuilder();
-
-            string otherTimes = isFirstTime? "" : i18n.Get("AnimalContest.Dialog.MarnieAct.Lewis.OtherTimes");
-            marnieAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.MarnieAct.Lewis.Begin",new {otherTimes})}\"/pause 200");
-            
-            if (marnieAnimal.Contains("Cow"))
-            {
-                marnieAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.MarnieAct.Lewis.Cow")}\"");
-                marnieAct.Append($"/speak Marnie \"{i18n.Get("AnimalContest.Dialog.MarnieAct.Marnie.Astonished")}\"");
-                marnieAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.MarnieAct.Lewis.ContinueEvalution")}\"");
-                marnieAct.Append($"/speak Caroline \"{i18n.Get("AnimalContest.Dialog.MarnieAct.Caroline")}\"");
-            }
-            else if (marnieAnimal.Contains("Chicken"))
-            {
-                marnieAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.MarnieAct.Lewis.Chicken")}\"");
-                marnieAct.Append($"/speak Marnie \"{i18n.Get("AnimalContest.Dialog.MarnieAct.Marnie.Astonished")}\"");
-                marnieAct.Append($"/speak Pierre \"{i18n.Get("AnimalContest.Dialog.MarnieAct.Pierre.Chicken")}\"");
-            }
-            else if (marnieAnimal.Contains("Duck"))
-            {
-                marnieAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.MarnieAct.Lewis.Duck")}\"");
-                marnieAct.Append($"/speak Marnie \"{i18n.Get("AnimalContest.Dialog.MarnieAct.Marnie.Astonished")}\"");
-                marnieAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.MarnieAct.Lewis.ContinueEvalution")}\"");
-                marnieAct.Append($"/speak Jodi \"{i18n.Get("AnimalContest.Dialog.MarnieAct.Jodi.Duck")}\"");
-            }
-            else if (marnieAnimal.Contains("Pig"))
-            {
-                marnieAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.MarnieAct.Lewis.Pig")}\"");
-                marnieAct.Append($"/speak Marnie \"{i18n.Get("AnimalContest.Dialog.MarnieAct.Marnie.Astonished")}\"");
-                marnieAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.MarnieAct.Lewis.Astonished")}\"");
-                marnieAct.Append($"/speak George \"{i18n.Get("AnimalContest.Dialog.MarnieAct.George.Pig")}\"");
-            }
-            else if (marnieAnimal.Contains("Goat"))
-            {
-                marnieAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.MarnieAct.Lewis.Goat")}\"");
-                marnieAct.Append($"/speak Marnie \"{i18n.Get("AnimalContest.Dialog.MarnieAct.Marnie.Astonished")}\"");
-                marnieAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.MarnieAct.Lewis.ContinueEvalution")}\"");
-                marnieAct.Append($"/speak Evelyn \"{i18n.Get("AnimalContest.Dialog.MarnieAct.Evelyn.Goat")}\"");
-            }
-            else if (marnieAnimal.Contains("Rabbit"))
-            {
-                marnieAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.MarnieAct.Lewis.Rabbit")}\"");
-                marnieAct.Append($"/speak Marnie \"{i18n.Get("AnimalContest.Dialog.MarnieAct.Marnie.Astonished")}\"");
-                marnieAct.Append("/emote Lewis 40");
-                marnieAct.Append($"/speak Jas \"{i18n.Get("AnimalContest.Dialog.MarnieAct.Jas.Rabbit")}\"");
-            }
-            else if (marnieAnimal.Contains("Sheep"))
-            {
-                marnieAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.MarnieAct.Lewis.Sheep")}\"");
-                marnieAct.Append($"/speak Marnie \"{i18n.Get("AnimalContest.Dialog.MarnieAct.Marnie.Astonished")}\"");
-                if (Game1.player.mailReceived.Contains("secretNote21_done"))
-                {
-                    marnieAct.Append("/emote farmer 16");
-                }
-                else
-                {
-                    marnieAct.Append("/emote farmer 8");
-                }
-                marnieAct.Append($"/speak Jas \"{i18n.Get("AnimalContest.Dialog.MarnieAct.Jas.Sheep")}\"");
-            }
-            else
-            {
-                marnieAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.MarnieAct.Lewis.Animal")}\"");
-                marnieAct.Append($"/speak Marnie \"{i18n.Get("AnimalContest.Dialog.MarnieAct.Marnie.Astonished")}\"");
-                marnieAct.Append($"/pause 500/speak Caroline \"{i18n.Get("AnimalContest.Dialog.MarnieAct.Caroline")}\"");
-            }
-            marnieAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.MarnieAct.Lewis.Evalution")}\"");
-            string closurePrefix = isFirstTime
-                ? i18n.Get("AnimalContest.Dialog.MarnieAct.Lewis.ClosurePrefix.FirstTime")
-                : i18n.Get("AnimalContest.Dialog.MarnieAct.Lewis.ClosurePrefix.OtherTimes");
-            marnieAct.Append($"/pause 1500/speak Lewis \"{i18n.Get("AnimalContest.Dialog.MarnieAct.Lewis.Closure", new {closurePrefix})}\"");
-            marnieAct.Append($"/speak Marnie \"{i18n.Get("AnimalContest.Dialog.MarnieAct.Marnie.Thanks")}\"");
-            marnieAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.MarnieAct.Lewis.Ending")}\"");
-
-            return marnieAct.ToString();
-        }
-
+        
         private static string GetPlayerEvalutionAct(AnimalContestItem animalContestInfo, FarmAnimal farmAnimal)
         {
             StringBuilder playerAct = new StringBuilder();
@@ -800,273 +574,9 @@ namespace AnimalHusbandryMod.animals
             return playerAct.ToString();
         }
 
-        private static string GetJasAct(AnimalContestItem animalContestInfo, bool isFirstTime)
-        {
-            StringBuilder jasAct = new StringBuilder();
-            string babyAnimalName = AnimalExtension.GetBabyAnimalNameByType(GetJasAnimal(animalContestInfo.MarnieAnimal));
-            jasAct.Append("/emote Lewis 40");
-            if (isFirstTime)
-            {
-                jasAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.JasAct.Lewis.FirstTime1")}\"");
-                jasAct.Append($"/speak Jas \"{i18n.Get("AnimalContest.Dialog.JasAct.Jas.FirstTime1")}\"");
-                jasAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.JasAct.Lewis.FirstTime2")}\"");
-                jasAct.Append($"/speak Jas \"{i18n.Get("AnimalContest.Dialog.JasAct.Jas.FirstTime2")}\"");
-                jasAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.JasAct.Lewis.FirstTime3")}\"");
-                jasAct.Append($"/speak Marnie \"{i18n.Get("AnimalContest.Dialog.JasAct.Marnie.FirstTime")}\"");
-                jasAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.JasAct.Lewis.FirstTime4", new {babyAnimalName})}\"");
-                jasAct.Append($"/pause 1500/speak Lewis \"{i18n.Get("AnimalContest.Dialog.JasAct.Lewis.FirstTime5")}\"");
-                jasAct.Append($"/emote Jas 20/speak Lewis \"{i18n.Get("AnimalContest.Dialog.JasAct.Lewis.FirstTime6")}\"");
-            }
-            else
-            {
-                jasAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.JasAct.Lewis.OtherTimes1")}\"");
-                jasAct.Append($"/speak Jas \"{i18n.Get("AnimalContest.Dialog.JasAct.Jas.OtherTimes1")}\"");
-                jasAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.JasAct.Lewis.OtherTimes2", new { babyAnimalName })}\"");
-                jasAct.Append($"/pause 1500/speak Lewis \"{i18n.Get("AnimalContest.Dialog.JasAct.Lewis.OtherTimes3")}\"");
-                jasAct.Append($"/emote Jas 20/speak Jas \"{i18n.Get("AnimalContest.Dialog.JasAct.Jas.OtherTimes2")}\"");
-                jasAct.Append($"/jump Lewis/emote Lewis 16/speak Lewis \"{i18n.Get("AnimalContest.Dialog.JasAct.Lewis.OtherTimes4")}\"");
-            }
-            return jasAct.ToString();
-        }
-
-        private static string GetAlexAct(AnimalContestItem animalContestInfo, bool isFirstTime)
-        {
-            StringBuilder alexAct = new StringBuilder();
-            if (isFirstTime)
-            {
-                alexAct.Append($"/emote Lewis 8/speak Lewis \"{i18n.Get("AnimalContest.Dialog.AlexAct.Lewis.FirstTime1")}\"");
-                alexAct.Append($"/speak Alex \"{i18n.Get("AnimalContest.Dialog.AlexAct.Alex.FirstTime1")}\"");
-                alexAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.AlexAct.Lewis.FirstTime2")}\"");
-                alexAct.Append($"/speak Alex \"{i18n.Get("AnimalContest.Dialog.AlexAct.Alex.FirstTime2")}\"/playSound dogWhining/pause 1000/specificTemporarySprite animalCompetitionJoshDogOut/pause 1000");
-                alexAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.AlexAct.Lewis.FirstTime3")}\"");
-                alexAct.Append($"/speak Alex \"{i18n.Get("AnimalContest.Dialog.AlexAct.Alex.FirstTime3")}\"");
-                alexAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.AlexAct.Lewis.FirstTime4")}\"");
-                alexAct.Append($"/speak Alex \"{i18n.Get("AnimalContest.Dialog.AlexAct.Alex.FirstTime4")}\"");
-                alexAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.AlexAct.Lewis.FirstTime5")}\"");
-                alexAct.Append("/emote Alex 12");
-            }
-            else
-            {
-                alexAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.AlexAct.Lewis.OtherTimes1")}\"");
-                alexAct.Append($"/speak Alex \"{i18n.Get("AnimalContest.Dialog.AlexAct.Alex.OtherTimes1")}\"/pause 500/specificTemporarySprite animalCompetitionJoshDogOut/pause 1000");
-                alexAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.AlexAct.Lewis.OtherTimes2")}\"");
-                alexAct.Append($"/speak Alex \"{i18n.Get("AnimalContest.Dialog.AlexAct.Alex.OtherTimes2")}\"/pause 300/showFrame Alex 26/pause 100/specificTemporarySprite animalCompetitionJoshDogSteak/playSound dwop");
-                alexAct.Append($"/pause 1000/speak Lewis \"{i18n.Get("AnimalContest.Dialog.AlexAct.Lewis.OtherTimes3")}\"");
-                alexAct.Append($"/speak Alex \"{i18n.Get("AnimalContest.Dialog.AlexAct.Alex.OtherTimes3")}\"/playSound dogWhining");
-                alexAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.AlexAct.Lewis.OtherTimes4")}\"");
-                alexAct.Append("/pause 300/specificTemporarySprite animalCompetitionJoshDogOut/pause 100/showFrame Alex 4/emote Alex 12");
-            }
-            return alexAct.ToString();
-        }
-
-        private static string GetWillyAct(AnimalContestItem animalContestInfo, bool isFirstTime)
-        {
-            StringBuilder willyAct = new StringBuilder();
-            if (isFirstTime)
-            {
-                willyAct.Append($"/jump Lewis/emote Lewis 16/speak Lewis \"{i18n.Get("AnimalContest.Dialog.WillyAct.Lewis.")}\"");
-                willyAct.Append($"/speak Willy \"{i18n.Get("AnimalContest.Dialog.WillyAct.Willy.")}\"");
-                willyAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.WillyAct.Lewis.")}\"");
-                willyAct.Append($"/pause 800/playSound eat/jump Lewis/textAboveHead Lewis \"{i18n.Get("AnimalContest.Dialog.WillyAct.Lewis.")}\"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.WillyAct.Lewis.")}\"");
-                willyAct.Append($"/speak Willy \"{i18n.Get("AnimalContest.Dialog.WillyAct.Willy.")}\"");
-                willyAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.WillyAct.Lewis.")}\"");
-            }
-            else
-            {
-                willyAct.Append($"/emote Lewis 16/speak Lewis \"{i18n.Get("AnimalContest.Dialog.WillyAct.Lewis.OtherTimes1")}\"");
-                willyAct.Append($"/speak Willy \"{i18n.Get("AnimalContest.Dialog.WillyAct.Willy.OtherTimes1")}\"");
-                willyAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.WillyAct.Lewis.OtherTimes2")}\"");
-                willyAct.Append($"/pause 800/playSound scissors/jump Lewis/textAboveHead Lewis \"{i18n.Get("AnimalContest.Dialog.WillyAct.Lewis.OtherTimes3")}\"");
-                willyAct.Append($"/pause 500/speak Lewis \"{i18n.Get("AnimalContest.Dialog.WillyAct.Lewis.OtherTimes4")}\"");
-                willyAct.Append("/emote Willy 28");
-                willyAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.WillyAct.Lewis.OtherTimes5")}\"");
-            }
-            return willyAct.ToString();
-        }
-
-        private static string GetAbigailAct(AnimalContestItem animalContestInfo, bool isFirstTime)
-        {
-            StringBuilder abigailAct = new StringBuilder();
-            if (isFirstTime)
-            {
-                abigailAct.Append($"/jump Lewis/emote Lewis 16/speak Lewis \"{i18n.Get("AnimalContest.Dialog.AbigailAct.Lewis.FirstTime1")}\"");
-                abigailAct.Append($"/speak Abigail \"{i18n.Get("AnimalContest.Dialog.AbigailAct.Abigail.FirstTime1")}\"");
-                abigailAct.Append($"/emote Lewis 12/speak Lewis \"{i18n.Get("AnimalContest.Dialog.AbigailAct.Lewis.FirstTime2")}\"");
-                abigailAct.Append($"/speak Abigail \"{i18n.Get("AnimalContest.Dialog.AbigailAct.Abigail.FirstTime2")}\"");
-                abigailAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.AbigailAct.Lewis.FirstTime3")}\"");
-                abigailAct.Append($"/speak Abigail \"{i18n.Get("AnimalContest.Dialog.AbigailAct.Abigail.FirstTime3")}\"");
-                abigailAct.Append($"/textAboveHead Pierre \"{i18n.Get("AnimalContest.Dialog.AbigailAct.Pierre.FirstTime")}\"/emote Abigail 16");
-                abigailAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.AbigailAct.Lewis.FirstTime4")}\"");
-            }
-            else
-            {
-                abigailAct.Append($"/emote Lewis 16/speak Lewis \"{i18n.Get("AnimalContest.Dialog.AbigailAct.Lewis.OtherTimes1")}\"");
-                abigailAct.Append($"/speak Abigail \"{i18n.Get("AnimalContest.Dialog.AbigailAct.Abigail.OtherTimes1")}\"");
-                abigailAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.AbigailAct.Lewis.OtherTimes2")}\"");
-                abigailAct.Append($"/speak Abigail \"{i18n.Get("AnimalContest.Dialog.AbigailAct.Abigail.OtherTimes2")}\"");
-                abigailAct.Append($"/emote farmer 16/speak Lewis \"{i18n.Get("AnimalContest.Dialog.AbigailAct.Lewis.OtherTimes3")}\"");
-                abigailAct.Append($"/speak Abigail \"{i18n.Get("AnimalContest.Dialog.AbigailAct.Abigail.OtherTimes3")}\"");
-                abigailAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.AbigailAct.Lewis.OtherTimes4")}\"");
-                abigailAct.Append("/emote Abigail 28");
-            }
-            return abigailAct.ToString();
-        }
-
-        private static string GetMaruAct(AnimalContestItem animalContestInfo, bool isFirstTime)
-        {
-            StringBuilder maruAct = new StringBuilder();
-            if (isFirstTime)
-            {
-                maruAct.Append($"/emote Lewis 8/speak Lewis \"{i18n.Get("AnimalContest.Dialog.MaruAct.Lewis.FirstTime1")}\"");
-                maruAct.Append($"/speak Maru \"{i18n.Get("AnimalContest.Dialog.MaruAct.Maru.FirstTime1")}\"");
-                maruAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.MaruAct.Lewis.FirstTime2")}\"");
-                maruAct.Append($"/speak Maru \"{i18n.Get("AnimalContest.Dialog.MaruAct.Maru.FirstTime2")}\"");
-                maruAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.MaruAct.Lewis.FirstTime3")}\"");
-                maruAct.Append($"/speak Maru \"{i18n.Get("AnimalContest.Dialog.MaruAct.Maru.FirstTime3")}\"");
-                maruAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.MaruAct.Lewis.FirstTime4")}\"");
-                maruAct.Append("/emote Maru 28");
-            }
-            else
-            {
-                maruAct.Append($"/emote Lewis 16/speak Lewis \"{i18n.Get("AnimalContest.Dialog.MaruAct.Lewis.OtherTimes1")}\"");
-                maruAct.Append($"/speak Maru \"{i18n.Get("AnimalContest.Dialog.MaruAct.Maru.OtherTimes1")}\"");
-                maruAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.MaruAct.Lewis.OtherTimes2")}\"");
-                maruAct.Append($"/speak Maru \"{i18n.Get("AnimalContest.Dialog.MaruAct.Maru.OtherTimes2")}\"");
-                maruAct.Append($"/pause 500/message \"{i18n.Get("AnimalContest.Dialog.MaruAct.Robot.OtherTimes1")}\"");
-                maruAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.MaruAct.Lewis.OtherTimes3")}\"");
-                maruAct.Append($"/speak Maru \"{i18n.Get("AnimalContest.Dialog.MaruAct.Maru.OtherTimes3")}\"");
-                maruAct.Append($"/pause 500/message \"{i18n.Get("AnimalContest.Dialog.MaruAct.Robot.OtherTimes2")}\"");
-                maruAct.Append($"/emote Lewis 12/speak Maru \"{i18n.Get("AnimalContest.Dialog.MaruAct.Maru.OtherTimes4")}\"");
-                maruAct.Append($"/pause 500/message \"{i18n.Get("AnimalContest.Dialog.MaruAct.Robot.OtherTimes3")}\"");
-                maruAct.Append($"/emote Marnie 16/speak Lewis \"{i18n.Get("AnimalContest.Dialog.MaruAct.Lewis.OtherTimes4")}\"");
-                maruAct.Append("/emote Maru 28");
-            }
-            return maruAct.ToString();
-        }
-
-        private static string GetJodiAct(AnimalContestItem animalContestInfo, bool isFirstTime)
-        {
-            StringBuilder jodiAct = new StringBuilder();
-            if (isFirstTime)
-            {
-                jodiAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.JodiAct.Lewis.FirstTime1")}\"");
-                jodiAct.Append($"/speak Jodi \"{i18n.Get("AnimalContest.Dialog.JodiAct.Jodi.FirstTime1")}\"");
-                jodiAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.JodiAct.Lewis.FirstTime2")}\"");
-                jodiAct.Append($"/speak Jodi \"{i18n.Get("AnimalContest.Dialog.JodiAct.Jodi.FirstTime2")}\"");
-                jodiAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.JodiAct.Lewis.FirstTime3")}\"");
-                jodiAct.Append($"/pause 1000/speak Lewis \"{i18n.Get("AnimalContest.Dialog.JodiAct.Lewis.FirstTime4")}\"");
-            }
-            else
-            {
-                jodiAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.JodiAct.Lewis.OtherTimes1")}\"");
-                jodiAct.Append($"/speak Jodi \"{i18n.Get("AnimalContest.Dialog.JodiAct.Jodi.OtherTimes1")}\"");
-                if (Game1.player.isMarried() && "Sam".Equals(Game1.player.spouse))
-                {
-                    jodiAct.Append($"/speak Sam \"{i18n.Get("AnimalContest.Dialog.JodiAct.Sam.Married")}\"");
-                    string prefix = "";
-                    if (Game1.year > 1)
-                    {
-                        prefix = i18n.Get("AnimalContest.Dialog.JodiAct.Jodi.OtherTimes2.PrefixYear2");
-                    }
-                    else
-                    {
-                        prefix = "AnimalContest.Dialog.JodiAct.Jodi.OtherTimes2.PrefixYear1";
-                    }
-                    jodiAct.Append($"/speak Jodi \"{i18n.Get("AnimalContest.Dialog.JodiAct.Jodi.OtherTimes2", new { prefix })}\"");
-                }
-                else
-                {
-                    jodiAct.Append($"/showFrame Sam 33/textAboveHead Sam \"{i18n.Get("AnimalContest.Dialog.JodiAct.Sam.Single")}\"/pause 1000/showFrame Sam 12");
-                }
-                jodiAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.JodiAct.Lewis.OtherTimes2")}\"");
-                jodiAct.Append($"/pause 1500/speak Lewis \"{i18n.Get("AnimalContest.Dialog.JodiAct.Lewis.OtherTimes3")}\"");
-                
-            }
-            jodiAct.Append($"/speak Jodi \"{i18n.Get("AnimalContest.Dialog.JodiAct.Jodi.Thanks")}\"");
-            return jodiAct.ToString();
-        }
-
-        private static string GetShaneAct(AnimalContestItem animalContestInfo, bool isFirstTime)
-        {
-            StringBuilder shaneAct = new StringBuilder();
-            if (isFirstTime)
-            {
-                shaneAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.ShaneAct.Lewis.FirstTime1")}\"");
-                shaneAct.Append($"/speak Shane \"{i18n.Get("AnimalContest.Dialog.ShaneAct.Shane.FirstTime1")}\"");
-                shaneAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.ShaneAct.Lewis.FirstTime2")}\"");
-                shaneAct.Append($"/speak Shane \"{i18n.Get("AnimalContest.Dialog.ShaneAct.Shane.FirstTime2")}\"");
-                shaneAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.ShaneAct.Lewis.FirstTime3")}\"");
-                shaneAct.Append($"/pause 1500/speak Lewis \"{i18n.Get("AnimalContest.Dialog.ShaneAct.Lewis.FirstTime4")}\"");
-                shaneAct.Append($"/speak Shane \"{i18n.Get("AnimalContest.Dialog.ShaneAct.Shane.FirstTime3")}\"");
-                shaneAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.ShaneAct.Lewis.FirstTime5")}\"");
-            }
-            else
-            {
-                shaneAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.ShaneAct.Lewis.OtherTimes1")}\"");
-                shaneAct.Append($"/speak Shane \"{i18n.Get("AnimalContest.Dialog.ShaneAct.Shane.OtherTimes1")}\"");
-                shaneAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.ShaneAct.Lewis.OtherTimes2")}\"");
-                shaneAct.Append($"/speak Shane \"{i18n.Get("AnimalContest.Dialog.ShaneAct.Shane.OtherTimes2")}\"");
-                shaneAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.ShaneAct.Lewis.OtherTimes3")}\"");
-                shaneAct.Append($"/pause 1500/speak Lewis \"{i18n.Get("AnimalContest.Dialog.ShaneAct.Lewis.OtherTimes4")}\"");
-            }
-            return shaneAct.ToString();
-        }
-
-        private static string GetEmilyAct(AnimalContestItem animalContestInfo, bool isFirstTime)
-        {
-            StringBuilder emilyAct = new StringBuilder();
-            if (isFirstTime)
-            {
-                emilyAct.Append($"/jump Lewis/emote Lewis 16/speak Lewis \"{i18n.Get("AnimalContest.Dialog.ShaneAct.Lewis.FirstTime1")}\"");
-                emilyAct.Append($"/speak Emily \"{i18n.Get("AnimalContest.Dialog.ShaneAct.Emily.FirstTime1")}\"");
-                emilyAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.ShaneAct.Lewis.FirstTime2")}\"");
-                emilyAct.Append($"/speak Emily \"{i18n.Get("AnimalContest.Dialog.ShaneAct.Emily.FirstTim2")}\"");
-                emilyAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.ShaneAct.Lewis.FirstTime3")}\"");
-                emilyAct.Append($"/speak Emily \"{i18n.Get("AnimalContest.Dialog.ShaneAct.Emily.FirstTime3")}\"");
-                emilyAct.Append($"/emote Lewis 8/speak Lewis \"{i18n.Get("AnimalContest.Dialog.ShaneAct.Lewis.FirstTime4")}\"");
-                emilyAct.Append("/pause 500/specificTemporarySprite animalCompetitionEmilyParrotAction");
-                emilyAct.Append($"/pause 1000/speak Lewis \"{i18n.Get("AnimalContest.Dialog.ShaneAct.Lewis.FirstTime5")}\"");
-                emilyAct.Append("/pause 1500/specificTemporarySprite animalCompetitionEmilyParrotAction");
-                emilyAct.Append($"/pause 1500/speak Emily \"{i18n.Get("AnimalContest.Dialog.ShaneAct.Emily.FirstTime4")}\"");
-                emilyAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.ShaneAct.Lewis.FirstTime6")}\"");
-            }
-            else
-            {
-                emilyAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.ShaneAct.Lewis.OtherTimes1")}\"");
-                emilyAct.Append($"/speak Emily \"{i18n.Get("AnimalContest.Dialog.ShaneAct.Emily.OtherTimes1")}\"");
-                emilyAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.ShaneAct.Lewis.OtherTimes2")}\"");
-                emilyAct.Append("/specificTemporarySprite animalCompetitionEmilyParrotAction");
-                emilyAct.Append($"/speak Emily \"{i18n.Get("AnimalContest.Dialog.ShaneAct.Emily.OtherTimes2")}\"");
-                emilyAct.Append("/faceDirection Emily 0/specificTemporarySprite animalCompetitionEmilyBoomBox/playMusic EmilyDance/pause 4460/faceDirection Emily 1 true");
-                emilyAct.Append("/specificTemporarySprite animalCompetitionEmilyBoomBoxStart/specificTemporarySprite animalCompetitionEmilyParrotDance");
-                emilyAct.Append("/pause 10000/faceDirection Emily 0 true/pause 500/specificTemporarySprite animalCompetitionEmilyParrotStopDance");
-                emilyAct.Append("/stopMusic/specificTemporarySprite animalCompetitionEmilyBoomBoxStop/pause 500/faceDirection Emily 1/pause 500");
-                emilyAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.ShaneAct.Lewis.OtherTimes3")}\"");
-                emilyAct.Append($"/speak Emily \"{i18n.Get("AnimalContest.Dialog.ShaneAct.Emily.OtherTimes3")}\"");
-                emilyAct.Append($"/pause 1000/speak Lewis \"{i18n.Get("AnimalContest.Dialog.ShaneAct.Lewis.OtherTimes4")}\"");
-            }
-            return emilyAct.ToString();
-        }
-
-        private static string GetLinusAct(AnimalContestItem animalContestInfo, bool alternate)
-        {
-            StringBuilder linusAct = new StringBuilder();
-            if (!alternate)
-            {
-                linusAct.Append("/speak Lewis \"\"");
-                linusAct.Append("/speak Linus \"\"");
-            }
-            else
-            {
-                linusAct.Append("/speak Lewis \"\"");
-                linusAct.Append("/speak Linus \"\"");
-            }
-            return linusAct.ToString();
-        }
-
         private static string GetSecondContender(List<AnimalContestItem> history, bool removeJasFromPool)
         {
-            List<string> contendersPool = new List<string>(PossibleSecondContenders);
+            List<string> contendersPool = PossibleSecondContenders.Select(c => c.NpcName).ToList();
             if (removeJasFromPool)
             {
                 contendersPool.Remove("Jas");
@@ -1093,7 +603,7 @@ namespace AnimalHusbandryMod.animals
 
         private static string GetThirdContender(List<AnimalContestItem> history)
         {
-            List<string> contendersPool = new List<string>(PossibleThirdContenders);
+            List<string> contendersPool = PossibleThirdContenders.Select(c => c.NpcName).ToList();
             if (!Game1.player.eventsSeen.Contains(3900074))
             {
                 contendersPool.Remove("Shane");
@@ -1122,12 +632,6 @@ namespace AnimalHusbandryMod.animals
             return animalsPool[random.Next(animalsPool.Count-1)];
         }
 
-        private static string GetJasAnimal(string marnieAnimal)
-        {
-            int i = Array.IndexOf(PossibleAnimals, marnieAnimal);
-            return PossibleAnimals[((long) Game1.uniqueIDForThisGame + i) % PossibleAnimals.Length];
-        }
-
         private static VincentAnimal ChooseVincentAnimal(Random random, List<AnimalContestItem> history)
         {
             List<VincentAnimal> animalsPool = Enum.GetValues(typeof(VincentAnimal)).Cast<VincentAnimal>().ToList();
@@ -1137,7 +641,7 @@ namespace AnimalHusbandryMod.animals
             }
             if (history.Count > 0)
             {
-                List<Tuple<VincentAnimal, int>> animalCount = animalsPool.Select((a) => new Tuple<VincentAnimal, int>(a, history.Count(m => m.VicentAnimal == a.ToString()))).ToList();
+                List<Tuple<VincentAnimal, int>> animalCount = animalsPool.Select((a) => new Tuple<VincentAnimal, int>(a, history.Count(m => m.VincentAnimal == a.ToString()))).ToList();
                 int minCount = animalCount.Min(t2 => t2.Item2);
                 animalsPool = animalCount.Where(t1 => t1.Item2 == minCount).Select(t => t.Item1).ToList();
             }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AnimalHusbandryMod.animals;
+using AnimalHusbandryMod.animals.events;
 using AnimalHusbandryMod.farmer;
 using StardewModdingAPI;
 using StardewModdingAPI.Utilities;

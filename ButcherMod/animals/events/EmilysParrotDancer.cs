@@ -1,11 +1,9 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using StardewModdingAPI;
 using StardewModdingAPI.Utilities;
 using StardewValley;
 
-namespace AnimalHusbandryMod.animals
+namespace AnimalHusbandryMod.animals.events
 {
     public class EmilysParrotDancer : TemporaryAnimatedSprite
     {

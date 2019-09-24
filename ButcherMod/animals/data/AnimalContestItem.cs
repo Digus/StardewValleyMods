@@ -14,7 +14,7 @@ namespace AnimalHusbandryMod.animals.data
         [JsonProperty]
         private string _date;
         public List<string> Contenders;
-        public string VicentAnimal;
+        public string VincentAnimal;
         public string MarnieAnimal;
         public string Winner;
         public long? ParticipantId;
@@ -27,12 +27,12 @@ namespace AnimalHusbandryMod.animals.data
             set => _date = value?.ToString();
         }
 
-        public AnimalContestItem(int eventId, SDate date, List<string> contenders, string vicentAnimal, string marnieAnimal)
+        public AnimalContestItem(int eventId, SDate date, List<string> contenders, string vincentAnimal, string marnieAnimal)
         {
             EventId = eventId;
             Date = date;
             Contenders = contenders;
-            VicentAnimal = vicentAnimal;
+            VincentAnimal = vincentAnimal;
             MarnieAnimal = marnieAnimal;
         }
     }

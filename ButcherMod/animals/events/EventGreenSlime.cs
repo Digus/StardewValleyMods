@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using StardewValley;
 using StardewValley.Monsters;
 
-namespace AnimalHusbandryMod.common
+namespace AnimalHusbandryMod.animals.events
 {
     public class EventGreenSlime : GreenSlime
     {

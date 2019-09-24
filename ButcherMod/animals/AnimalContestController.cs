@@ -89,6 +89,7 @@ namespace AnimalHusbandryMod.animals
         public static SDate GetNextContestDate()
         {
             return SDate.Now();
+            //TODO- Uncomment
             //return ContestDays
             //    .Select(d => new SDate(Convert.ToInt32(d.Split(' ')[0]), d.Split(' ')[1]))
             //    .Where(d => d >= SDate.Now()).OrderBy(d => d)
