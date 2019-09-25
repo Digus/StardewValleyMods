@@ -4,12 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AnimalHusbandryMod.animals.data;
+using StardewValley;
 
 namespace AnimalHusbandryMod.animals.events
 {
     public class AbigailAct : AbstractAct
     {
         public override string NpcName => "Abigail";
+        public override int? RequiredEvent => 4;
 
         public override string GetAct(AnimalContestItem animalContestInfo, List<AnimalContestItem> history)
         {
@@ -42,6 +44,11 @@ namespace AnimalHusbandryMod.animals.events
                 abigailAct.Append("/emote Abigail 28");
             }
             return abigailAct.ToString();
+        }
+
+        public override bool Available(List<AnimalContestItem> history)
+        {
+            return base.Available(history) && (!history.Exists(i => i.Contenders.Contains(NpcName)) || Game1.player.mailReceived.Contains("slimeHutchBuilt"));
         }
     }
 }

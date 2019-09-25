@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AnimalHusbandryMod.animals.data;
+using AnimalHusbandryMod.common;
 using AnimalHusbandryMod.farmer;
 using Harmony;
 using StardewModdingAPI;
@@ -16,7 +17,6 @@ namespace AnimalHusbandryMod.animals
 {
     public class AnimalContestController : AnimalStatusController
     {
-        public static readonly IList<string> ContestDays = new ReadOnlyCollection<string>(new List<string>() { "26 spring", "26 fall" }) ;
         private static FarmAnimal _temporaryFarmAnimal = null;
 
         public static bool IsParticipant(FarmAnimal farmAnimal)
@@ -88,13 +88,14 @@ namespace AnimalHusbandryMod.animals
 
         public static SDate GetNextContestDate()
         {
-            return SDate.Now();
-            //TODO- Uncomment
-            //return ContestDays
-            //    .Select(d => new SDate(Convert.ToInt32(d.Split(' ')[0]), d.Split(' ')[1]))
-            //    .Where(d => d >= SDate.Now()).OrderBy(d => d)
-            //    .DefaultIfEmpty(new SDate(Convert.ToInt32(ContestDays[0].Split(' ')[0]), ContestDays[0].Split(' ')[1]))
-            //    .FirstOrDefault();
+            List<SDate> orderedDates = DataLoader.AnimalContestData.ContestDays
+                .Select(d => new SDate(Convert.ToInt32(d.Split(' ')[0]), d.Split(' ')[1]))
+                .OrderBy(d => d.DaysSinceStart).ToList();
+
+            return orderedDates
+                .Where(d => d >= SDate.Now())
+                .DefaultIfEmpty(orderedDates.First())
+                .FirstOrDefault();
         }
 
         public static String GetNextContestDateKey()

@@ -4,11 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AnimalHusbandryMod.animals;
+using AnimalHusbandryMod.farmer;
 using MailFrameworkMod;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Netcode;
 using StardewModdingAPI;
+using StardewModdingAPI.Utilities;
 using StardewValley;
 using StardewValley.Buildings;
 using StardewValley.Locations;
@@ -242,19 +244,31 @@ namespace AnimalHusbandryMod.tools
                 MailDao.SaveLetter(inseminationSyringeLetter);
             }
 
-
-            MailDao.SaveLetter
-            (
-                new Letter
+            if (!DataLoader.ModConfig.DisableAnimalContest)
+            {
+                MailDao.SaveLetter
                 (
-                    "participantRibbon"
-                    , DataLoader.i18n.Get("Tool.ParticipantRibbon.Letter")
-                    , new List<Item> {new ParticipantRibbon()}
-                    , (l) => !Game1.player.mailReceived.Contains(l.Id+AnimalContestController.GetNextContestDateKey())
-                    , (l) => Game1.player.mailReceived.Add(l.Id+AnimalContestController.GetNextContestDateKey())
-                )
-            );
-
+                    new Letter
+                    (
+                        "participantRibbon"
+                        , DataLoader.i18n.Get("Tool.ParticipantRibbon.Letter")
+                        , new List<Item> { new ParticipantRibbon() }
+                        , (l) => SDate.Now().AddDays(1).Equals(AnimalContestController.GetNextContestDate()) && FarmerLoader.FarmerData.AnimalContestData.Count == 0
+                        , (l) => Game1.player.mailReceived.Add(l.Id + AnimalContestController.GetNextContestDateKey())
+                    )
+                );
+                MailDao.SaveLetter
+                (
+                    new Letter
+                    (
+                        "participantRibbon"
+                        , DataLoader.i18n.Get("Tool.ParticipantRibbon.LetterRedelivery")
+                        , new List<Item> { new ParticipantRibbon() }
+                        , (l) => SDate.Now().AddDays(1).Equals(AnimalContestController.GetNextContestDate()) && FarmerLoader.FarmerData.AnimalContestData.Count > 0
+                        , (l) => Game1.player.mailReceived.Add(l.Id + AnimalContestController.GetNextContestDateKey())
+                    )
+                );
+            }
 
             if (!DataLoader.ModConfig.DisableTreats)
             {

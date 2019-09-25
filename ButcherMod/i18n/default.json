@@ -149,7 +149,8 @@
 	"Tool.ParticipantRibbon.Description": "Use this to choose an animal for the next contest.",
 	"Tool.ParticipantRibbon.CantBeBaby": "Babies can't participate in an animal contest.",
 	"Tool.ParticipantRibbon.HasAlreadyParticipatedContest": "{{animalName}} has already participated in the animal contest.",
-	"Tool.ParticipantRibbon.Letter": "Dear @,^Tomorrow we're having our {{season}} Animal Contest in the town square.^^If you want to participate, place this ribbon on one of your animals today and I'll bring it to the event tomorrow!^We'll choose the most well treated animal of Stardew Valley.^You can participate with your pet, but farm animals have more chance of winning.^Come to town before 10 AM if want to participate or just watch.^   -Mayor Lewis",
+	"Tool.ParticipantRibbon.Letter": "Dear @,^Tomorrow I'm bringing back the Stardew Valley Animal Contest in the town square.^^If you want to participate, place this ribbon on one of your animals today and I'll bring it to the event tomorrow!^We'll choose the most well treated animal of Stardew Valley.^You can also participate with your pet, but make sure he knows some tricks.^Come to town before 10 AM, even if only to watch.^   -Mayor Lewis",
+	"Tool.ParticipantRibbon.LetterRedelivery": "Dear @,^Tomorrow we're having our traditional Stardew Valley Animal Contest in the town square.^^If you want to participate, place this ribbon on one of your animals today and I'll bring it to the event tomorrow!^We'll choose the most well treated animal of Stardew Valley.^You can also participate with your pet, but make sure he knows some tricks.^Come to town before 10 AM, even if only to watch.^   -Mayor Lewis",
 	
 	//Menus
 	"Menu.AnimalQueryMenu.PregnancyBuildingLimit": "That building has no room for a pregnant animal.",
@@ -184,6 +185,7 @@
 	"AnimalContest.Dialog.Lewis.ClosureThanks": "Before annoucing the winner I want to thank you all for comming!$h",
 	"AnimalContest.Dialog.Lewis.ClosureSuccessFirstTime": "The contest was a major success and it means a lot to me that we were able to bring it back.$h",
 	"AnimalContest.Dialog.Lewis.ClosureSuccessOtherTimes": "The contest was a major success and it's getting better everytime.$h",
+	"AnimalContest.Dialog.Lewis.EmilyUnnamedParrot": "the unnamed parrot",
 	"AnimalContest.Dialog.Lewis.WinnerAnnouncement": "But without further ado, the winner is...#$b#{{winnerName}} with {{winnerAnimalName}}!$h",
 	"AnimalContest.Dialog.Pierre.PlayerCongrats": "Congrats {{playerName}}!",
 	"AnimalContest.Dialog.Gus.PlayerCongrats": "Great {{playerName}}!",

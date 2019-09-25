@@ -6,17 +6,17 @@ using System.Threading.Tasks;
 using AnimalHusbandryMod.animals.data;
 using AnimalHusbandryMod.common;
 using StardewModdingAPI;
+using StardewValley;
 using static AnimalHusbandryMod.common.DataLoader;
 
 namespace AnimalHusbandryMod.animals.events
 {
     public class AlexAct: AbstractAct
     {
-        override 
-        public string NpcName => "Alex";
+        public override string NpcName => "Alex";
+        public override int? RequiredEvent => 2481135;
 
-        override 
-        public string GetAct(AnimalContestItem animalContestInfo, List<AnimalContestItem> history)
+        public override string GetAct(AnimalContestItem animalContestInfo, List<AnimalContestItem> history)
         {
             return GetAct(animalContestInfo, !history.Exists(h => h.Contenders.Contains(NpcName)));
         }
@@ -50,6 +50,5 @@ namespace AnimalHusbandryMod.animals.events
             }
             return alexAct.ToString();
         }
-
     }
 }

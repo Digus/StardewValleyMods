@@ -1,6 +1,6 @@
 ﻿namespace AnimalHusbandryMod.animals.events
 {
-    enum VincentAnimal
+    public enum VincentAnimal
     {
         Frog
         ,Squirrel

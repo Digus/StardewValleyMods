@@ -95,5 +95,17 @@ namespace AnimalHusbandryMod.animals.events
 
             return marnieAct.ToString();
         }
+
+        public string ChooseMarnieAnimal(Random random, List<AnimalContestItem> history)
+        {
+            List<string> animalsPool = new List<string>(AnimalContestEventBuilder.MarnieJasPossibleAnimals);
+            if (history.Count > 0)
+            {
+                List<Tuple<string, int>> animalCount = animalsPool.Select((a) => new Tuple<String, int>(a, history.Count(m => m.MarnieAnimal == a))).ToList();
+                int minCount = animalCount.Min(t2 => t2.Item2);
+                animalsPool = animalCount.Where(t1 => t1.Item2 == minCount).Select(t => t.Item1).ToList();
+            }
+            return animalsPool[random.Next(animalsPool.Count - 1)];
+        }
     }
 }

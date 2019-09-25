@@ -24,6 +24,7 @@ namespace AnimalHusbandryMod.common
         public static CookingData CookingData;
         public static AnimalData AnimalData;
         public static AnimalBuildingData AnimalBuildingData;
+        public static AnimalContestData AnimalContestData;
 
         public static String LooseSpritesName;
         public static Texture2D LooseSprites;
@@ -60,6 +61,8 @@ namespace AnimalHusbandryMod.common
             DataLoader.Helper.Data.WriteJsonFile("data\\animalBuilding.json", AnimalBuildingData);
             AnimalData = DataLoader.Helper.Data.ReadJsonFile<AnimalData>("data\\animals.json") ?? new AnimalData();
             DataLoader.Helper.Data.WriteJsonFile("data\\animals.json", AnimalData);
+            AnimalContestData = DataLoader.Helper.Data.ReadJsonFile<AnimalContestData>("data\\animalContest.json") ?? new AnimalContestData();
+            DataLoader.Helper.Data.WriteJsonFile("data\\animalContest.json", AnimalContestData);
 
             // look cooking data
             CookingData = Helper.Data.ReadJsonFile<CookingData>("data\\cooking.json") ?? new CookingData();

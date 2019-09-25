@@ -118,24 +118,28 @@ namespace AnimalHusbandryMod
                     );
                 }
 
-                harmony.Patch(
-                    original: AccessTools.Method(typeof(Event), "addSpecificTemporarySprite"),
-                    postfix: new HarmonyMethod(typeof(EventsOverrides), nameof(EventsOverrides.addSpecificTemporarySprite))
-                );
-                harmony.Patch(
-                    original: AccessTools.Method(typeof(Event), nameof(Event.skipEvent)),
-                    postfix: new HarmonyMethod(typeof(EventsOverrides), nameof(EventsOverrides.skipEvent))
-                );
+                if (!DataLoader.ModConfig.DisableAnimalContest)
+                {
+                    harmony.Patch(
+                        original: AccessTools.Method(typeof(Event), "addSpecificTemporarySprite"),
+                        postfix: new HarmonyMethod(typeof(EventsOverrides),
+                            nameof(EventsOverrides.addSpecificTemporarySprite))
+                    );
+                    harmony.Patch(
+                        original: AccessTools.Method(typeof(Event), nameof(Event.skipEvent)),
+                        postfix: new HarmonyMethod(typeof(EventsOverrides), nameof(EventsOverrides.skipEvent))
+                    );
 
-                harmony.Patch(
-                    original: AccessTools.Method(typeof(Pet), nameof(Pet.checkAction)),
-                    prefix: new HarmonyMethod(typeof(PetOverrides), nameof(PetOverrides.checkAction))
-                );
+                    harmony.Patch(
+                        original: AccessTools.Method(typeof(Pet), nameof(Pet.checkAction)),
+                        prefix: new HarmonyMethod(typeof(PetOverrides), nameof(PetOverrides.checkAction))
+                    );
 
-                harmony.Patch(
-                    original: AccessTools.Method(typeof(Pet), nameof(Pet.update), new []{typeof(GameTime),typeof(GameLocation)}),
-                    prefix: new HarmonyMethod(typeof(PetOverrides), nameof(PetOverrides.update))
-                );
+                    harmony.Patch(
+                        original: AccessTools.Method(typeof(Pet), nameof(Pet.update), new[] { typeof(GameTime), typeof(GameLocation) }),
+                        prefix: new HarmonyMethod(typeof(PetOverrides), nameof(PetOverrides.update))
+                    );
+                }
 
                 harmony.Patch(
                     original: AccessTools.Method(typeof(FarmAnimal), nameof(FarmAnimal.dayUpdate)),
@@ -164,8 +168,10 @@ namespace AnimalHusbandryMod
         {
             if (!_isEnabled)
                 return;
-
-            EventsLoader.CheckEventDay();
+            if (!DataLoader.ModConfig.DisableAnimalContest)
+            {
+                EventsLoader.CheckEventDay();
+            }
 
             DataLoader.LivingWithTheAnimalsChannel.CheckChannelDay();
             if (!DataLoader.ModConfig.DisableMeat)

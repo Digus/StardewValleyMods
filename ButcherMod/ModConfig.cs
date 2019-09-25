@@ -13,6 +13,7 @@ namespace AnimalHusbandryMod
         public bool DisablePregnancy;
         public bool DisableMeat;
         public bool DisableTreats;
+        public bool DisableAnimalContest;
         public bool DisableRancherMeatPriceAjust;
         public bool DisableMoodInscreseWithTreats;
         public bool DisableFriendshipInscreseWithTreats;

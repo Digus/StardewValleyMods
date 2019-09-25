@@ -15,13 +15,21 @@ namespace AnimalHusbandryMod.animals
 {
     public class AnimalContestEventBuilder
     {
-        public static readonly IList<string> Seasons = new ReadOnlyCollection<string>(new List<string>() {"spring", "summer", "fall", "winter"});
+        private static readonly MarnieAct MarnieAct = new MarnieAct();
+        private static readonly VincentAct VincentAct = new VincentAct();
+        private static readonly ShaneAct ShaneAct = new ShaneAct();
+        private static readonly JodiAct JodiAct = new JodiAct();
+        private static readonly EmilyAct EmilyAct = new EmilyAct();
+        private static readonly JasAct JasAct = new JasAct();
+        private static readonly AlexAct AlexAct = new AlexAct();
+        private static readonly AbigailAct AbigailAct = new AbigailAct();
+        private static readonly WillyAct WillyAct = new WillyAct();
+        private static readonly MaruAct MaruAct = new MaruAct();
 
-        public static readonly IAnimalContestAct[] PossibleThirdContenders = new IAnimalContestAct[] { new ShaneAct(), new JodiAct(), new EmilyAct()};
-        public static readonly IAnimalContestAct[] PossibleSecondContenders = new IAnimalContestAct[] { new JasAct(),new AlexAct(), new AbigailAct(), new WillyAct(), new MaruAct() };
-        public static readonly string[] PossibleAnimals = { "White_Cow", "Brown_Cow", "Goat", "Sheep", "Pig", "Brown_Chicken", "White_Chicken", "Duck", "Rabbit" };
-        public static readonly int MinPointsToPossibleWin = 11;
-        public static readonly int MinPointsToGaranteeWin = 14;
+        public static readonly IList<string> Seasons = new ReadOnlyCollection<string>(new List<string>() {"spring", "summer", "fall", "winter"});
+        public static readonly string[] MarnieJasPossibleAnimals = { "White_Cow", "Brown_Cow", "Goat", "Sheep", "Pig", "Brown_Chicken", "White_Chicken", "Duck", "Rabbit" };
+        public static readonly IAnimalContestAct[] PossibleSecondContenders = new IAnimalContestAct[] { JasAct, AlexAct, AbigailAct, WillyAct, MaruAct };
+        public static readonly IAnimalContestAct[] PossibleThirdContenders = new IAnimalContestAct[] { ShaneAct, JodiAct, EmilyAct };
 
         private const string SmallSize = "16 16";
         private const string BigSize = "32 32";
@@ -56,11 +64,11 @@ namespace AnimalHusbandryMod.animals
 
             string[] contenders = new string[3] ;
             contenders[0] = "Marnie";
-            contenders[1] = GetSecondContender(history, isPlayerJustWatching);
-            contenders[2] = GetThirdContender(history);
+            contenders[1] = GetContenderFromPool(new List<IAnimalContestAct>(PossibleSecondContenders).Where(c=> !isPlayerJustWatching || !c.NpcName.Equals("Jas")).ToList(), history)??"Maru";
+            contenders[2] = GetContenderFromPool(new List<IAnimalContestAct>(PossibleThirdContenders), history)??"Jodi";
 
-            string marnieAnimal = ChooseMarnieAnimal(random, history);
-            VincentAnimal vincentAnimal = ChooseVincentAnimal(random, history);
+            string marnieAnimal = MarnieAct.ChooseMarnieAnimal(random, history);
+            VincentAnimal vincentAnimal = VincentAct.ChooseVincentAnimal(random, history);
 
             AnimalContestItem animalContestInfo = new AnimalContestItem(eventId, contestDate, contenders.ToList(), vincentAnimal.ToString(), marnieAnimal)
             {
@@ -194,13 +202,16 @@ namespace AnimalHusbandryMod.animals
             {
                 eventAction.Append("/animate Maru false false 130 16 16 16 16 16 17 18 19 20 21 22 23 23 23 23");
             }
+            string faceDirectionPlayerPosition;
             if (!isPlayerJustWatching)
             {
                 eventAction.Append("/move farmer 0 4 2/faceDirection farmer 3");
+                faceDirectionPlayerPosition = "farmer";
             }
             else
             {
                 eventAction.Append("/move farmer 0 3 2/faceDirection farmer 3");
+                faceDirectionPlayerPosition = "Jas";
             }
                 
             if (isHaleyPresent)
@@ -210,22 +221,18 @@ namespace AnimalHusbandryMod.animals
             if (!isPlayerJustWatching)
             {
                 eventAction.Append("/faceDirection farmer 0");
-            }
-
-            if (!isPlayerJustWatching)
-            {
                 eventAction.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.Lewis.PlayerParticipant")}\"");
             }
             else
             {
                 eventAction.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.Lewis.PlayerWatching")}\"");
             }
-
+            eventAction.Append($"/faceDirection {contenders[0]} 0");
             eventAction.Append($"/pause 500/emote Lewis 40/speak Lewis \"{i18n.Get("AnimalContest.Dialog.Lewis.Attention")}\"");
-            eventAction.Append($"/faceDirection {contenders[0]} 0 true");
-            eventAction.Append($"/faceDirection {contenders[1]} 0");
+            
+            eventAction.Append($"/faceDirection {contenders[1]} 0 true");
+            eventAction.Append($"/faceDirection Pierre 0");
             eventAction.Append($"/faceDirection {contenders[2]} 0 true");
-            eventAction.Append($"/faceDirection Pierre 0 true");
             if (!contenders.Contains("Willy"))
             {
                 initialPosition.Append($"/faceDirection Willy 3");
@@ -244,23 +251,30 @@ namespace AnimalHusbandryMod.animals
             eventAction.Append(new VincentAct().GetAct(animalContestInfo, history));
 
             eventAction.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.Lewis.ContestExplanation")}\"");
-            eventAction.Append("/move Lewis 0 4 2/move Lewis -5 0 3/faceDirection Lewis 0");
+            eventAction.Append($"/faceDirection {contenders[2]} 3 true");
+            eventAction.Append("/move Lewis 0 1 2");
+            eventAction.Append($"/faceDirection {contenders[0]} 3 true");
+            eventAction.Append("/move Lewis 0 1 2");
+            eventAction.Append($"/faceDirection {faceDirectionPlayerPosition} 3 true");
+            eventAction.Append($"/faceDirection {contenders[1]} 3 true");
+            eventAction.Append("/move Lewis 0 2 2");
+            eventAction.Append("/move Lewis -5 0 3/faceDirection Lewis 0");
             eventAction.Append(new MarnieAct().GetAct(animalContestInfo, history));
-            eventAction.Append("/faceDirection Lewis 1/move Lewis 3 0 1/faceDirection Lewis 0");
+            eventAction.Append($"/faceDirection Lewis 1/move Lewis 1 0 1/faceDirection {contenders[0]} 2 true/move Lewis 2 0 1/faceDirection {contenders[0]} 1 true/faceDirection Lewis 0");
             if (!isPlayerJustWatching)
             {
                 eventAction.Append(GetPlayerEvalutionAct(animalContestInfo, farmAnimal));
             }
             else
             {
-                eventAction.Append(new JasAct().GetAct(animalContestInfo, history));
+                eventAction.Append(JasAct.GetAct(animalContestInfo, history));
             }
-            eventAction.Append("/faceDirection Lewis 1/move Lewis 5 0 1/faceDirection Lewis 0");
+            eventAction.Append($"/faceDirection Lewis 1/move Lewis 1 0 1/faceDirection {faceDirectionPlayerPosition} 2 true/move Lewis 1 0 1/faceDirection {faceDirectionPlayerPosition} 1 true/move Lewis 1 0 1/faceDirection {contenders[1]} 2 true/move Lewis 2 0 1/faceDirection {contenders[1]} 1 true/faceDirection Lewis 0");
             eventAction.Append(PossibleSecondContenders.First(c => c.NpcName.Equals(contenders[1])).GetAct(animalContestInfo, history));
-            eventAction.Append("/faceDirection Lewis 1/move Lewis 3 0 1/faceDirection Lewis 0");
-            eventAction.Append(PossibleThirdContenders.First(c=>c.NpcName.Equals(contenders[2])).GetAct(animalContestInfo, history));
-            eventAction.Append($"/faceDirection Lewis 3/faceDirection Lewis 2/speak Lewis \"{i18n.Get("AnimalContest.Dialog.Lewis.Closure")}\"");
-            eventAction.Append("/faceDirection Lewis 3/move Lewis -6 0 3/faceDirection Lewis 0/move Lewis 0 -4 0/faceDirection Lewis 3/faceDirection Lewis 2");
+            eventAction.Append($"/faceDirection Lewis 1/move Lewis 1 0 1/faceDirection {contenders[2]} 2 true/move Lewis 2 0 1/faceDirection {contenders[2]} 1 true/faceDirection Lewis 0");
+            eventAction.Append(PossibleThirdContenders.First(c => c.NpcName.Equals(contenders[2])).GetAct(animalContestInfo, history));
+            eventAction.Append($"/playMusic event1/faceDirection Lewis 3/faceDirection Lewis 2/speak Lewis \"{i18n.Get("AnimalContest.Dialog.Lewis.Closure")}\"");
+            eventAction.Append($"/faceDirection Lewis 3/move Lewis -6 0 3/faceDirection Lewis 0/move Lewis 0 -4 0/faceDirection {contenders[2]} 0 true/faceDirection {contenders[1]} 0 true/faceDirection Lewis 3/faceDirection {contenders[0]} 0 true/faceDirection {faceDirectionPlayerPosition} 0 true/faceDirection Lewis 2");
 
             eventAction.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.Lewis.ClosureThanks")}#$b#");
             if (history.Count == 0)
@@ -271,9 +285,13 @@ namespace AnimalHusbandryMod.animals
             {
                 eventAction.Append($"{i18n.Get("AnimalContest.Dialog.Lewis.ClosureSuccessOtherTimes")}\"");
             }
-            String winnerAnimalName = animalContestInfo.Winner == "Farmer" ? farmAnimal.displayName : animalContestInfo.Winner == "Emily" ? "the unnamed parrot" : "%name";
+            String winnerAnimalName = animalContestInfo.Winner == "Farmer" 
+                ? farmAnimal.displayName 
+                : animalContestInfo.Winner == "Emily" 
+                    ? i18n.Get("AnimalContest.Dialog.Lewis.EmilyUnnamedParrot") 
+                    : "%name";
             String winnerName = animalContestInfo.Winner=="Farmer"?"@":animalContestInfo.Winner;
-            eventAction.Append($"/pause 200/speak Lewis \"{ i18n.Get("AnimalContest.Dialog.Lewis.WinnerAnnouncement", new {winnerName, winnerAnimalName})}\"");
+            eventAction.Append($"/stopMusic/pause 200/speak Lewis \"{ i18n.Get("AnimalContest.Dialog.Lewis.WinnerAnnouncement", new {winnerName, winnerAnimalName})}\"");
             eventAction.Append("/playMusic event1/emote Alex 56 true/pause 60");
             if (animalContestInfo.Winner == "Farmer")
             {
@@ -354,8 +372,8 @@ namespace AnimalHusbandryMod.animals
                 animalContestInfo.FarmAnimalScore = new AnimalContestScore(friendshipPoints, monthsOld, agePoints, treatAvaregePoints, treatAvaregePoints, parentWinnerPoints);
                 int totalPoints = animalContestInfo.FarmAnimalScore.TotalPoints;
                 if (
-                    (totalPoints >= MinPointsToGaranteeWin)
-                    || (totalPoints >= MinPointsToPossibleWin
+                    (totalPoints >= DataLoader.AnimalContestData.MinPointsToGaranteeWin)
+                    || (totalPoints >= DataLoader.AnimalContestData.MinPointsToPossibleWin
                         && agePoints > 0 && treatVariatyPoints > 0 && treatAvaregePoints > 0 && friendshipPoints > 0
                         && history.Count(h => h.Winner != "Farmer") >= history.Count(h => h.Winner == "Farmer"))
                 )
@@ -437,7 +455,7 @@ namespace AnimalHusbandryMod.animals
 
         private static bool IsAnimalSmall(string animal)
         {
-            return Array.IndexOf(PossibleAnimals, animal) > 4;
+            return Array.IndexOf(MarnieJasPossibleAnimals, animal) > 4;
         }
         
         private static string GetPlayerEvalutionAct(AnimalContestItem animalContestInfo, FarmAnimal farmAnimal)
@@ -547,7 +565,7 @@ namespace AnimalHusbandryMod.animals
                             break;
                     }
                     playerAct.Append($"/pause 200");
-                    if (score.TotalPoints >= MinPointsToPossibleWin)
+                    if (score.TotalPoints >= DataLoader.AnimalContestData.MinPointsToPossibleWin)
                     {
                         playerAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.PlayerAct.Lewis.ChanceWinning")}\"");
                         playerAct.Append("/emote farmer 32");
@@ -574,78 +592,15 @@ namespace AnimalHusbandryMod.animals
             return playerAct.ToString();
         }
 
-        private static string GetSecondContender(List<AnimalContestItem> history, bool removeJasFromPool)
+        private static string GetContenderFromPool(List<IAnimalContestAct> pool, List<AnimalContestItem> history)
         {
-            List<string> contendersPool = PossibleSecondContenders.Select(c => c.NpcName).ToList();
-            if (removeJasFromPool)
-            {
-                contendersPool.Remove("Jas");
-            }
-            if (!Game1.player.eventsSeen.Contains(2481135))
-            {
-                contendersPool.Remove("Alex");
-            }
-            if (!Game1.player.eventsSeen.Contains(4) || (history.Exists(i=> i.Contenders.Contains("Abigail")) && !Game1.player.mailReceived.Contains("slimeHutchBuilt")))
-            {
-                contendersPool.Remove("Abigail");
-            }
-            if (!Game1.player.eventsSeen.Contains(711130))
-            {
-                contendersPool.Remove("Willy");
-            }
+            List<string> contendersPool = pool.Where(c => c.Available(history)).Select(c => c.NpcName).ToList();
             if (history.Count > 0)
             {
                 contendersPool.RemoveAll(history.Last().Contenders.Contains);
                 contendersPool.Sort((c1, c2) => history.Sum(d => d.Contenders.Count(c3 => c1 == c3)) - history.Sum(d => d.Contenders.Count(c3 => c2 == c3)));
             }
-            return contendersPool.DefaultIfEmpty(removeJasFromPool? "Maru" : "Jas").FirstOrDefault();
-        }
-
-        private static string GetThirdContender(List<AnimalContestItem> history)
-        {
-            List<string> contendersPool = PossibleThirdContenders.Select(c => c.NpcName).ToList();
-            if (!Game1.player.eventsSeen.Contains(3900074))
-            {
-                contendersPool.Remove("Shane");
-            }
-            if (!Game1.player.eventsSeen.Contains(463391))
-            {
-                contendersPool.Remove("Emily");
-            }
-            if (history.Count > 0)
-            {
-                contendersPool.RemoveAll(history.Last().Contenders.Contains);
-                contendersPool.Sort((c1, c2) => history.Sum(d => d.Contenders.Count(c3 => c1 == c3)) - history.Sum(d => d.Contenders.Count(c3 => c2 == c3)));
-            }
-            return contendersPool.DefaultIfEmpty("Jodi").FirstOrDefault();
-        }
-
-        private static string ChooseMarnieAnimal(Random random, List<AnimalContestItem> history)
-        {
-            List<string> animalsPool = new List<string>(PossibleAnimals);
-            if (history.Count > 0)
-            {
-                List<Tuple<string, int>> animalCount = animalsPool.Select((a) => new Tuple<String,int>(a, history.Count(m => m.MarnieAnimal == a))).ToList();
-                int minCount = animalCount.Min(t2 => t2.Item2);
-                animalsPool = animalCount.Where(t1 => t1.Item2 == minCount).Select(t=> t.Item1).ToList();
-            }
-            return animalsPool[random.Next(animalsPool.Count-1)];
-        }
-
-        private static VincentAnimal ChooseVincentAnimal(Random random, List<AnimalContestItem> history)
-        {
-            List<VincentAnimal> animalsPool = Enum.GetValues(typeof(VincentAnimal)).Cast<VincentAnimal>().ToList();
-            if (history.Count < 2)
-            {
-                animalsPool.Remove(VincentAnimal.Rabbit);
-            }
-            if (history.Count > 0)
-            {
-                List<Tuple<VincentAnimal, int>> animalCount = animalsPool.Select((a) => new Tuple<VincentAnimal, int>(a, history.Count(m => m.VincentAnimal == a.ToString()))).ToList();
-                int minCount = animalCount.Min(t2 => t2.Item2);
-                animalsPool = animalCount.Where(t1 => t1.Item2 == minCount).Select(t => t.Item1).ToList();
-            }
-            return animalsPool[random.Next(animalsPool.Count - 1)];
+            return contendersPool.DefaultIfEmpty(null).FirstOrDefault();
         }
 
         private static string GenerateKey(int id, SDate date)
@@ -662,13 +617,5 @@ namespace AnimalHusbandryMod.animals
         {
             return Convert.ToInt32($"6572{date.Year:00}{Utility.getSeasonNumber(date.Season)}{date.Day:00}");
         }
-    }
-
-    enum VincentAnimal
-    {
-        Frog
-        ,Squirrel
-        ,Bird
-        ,Rabbit
     }
 }

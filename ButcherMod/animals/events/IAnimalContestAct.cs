@@ -13,5 +13,6 @@ namespace AnimalHusbandryMod.animals.events
     {
         string GetAct(AnimalContestItem animalContestInfo, List<AnimalContestItem> history);
         string NpcName { get; }
+        bool Available(List<AnimalContestItem> history);
     }
 }

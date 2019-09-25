@@ -46,10 +46,10 @@ namespace AnimalHusbandryMod.animals.events
             return jasAct.ToString();
         }
 
-        public static string GetJasAnimal(string marnieAnimal)
+        public string GetJasAnimal(string marnieAnimal)
         {
-            int i = Array.IndexOf(AnimalContestEventBuilder.PossibleAnimals, marnieAnimal);
-            return AnimalContestEventBuilder.PossibleAnimals[((long)Game1.uniqueIDForThisGame + i) % AnimalContestEventBuilder.PossibleAnimals.Length];
+            int i = Array.IndexOf(AnimalContestEventBuilder.MarnieJasPossibleAnimals, marnieAnimal);
+            return AnimalContestEventBuilder.MarnieJasPossibleAnimals[((long)Game1.uniqueIDForThisGame + i) % AnimalContestEventBuilder.MarnieJasPossibleAnimals.Length];
         }
     }
 }

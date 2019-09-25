@@ -73,12 +73,13 @@
   <ItemGroup>
     <Compile Include="animals\Animal.cs" />
     <Compile Include="animals\AnimalContestController.cs" />
+    <Compile Include="animals\data\AnimalContestData.cs" />
     <Compile Include="animals\events\AbigailAct.cs" />
     <Compile Include="animals\events\AbstractAct.cs" />
     <Compile Include="animals\events\AlexAct.cs" />
     <Compile Include="animals\events\EmilyAct.cs" />
     <Compile Include="animals\events\IAnimalContestAct.cs" />
-    <Compile Include="animals\events\AnimalContestEventBuilder.cs" />
+    <Compile Include="animals\AnimalContestEventBuilder.cs" />
     <Compile Include="animals\data\AnimalContestItem.cs" />
     <Compile Include="animals\data\AnimalContestScore.cs" />
     <Compile Include="animals\data\AnimalStatus.cs" />
@@ -106,7 +107,8 @@
     <Compile Include="animals\events\ShaneAct.cs" />
     <Compile Include="animals\events\WillyAct.cs" />
     <Compile Include="animals\FarmAnimalOverrides.cs" />
-    <Compile Include="animals\VincentAct.cs" />
+    <Compile Include="animals\events\VincentAct.cs" />
+    <Compile Include="animals\events\VincentAnimal.cs" />
     <Compile Include="common\CustomEvent.cs" />
     <Compile Include="animals\events\EventGreenSlime.cs" />
     <Compile Include="common\EventsLoader.cs" />

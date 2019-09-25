@@ -55,7 +55,7 @@ namespace AnimalHusbandryMod.tools
             y = (int)who.GetToolLocation(false).Y;
             Rectangle rectangle = new Rectangle(x - Game1.tileSize / 2, y - Game1.tileSize / 2, Game1.tileSize, Game1.tileSize);
 
-            if (Context.IsMainPlayer && !DataLoader.ModConfig.DisableTreats)
+            if (Context.IsMainPlayer && !DataLoader.ModConfig.DisableAnimalContest)
             {
                 if (location is Farm)
                 {

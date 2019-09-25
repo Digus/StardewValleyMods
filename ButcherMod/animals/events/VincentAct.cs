@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using AnimalHusbandryMod.animals.data;
 
@@ -125,6 +126,22 @@ namespace AnimalHusbandryMod.animals.events
             vicentAct.Append($"/emote Lewis 40");
 
             return vicentAct.ToString();
+        }
+
+        public VincentAnimal ChooseVincentAnimal(Random random, List<AnimalContestItem> history)
+        {
+            List<VincentAnimal> animalsPool = Enum.GetValues(typeof(VincentAnimal)).Cast<VincentAnimal>().ToList();
+            if (history.Count < 2)
+            {
+                animalsPool.Remove(VincentAnimal.Rabbit);
+            }
+            if (history.Count > 0)
+            {
+                List<Tuple<VincentAnimal, int>> animalCount = animalsPool.Select((a) => new Tuple<VincentAnimal, int>(a, history.Count(m => m.VincentAnimal == a.ToString()))).ToList();
+                int minCount = animalCount.Min(t2 => t2.Item2);
+                animalsPool = animalCount.Where(t1 => t1.Item2 == minCount).Select(t => t.Item1).ToList();
+            }
+            return animalsPool[random.Next(animalsPool.Count - 1)];
         }
     }
 }
