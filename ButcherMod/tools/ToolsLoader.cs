@@ -261,7 +261,7 @@ namespace AnimalHusbandryMod.tools
                 (
                     new Letter
                     (
-                        "participantRibbon"
+                        "participantRibbonRedelivery"
                         , DataLoader.i18n.Get("Tool.ParticipantRibbon.LetterRedelivery")
                         , new List<Item> { new ParticipantRibbon() }
                         , (l) => SDate.Now().AddDays(1).Equals(AnimalContestController.GetNextContestDate()) && FarmerLoader.FarmerData.AnimalContestData.Count > 0

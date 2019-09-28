@@ -248,9 +248,9 @@ namespace AnimalHusbandryMod.animals
                 eventAction.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.Lewis.IntroductionOtherTimes")}\"");
             }
 
-            eventAction.Append(new VincentAct().GetAct(animalContestInfo, history));
+            //eventAction.Append(new VincentAct().GetAct(animalContestInfo, history));
 
-            eventAction.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.Lewis.ContestExplanation")}\"");
+            //eventAction.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.Lewis.ContestExplanation")}\"");
             eventAction.Append($"/faceDirection {contenders[2]} 3 true");
             eventAction.Append("/move Lewis 0 1 2");
             eventAction.Append($"/faceDirection {contenders[0]} 3 true");
@@ -263,7 +263,7 @@ namespace AnimalHusbandryMod.animals
             eventAction.Append($"/faceDirection Lewis 1/move Lewis 1 0 1/faceDirection {contenders[0]} 2 true/move Lewis 2 0 1/faceDirection {contenders[0]} 1 true/faceDirection Lewis 0");
             if (!isPlayerJustWatching)
             {
-                eventAction.Append(GetPlayerEvalutionAct(animalContestInfo, farmAnimal));
+                eventAction.Append(GetPlayerAct(animalContestInfo, farmAnimal));
             }
             else
             {
@@ -366,15 +366,15 @@ namespace AnimalHusbandryMod.animals
                 int agePoints = monthsOld < 4 ? monthsOld : Math.Max(0, 5 - (monthsOld + 1) / 2);
                 int treatVariatyPoints = Math.Min(3, participantAnimalStatus.FeedTreatsQuantity.Keys.Count);
                 int weeksOld = (farmAnimal.age.Value + 1) / 7 + 1;
-                int treatAvaregePoints = Math.Min(3, (participantAnimalStatus.FeedTreatsQuantity.Values.Sum() * 3) / weeksOld);
+                int treatAveragePoints = Math.Min(3, (participantAnimalStatus.FeedTreatsQuantity.Values.Sum() * 3) / weeksOld);
                 int parentWinnerPoints = history.Exists(h => h.Winner == "Farmer" && h.ParticipantId == farmAnimal.parentId.Value) ? 1 : 0;
 
-                animalContestInfo.FarmAnimalScore = new AnimalContestScore(friendshipPoints, monthsOld, agePoints, treatAvaregePoints, treatAvaregePoints, parentWinnerPoints);
+                animalContestInfo.FarmAnimalScore = new AnimalContestScore(friendshipPoints, monthsOld, agePoints, treatAveragePoints, treatAveragePoints, parentWinnerPoints);
                 int totalPoints = animalContestInfo.FarmAnimalScore.TotalPoints;
                 if (
                     (totalPoints >= DataLoader.AnimalContestData.MinPointsToGaranteeWin)
                     || (totalPoints >= DataLoader.AnimalContestData.MinPointsToPossibleWin
-                        && agePoints > 0 && treatVariatyPoints > 0 && treatAvaregePoints > 0 && friendshipPoints > 0
+                        && agePoints > 0 && treatVariatyPoints > 0 && treatAveragePoints > 0 && friendshipPoints > 0
                         && history.Count(h => h.Winner != "Farmer") >= history.Count(h => h.Winner == "Farmer"))
                 )
                 {
@@ -458,26 +458,27 @@ namespace AnimalHusbandryMod.animals
             return Array.IndexOf(MarnieJasPossibleAnimals, animal) > 4;
         }
         
-        private static string GetPlayerEvalutionAct(AnimalContestItem animalContestInfo, FarmAnimal farmAnimal)
+        private static string GetPlayerAct(AnimalContestItem animalContestInfo, FarmAnimal farmAnimal)
         {
             StringBuilder playerAct = new StringBuilder();
-            string animalName = farmAnimal.displayName;
 
             if (animalContestInfo.FarmAnimalScore is AnimalContestScore score)
             {
-                playerAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.PlayerAct.Lewis.Begin", new { animalName})}\"");
+
+                string animalName = farmAnimal.displayName;
+                playerAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.PlayerAct.Lewis.Begin", new { animalName })}\"");
 
                 if (score.AgePoints == 0)
                 {
-                    playerAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.PlayerAct.Lewis.DisqualifyAge", new { animalName})}\"");
+                    playerAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.PlayerAct.Lewis.DisqualifyAge", new { animalName })}\"");
                 }
                 else if (score.TreatVariatyPoints == 0)
                 {
-                    playerAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.PlayerAct.Lewis.DisqualifyTreatVariaty", new { animalName})}\"");
+                    playerAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.PlayerAct.Lewis.DisqualifyTreatVariaty", new { animalName })}\"");
                 }
-                else if (score.TreatAvaregePoints == 0)
+                else if (score.TreatAveragePoints == 0)
                 {
-                    playerAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.PlayerAct.Lewis.DisqualifyTreatAvarege", new { animalName})}\"");
+                    playerAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.PlayerAct.Lewis.DisqualifyTreatAverage", new { animalName })}\"");
                 }
                 else if (score.FriendshipPoints == 0)
                 {
@@ -545,23 +546,23 @@ namespace AnimalHusbandryMod.animals
                     }
                     playerAct.Append("#$b#");
                     string conjunction;
-                    switch (score.TreatAvaregePoints)
+                    switch (score.TreatAveragePoints)
                     {
                         case 1:
                             conjunction = score.TreatVariatyPoints < 3
-                                ? i18n.Get("AnimalContest.Dialog.PlayerAct.Lewis.TreatAvarege1.Conjunction1")
-                                : i18n.Get("AnimalContest.Dialog.PlayerAct.Lewis.TreatAvarege1.Conjunction2");
-                            playerAct.Append($"{i18n.Get("AnimalContest.Dialog.PlayerAct.Lewis.TreatAvarege1", new { conjunction })}\"");
+                                ? i18n.Get("AnimalContest.Dialog.PlayerAct.Lewis.TreatAverage1.Conjunction1")
+                                : i18n.Get("AnimalContest.Dialog.PlayerAct.Lewis.TreatAverage1.Conjunction2");
+                            playerAct.Append($"{i18n.Get("AnimalContest.Dialog.PlayerAct.Lewis.TreatAverage1", new { conjunction })}\"");
                             break;
                         case 2:
-                            playerAct.Append($"{i18n.Get("AnimalContest.Dialog.PlayerAct.Lewis.TreatAvarege2", new { animalName })}\"");
+                            playerAct.Append($"{i18n.Get("AnimalContest.Dialog.PlayerAct.Lewis.TreatAverage2", new { animalName })}\"");
                             break;
                         case 3:
                         default:
                             conjunction = score.TreatVariatyPoints < 3
-                                ? i18n.Get("AnimalContest.Dialog.PlayerAct.Lewis.TreatAvarege3.Conjunction1")
-                                : i18n.Get("AnimalContest.Dialog.PlayerAct.Lewis.TreatAvarege3.Conjunction2");
-                            playerAct.Append($"{i18n.Get("AnimalContest.Dialog.PlayerAct.Lewis.TreatAvarege3", new { conjunction })}\"");
+                                ? i18n.Get("AnimalContest.Dialog.PlayerAct.Lewis.TreatAverage3.Conjunction1")
+                                : i18n.Get("AnimalContest.Dialog.PlayerAct.Lewis.TreatAverage3.Conjunction2");
+                            playerAct.Append($"{i18n.Get("AnimalContest.Dialog.PlayerAct.Lewis.TreatAverage3", new { conjunction })}\"");
                             break;
                     }
                     playerAct.Append($"/pause 200");
@@ -584,8 +585,8 @@ namespace AnimalHusbandryMod.animals
                 string petSound = Game1.player.catPerson
                     ? i18n.Get("AnimalContest.Dialog.PlayerAct.PetSound.Cat")
                     : i18n.Get("AnimalContest.Dialog.PlayerAct.PetSound.Dog");
-                playerAct.Append($"/question null \"{i18n.Get("AnimalContest.Dialog.PlayerAct.Player.PetAwnsers", new { petName, petSound })}\"");
-                playerAct.Append($"/splitSpeak Lewis \"{i18n.Get("AnimalContest.Dialog.PlayerAct.Lewis.PetAwnsers")}\"");
+                playerAct.Append($"/question null \"{i18n.Get("AnimalContest.Dialog.PlayerAct.Player.PetAnswers", new { petName, petSound })}\"");
+                playerAct.Append($"/splitSpeak Lewis \"{i18n.Get("AnimalContest.Dialog.PlayerAct.Lewis.PetAnswers")}\"");
                 playerAct.Append("/emote farmer 28");
             }
             playerAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.PlayerAct.Lewis.Ending")}\"");

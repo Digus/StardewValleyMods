@@ -8,15 +8,19 @@ namespace AnimalHusbandryMod.animals.data
 {
     public class AnimalContestData
     {
+        public List<string> ContestDays;
         public int MinPointsToPossibleWin;
         public int MinPointsToGaranteeWin;
-        public List<string> ContestDays;
+        public int FarmAnimalFriendshipForParticipating;
+        public int PetFriendshipForParticipating;
 
         public AnimalContestData()
         {
+            ContestDays = new List<string>() { "26 spring", "26 fall" };
             MinPointsToPossibleWin = 11;
             MinPointsToGaranteeWin = 14;
-            ContestDays = new List<string>() { "26 spring", "26 fall" };
+            FarmAnimalFriendshipForParticipating = 90;
+            PetFriendshipForParticipating = 48;
         }
     }
 }

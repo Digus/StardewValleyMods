@@ -6,17 +6,17 @@
         public int MonthsOld;
         public int AgePoints;
         public int TreatVariatyPoints;
-        public int TreatAvaregePoints;
+        public int TreatAveragePoints;
         public int ParentWinnerPoints;
-        public int TotalPoints => FriendshipPoints + AgePoints + TreatVariatyPoints + TreatAvaregePoints + ParentWinnerPoints;
+        public int TotalPoints => FriendshipPoints + AgePoints + TreatVariatyPoints + TreatAveragePoints + ParentWinnerPoints;
 
-        public AnimalContestScore(int friendshipPoints, int monthsOld, int agePoints, int treatVariatyPoints, int treatAvaregePoints, int parentWinnerPoints)
+        public AnimalContestScore(int friendshipPoints, int monthsOld, int agePoints, int treatVariatyPoints, int treatAveragePoints, int parentWinnerPoints)
         {
             this.FriendshipPoints = friendshipPoints;
             this.MonthsOld = monthsOld;
             this.AgePoints = agePoints;
             this.TreatVariatyPoints = treatVariatyPoints;
-            this.TreatAvaregePoints = treatAvaregePoints;
+            this.TreatAveragePoints = treatAveragePoints;
             this.ParentWinnerPoints = parentWinnerPoints;
         }
     }

@@ -28,7 +28,7 @@ namespace AnimalHusbandryMod.animals.events
             {
                 marnieAct.Append($"/speak Lewis \"{GetDialog("Lewis.Cow")}\"");
                 marnieAct.Append($"/speak Marnie \"{GetDialog("Marnie.Astonished")}\"");
-                marnieAct.Append($"/speak Lewis \"{GetDialog("Lewis.ContinueEvalution")}\"");
+                marnieAct.Append($"/speak Lewis \"{GetDialog("Lewis.ContinueEvaluation")}\"");
                 marnieAct.Append($"/speak Caroline \"{GetDialog("Caroline")}\"");
             }
             else if (marnieAnimal.Contains("Chicken"))
@@ -41,7 +41,7 @@ namespace AnimalHusbandryMod.animals.events
             {
                 marnieAct.Append($"/speak Lewis \"{GetDialog("Lewis.Duck")}\"");
                 marnieAct.Append($"/speak Marnie \"{GetDialog("Marnie.Astonished")}\"");
-                marnieAct.Append($"/speak Lewis \"{GetDialog("Lewis.ContinueEvalution")}\"");
+                marnieAct.Append($"/speak Lewis \"{GetDialog("Lewis.ContinueEvaluation")}\"");
                 marnieAct.Append($"/speak Jodi \"{GetDialog("Jodi.Duck")}\"");
             }
             else if (marnieAnimal.Contains("Pig"))
@@ -55,7 +55,7 @@ namespace AnimalHusbandryMod.animals.events
             {
                 marnieAct.Append($"/speak Lewis \"{GetDialog("Lewis.Goat")}\"");
                 marnieAct.Append($"/speak Marnie \"{GetDialog("Marnie.Astonished")}\"");
-                marnieAct.Append($"/speak Lewis \"{GetDialog("Lewis.ContinueEvalution")}\"");
+                marnieAct.Append($"/speak Lewis \"{GetDialog("Lewis.ContinueEvaluation")}\"");
                 marnieAct.Append($"/speak Evelyn \"{GetDialog("Evelyn.Goat")}\"");
             }
             else if (marnieAnimal.Contains("Rabbit"))

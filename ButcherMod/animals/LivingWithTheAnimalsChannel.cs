@@ -31,7 +31,7 @@ namespace AnimalHusbandryMod.animals
             /*13*/_episodes.Add(4, new Episode("TV.LivingWithTheAnimals.Episode.Barn", false, false, false));
             /*16*/_episodes.Add(5, new Episode("TV.LivingWithTheAnimals.Episode.FeedingBasket", false, false, true));
             /*20*/_episodes.Add(6, new Episode("TV.LivingWithTheAnimals.Episode.CaveCarrot", false, false, true));
-            /*23*/_episodes.Add(7, new Episode("TV.LivingWithTheAnimals.Episode.MeatPrice", true, false, false));
+            /*23*/_episodes.Add(7, new Episode("TV.LivingWithTheAnimals.Episode.SpringAnimalContest", false, false, false, true));
             /*27*/_episodes.Add(8, new Episode("TV.LivingWithTheAnimals.Episode.Wheat", false, false, true));
             //SUMMER 1
             /*02*/_episodes.Add(9, new Episode("TV.LivingWithTheAnimals.Episode.CatDogTreat", false, false, true));
@@ -40,49 +40,49 @@ namespace AnimalHusbandryMod.animals
             /*13*/_episodes.Add(12, new Episode("TV.LivingWithTheAnimals.Episode.TreatMilk", false, false, true));
             /*16*/_episodes.Add(13, new Episode("TV.LivingWithTheAnimals.Episode.Insemination", false, true, false));
             /*20*/_episodes.Add(14, new Episode("TV.LivingWithTheAnimals.Episode.Grape", false, false, true));
-            /*23*/_episodes.Add(15, new Episode("TV.LivingWithTheAnimals.Episode.MeatDishesBuffs", true, false, false));
+            /*23*/_episodes.Add(15, new Episode("TV.LivingWithTheAnimals.Episode.MeatPrice", true, false, false));
             /*27*/_episodes.Add(16, new Episode("TV.LivingWithTheAnimals.Episode.BokChoy", false, false, true));
             //FALL 1
             /*02*/_episodes.Add(17, new Episode("TV.LivingWithTheAnimals.Episode.TreatIsNotHay", false, false, true));
             /*06*/_episodes.Add(18, new Episode("TV.LivingWithTheAnimals.Episode.TreatPrice", false, false, true));
             /*09*/_episodes.Add(19, new Episode("TV.LivingWithTheAnimals.Episode.PregnancyTime", false, true, false));
-            /*13*/_episodes.Add(20, new Episode("TV.LivingWithTheAnimals.Episode.Corn ", false, false, true));
+            /*13*/_episodes.Add(20, new Episode("TV.LivingWithTheAnimals.Episode.Corn", false, false, true));
             /*16*/_episodes.Add(21, new Episode("TV.LivingWithTheAnimals.Episode.PregnancyRoom", false, true, false));
-            /*20*/
-            /*23*/_episodes.Add(23, new Episode("TV.LivingWithTheAnimals.Episode.Heater", false, false, false));
-            /*27*/_episodes.Add(24, new Episode("TV.LivingWithTheAnimals.Episode.ChikenCowMeat", true, false, false));
+            /*20*/_episodes.Add(22, new Episode("TV.LivingWithTheAnimals.Episode.MeatDishesBuffs", true, false, false));
+            /*23*/_episodes.Add(23, new Episode("TV.LivingWithTheAnimals.Episode.FallAnimalContest", false, false, false, true));
+            /*27*/_episodes.Add(24, new Episode("TV.LivingWithTheAnimals.Episode.Heater", false, false, false));
             //WINTER 1
-            /*02*/
-            /*06*/
+            /*02*/_episodes.Add(25, new Episode("TV.LivingWithTheAnimals.Episode.ChikenCowMeat", true, false, false));
+            /*06*/_episodes.Add(26, new Episode("TV.LivingWithTheAnimals.Episode.AgeAnimalContest", false, false, false, true));
             /*09*/_episodes.Add(27, new Episode("TV.LivingWithTheAnimals.Episode.ProfessionAnimalProductQuality", false, false, false));
-            /*13*/
+            /*13*/_episodes.Add(28, new Episode("TV.LivingWithTheAnimals.Episode.TreatAverageAnimalContest", false, false, true, true));
             /*16*/_episodes.Add(29, new Episode("TV.LivingWithTheAnimals.Episode.RabbitPregnancy", false, true, false));
             /*20*/
             /*23*/_episodes.Add(31, new Episode("TV.LivingWithTheAnimals.Episode.Kale", false, false, true));
             /*27*/_episodes.Add(32, new Episode("TV.LivingWithTheAnimals.Episode.Cauliflower", false, false, true));
             //SPRING 2
-            /*02*/_episodes.Add(33, new Episode("TV.LivingWithTheAnimals.Episode.CrystalFruit ", false, false, true));
-            /*06*/
-            /*09*/_episodes.Add(35, new Episode("TV.LivingWithTheAnimals.Episode.BeanHotpot ", false, false, true));
-            /*13*/
+            /*02*/_episodes.Add(33, new Episode("TV.LivingWithTheAnimals.Episode.CrystalFruit", false, false, true));
+            /*06*/_episodes.Add(34, new Episode("TV.LivingWithTheAnimals.Episode.ParticipantAnimalContest", false, false, false, true));
+            /*09*/_episodes.Add(35, new Episode("TV.LivingWithTheAnimals.Episode.BeanHotpot", false, false, true));
+            /*13*/_episodes.Add(36, new Episode("TV.LivingWithTheAnimals.Episode.FriendshipAnimalContest", false, false, false, true));
             /*16*/
-            /*20*/
-            /*23*/_episodes.Add(39, new Episode("TV.LivingWithTheAnimals.Episode.Apple ", false, false, true));
+            /*20*/_episodes.Add(38, new Episode("TV.LivingWithTheAnimals.Episode.TreatVarietyAnimalContest", false, false, true, true));
+            /*23*/_episodes.Add(39, new Episode("TV.LivingWithTheAnimals.Episode.Apple", false, false, true));
             /*27*/_episodes.Add(40, new Episode("TV.LivingWithTheAnimals.Episode.Melon", false, false, true));
             //SUMMER 2
-            /*02*/
+            /*02*/_episodes.Add(41, new Episode("TV.LivingWithTheAnimals.Episode.HeritageAnimalContest", false, false, false, true));
             /*06*/
-            /*09*/_episodes.Add(43, new Episode("TV.LivingWithTheAnimals.Episode.RedCabbage ", false, false, true));
+            /*09*/_episodes.Add(43, new Episode("TV.LivingWithTheAnimals.Episode.RedCabbage", false, false, true));
             /*13*/
             /*16*/
             /*20*/
             /*23*/
-            /*27*/_episodes.Add(48, new Episode("TV.LivingWithTheAnimals.Episode.Amaranth ", false, false, true));
+            /*27*/_episodes.Add(48, new Episode("TV.LivingWithTheAnimals.Episode.Amaranth", false, false, true));
             //FALL 2
-            /*02*/_episodes.Add(49, new Episode("TV.LivingWithTheAnimals.Episode.Yam ", false, false, true));
+            /*02*/_episodes.Add(49, new Episode("TV.LivingWithTheAnimals.Episode.Yam", false, false, true));
             /*06*/
-            /*09*/_episodes.Add(51, new Episode("TV.LivingWithTheAnimals.Episode.Artichoke ", false, false, true));
-            /*13*/_episodes.Add(52, new Episode("TV.LivingWithTheAnimals.Episode.Pumpkin ", false, false, true));
+            /*09*/_episodes.Add(51, new Episode("TV.LivingWithTheAnimals.Episode.Artichoke", false, false, true));
+            /*13*/_episodes.Add(52, new Episode("TV.LivingWithTheAnimals.Episode.Pumpkin", false, false, true));
             /*16*/_episodes.Add(53, new Episode("TV.LivingWithTheAnimals.Episode.PigsWinterPart1", false, true, false));
             /*20*/
             /*23*/
@@ -118,7 +118,8 @@ namespace AnimalHusbandryMod.animals
             {
                 if ((!episode.AboutMeat || !DataLoader.ModConfig.DisableMeat)
                     && (!episode.AboutPregnancy || !DataLoader.ModConfig.DisablePregnancy)
-                    && (!episode.AboutTreats || !DataLoader.ModConfig.DisableTreats))
+                    && (!episode.AboutTreats || !DataLoader.ModConfig.DisableTreats)
+                    && (!episode.AboutContest || !DataLoader.ModConfig.DisableAnimalContest))
                 {
                     return episode;
                 }
@@ -161,13 +162,15 @@ namespace AnimalHusbandryMod.animals
         public bool AboutMeat { get; }
         public bool AboutPregnancy { get; }
         public bool AboutTreats { get; }
+        public bool AboutContest { get; }
 
-        public Episode(string text, bool aboutMeat, bool aboutPregnancy, bool aboutTreats)
+        public Episode(string text, bool aboutMeat, bool aboutPregnancy, bool aboutTreats, bool aboutContest = false)
         {
             Text = text;
             AboutMeat = aboutMeat;
             AboutPregnancy = aboutPregnancy;
             AboutTreats = aboutTreats;
+            AboutContest = aboutContest;
         }
     }
 }
