@@ -222,7 +222,7 @@ namespace AnimalHusbandryMod.animals
                         _hoverText.SetValue(DataLoader.i18n.Get("Menu.AnimalQueryMenu.ExchangeAnimalForMeat"));
                     }
                     else
-                        this.meatButton.scale = Math.Max(4f, this.sellButton.scale - 0.05f);
+                        this.meatButton.scale = Math.Max(4f, this.meatButton.scale - 0.05f);
                 }
                 if (this.pregnantStatus != null)
                 {
@@ -266,6 +266,7 @@ namespace AnimalHusbandryMod.animals
                     {
                         if (AnimalContestController.CanChangeParticipant(this._farmAnimal))
                         {
+                            this.animalContestIndicator.scale = Math.Min(4.1f, this.animalContestIndicator.scale + 0.05f);
                             _hoverText.SetValue(DataLoader.i18n.Get("Menu.AnimalQueryMenu.ChangeParticipant"));
                         }
                         else
@@ -282,6 +283,10 @@ namespace AnimalHusbandryMod.animals
                             SDate date = AnimalContestController.GetParticipantDate(this._farmAnimal);
                             _hoverText.SetValue(DataLoader.i18n.Get(messageKey, new { season = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(date.Season), contestDate = Utility.getDateStringFor(date.Day, Utility.getSeasonNumber(date.Season), date.Year) }));
                         }
+                    }
+                    else
+                    {
+                        this.animalContestIndicator.scale = Math.Max(4f, this.animalContestIndicator.scale - 0.05f);
                     }
                 }
             }
