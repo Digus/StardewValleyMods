@@ -77,7 +77,7 @@ namespace AnimalHusbandryMod.animals
             {
                 if (AnimalContestController.HasWon(farmAnimal))
                 {
-                    animalContestIndicator = new ClickableTextureComponent(new Microsoft.Xna.Framework.Rectangle(this.xPositionOnScreen + AnimalQueryMenu.width + Game1.tileSize + 4, this.yPositionOnScreen + AnimalQueryMenu.height - Game1.tileSize * 4 - IClickableMenu.borderWidth, Game1.tileSize, Game1.tileSize), DataLoader.LooseSprites, new Microsoft.Xna.Framework.Rectangle(AnimalContestController.GetParticipantDate(this._farmAnimal).Season == "spring" ? 48 : 64, 29, 16, 15), 4f, false);
+                    animalContestIndicator = new ClickableTextureComponent(new Microsoft.Xna.Framework.Rectangle(this.xPositionOnScreen + AnimalQueryMenu.width + Game1.tileSize + 4, this.yPositionOnScreen + AnimalQueryMenu.height - Game1.tileSize * 4 - IClickableMenu.borderWidth, Game1.tileSize, Game1.tileSize), DataLoader.LooseSprites, new Microsoft.Xna.Framework.Rectangle(AnimalContestController.HasFertilityBonus(this._farmAnimal) ? 48 : 64, 29, 16, 15), 4f, false);
                 }
                 else
                 {
@@ -271,17 +271,11 @@ namespace AnimalHusbandryMod.animals
                         }
                         else
                         {
-                            string messageKey;
-                            if (AnimalContestController.HasParticipated(this._farmAnimal) && AnimalContestController.HasWon(this._farmAnimal))
-                            {
-                                messageKey = "Menu.AnimalQueryMenu.Winner";
-                            }
-                            else
-                            {
-                                messageKey = "Menu.AnimalQueryMenu.ContestParticipant";
-                            }
+                            string messageKey = AnimalContestController.HasWon(this._farmAnimal) 
+                                ? "Menu.AnimalQueryMenu.Winner" 
+                                : "Menu.AnimalQueryMenu.ContestParticipant";
                             SDate date = AnimalContestController.GetParticipantDate(this._farmAnimal);
-                            _hoverText.SetValue(DataLoader.i18n.Get(messageKey, new { season = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(date.Season), contestDate = Utility.getDateStringFor(date.Day, Utility.getSeasonNumber(date.Season), date.Year) }));
+                            _hoverText.SetValue(DataLoader.i18n.Get(messageKey, new { contestDate = Utility.getDateStringFor(date.Day, Utility.getSeasonNumber(date.Season), date.Year) }));
                         }
                     }
                     else

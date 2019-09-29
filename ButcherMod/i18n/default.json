@@ -156,7 +156,9 @@
 	"Tool.ParticipantRibbon.Name": "Participant Ribbon",
 	"Tool.ParticipantRibbon.Description": "Use this to choose an animal for the next contest.",
 	"Tool.ParticipantRibbon.CantBeBaby": "Babies can't participate in an animal contest.",
-	"Tool.ParticipantRibbon.HasAlreadyParticipatedContest": "{{animalName}} has already participated in the animal contest.",
+	"Tool.ParticipantRibbon.HasAlreadyParticipatedContest": "{{animalName}} has already participated in an animal contest.",
+	"Tool.ParticipantRibbon.IsAlreadyParticipant": "{{animalName}} will participate in the next animal contest already.",
+	"Tool.ParticipantRibbon.AnotherParticipantAlready": "The next animal contest has a participant already. Remove the ribbon from {{participantName}} before choosing another animal.",
 	"Tool.ParticipantRibbon.Letter": "Dear @,^Tomorrow I'm bringing back the Stardew Valley Animal Contest in the town square.^We'll be choosing the greatest animal of Stardew Valley!^^Place this ribbon on the animal you want to participate and I'll bring it for you tomorrow.^You can also participate with your pet, but make sure it knows some tricks.^^Come to town before 10 AM to participate or just watch.^   -Mayor Lewis",
 	"Tool.ParticipantRibbon.LetterRedelivery": "Dear @,^Tomorrow we'll have our traditional Stardew Valley Animal Contest in the town square.^We'll be choosing the greatest animal of Stardew Valley!^^Place this ribbon on the animal you want to participate and I'll bring it for you tomorrow.^You can also participate with your pet, but make sure it knows some tricks.^^Come to town before 10 AM to participate or just watch.^   -Mayor Lewis",
 	
@@ -168,8 +170,8 @@
 	"Menu.AnimalQueryMenu.WantsTreatTomorrow":  "It'll want a treat tomorrow.",
 	"Menu.AnimalQueryMenu.WantsTreatInDays":  "It'll want a treat in {{numberOfDays}} days.",
 	"Menu.AnimalQueryMenu.ExchangeAnimalForMeat":  "Exchange for meat.",
-	"Menu.AnimalQueryMenu.Winner": "Winner of {{season}} Animal Contest\n{{contestDate}}",
-	"Menu.AnimalQueryMenu.ContestParticipant": "Participant of {{season}} Animal Contest\n{{contestDate}}",
+	"Menu.AnimalQueryMenu.Winner": "Animal Contest Winner\n{{contestDate}}",
+	"Menu.AnimalQueryMenu.ContestParticipant": "Animal Contest Participant\n{{contestDate}}",
 	"Menu.AnimalQueryMenu.ChangeParticipant": "Get Ribbon Back.",
 
 	//Animals

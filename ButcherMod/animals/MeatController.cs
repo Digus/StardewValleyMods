@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AnimalHusbandryMod.common;
 using AnimalHusbandryMod.animals.data;
 using AnimalHusbandryMod.meats;
+using AnimalHusbandryMod.tools;
 using Microsoft.Xna.Framework;
 using StardewValley;
 using StardewValley.Menus;
@@ -183,6 +184,11 @@ namespace AnimalHusbandryMod.animals
                     }
                 }
             }
+            if (AnimalContestController.CanChangeParticipant(farmAnimal))
+            {
+                AnimalContestController.RemoveAnimalParticipant(farmAnimal);
+                itemsToReturn.Add(new ParticipantRibbon());
+            }
 
             return itemsToReturn;
         }
@@ -220,21 +226,22 @@ namespace AnimalHusbandryMod.animals
 
         public static void AddItemsToInventoryByMenuIfNecessary(List<Item> items, ItemGrabMenu.behaviorOnItemSelect itemSelectedCallback = null)
         {
-            Game1.player.addItemsByMenuIfNecessary(
-                new List<Item>(
-                    items
+            List<Item> listItensToAdd = items.Where(i => !(i is Object)).ToList();
+            List<Object> listObjects = items
+                    .Where(i => i is Object)
                     .GroupBy(i => new {id = i.ParentSheetIndex, (i as Object).Quality })
                     .Select(g => new Object(Vector2.Zero, g.Key.id, g.Count()) {Quality = g.Key.Quality })
-                    .ToList()
-                ),
+                    .ToList();
+            listItensToAdd.AddRange(listObjects);
+            Game1.player.addItemsByMenuIfNecessary(
+                listItensToAdd,
                 itemSelectedCallback
             );
         }
 
         private static int ProduceQuality(Random random, FarmAnimal farmAnimal)
         {
-            AnimalStatus animalStatus = GetAnimalStatus(farmAnimal.myID.Value);
-            if ((animalStatus.HasWon??false) && animalStatus.DayParticipatedContest.Season == "fall")
+            if (AnimalContestController.HasProductionBonus(farmAnimal))
             {
                 return 4;
             }

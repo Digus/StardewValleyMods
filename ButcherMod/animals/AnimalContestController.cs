@@ -24,9 +24,16 @@ namespace AnimalHusbandryMod.animals
             return GetAnimalStatus(farmAnimal.myID.Value).DayParticipatedContest != null;
         }
 
+        public static bool IsParticipantPet()
+        {
+            SDate dayParticipatedContest = GetAnimalStatus(AnimalData.PetId).DayParticipatedContest;
+            return dayParticipatedContest != null && dayParticipatedContest > SDate.Now();
+        }
+
         public static bool HasParticipated(FarmAnimal farmAnimal)
         {
-            return GetAnimalStatus(farmAnimal.myID.Value).HasWon != null;
+            SDate dayParticipatedContest = GetAnimalStatus(farmAnimal.myID.Value).DayParticipatedContest;
+            return dayParticipatedContest != null && dayParticipatedContest <= SDate.Now();
         }
 
         public static bool HasWon(FarmAnimal farmAnimal)
@@ -86,6 +93,13 @@ namespace AnimalHusbandryMod.animals
             animalStatus.DayParticipatedContest = null;
         }
 
+        public static bool IsContestDate()
+        {
+            return DataLoader.AnimalContestData.ContestDays
+                .Select(d => new SDate(Convert.ToInt32(d.Split(' ')[0]), d.Split(' ')[1]))
+                .Any(d => d == SDate.Now());
+        }
+
         public static SDate GetNextContestDate()
         {
             List<SDate> orderedDates = DataLoader.AnimalContestData.ContestDays
@@ -93,8 +107,8 @@ namespace AnimalHusbandryMod.animals
                 .OrderBy(d => d.DaysSinceStart).ToList();
 
             return orderedDates
-                .Where(d => d >= SDate.Now())
-                .DefaultIfEmpty(orderedDates.First())
+                .Where(d => d > SDate.Now())
+                .DefaultIfEmpty(orderedDates.First().AddDays(112))
                 .FirstOrDefault();
         }
 
@@ -106,7 +120,12 @@ namespace AnimalHusbandryMod.animals
 
         public static long? GetNextContestParticipantId()
         {
-            AnimalStatus animalStatus = FarmerLoader.FarmerData.AnimalData.Find(s => s.DayParticipatedContest == GetNextContestDate()) ?? FarmerLoader.FarmerData.AnimalData.Find(s=> s.Id == -9223372036854775399);
+            return ContestParticipantId(GetNextContestDate());
+        }
+
+        public static long? ContestParticipantId(SDate contestDate)
+        {
+            AnimalStatus animalStatus = FarmerLoader.FarmerData.AnimalData.Find(s => s.DayParticipatedContest == contestDate);
             return animalStatus?.Id;
         }
 
@@ -205,6 +224,16 @@ namespace AnimalHusbandryMod.animals
         public static void CleanTemporaryParticipant()
         {
             _temporaryFarmAnimal = null;
+        }
+
+        public static bool HasFertilityBonus(FarmAnimal farmAnimal)
+        {
+            return HasWon(farmAnimal) && new[]{ "spring" , "summer"}.Contains(GetParticipantDate(farmAnimal).Season);
+        }
+
+        public static bool HasProductionBonus(FarmAnimal farmAnimal)
+        {
+            return HasWon(farmAnimal) && new[] { "fall", "winter" }.Contains(GetParticipantDate(farmAnimal).Season);
         }
     }
 }

@@ -36,16 +36,15 @@ namespace AnimalHusbandryMod.animals
 
         private static readonly ITranslationHelper i18n = DataLoader.i18n;
 
-        public static CustomEvent CreateEvent()
+        public static CustomEvent CreateEvent(SDate contestDate)
         {
-            SDate contestDate = AnimalContestController.GetNextContestDate();
             int eventId = GetEventId(contestDate);
             string key = GenerateKey(eventId, contestDate);
 
             Random random = new Random((int)((long)Game1.uniqueIDForThisGame * 100000 + contestDate.Year* 1000 + Utility.getSeasonNumber(contestDate.Season) *100 + contestDate.Day));
 
             //Player and Participant init
-            long? contestParticipantId = AnimalContestController.GetNextContestParticipantId();
+            long? contestParticipantId = AnimalContestController.ContestParticipantId(contestDate);
             AnimalStatus participantAnimalStatus = contestParticipantId != null ?AnimalStatusController.GetAnimalStatus((long)contestParticipantId): null;
             bool isPlayerJustWatching = participantAnimalStatus == null;
             bool isParticipantPet = !isPlayerJustWatching && participantAnimalStatus.Id == AnimalData.PetId;

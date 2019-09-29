@@ -36,10 +36,10 @@ namespace AnimalHusbandryMod.common
         public static void CheckEventDay()
         {
             CustomEvents.Clear();
-            if (SDate.Now() == AnimalContestController.GetNextContestDate())
+            if (AnimalContestController.IsContestDate())
             {
                 AnimalContestController.CleanTemporaryParticipant();
-                CustomEvents.Add(AnimalContestEventBuilder.CreateEvent());
+                CustomEvents.Add(AnimalContestEventBuilder.CreateEvent(SDate.Now()));
                 DataLoader.Helper.Content.InvalidateCache("Data\\Events\\Town");
             }
         }
