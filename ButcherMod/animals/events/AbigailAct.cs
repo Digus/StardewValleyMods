@@ -29,7 +29,7 @@ namespace AnimalHusbandryMod.animals.events
                 abigailAct.Append($"/speak Abigail \"{GetDialog("Abigail.FirstTime2")}\"");
                 abigailAct.Append($"/speak Lewis \"{GetDialog("Lewis.FirstTime3")}\"");
                 abigailAct.Append($"/speak Abigail \"{GetDialog("Abigail.FirstTime3")}\"");
-                abigailAct.Append($"/textAboveHead Pierre \"{GetDialog("Pierre.FirstTime")}\"/emote Abigail 16");
+                abigailAct.Append($"/textAboveHead Pierre \"{GetDialog("Pierre.FirstTime")}\"/pause 500/emote Abigail 16");
                 abigailAct.Append($"/speak Lewis \"{GetDialog("Lewis.FirstTime4")}\"");
             }
             else

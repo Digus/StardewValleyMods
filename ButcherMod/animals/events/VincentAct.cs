@@ -13,10 +13,10 @@ namespace AnimalHusbandryMod.animals.events
         public override string GetAct(AnimalContestItem animalContestInfo, List<AnimalContestItem> history)
         {
             Enum.TryParse(animalContestInfo.VincentAnimal, out VincentAnimal vincentAnimal);
-            return GetVincentAct(vincentAnimal, history.Count % 5 == 4, !history.Exists(h => h.VincentAnimal == vincentAnimal.ToString()));
+            return GetVincentAct(vincentAnimal, history.Count % 5 == 4, !history.Exists(h => h.VincentAnimal == vincentAnimal.ToString()), history.Count == 0);
         }
 
-        private string GetVincentAct(VincentAnimal vincentAnimal, bool isLate, bool isAnimalFirstTime)
+        private string GetVincentAct(VincentAnimal vincentAnimal, bool isLate, bool isAnimalFirstTime, bool isFirstTime)
         {
 
             StringBuilder vicentAct = new StringBuilder();
@@ -33,7 +33,7 @@ namespace AnimalHusbandryMod.animals.events
             vicentAct.Append($"/speed Vincent 5/move Vincent 0 -16 0/speak Vincent \"{GetDialog("Vincent.Begin1")}\"");
             vicentAct.Append($"/speak Lewis \"{GetDialog("Lewis.Begin2")}\"");
             vicentAct.Append($"/speak Vincent \"{GetDialog("Vincent.Begin2")}\"");
-            if (isAnimalFirstTime)
+            if (isFirstTime)
             {
                 vicentAct.Append($"/speak Lewis \"{GetDialog("Lewis.FirstTime")}\"");
                 vicentAct.Append($"/speak Vincent \"{GetDialog("Vincent.FirstTime")}\"/faceDirection Vincent 1/pause 400");
@@ -74,7 +74,7 @@ namespace AnimalHusbandryMod.animals.events
                     {
                         vicentAct.Append($"/emote Lewis 8/jump Lewis/speak Lewis \"{GetDialog("Squirrel.Lewis.FirstTime")}\"");
                         vicentAct.Append($"/faceDirection Vincent 0/speak Vincent \"{GetDialog("Squirrel.Vincent.FirstTime")}\"");
-                        vicentAct.Append($"/animate Sam false false 2000 33/textAboveHead Sam \"{GetDialog("Squirrel.Sam.FirstTime")}\"/faceDirection Vincent 1/jump Vincent");
+                        vicentAct.Append($"/animate Sam false false 2000 33/textAboveHead Sam \"{GetDialog("Squirrel.Sam.FirstTime")}\"/pause 500/faceDirection Vincent 1/jump Vincent");
                     }
                     else
                     {
@@ -85,7 +85,7 @@ namespace AnimalHusbandryMod.animals.events
                         vicentAct.Append($"/speak Jodi \"{GetDialog("Squirrel.Jodi.OtherTimes")}\"");
                         vicentAct.Append($"/faceDirection Vincent 1/textAboveHead Vincent \"{GetDialog("Squirrel.Vincent.OtherTimes2")}\"");
                     }
-                    vicentAct.Append($"/pause 2000/specificTemporarySprite animalContestSquirrelRun");
+                    vicentAct.Append($"/pause 1000/specificTemporarySprite animalContestSquirrelRun");
                     break;
                 case VincentAnimal.Bird:
                     vicentAct.Append($"/specificTemporarySprite animalContestBirdShow");
@@ -100,7 +100,7 @@ namespace AnimalHusbandryMod.animals.events
                         vicentAct.Append($"/faceDirection Vincent 0/speak Vincent \"{GetDialog("Bird.Vincent.OtherTimes1")}\"/faceDirection Vincent 1/pause 4000");
                         vicentAct.Append($"/textAboveHead Vincent \"{GetDialog("Bird.Vincent.OtherTimes2")}\"/pause 500");
                     }
-                    vicentAct.Append("/specificTemporarySprite animalContestBirdFly2");
+                    vicentAct.Append("/specificTemporarySprite animalContestBirdFly");
                     break;
                 case VincentAnimal.Rabbit:
                     vicentAct.Append("/specificTemporarySprite animalContestRabbitShow 29 64 false true");
@@ -108,8 +108,8 @@ namespace AnimalHusbandryMod.animals.events
                     {
                         vicentAct.Append($"/speak Lewis \"{GetDialog("Rabbit.Lewis.FirstTime1")}\"");
                         vicentAct.Append($"/faceDirection Vincent 0/speak Vincent \"{GetDialog("Rabbit.Vincent.FirstTime")}\"");
-                        vicentAct.Append($"/jump Lewis/emote Lewis 16/speak Lewis \"{GetDialog("Rabbit.Lewis.FirstTime")}\"");
-                        vicentAct.Append($"/speak Linus \"{GetDialog("Rabbit.Linus.FirstTime2")}\"");
+                        vicentAct.Append($"/jump Lewis/emote Lewis 16/speak Lewis \"{GetDialog("Rabbit.Lewis.FirstTime2")}\"");
+                        vicentAct.Append($"/speak Linus \"{GetDialog("Rabbit.Linus.FirstTime")}\"");
                         vicentAct.Append("/faceDirection Vincent 1");
                     }
                     else
@@ -131,6 +131,7 @@ namespace AnimalHusbandryMod.animals.events
         public VincentAnimal ChooseVincentAnimal(Random random, List<AnimalContestItem> history)
         {
             List<VincentAnimal> animalsPool = Enum.GetValues(typeof(VincentAnimal)).Cast<VincentAnimal>().ToList();
+
             if (history.Count < 2)
             {
                 animalsPool.Remove(VincentAnimal.Rabbit);
@@ -141,6 +142,11 @@ namespace AnimalHusbandryMod.animals.events
                 int minCount = animalCount.Min(t2 => t2.Item2);
                 animalsPool = animalCount.Where(t1 => t1.Item2 == minCount).Select(t => t.Item1).ToList();
             }
+            else
+            {
+                animalsPool.Remove(VincentAnimal.Bird);
+            }
+
             return animalsPool[random.Next(animalsPool.Count - 1)];
         }
     }

@@ -131,40 +131,43 @@ namespace AnimalHusbandryMod.animals
 
         public static void EndEvent(AnimalContestItem animalContestItem, bool participated = true)
         {
-            if (!participated)
+            if (Context.IsMainPlayer)
             {
-                animalContestItem.Winner = "Marnie";
-                animalContestItem.Contenders = new List<string>(new []{"Marnie"});
-                animalContestItem.VincentAnimal = null;
-                animalContestItem.MarnieAnimal = null;
-            }
-            if (animalContestItem.ParticipantId.HasValue)
-            {
-                long participantIdValue = animalContestItem.ParticipantId.Value;
-                AnimalStatus animalStatus = GetAnimalStatus(participantIdValue);
-                animalStatus.HasWon = (animalStatus.HasWon??false) || animalContestItem.Winner == "Farmer";
-                if (participantIdValue != AnimalData.PetId)
+                if (!participated)
                 {
-                    if (participated)
+                    animalContestItem.Winner = "Marnie";
+                    animalContestItem.Contenders = new List<string>(new[] { "Marnie" });
+                    animalContestItem.VincentAnimal = null;
+                    animalContestItem.MarnieAnimal = null;
+                }
+                if (animalContestItem.ParticipantId.HasValue)
+                {
+                    long participantIdValue = animalContestItem.ParticipantId.Value;
+                    AnimalStatus animalStatus = GetAnimalStatus(participantIdValue);
+                    animalStatus.HasWon = (animalStatus.HasWon ?? false) || animalContestItem.Winner == "Farmer";
+                    if (participantIdValue != AnimalData.PetId)
                     {
-                        _temporaryFarmAnimal.friendshipTowardFarmer.Value = Math.Min(1000, _temporaryFarmAnimal.friendshipTowardFarmer.Value + DataLoader.AnimalContestData.FarmAnimalFriendshipForParticipating);
-                        _temporaryFarmAnimal.happiness.Value = 255;
+                        if (participated)
+                        {
+                            _temporaryFarmAnimal.friendshipTowardFarmer.Value = Math.Min(1000, _temporaryFarmAnimal.friendshipTowardFarmer.Value + DataLoader.AnimalContestData.FarmAnimalFriendshipForParticipating);
+                            _temporaryFarmAnimal.happiness.Value = 255;
+                        }
+                        else
+                        {
+                            _temporaryFarmAnimal.friendshipTowardFarmer.Value = Math.Max(0, _temporaryFarmAnimal.friendshipTowardFarmer.Value - DataLoader.AnimalContestData.FarmAnimalFriendshipForParticipating);
+                            _temporaryFarmAnimal.happiness.Value = 0;
+                        }
+                        ReAddFarmAnimal(participantIdValue);
                     }
                     else
                     {
-                        _temporaryFarmAnimal.friendshipTowardFarmer.Value = Math.Max(0, _temporaryFarmAnimal.friendshipTowardFarmer.Value - DataLoader.AnimalContestData.FarmAnimalFriendshipForParticipating);
-                        _temporaryFarmAnimal.happiness.Value = 0;
+                        if (participated)
+                        {
+                            Pet pet = ((Pet)Game1.getCharacterFromName(Game1.player.getPetName()));
+                            pet.friendshipTowardFarmer = Math.Min(Pet.maxFriendship, pet.friendshipTowardFarmer + DataLoader.AnimalContestData.PetFriendshipForParticipating);
+                        }
+                        AnimalContestController.ReAddPet();
                     }
-                    ReAddFarmAnimal(participantIdValue);
-                }
-                else
-                {
-                    if (participated)
-                    {
-                        Pet pet = ((Pet)Game1.getCharacterFromName(Game1.player.getPetName()));
-                        pet.friendshipTowardFarmer = Math.Min(Pet.maxFriendship, pet.friendshipTowardFarmer + DataLoader.AnimalContestData.PetFriendshipForParticipating);
-                    }
-                    AnimalContestController.ReAddPet();
                 }
             }
         }

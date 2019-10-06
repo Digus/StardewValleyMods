@@ -120,6 +120,14 @@ namespace AnimalHusbandryMod
 
                 if (!DataLoader.ModConfig.DisableAnimalContest)
                 {
+                    Helper.Events.Multiplayer.ModMessageReceived += (ss, a) =>
+                    {
+                        if (a.Type == "animalContestEvent")
+                        {
+                            EventsLoader.AddEvent(a.ReadAs<CustomEvent>());
+                        }
+                    };
+
                     harmony.Patch(
                         original: AccessTools.Method(typeof(Event), "addSpecificTemporarySprite"),
                         postfix: new HarmonyMethod(typeof(EventsOverrides),
@@ -133,6 +141,11 @@ namespace AnimalHusbandryMod
                     harmony.Patch(
                         original: AccessTools.Method(typeof(Pet), nameof(Pet.checkAction)),
                         prefix: new HarmonyMethod(typeof(PetOverrides), nameof(PetOverrides.checkAction))
+                    );
+
+                    harmony.Patch(
+                        original: AccessTools.Method(typeof(Multiplayer), nameof(Multiplayer.broadcastEvent)),
+                        prefix: new HarmonyMethod(typeof(MultiplayerOverrides), nameof(MultiplayerOverrides.broadcastEvent))
                     );
 
                     harmony.Patch(

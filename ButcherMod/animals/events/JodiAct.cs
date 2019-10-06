@@ -43,7 +43,7 @@ namespace AnimalHusbandryMod.animals.events
                 }
                 else
                 {
-                    jodiAct.Append($"/showFrame Sam 33/textAboveHead Sam \"{GetDialog("Sam.Single")}\"/pause 2000/showFrame Sam 12");
+                    jodiAct.Append($"/animate Sam false false 1500 33/textAboveHead Sam \"{GetDialog("Sam.Single")}\"/pause 2000");
                 }
                 jodiAct.Append($"/speak Lewis \"{GetDialog("Lewis.OtherTimes2")}\"");
                 jodiAct.Append($"/pause 1500/speak Lewis \"{GetDialog("Lewis.OtherTimes3")}\"");

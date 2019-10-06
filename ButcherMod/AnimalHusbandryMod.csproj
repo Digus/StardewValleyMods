@@ -122,6 +122,7 @@
     <Compile Include="animals\TreatsController.cs" />
     <Compile Include="common\EventOverrides.cs" />
     <Compile Include="common\ItemUtility.cs" />
+    <Compile Include="common\MultiplayerOverrides.cs" />
     <Compile Include="meats\MeatOverrides.cs" />
     <Compile Include="ModConfig.cs" />
     <Compile Include="animals\data\RabbitItem.cs" />

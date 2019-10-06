@@ -36,7 +36,7 @@ namespace AnimalHusbandryMod.common
         public static void CheckEventDay()
         {
             CustomEvents.Clear();
-            if (AnimalContestController.IsContestDate())
+            if (Context.IsMainPlayer && !DataLoader.ModConfig.DisableAnimalContest && AnimalContestController.IsContestDate())
             {
                 AnimalContestController.CleanTemporaryParticipant();
                 CustomEvents.Add(AnimalContestEventBuilder.CreateEvent(SDate.Now()));
@@ -57,6 +57,21 @@ namespace AnimalHusbandryMod.common
                     }
                 }
             });
+        }
+
+        public static void BroadcastEvent(int evtId)
+        {
+            CustomEvent customEvent = CustomEvents.FirstOrDefault(e => e.Key.StartsWith(evtId + "/"));
+            if (customEvent != null)
+            {
+                DataLoader.Helper.Multiplayer.SendMessage(customEvent, "animalContestEvent");
+            }
+        }
+
+        public static void AddEvent(CustomEvent customEvent)
+        {
+            CustomEvents.Add(customEvent);
+            DataLoader.Helper.Content.InvalidateCache("Data\\Events\\Town");
         }
     }
 }

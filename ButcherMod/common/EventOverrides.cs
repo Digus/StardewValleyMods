@@ -37,7 +37,6 @@ namespace AnimalHusbandryMod.common
         private static readonly Vector2 SquirrelOffset = new Vector2(-6f, -20f);
         private static readonly Vector2 CrabOffset = new Vector2(0f, -6f);
 
-
         public static void addSpecificTemporarySprite(Event __instance, ref string key, GameLocation location, string[] split)
         {
             if (!key.StartsWith("animalContest"))
@@ -418,11 +417,11 @@ namespace AnimalHusbandryMod.common
                     lastSprite = new TemporaryAnimatedSprite(tileSheets_critters,
                         new Microsoft.Xna.Framework.Rectangle(32, 96, 32, 32), 60f, 3, 1,
                         position, false, true,
-                        (float)((64 * Game1.tileSize) / 10000f) + 0.00002f, 0.0f, Color.White, (float)Game1.pixelZoom,
+                        (float)((64 * Game1.tileSize) / 10000f) + 0.00003f, 0.0f, Color.White, (float)Game1.pixelZoom,
                         0.0f, 0.0f, 0.0f, false)
                     {
                         endFunction = new TemporaryAnimatedSprite.endBehavior(addBirdFlap),
-                        motion = new Vector2(6f, -0.5f)
+                        motion = new Vector2(6f, -1.3f)
                     };
                     location.TemporarySprites.Add(lastSprite);
                     count--;
@@ -432,11 +431,11 @@ namespace AnimalHusbandryMod.common
                     lastSprite = new TemporaryAnimatedSprite(tileSheets_critters,
                         new Microsoft.Xna.Framework.Rectangle(64, 96, 32, 32), 60f, 1, 1,
                         lastSprite.Position, false, true,
-                        (float)((64 * Game1.tileSize) / 10000f) + 0.00002f, 0.0f, Color.White, (float)Game1.pixelZoom,
+                        (float)((64 * Game1.tileSize) / 10000f) + 0.00003f, 0.0f, Color.White, (float)Game1.pixelZoom,
                         0.0f, 0.0f, 0.0f, false)
                     {
                         endFunction = new TemporaryAnimatedSprite.endBehavior((Action<int>)AddBirdFly),
-                        motion = new Vector2(6f, -0.5f)
+                        motion = new Vector2(6f, -1.3f)
                     };
                     location.TemporarySprites.Add(lastSprite);
                 };

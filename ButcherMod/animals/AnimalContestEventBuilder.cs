@@ -76,12 +76,15 @@ namespace AnimalHusbandryMod.animals
             animalContestInfo = PickTheWinner(animalContestInfo, history, participantAnimalStatus, farmAnimal, contenders[2]);
 
             // Deciding who will be present
-            bool isHaleyPresent = Game1.player.eventsSeen.Contains(14);
-            bool isKentPresent = Game1.year > 1 && contenders.Contains("Jodi");
-            bool isSebastianPresent = vincentAnimal == VincentAnimal.Frog || contenders.Contains("Abigail");
-            bool isDemetriusPresent = contenders.Contains("Maru");
-            bool isClintPresent = contenders.Contains("Emily");
-            bool isLeahPresent = Game1.player.eventsSeen.Contains(53); 
+            bool isHaleyWatching = Game1.player.eventsSeen.Contains(14) || Game1.player.spouse == "Haley";
+            bool isKentWatching = Game1.year > 1 && contenders.Contains("Jodi");
+            bool isSebastianWatching = Game1.player.spouse != "Sebastian" && (vincentAnimal == VincentAnimal.Frog || contenders.Contains("Abigail"));
+            bool isPennyWatching = Game1.player.spouse != "Penny" && !isSebastianWatching && (contenders.Contains("Maru") || contenders.Contains("Jas") || isPlayerJustWatching || Game1.player.getFriendshipHeartLevelForNPC("Penny") >= 4);
+            bool isDemetriusWatching = contenders.Contains("Maru");
+            bool isClintWatching = contenders.Contains("Emily");
+            bool isLeahWatching = Game1.player.spouse != "Leah" && Game1.player.eventsSeen.Contains(53);
+            bool isLinusWatching = !contenders.Contains("Linus") && Game1.player.eventsSeen.Contains(26);
+            bool isShaneWatching = !contenders.Contains("Shane") && (contenders.Contains("Jas") || isPlayerJustWatching || Game1.player.eventsSeen.Contains(3900074) || Game1.player.spouse == "Shane");
 
             StringBuilder initialPosition = new StringBuilder();
             initialPosition.Append("none/-100 -100");
@@ -98,7 +101,7 @@ namespace AnimalHusbandryMod.animals
             initialPosition.Append($" {contenders[0]} 24 66 3");
             initialPosition.Append($" {contenders[1]} 30 66 1");
             initialPosition.Append($" {contenders[2]} 33 66 1");
-            if (isKentPresent)
+            if (isKentWatching)
             {
                 initialPosition.Append($" Kent 36 66 3");
             }
@@ -109,7 +112,7 @@ namespace AnimalHusbandryMod.animals
             }
             initialPosition.Append($" Sam 37 66 3");
             initialPosition.Append($" Gus 36 68 3");
-            initialPosition.Append($" Evelyn 30 69 0");
+            initialPosition.Append($" Evelyn 30 69 1");
             initialPosition.Append($" George 31 69 0");
             if (!contenders.Contains("Alex"))
             {
@@ -117,28 +120,35 @@ namespace AnimalHusbandryMod.animals
             }
             initialPosition.Append($" Pierre 26 69 1");
             initialPosition.Append($" Caroline 27 69 3");
-            initialPosition.Append($" Elliott 33 69 0");
+            if (Game1.player.spouse != "Elliott")
+            {
+                initialPosition.Append($" Elliott 33 69 0");
+            }
             if (!contenders.Contains("Willy"))
             {
                 initialPosition.Append($" Willy 35 69 0");
             }
-            if (isHaleyPresent)
+            if (isHaleyWatching)
             {
                 initialPosition.Append($" Haley 22 68 1");
             }
-            if (isLeahPresent)
+            if (isLeahWatching)
             {
                 initialPosition.Append($" Leah 22 70 0");
             }
-            if (isSebastianPresent)
+            if (isSebastianWatching)
             {
                 initialPosition.Append($" Sebastian 37 67 3");
             }
-            if (isDemetriusPresent)
+            else if (isPennyWatching)
+            {
+                initialPosition.Append($" Penny 37 67 3");
+            }
+            if (isDemetriusWatching)
             {
                 initialPosition.Append($" Demetrius 32 70 0");
             }
-            if (isClintPresent)
+            if (isClintWatching)
             {
                 initialPosition.Append($" Clint 34 70 0");
             }
@@ -150,19 +160,25 @@ namespace AnimalHusbandryMod.animals
             {
                 initialPosition.Append($" Jas 23 70 0");
             }
-            if (!contenders.Contains("Shane") && (contenders.Contains("Jas") || isPlayerJustWatching))
+            if (isShaneWatching)
             {
                 initialPosition.Append($" Shane 24 70 0");
             }
 
             bool linusAlternateAnimal = false;
-            if (!contenders.Contains("Linus"))
+            if (isLinusWatching)
             {
                 initialPosition.Append($" Linus 37 70 3");
             }
             else
             {
                 linusAlternateAnimal = history.Count(h => h.Contenders.Contains("Linus")) % 2 == new Random((int)Game1.uniqueIDForThisGame).Next(2);
+            }
+
+            if (Game1.player.spouse != null && !new string[] {"Shane", "Alex", "Sam", "Haley"}.Contains(Game1.player.spouse) &&
+                !animalContestInfo.Contenders.Contains(Game1.player.spouse))
+            {
+                initialPosition.Append($" {Game1.player.spouse} 25 69 0");
             }
 
             initialPosition.Append($" Vincent 28 80 0");
@@ -175,7 +191,7 @@ namespace AnimalHusbandryMod.animals
                 }
                 else
                 {
-                    initialPosition.Append(" cat 26 66 2/showFrame Cat 18");
+                    initialPosition.Append(" cat 26 66 2/positionOffset Cat -8 0/showFrame Cat 18");
                 }
             }
             else
@@ -187,13 +203,13 @@ namespace AnimalHusbandryMod.animals
                     initialPosition.Append($"/addTemporaryActor {playerAnimalTextureName} {(isPlayerAnimalSmall? SmallSize : BigSize)} {(isPlayerAnimalSmall?26:25)} 66 0 false Animal participant/showFrame participant 0");
                 }
             }
-            initialPosition.Append("/specificTemporarySprite animalContest/broadcastEvent/skippable");
+            initialPosition.Append("/specificTemporarySprite animalContest/skippable");
             initialPosition.Append(GetContendersAnimalPosition(contenders, marnieAnimal, isPlayerJustWatching, linusAlternateAnimal));
 
             initialPosition.Append("/viewport 28 65 true");
 
             StringBuilder eventAction = new StringBuilder();
-            if (isHaleyPresent)
+            if (isHaleyWatching)
             {
                 eventAction.Append("/showFrame Haley 25");
             }
@@ -213,7 +229,7 @@ namespace AnimalHusbandryMod.animals
                 faceDirectionPlayerPosition = "Jas";
             }
                 
-            if (isHaleyPresent)
+            if (isHaleyWatching)
             {
                 eventAction.Append("/pause 200/playSound cameraNoise/shake Haley 50/screenFlash .5/pause 1000/showFrame Haley 5/pause 1000");
             }
@@ -227,11 +243,12 @@ namespace AnimalHusbandryMod.animals
                 eventAction.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.Lewis.PlayerWatching")}\"");
             }
             eventAction.Append($"/faceDirection {contenders[0]} 0");
-            eventAction.Append($"/pause 500/emote Lewis 40/speak Lewis \"{i18n.Get("AnimalContest.Dialog.Lewis.Attention")}\"");
-            
-            eventAction.Append($"/faceDirection {contenders[1]} 0 true");
+            eventAction.Append($"/pause 1000/emote Lewis 40/speak Lewis \"{i18n.Get("AnimalContest.Dialog.Lewis.Attention")}\"");
+
+            eventAction.Append($"/pause 100/faceDirection {contenders[1]} 0 true");
             eventAction.Append($"/faceDirection Pierre 0");
             eventAction.Append($"/faceDirection {contenders[2]} 0 true");
+            eventAction.Append($"/faceDirection Evelyn 0 true");
             if (!contenders.Contains("Willy"))
             {
                 initialPosition.Append($"/faceDirection Willy 3");
@@ -247,9 +264,9 @@ namespace AnimalHusbandryMod.animals
                 eventAction.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.Lewis.IntroductionOtherTimes")}\"");
             }
 
-            //eventAction.Append(new VincentAct().GetAct(animalContestInfo, history));
+            eventAction.Append(new VincentAct().GetAct(animalContestInfo, history));
 
-            //eventAction.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.Lewis.ContestExplanation")}\"");
+            eventAction.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.Lewis.ContestExplanation")}\"");
             eventAction.Append($"/faceDirection {contenders[2]} 3 true");
             eventAction.Append("/move Lewis 0 1 2");
             eventAction.Append($"/faceDirection {contenders[0]} 3 true");
@@ -273,7 +290,7 @@ namespace AnimalHusbandryMod.animals
             eventAction.Append($"/faceDirection Lewis 1/move Lewis 1 0 1/faceDirection {contenders[2]} 2 true/move Lewis 2 0 1/faceDirection {contenders[2]} 1 true/faceDirection Lewis 0");
             eventAction.Append(PossibleThirdContenders.First(c => c.NpcName.Equals(contenders[2])).GetAct(animalContestInfo, history));
             eventAction.Append($"/playMusic event1/faceDirection Lewis 3/faceDirection Lewis 2/speak Lewis \"{i18n.Get("AnimalContest.Dialog.Lewis.Closure")}\"");
-            eventAction.Append($"/faceDirection Lewis 3/move Lewis -6 0 3/faceDirection Lewis 0/move Lewis 0 -4 0/faceDirection {contenders[2]} 0 true/faceDirection {contenders[1]} 0 true/faceDirection Lewis 3/faceDirection {contenders[0]} 0 true/faceDirection {faceDirectionPlayerPosition} 0 true/faceDirection Lewis 2");
+            eventAction.Append($"/faceDirection Lewis 3/move Lewis -6 0 3/faceDirection Lewis 0/move Lewis 0 -4 0/faceDirection {contenders[1]} 0 true/faceDirection {contenders[0]} 0 true/faceDirection Lewis 3/faceDirection {contenders[2]} 0 true/faceDirection {faceDirectionPlayerPosition} 0 true/faceDirection Lewis 2");
 
             eventAction.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.Lewis.ClosureThanks")}#$b#");
             if (history.Count == 0)
@@ -295,19 +312,39 @@ namespace AnimalHusbandryMod.animals
             if (animalContestInfo.Winner == "Farmer")
             {
                 eventAction.Append("/emote farmer 32 true/pause 500/emote participant 20 true/pause 1000");
-                if (Game1.player.getFriendshipHeartLevelForNPC("Pierre")>=4)
+                if (Game1.player.spouse != null)
                 {
-                    eventAction.Append($"/textAboveHead Pierre \"{i18n.Get("AnimalContest.Dialog.Pierre.PlayerCongrats", new {playerName = Game1.player.Name})}\"/pause 1000");
+                    eventAction.Append($"/textAboveHead {Game1.player.spouse} \"{i18n.Get("AnimalContest.Dialog.Spouse.PlayerCongrats")}\"/pause 1500");
                 }
                 if (Game1.player.getFriendshipHeartLevelForNPC("Gus") >= 4)
                 {
-                    eventAction.Append($"/textAboveHead Gus \"{i18n.Get("AnimalContest.Dialog.Gus.", new { playerName = Game1.player.Name })}\"/pause 1000");
+                    eventAction.Append($"/textAboveHead Gus \"{i18n.Get("AnimalContest.Dialog.Gus.PlayerCongrats", new { playerName = Game1.player.Name })}\"/pause 1500");
+                }
+                else if (Game1.player.spouse != null)
+                {
+                    eventAction.Append($"/pause 1500");
+                }
+                if (Game1.player.getFriendshipHeartLevelForNPC("Pierre") >= 4)
+                {
+                    eventAction.Append($"/textAboveHead Pierre \"{i18n.Get("AnimalContest.Dialog.Pierre.PlayerCongrats", new { playerName = Game1.player.Name })}\"/pause 1500");
+                }
+                if (isLinusWatching && Game1.player.getFriendshipHeartLevelForNPC("Linus") >= 4)
+                {
+                    eventAction.Append($"/textAboveHead Linus \"{i18n.Get("AnimalContest.Dialog.Linus.PlayerCongrats", new { playerName = Game1.player.Name })}\"/pause 1500");
+                }
+                else if (Game1.player.getFriendshipHeartLevelForNPC("Pierre") >= 4)
+                {
+                    eventAction.Append($"/pause 1500");
                 }
             }
             else if (animalContestInfo.Winner == "Marnie")
             {
                 eventAction.Append("/specificTemporarySprite animalContestMarnieWinning/warp Marnie -2000 -2000/emote marnieAnimal 20 true/pause 500");
-                eventAction.Append($"/emote Jas 32 true/pause 1000/textAboveHead Shane \"{i18n.Get("AnimalContest.Dialog.Shane.MarnieCongrats")}\"/pause 1000");
+                eventAction.Append($"/emote Jas 32 true/pause 1500");
+                if (isShaneWatching || animalContestInfo.Contenders.Contains("Shane"))
+                {
+                    eventAction.Append($"/textAboveHead Shane \"{i18n.Get("AnimalContest.Dialog.Shane.MarnieCongrats")}\"/pause 1000");
+                }
             }
             else if (animalContestInfo.Winner == "Shane")
             {
@@ -318,7 +355,7 @@ namespace AnimalHusbandryMod.animals
             {
                 eventAction.Append("/specificTemporarySprite animalContestEmilyParrotAction/emote Emily 20 true");
                 eventAction.Append($"/textAboveHead Clint \"{i18n.Get("AnimalContest.Dialog.Clint.EmilyContrats")}\"/pause 500");
-                if (isHaleyPresent)
+                if (isHaleyWatching)
                 {
                     eventAction.Append($"/textAboveHead Haley \"{i18n.Get("AnimalContest.Dialog.Haley.EmilyContrats")}\"/pause 500");
                 }
@@ -326,17 +363,25 @@ namespace AnimalHusbandryMod.animals
             }
             else if (animalContestInfo.Winner == "Jodi")
             {
-                eventAction.Append("/emote jodiAnimal 20 true/emote Jodi 32 true");
-                eventAction.Append($"/pause 1000/textAboveHead Sam \"{i18n.Get("AnimalContest.Dialog.Sam.JodiContrats")}\"/pause 1500");
-                eventAction.Append($"/textAboveHead Caroline \"{i18n.Get("AnimalContest.Dialog.Caroline.JodiContrats")}\"/pause 1500");
-                if (isKentPresent)
+                eventAction.Append("/emote jodiAnimal 20 true/emote Jodi 32 true/pause 1000");
+                if (isKentWatching)
                 {
-                    eventAction.Append($"/textAboveHead Kent \"{i18n.Get("AnimalContest.Dialog.Kent.JodiContrats")}\"/pause 1000");
+                    eventAction.Append($"/textAboveHead Kent \"{i18n.Get("AnimalContest.Dialog.Kent.JodiContrats")}\"/pause 1500");
                 }
+                eventAction.Append($"/textAboveHead Caroline \"{i18n.Get("AnimalContest.Dialog.Caroline.JodiContrats")}\"/pause 1500");
+                eventAction.Append($"/textAboveHead Sam \"{i18n.Get("AnimalContest.Dialog.Sam.JodiContrats")}\"/pause 1500");
             }
             eventAction.Append($"/textAboveHead Evelyn \"{i18n.Get("AnimalContest.Dialog.Evelyn.Contrats")}\"");
+            if (isHaleyWatching)
+            {
+                eventAction.Append("/showFrame Haley 25/pause 1000/playSound cameraNoise/shake Haley 50/screenFlash .5/pause 1000/showFrame Haley 5/pause 1500");
+            }
+            else
+            {
+                eventAction.Append($"/pause 3000");
+            }
 
-            eventAction.Append($"/pause 3000/speak Lewis \"{i18n.Get("AnimalContest.Dialog.Lewis.Ending")}\"/faceDirection Lewis 3/move Lewis -2 0 3 true");
+            eventAction.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.Lewis.Ending")}\"/faceDirection Lewis 3/move Lewis -2 0 3 true");
             if (animalContestInfo.Winner != "Marnie")
             {
                 eventAction.Append($"/faceDirection Marnie 0/move Marnie 0 -2 0 true");
@@ -368,7 +413,7 @@ namespace AnimalHusbandryMod.animals
                 int treatAveragePoints = Math.Min(3, (participantAnimalStatus.FeedTreatsQuantity.Values.Sum() * 3) / weeksOld);
                 int parentWinnerPoints = history.Exists(h => h.Winner == "Farmer" && h.ParticipantId == farmAnimal.parentId.Value) ? 1 : 0;
 
-                animalContestInfo.FarmAnimalScore = new AnimalContestScore(friendshipPoints, monthsOld, agePoints, treatAveragePoints, treatAveragePoints, parentWinnerPoints);
+                animalContestInfo.FarmAnimalScore = new AnimalContestScore(friendshipPoints, monthsOld, agePoints, treatVariatyPoints, treatAveragePoints, parentWinnerPoints);
                 int totalPoints = animalContestInfo.FarmAnimalScore.TotalPoints;
                 if (
                     (totalPoints >= DataLoader.AnimalContestData.MinPointsToGaranteeWin)

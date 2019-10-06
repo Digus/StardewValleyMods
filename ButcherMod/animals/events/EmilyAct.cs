@@ -25,7 +25,7 @@ namespace AnimalHusbandryMod.animals.events
                 emilyAct.Append($"/jump Lewis/emote Lewis 16/speak Lewis \"{GetDialog("Lewis.FirstTime1")}\"");
                 emilyAct.Append($"/speak Emily \"{GetDialog("Emily.FirstTime1")}\"");
                 emilyAct.Append($"/speak Lewis \"{GetDialog("Lewis.FirstTime2")}\"");
-                emilyAct.Append($"/speak Emily \"{GetDialog("Emily.FirstTim2")}\"");
+                emilyAct.Append($"/speak Emily \"{GetDialog("Emily.FirstTime2")}\"");
                 emilyAct.Append($"/speak Lewis \"{GetDialog("Lewis.FirstTime3")}\"");
                 emilyAct.Append($"/speak Emily \"{GetDialog("Emily.FirstTime3")}\"");
                 emilyAct.Append($"/emote Lewis 8/speak Lewis \"{GetDialog("Lewis.FirstTime4")}\"");
