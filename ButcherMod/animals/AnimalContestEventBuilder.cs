@@ -94,7 +94,15 @@ namespace AnimalHusbandryMod.animals
             }
             else
             {
-                initialPosition.Append("/farmer 37 62 2");
+                if (IsWatchingPositionNorthEast(animalContestInfo))
+                {
+                    initialPosition.Append("/farmer 37 62 2");
+                }
+                else
+                {
+                    initialPosition.Append($"/farmer 28 70 {(IsWatchingPositionSouthEest(animalContestInfo)?"1":"3")}");
+                }
+                
             }
 
             initialPosition.Append(" Lewis 28 63 2");
@@ -201,6 +209,10 @@ namespace AnimalHusbandryMod.animals
                     string playerAnimalTextureName = farmAnimal.Sprite.textureName.Value.Split('\\')[1].Replace(' ', '_');
                     bool isPlayerAnimalSmall = IsAnimalSmall(playerAnimalTextureName);
                     initialPosition.Append($"/addTemporaryActor {playerAnimalTextureName} {(isPlayerAnimalSmall? SmallSize : BigSize)} {(isPlayerAnimalSmall?26:25)} 66 0 false Animal participant/showFrame participant 0");
+                    if (!isPlayerAnimalSmall)
+                    {
+                        initialPosition.Append("/positionOffset participant 5 0");
+                    }
                 }
             }
             initialPosition.Append("/specificTemporarySprite animalContest/skippable");
@@ -220,13 +232,29 @@ namespace AnimalHusbandryMod.animals
             string faceDirectionPlayerPosition;
             if (!isPlayerJustWatching)
             {
-                eventAction.Append("/move farmer 0 4 2/faceDirection farmer 3");
                 faceDirectionPlayerPosition = "farmer";
+                eventAction.Append("/move farmer 0 4 2/faceDirection farmer 3/emote farmer 32");
+                //eventAction.Append($"/emote {(isParticipantPet?!Game1.player.catPerson? "Dog":"Cat": "participant")} 20");
             }
             else
             {
-                eventAction.Append("/move farmer 0 3 2/faceDirection farmer 3");
                 faceDirectionPlayerPosition = "Jas";
+                if (IsWatchingPositionNorthEast(animalContestInfo))
+                {
+                    eventAction.Append("/move farmer 0 3 2/faceDirection farmer 3");
+                }
+                else if (IsWatchingPositionSouthEest(animalContestInfo))
+                {
+                    eventAction.Append("/move farmer 2 0 1/faceDirection farmer 0");
+                }
+                else
+                {
+                    eventAction.Append("/move farmer -3 0 3/faceDirection farmer 0");
+                }
+                if (Game1.player.spouse != null)
+                {
+                    eventAction.Append($"/emote {Game1.player.spouse} 20 true/emote farmer 20");
+                }
             }
                 
             if (isHaleyWatching)
@@ -311,7 +339,7 @@ namespace AnimalHusbandryMod.animals
             eventAction.Append("/playMusic event1/emote Alex 56 true/pause 60");
             if (animalContestInfo.Winner == "Farmer")
             {
-                eventAction.Append("/emote farmer 32 true/pause 500/emote participant 20 true/pause 1000");
+                eventAction.Append("/emote farmer 32 true/pause 500");
                 if (Game1.player.spouse != null)
                 {
                     eventAction.Append($"/textAboveHead {Game1.player.spouse} \"{i18n.Get("AnimalContest.Dialog.Spouse.PlayerCongrats")}\"/pause 1500");
@@ -339,7 +367,7 @@ namespace AnimalHusbandryMod.animals
             }
             else if (animalContestInfo.Winner == "Marnie")
             {
-                eventAction.Append("/specificTemporarySprite animalContestMarnieWinning/warp Marnie -2000 -2000/emote marnieAnimal 20 true/pause 500");
+                eventAction.Append("/specificTemporarySprite animalContestMarnieWinning/warp Marnie -2000 -2000/pause 500");
                 eventAction.Append($"/emote Jas 32 true/pause 1500");
                 if (isShaneWatching || animalContestInfo.Contenders.Contains("Shane"))
                 {
@@ -401,6 +429,22 @@ namespace AnimalHusbandryMod.animals
             return new CustomEvent(key,script);
         }
 
+        private static bool IsWatchingPositionNorthEast(AnimalContestItem animalContestInfo)
+        {
+            return Game1.player.spouse == null 
+                   || Game1.player.spouse == "Sam" 
+                   || (Game1.player.spouse == "Shane" && animalContestInfo.Contenders.Contains("Shane"))
+                   || (Game1.player.spouse == "Emily" && animalContestInfo.Contenders.Contains("Emily"));
+        }
+
+        private static bool IsWatchingPositionSouthEest(AnimalContestItem animalContestInfo)
+        {
+            return Game1.player.spouse == null
+                   || Game1.player.spouse == "Alex"
+                   || (Game1.player.spouse == "Maru" && animalContestInfo.Contenders.Contains("Maru"))
+                   || (Game1.player.spouse == "Abigail" && animalContestInfo.Contenders.Contains("Abigail"));
+        }
+
         private static AnimalContestItem PickTheWinner(AnimalContestItem animalContestInfo, List<AnimalContestItem> history, AnimalStatus participantAnimalStatus, FarmAnimal farmAnimal, string thirdContender)
         {
             if (farmAnimal != null)
@@ -442,6 +486,10 @@ namespace AnimalHusbandryMod.animals
             StringBuilder sb = new StringBuilder();
             bool isMarnieAnimalSmall = IsAnimalSmall(marnieAnimal);
             sb.Append($"/addTemporaryActor {marnieAnimal} {(isMarnieAnimalSmall ? SmallSize : BigSize)} {(isMarnieAnimalSmall ? 23 : 22)} 66 0 false Animal marnieAnimal/showFrame marnieAnimal 0");
+            if (!isMarnieAnimalSmall)
+            {
+                sb.Append("/positionOffset marnieAnimal 8 0");
+            }
             if (contenders.Contains("Alex"))
             {
                 sb.Append("/specificTemporarySprite animalContestJoshDog");
@@ -457,10 +505,18 @@ namespace AnimalHusbandryMod.animals
                 if (isPlayerJustWatching)
                 {
                     sb.Append($"/addTemporaryActor Baby{(jasAnimal.Equals("Duck") ? "White_Chicken" : jasAnimal)} {(isJasAnimalSmall ? SmallSize : BigSize)} {(isJasAnimalSmall ? 26 : 25)} 66 0 false Animal jasAnimal/showFrame jasAnimal 0");
+                    if (!isJasAnimalSmall)
+                    {
+                        sb.Append("/positionOffset jasAnimal 12 0");
+                    }
                 }
                 else
                 {
                     sb.Append($"/addTemporaryActor Baby{(jasAnimal.Equals("Duck") ? "White_Chicken" : jasAnimal)} {(isJasAnimalSmall ? SmallSize : BigSize)} 31 66 0 false Animal jasAnimal/showFrame jasAnimal 0");
+                    if (!isJasAnimalSmall)
+                    {
+                        sb.Append("/positionOffset jasAnimal -17 0");
+                    }
                 }
             }
             if (contenders.Contains("Linus"))

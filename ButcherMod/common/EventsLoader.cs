@@ -41,6 +41,7 @@ namespace AnimalHusbandryMod.common
                 AnimalContestController.CleanTemporaryParticipant();
                 CustomEvents.Add(AnimalContestEventBuilder.CreateEvent(SDate.Now()));
                 DataLoader.Helper.Content.InvalidateCache("Data\\Events\\Town");
+                Game1.showGlobalMessage(Game1.content.LoadString("Strings\\StringsFromCSFiles:Game1.cs.2640", DataLoader.i18n.Get("AnimalContest.Message.Name")) + Game1.content.LoadString("Strings\\StringsFromCSFiles:Game1.cs.2637"));
             }
         }
 

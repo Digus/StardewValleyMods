@@ -185,6 +185,7 @@
 	"Animal.Dinosaur.BabyName": "hatchling",
 
 	//Animal Contest
+	"AnimalContest.Message.Name": "Animal Contest",
 	"AnimalContest.Dialog.Lewis.PlayerParticipant":  "@! You're here!$h#$b#Well folks, now that all competitors are here, let's get started.",
 	"AnimalContest.Dialog.Lewis.PlayerWatching":  "@! You came!$h#$b#Well folks, I think we're ready, let's get started.",
 	"AnimalContest.Dialog.Lewis.Attention":  "Ahem... Attention everyone!$u!",
@@ -318,7 +319,7 @@
 	"AnimalContest.Dialog.JasAct.Jas.FirstTime1": "But you said you're choosing the greatest animal of Stardew Valley, and everybody knows that babies are the greatest.$h",
 	"AnimalContest.Dialog.JasAct.Lewis.FirstTime2": "But that's not how the contest work.",
 	"AnimalContest.Dialog.JasAct.Jas.FirstTime2": "Why not? I think you should change the rules then.$4",
-	"AnimalContest.Dialog.JasAct.Lewis.FirstTime3": "I can't...",
+	"AnimalContest.Dialog.JasAct.Lewis.FirstTime3": "I can't just...",
 	"AnimalContest.Dialog.JasAct.Marnie.FirstTime": "Lewis, she is just a kid. Why can't she participate? The contest was one person short anyway.$u",
 	"AnimalContest.Dialog.JasAct.Lewis.FirstTime4": "Hmm... yeah... okay. Come here little {{babyAnimalName}}. Let's take a look at you.",
 	"AnimalContest.Dialog.JasAct.Lewis.FirstTime5": "Your baby is really cute Jas.$h",
