@@ -170,17 +170,7 @@ namespace AnimalHusbandryMod.tools
 
         public void LoadMail()
         {
-
-            string meatCleaverText;
-            if (DataLoader.ModConfig.Softmode)
-            {
-                meatCleaverText = DataLoader.i18n.Get("Tool.MeatCleaver.Letter.Soft");
-            }
-            else
-            {
-                meatCleaverText = DataLoader.i18n.Get("Tool.MeatCleaver.Letter");
-            }
-
+            string meatCleaverText = DataLoader.i18n.Get(DataLoader.ModConfig.Softmode ? "Tool.MeatCleaver.Letter.Soft" : "Tool.MeatCleaver.Letter");
 
             bool HasAnimal()
             {
@@ -197,7 +187,7 @@ namespace AnimalHusbandryMod.tools
 
             bool MeatCleaverCondition(Letter l)
             {
-                return HasAnimal() && !HasTool(typeof(MeatCleaver));
+                return !DataLoader.ModConfig.DisableMeatToolLetter && HasAnimal() && !HasTool(typeof(MeatCleaver));
             }
 
             List<string> validBuildingsForInsemination = new List<string>(new string[] { "Deluxe Barn", "Big Barn", "Deluxe Coop" });

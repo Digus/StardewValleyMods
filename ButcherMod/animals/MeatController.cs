@@ -241,7 +241,7 @@ namespace AnimalHusbandryMod.animals
 
         private static int ProduceQuality(Random random, FarmAnimal farmAnimal)
         {
-            if (AnimalContestController.HasProductionBonus(farmAnimal))
+            if (!DataLoader.ModConfig.DisableContestBonus && AnimalContestController.HasProductionBonus(farmAnimal))
             {
                 return 4;
             }
