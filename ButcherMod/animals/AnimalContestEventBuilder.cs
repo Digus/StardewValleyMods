@@ -83,7 +83,7 @@ namespace AnimalHusbandryMod.animals
             bool isDemetriusWatching = contenders.Contains("Maru");
             bool isClintWatching = contenders.Contains("Emily");
             bool isLeahWatching = Game1.player.spouse != "Leah" && Game1.player.eventsSeen.Contains(53);
-            bool isLinusWatching = !contenders.Contains("Linus") && Game1.player.eventsSeen.Contains(26);
+            bool isLinusWatching = !contenders.Contains("Linus") && (Game1.player.eventsSeen.Contains(26) || vincentAnimal == VincentAnimal.Rabbit);
             bool isShaneWatching = !contenders.Contains("Shane") && (contenders.Contains("Jas") || isPlayerJustWatching || Game1.player.eventsSeen.Contains(3900074) || Game1.player.spouse == "Shane");
 
             StringBuilder initialPosition = new StringBuilder();
@@ -417,7 +417,7 @@ namespace AnimalHusbandryMod.animals
             eventAction.Append($"/pause 1500/showFrame Lewis 16/globalFade/viewport -1000 -1000");
             if (animalContestInfo.Winner == "Farmer")
             {
-                string bonusType = contestDate.Season == "spring" || contestDate.Season == "summer" ? "fertility" : "production";
+                string bonusType = contestDate.Season == "spring" || contestDate.Season == "summer" ? i18n.Get("AnimalContest.Message.Reward.Fertility") : i18n.Get("AnimalContest.Message.Reward.Production");
                 eventAction.Append($"/playSound reward/message \"{i18n.Get("AnimalContest.Message.Reward", new { animalName = farmAnimal.displayName, bonusType })}\"");
             }
             eventAction.Append("/specificTemporarySprite animalContestEnding/end");

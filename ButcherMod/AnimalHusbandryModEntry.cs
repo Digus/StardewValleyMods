@@ -69,7 +69,33 @@ namespace AnimalHusbandryMod
                 _feedingBasketSpawnKey = DataLoader.ModConfig.AddFeedingBasketToInventoryKey;
 
                 if (!DataLoader.ModConfig.DisableMeat)
+                {
                     ModHelper.ConsoleCommands.Add("player_addallmeatrecipes", "Add all meat recipes to the player.", DataLoader.RecipeLoader.AddAllMeatRecipes);
+                    if (DataLoader.ModConfig.Softmode)
+                    {
+                        ModHelper.ConsoleCommands.Add("player_addmeatwand", "Add Meat Wand to inventory.", (n, d) => Game1.player.addItemToInventory(new MeatCleaver()));
+                    }
+                    else
+                    {
+                        ModHelper.ConsoleCommands.Add("player_addmeatcleaver", "Add Meat Cleaver to inventory.", (n, d) => Game1.player.addItemToInventory(new MeatCleaver()));
+                    }
+                }
+
+                if (!DataLoader.ModConfig.DisablePregnancy)
+                {
+                    ModHelper.ConsoleCommands.Add("player_addinseminationsyringe", "Add Insemination Syringe to inventory.", (n, d) => Game1.player.addItemToInventory(new InseminationSyringe()));
+                }
+
+                if (!DataLoader.ModConfig.DisableTreats)
+                {
+                    ModHelper.ConsoleCommands.Add("player_addfeedingbasket", "Add Feeding Basket to inventory.", (n, d) => Game1.player.addItemToInventory(new FeedingBasket()));
+                }
+
+                if (!DataLoader.ModConfig.DisableAnimalContest)
+                {
+                    ModHelper.ConsoleCommands.Add("player_addparticipantribbon", "Add Participant Ribbon to inventory.", (n, d) => Game1.player.addItemToInventory(new ParticipantRibbon()));
+                }
+
 
                 if (_meatCleaverSpawnKey != null || _inseminationSyringeSpawnKey != null || _feedingBasketSpawnKey != null)
                     Helper.Events.Input.ButtonPressed += this.OnButtonPressed;

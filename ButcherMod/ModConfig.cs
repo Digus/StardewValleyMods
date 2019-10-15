@@ -20,5 +20,7 @@ namespace AnimalHusbandryMod
         public bool EnableTreatsCountAsAnimalFeed;
         public bool DisableMeatFromDinosaur;
         public double PercentualAjustOnFriendshipInscreaseFromProfessions = 0.25;
+        public bool DisableContestBonus;
+        public bool DisableMeatToolLetter;
     }
 }

@@ -192,6 +192,14 @@ namespace AnimalHusbandryMod.animals
                     Game1.player.addItemByMenuIfNecessary(new ParticipantRibbon());
                 }
             }
+            else
+            {
+                if(this.yesButton.containsPoint(x, y) && AnimalContestController.CanChangeParticipant(this._farmAnimal))
+                {
+                    AnimalContestController.RemoveAnimalParticipant(this._farmAnimal);
+                    MeatController.ThrowItem(new List<Item>(new Item[]{ new ParticipantRibbon() }), this._farmAnimal);
+                }
+            }
 
             base.receiveLeftClick(x, y, playSound);
         }
