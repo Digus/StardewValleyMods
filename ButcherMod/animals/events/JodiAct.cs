@@ -38,7 +38,7 @@ namespace AnimalHusbandryMod.animals.events
                     jodiAct.Append($"/speak Sam \"{GetDialog("Sam.Married")}\"");
                     string prefix = Game1.year > 1 
                         ? GetDialog("Jodi.OtherTimes2.PrefixYear2") 
-                        : "AnimalContest.Dialog.JodiAct.Jodi.OtherTimes2.PrefixYear1";
+                        : GetDialog("Jodi.OtherTimes2.PrefixYear1");
                     jodiAct.Append($"/speak Jodi \"{GetDialog("Jodi.OtherTimes2", new { prefix })}\"");
                 }
                 else

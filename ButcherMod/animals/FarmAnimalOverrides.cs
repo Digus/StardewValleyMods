@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AnimalHusbandryMod.common;
 using Microsoft.Xna.Framework;
 using Netcode;
 using StardewValley;
@@ -15,7 +16,8 @@ namespace AnimalHusbandryMod.animals
         {
             if (__instance.harvestType.Value == FarmAnimal.layHarvestType 
                 && __instance.daysSinceLastLay.Value == 0 
-                && AnimalContestController.HasFertilityBonus(__instance) )
+                && AnimalContestController.HasFertilityBonus(__instance)
+                && !DataLoader.ModConfig.DisableContestBonus)
             {
                 GameLocation homeIndoors = __instance.home.indoors.Value;
                 StardewValley.Object originalLayedObject = homeIndoors.Objects[__instance.getTileLocation()];
@@ -31,7 +33,7 @@ namespace AnimalHusbandryMod.animals
                     }
                 }
             }
-            else if (AnimalContestController.HasProductionBonus(__instance))
+            else if (!DataLoader.ModConfig.DisableContestBonus && AnimalContestController.HasProductionBonus(__instance))
             {
                 if (__instance.harvestType.Value == FarmAnimal.grabHarvestType)
                 {

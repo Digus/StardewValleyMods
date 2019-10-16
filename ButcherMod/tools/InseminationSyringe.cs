@@ -180,7 +180,7 @@ namespace AnimalHusbandryMod.tools
                 Animal? foundAnimal = AnimalExtension.GetAnimalFromType(this._animal.type.Value);
                 who.Stamina -= ((float) 4f - (float)who.FarmingLevel * 0.2f);
                 int daysUtillBirth = (DataLoader.AnimalData.getAnimalItem((Animal)foundAnimal) as ImpregnatableAnimalItem).MinimumDaysUtillBirth;
-                if (AnimalContestController.HasFertilityBonus(_animal))
+                if (!DataLoader.ModConfig.DisableContestBonus && AnimalContestController.HasFertilityBonus(_animal))
                 {
                     daysUtillBirth -=  (int)Math.Round(daysUtillBirth/10.0,MidpointRounding.AwayFromZero);
                 }
