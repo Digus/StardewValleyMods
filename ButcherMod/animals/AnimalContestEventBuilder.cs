@@ -415,7 +415,7 @@ namespace AnimalHusbandryMod.animals
                 eventAction.Append($"/faceDirection Marnie 0/move Marnie 0 -2 0 true");
             }
             eventAction.Append($"/pause 1500/showFrame Lewis 16/globalFade/viewport -1000 -1000");
-            if (animalContestInfo.Winner == "Farmer")
+            if (animalContestInfo.Winner == "Farmer" && !DataLoader.ModConfig.DisableContestBonus)
             {
                 string bonusType = contestDate.Season == "spring" || contestDate.Season == "summer" ? i18n.Get("AnimalContest.Message.Reward.Fertility") : i18n.Get("AnimalContest.Message.Reward.Production");
                 eventAction.Append($"/playSound reward/message \"{i18n.Get("AnimalContest.Message.Reward", new { animalName = farmAnimal.displayName, bonusType })}\"");
