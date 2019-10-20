@@ -206,8 +206,20 @@ namespace AnimalHusbandryMod.animals
             {
                 if (!isPlayerJustWatching)
                 {
-                    string playerAnimalTextureName = farmAnimal.Sprite.textureName.Value.Split('\\')[1].Replace(' ', '_');
-                    bool isPlayerAnimalSmall = IsAnimalSmall(playerAnimalTextureName);
+                    string spriteTextureName = farmAnimal.Sprite.textureName.Value;
+                    string playerAnimalTextureName;
+                    if (spriteTextureName.StartsWith("Animals\\"))
+                    {
+                        playerAnimalTextureName = farmAnimal.Sprite.textureName.Value
+                            .Substring(farmAnimal.Sprite.textureName.Value.IndexOf('\\')+1)
+                            .Replace(' ', '_');
+                    }
+                    else
+                    {
+                        DataLoader.AssetsToLoad["Animals\\" + spriteTextureName.Replace('_', ' ')] = farmAnimal.Sprite.Texture;
+                        playerAnimalTextureName = spriteTextureName.Replace(' ', '_'); ;
+                    }
+                    bool isPlayerAnimalSmall = IsAnimalSmall(farmAnimal);
                     initialPosition.Append($"/addTemporaryActor {playerAnimalTextureName} {(isPlayerAnimalSmall? SmallSize : BigSize)} {(isPlayerAnimalSmall?26:25)} 66 0 false Animal participant/showFrame participant 0");
                     if (!isPlayerAnimalSmall)
                     {
@@ -556,6 +568,11 @@ namespace AnimalHusbandryMod.animals
         private static bool IsAnimalSmall(string animal)
         {
             return Array.IndexOf(MarnieJasPossibleAnimals, animal) > 4;
+        }
+
+        private static bool IsAnimalSmall(FarmAnimal farmAnimal)
+        {
+            return farmAnimal.Sprite.SpriteWidth == 16;
         }
         
         private static string GetPlayerAct(AnimalContestItem animalContestInfo, FarmAnimal farmAnimal)

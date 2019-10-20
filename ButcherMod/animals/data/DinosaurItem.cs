@@ -6,20 +6,16 @@ using System.Threading.Tasks;
 
 namespace AnimalHusbandryMod.animals.data
 {
-    public class ChickenItem : AnimalItem, MeatAnimalItem, TreatItem
+    public class DinosaurItem : AnimalItem, TreatItem
     {
-        public int MinimalNumberOfMeat { get; set; }
-        public int MaximumNumberOfMeat { get; set; }
         public int MinimumDaysBetweenTreats { get; set; }
-        public object[] LikedTreats { get ; set ; }
+        public object[] LikedTreats { get; set; }
         public ISet<int> LikedTreatsId { get; set; }
 
-        public ChickenItem()
+        public DinosaurItem()
         {
-            MinimalNumberOfMeat = 1;
-            MaximumNumberOfMeat = 4;
             MinimumDaysBetweenTreats = 4;
-            LikedTreats = new object[] {78, 262, 270};
+            LikedTreats = new object[] { 78, 18, 418 };
             LikedTreatsId = new HashSet<int>();
         }
     }

@@ -74,6 +74,9 @@
     <Compile Include="animals\Animal.cs" />
     <Compile Include="animals\AnimalContestController.cs" />
     <Compile Include="animals\data\AnimalContestData.cs" />
+    <Compile Include="animals\data\CustomAnimalItem.cs" />
+    <Compile Include="animals\data\DinosaurItem.cs" />
+    <Compile Include="animals\data\MeatAnimalItem.cs" />
     <Compile Include="animals\events\AbigailAct.cs" />
     <Compile Include="animals\events\AbstractAct.cs" />
     <Compile Include="animals\events\AlexAct.cs" />

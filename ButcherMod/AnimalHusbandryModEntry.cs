@@ -96,6 +96,7 @@ namespace AnimalHusbandryMod
                     ModHelper.ConsoleCommands.Add("player_addparticipantribbon", "Add Participant Ribbon to inventory.", (n, d) => Game1.player.addItemToInventory(new ParticipantRibbon()));
                 }
 
+                ModHelper.ConsoleCommands.Add("config_customanimalstemplate", "Add custom animal template to the data\\animal.json file for every found custom animal .", DataLoader.AddCustomAnimalsTemplate);
 
                 if (_meatCleaverSpawnKey != null || _inseminationSyringeSpawnKey != null || _feedingBasketSpawnKey != null)
                     Helper.Events.Input.ButtonPressed += this.OnButtonPressed;
@@ -198,6 +199,7 @@ namespace AnimalHusbandryMod
             DataLoader.ToolsLoader.ReplaceOldTools();
             FarmerLoader.LoadData();
             DataLoader.ToolsLoader.LoadMail();
+            DataLoader.AnimalData.FillLikedTreatsIds();
         }
 
         /// <summary>Raised after the game begins a new day (including when the player loads a save).</summary>
