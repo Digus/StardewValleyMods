@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using AnimalHusbandryMod.animals;
+using AnimalHusbandryMod.animals.data;
 using AnimalHusbandryMod.common;
 using AnimalHusbandryMod.farmer;
 using AnimalHusbandryMod.meats;
@@ -23,9 +26,6 @@ namespace AnimalHusbandryMod
         internal static IModHelper ModHelper;
         internal static IMonitor monitor;
         internal static DataLoader DataLoader;
-        private SButton? _meatCleaverSpawnKey;
-        private SButton? _inseminationSyringeSpawnKey;
-        private SButton? _feedingBasketSpawnKey;
         private bool _isEnabled = true;
 
 
@@ -64,9 +64,7 @@ namespace AnimalHusbandryMod
             else
             {
                 DataLoader = new DataLoader(Helper);
-                _meatCleaverSpawnKey = DataLoader.ModConfig.AddMeatCleaverToInventoryKey;
-                _inseminationSyringeSpawnKey = DataLoader.ModConfig.AddInseminationSyringeToInventoryKey;
-                _feedingBasketSpawnKey = DataLoader.ModConfig.AddFeedingBasketToInventoryKey;
+                DataLoader.LoadContentPacksCommand();
 
                 if (!DataLoader.ModConfig.DisableMeat)
                 {
@@ -96,10 +94,14 @@ namespace AnimalHusbandryMod
                     ModHelper.ConsoleCommands.Add("player_addparticipantribbon", "Add Participant Ribbon to inventory.", (n, d) => Game1.player.addItemToInventory(new ParticipantRibbon()));
                 }
 
+                ModHelper.ConsoleCommands.Add("config_create_customanimaltemplates", "Add custom animal templates in the data\\animal.json file for every loaded custom animal.", DataLoader.AddCustomAnimalsTemplate);
+                ModHelper.ConsoleCommands.Add("config_reload_contentpacks_animalhusbandrymod", "Reload all content packs for animal husbandry mod.",DataLoader.LoadContentPacksCommand);
+                ModHelper.ConsoleCommands.Add("world_removealltools_animalhusbandrymod", "Remove all custom tools added by the animal husbandry mod.",DataLoader.ToolsLoader.RemoveAllToolsCommand);
 
-                if (_meatCleaverSpawnKey != null || _inseminationSyringeSpawnKey != null || _feedingBasketSpawnKey != null)
+                if (DataLoader.ModConfig.AddMeatCleaverToInventoryKey != null || DataLoader.ModConfig.AddInseminationSyringeToInventoryKey != null || DataLoader.ModConfig.AddFeedingBasketToInventoryKey != null)
+                {
                     Helper.Events.Input.ButtonPressed += this.OnButtonPressed;
-
+                }
 
                 SaveHandler.BeforeRemoving += (s, e) => { if(Context.IsMainPlayer) ItemUtility.RemoveItemAnywhere(typeof(ParticipantRibbon));};
 
@@ -198,6 +200,7 @@ namespace AnimalHusbandryMod
             DataLoader.ToolsLoader.ReplaceOldTools();
             FarmerLoader.LoadData();
             DataLoader.ToolsLoader.LoadMail();
+            DataLoader.AnimalData.FillLikedTreatsIds();
         }
 
         /// <summary>Raised after the game begins a new day (including when the player loads a save).</summary>
@@ -247,13 +250,13 @@ namespace AnimalHusbandryMod
             if (!_isEnabled || !Context.IsWorldReady)
                 return;
 
-            if (e.Button == _meatCleaverSpawnKey)
+            if (e.Button == DataLoader.ModConfig.AddMeatCleaverToInventoryKey)
                 Game1.player.addItemToInventory(new MeatCleaver());
 
-            if (e.Button == _inseminationSyringeSpawnKey)
+            if (e.Button == DataLoader.ModConfig.AddInseminationSyringeToInventoryKey)
                 Game1.player.addItemToInventory(new InseminationSyringe());
                 
-            if (e.Button == _feedingBasketSpawnKey)
+            if (e.Button == DataLoader.ModConfig.AddFeedingBasketToInventoryKey)
                 Game1.player.addItemToInventory(new FeedingBasket());
         }
     }

@@ -23,10 +23,14 @@ namespace AnimalHusbandryMod.animals
         {
             foreach (Animal animal in System.Enum.GetValues(typeof(Animal)))
             {
-                if (type.Contains(animal.ToString()))
+                if (type.Contains(animal.ToString()) && animal != Animal.CustomAnimal)
                 {
                     return animal;
                 }
+            }
+            if (DataLoader.AnimalData.CustomAnimals.Exists(a => type.Contains(a.Name)))
+            {
+                return Animal.CustomAnimal;
             }
             return null;
         }
