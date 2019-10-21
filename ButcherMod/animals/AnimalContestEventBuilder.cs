@@ -45,7 +45,7 @@ namespace AnimalHusbandryMod.animals
 
             //Player and Participant init
             long? contestParticipantId = AnimalContestController.ContestParticipantId(contestDate);
-            AnimalStatus participantAnimalStatus = contestParticipantId != null ?AnimalStatusController.GetAnimalStatus((long)contestParticipantId): null;
+            AnimalStatus participantAnimalStatus = contestParticipantId != null ? AnimalStatusController.GetAnimalStatus((long)contestParticipantId): null;
             bool isPlayerJustWatching = participantAnimalStatus == null;
             bool isParticipantPet = !isPlayerJustWatching && participantAnimalStatus.Id == AnimalData.PetId;
             FarmAnimal farmAnimal = null;
@@ -56,7 +56,14 @@ namespace AnimalHusbandryMod.animals
             else if (!isPlayerJustWatching)
             {
                 farmAnimal = AnimalContestController.GetAnimal(participantAnimalStatus.Id);
-                AnimalContestController.TemporalyRemoveFarmAnimal(farmAnimal);
+                if (farmAnimal == null)
+                {
+                    isPlayerJustWatching = true;
+                }
+                else
+                {
+                    AnimalContestController.TemporalyRemoveFarmAnimal(farmAnimal);
+                }
             }
 
             List<AnimalContestItem> history = FarmerLoader.FarmerData.AnimalContestData;
@@ -246,7 +253,12 @@ namespace AnimalHusbandryMod.animals
             if (!isPlayerJustWatching)
             {
                 faceDirectionPlayerPosition = "farmer";
-                eventAction.Append("/move farmer 0 4 2/faceDirection farmer 3/emote farmer 32");
+                eventAction.Append("/move farmer 0 4 2/faceDirection farmer 3");
+                if (isParticipantPet)
+                {
+                    eventAction.Append($"/playSound {(Game1.player.catPerson ? "cat" : "dog_bark")}");
+                }
+                eventAction.Append("/emote farmer 32");
                 //eventAction.Append($"/emote {(isParticipantPet?!Game1.player.catPerson? "Dog":"Cat": "participant")} 20");
             }
             else
