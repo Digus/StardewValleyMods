@@ -9,6 +9,6 @@ namespace AnimalHusbandryMod.animals.data
     public interface ImpregnatableAnimalItem 
     {
         int? MinimumDaysUtillBirth { get; set; }
-        bool CanUseDeluxeItemForPregancy { get; set; }
+        bool CanUseDeluxeItemForPregnancy { get; set; }
     }
 }

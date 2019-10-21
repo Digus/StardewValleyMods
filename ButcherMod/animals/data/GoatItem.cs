@@ -14,7 +14,7 @@ namespace AnimalHusbandryMod.animals.data
         public object[] LikedTreats { get; set; }
         public ISet<int> LikedTreatsId { get; set; }
         public int? MinimumDaysUtillBirth { get; set; }
-        public bool CanUseDeluxeItemForPregancy { get; set; }
+        public bool CanUseDeluxeItemForPregnancy { get; set; }
 
         public GoatItem()
         {
@@ -24,7 +24,7 @@ namespace AnimalHusbandryMod.animals.data
             LikedTreats = new object[] { 78, 398, 613, 274, 436 };
             LikedTreatsId = new HashSet<int>();
             MinimumDaysUtillBirth = 10;
-            CanUseDeluxeItemForPregancy = true;
+            CanUseDeluxeItemForPregnancy = true;
         }
     }
 }

@@ -187,7 +187,7 @@ namespace AnimalHusbandryMod.tools
                 {
                     daysUtillBirth -=  (int)Math.Round(daysUtillBirth/10.0,MidpointRounding.AwayFromZero);
                 }
-                PregnancyController.AddPregancy(new PregnancyItem(this._animal.myID.Value, daysUtillBirth, this._animal.allowReproduction.Value));
+                PregnancyController.AddPregnancy(new PregnancyItem(this._animal.myID.Value, daysUtillBirth, this._animal.allowReproduction.Value));
                 this._animal.allowReproduction.Value = false;
                 --this.attachments[0].Stack;
                 if (this.attachments[0].Stack <= 0)
@@ -216,7 +216,7 @@ namespace AnimalHusbandryMod.tools
         public bool CheckCorrectProduct(FarmAnimal animal, StardewValley.Object @object)
         {
             return animal.defaultProduceIndex.Value == @object.ParentSheetIndex 
-                   || (((ImpregnatableAnimalItem)DataLoader.AnimalData.GetAnimalItem(animal)).CanUseDeluxeItemForPregancy 
+                   || (((ImpregnatableAnimalItem)DataLoader.AnimalData.GetAnimalItem(animal)).CanUseDeluxeItemForPregnancy 
                        && animal.deluxeProduceIndex.Value == @object.ParentSheetIndex) ;
         }
 

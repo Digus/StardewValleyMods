@@ -16,7 +16,7 @@ namespace AnimalHusbandryMod.animals.data
         public object[] LikedTreats { get; set; }
         public ISet<int> LikedTreatsId { get; set; }
         public int? MinimumDaysUtillBirth { get; set; }
-        public bool CanUseDeluxeItemForPregancy { get; set; }
+        public bool CanUseDeluxeItemForPregnancy { get; set; }
 
         public CustomAnimalItem(string name)
         {

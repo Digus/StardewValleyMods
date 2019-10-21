@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using AnimalHusbandryMod.animals;
 using AnimalHusbandryMod.animals.data;
@@ -7,8 +8,11 @@ using AnimalHusbandryMod.cooking;
 using AnimalHusbandryMod.meats;
 using AnimalHusbandryMod.recipes;
 using AnimalHusbandryMod.tools;
+using MailFrameworkMod;
 using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
+using StardewValley;
+using StardewValley.Locations;
 
 namespace AnimalHusbandryMod.common
 {
@@ -57,6 +61,12 @@ namespace AnimalHusbandryMod.common
             {
                 RecipeLoader = new RecipesLoader();
                 RecipeLoader.LoadMails();
+            }
+
+            //load treats mail
+            if (!ModConfig.DisableTreats)
+            {
+                LoadTreatsMail();
             }
 
             // load animal data
@@ -215,6 +225,36 @@ namespace AnimalHusbandryMod.common
             return (T)AssetsToLoad[asset.AssetName];
         }
 
+        private static void LoadTreatsMail()
+        {
+            MailDao.SaveLetter(
+                new Letter(
+                    "DinosaursFirtTreat"
+                    , DataLoader.i18n.Get("Feeding.TreatDaffodil.Letter")
+                    , (letter) => !Game1.player.mailReceived.Contains(letter.Id)
+                                  && Game1.getLocationFromName("ArchaeologyHouse") is LibraryMuseum libraryMuseum
+                                  && libraryMuseum.museumAlreadyHasArtifact(107)
+                    , (letter) => Game1.player.mailReceived.Add(letter.Id)
+                )
+            );
+
+            MailDao.SaveLetter(
+                new Letter(
+                    "DinosaursSecondTreat"
+                    , DataLoader.i18n.Get("Feeding.TreatCrocus.Letter")
+                    , (letter) => !Game1.player.mailReceived.Contains(letter.Id) 
+                                  && Game1.getLocationFromName("ArchaeologyHouse") is LibraryMuseum libraryMuseum
+                                  && MuseumContainsTheseItems(new int[] { 579, 580, 581, 582, 583, 584, 585 }, new HashSet<int>(libraryMuseum.museumPieces.Values))
+                    , (letter) => Game1.player.mailReceived.Add(letter.Id)
+                )
+            );
+        }
+
+        private static bool MuseumContainsTheseItems(IEnumerable<int> items, ISet<int> museumItems)
+        {
+            return items.All(museumItems.Contains);
+        }
+
         private static void AddUniversalGiftTaste(IDictionary<string, string> data, Taste taste, params string[] values)
         {
             string key = "Universal_" + taste;
@@ -283,7 +323,7 @@ namespace AnimalHusbandryMod.common
                         if (impregnatableAnimalItem.MinimumDaysUtillBirth.HasValue)
                         {
                             syringeItemsIds.Add(Convert.ToInt32(farmAnimal.Value.Split('/')[2]));
-                            if (impregnatableAnimalItem.CanUseDeluxeItemForPregancy)
+                            if (impregnatableAnimalItem.CanUseDeluxeItemForPregnancy)
                             {
                                 syringeItemsIds.Add(Convert.ToInt32(farmAnimal.Value.Split('/')[3]));
                             }
@@ -300,6 +340,27 @@ namespace AnimalHusbandryMod.common
             if (animalDataChanged)
             {
                 Helper.Data.WriteJsonFile("data\\animals.json", DataLoader.AnimalData);
+            }
+        }
+
+        public void LoadContentPacksCommand(string command = null, string[] args = null)
+        {
+            foreach (IContentPack contentPack in Helper.ContentPacks.GetOwned())
+            {
+                if (File.Exists(Path.Combine(contentPack.DirectoryPath, "customAnimals.json")))
+                {
+                    AnimalHusbandryModEntry.monitor.Log($"Reading content pack: {contentPack.Manifest.Name} {contentPack.Manifest.Version} from {contentPack.DirectoryPath}");
+                    List<CustomAnimalItem> customAnimalItems = contentPack.ReadJsonFile<List<CustomAnimalItem>>("customAnimals.json");
+                    foreach (CustomAnimalItem customAnimalItem in customAnimalItems)
+                    {
+                        DataLoader.AnimalData.CustomAnimals.RemoveAll(c => c.Name.Contains(customAnimalItem.Name));
+                        DataLoader.AnimalData.CustomAnimals.Add(customAnimalItem);
+                    }
+                }
+                else
+                {
+                    AnimalHusbandryModEntry.monitor.Log($"Ignoring content pack: {contentPack.Manifest.Name} {contentPack.Manifest.Version} from {contentPack.DirectoryPath}\nIt does not have an customAnimals.json file.", LogLevel.Warn);
+                }
             }
         }
 

@@ -334,12 +334,12 @@ namespace AnimalHusbandryMod.animals
                 this.sellButton.draw(b);
                 this.moveHomeButton.draw(b);
                 allowReproductionButton?.draw(b);
-                // START pregancyStatus treatStatus meatButton
+                // START pregnancyStatus treatStatus meatButton
                 animalContestIndicator?.draw(b);
                 pregnantStatus?.draw(b);
                 treatStatus?.draw(b);
                 meatButton?.draw(b);
-                // END PregancyStatus
+                // END PregnancyStatus
                 // ADDED || confirmingMeat
                 if (confirmingSell || confirmingMeat)
                 {

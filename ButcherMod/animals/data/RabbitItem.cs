@@ -18,7 +18,7 @@ namespace AnimalHusbandryMod.animals.data
         public int MinimumNumberOfFeetChances { get; set; }
         public int MaximumNumberOfFeetChances { get; set; }
         public int? MinimumDaysUtillBirth { get; set; }
-        public bool CanUseDeluxeItemForPregancy { get; set; }
+        public bool CanUseDeluxeItemForPregnancy { get; set; }
 
         public RabbitItem()
         {

@@ -71,7 +71,8 @@ namespace AnimalHusbandryMod.animals
 
             AnimalContestItem animalContestInfo = new AnimalContestItem(eventId, contestDate, contenders.ToList(), vincentAnimal.ToString(), marnieAnimal)
             {
-                ParticipantId = isParticipantPet ? AnimalData.PetId : farmAnimal?.myID.Value
+                ParticipantId = isParticipantPet ? AnimalData.PetId : farmAnimal?.myID.Value,
+                PlayerAnimal = isParticipantPet ? Game1.player.catPerson ? "Cat" : "Dog" : farmAnimal?.type.Value
             };
             animalContestInfo = PickTheWinner(animalContestInfo, history, participantAnimalStatus, farmAnimal, contenders[2]);
 
@@ -319,7 +320,7 @@ namespace AnimalHusbandryMod.animals
             eventAction.Append($"/faceDirection Lewis 1/move Lewis 1 0 1/faceDirection {contenders[0]} 2 true/move Lewis 2 0 1/faceDirection {contenders[0]} 1 true/faceDirection Lewis 0");
             if (!isPlayerJustWatching)
             {
-                eventAction.Append(GetPlayerAct(animalContestInfo, farmAnimal));
+                eventAction.Append(GetPlayerAct(animalContestInfo, farmAnimal, history));
             }
             else
             {
@@ -575,14 +576,19 @@ namespace AnimalHusbandryMod.animals
             return farmAnimal.Sprite.SpriteWidth == 16;
         }
         
-        private static string GetPlayerAct(AnimalContestItem animalContestInfo, FarmAnimal farmAnimal)
+        private static string GetPlayerAct(AnimalContestItem animalContestInfo, FarmAnimal farmAnimal, List<AnimalContestItem> history)
         {
             StringBuilder playerAct = new StringBuilder();
 
             if (animalContestInfo.FarmAnimalScore is AnimalContestScore score)
             {
-
                 string animalName = farmAnimal.displayName;
+                if (AnimalExtension.GetAnimalFromType(farmAnimal.type.Value) == Animal.Dinosaur && !history.Exists(h=> h.PlayerAnimal == farmAnimal.type.Value))
+                {
+                    playerAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.PlayerAct.Lewis.Dinosaur")}\"");
+                    playerAct.Append($"/question null \"{i18n.Get("AnimalContest.Dialog.PlayerAct.Player.DinosaurAnswers")}\"");
+                    playerAct.Append($"/splitSpeak Lewis \"{i18n.Get("AnimalContest.Dialog.PlayerAct.Lewis.DinosaurAnswers")}\"");
+                }
                 playerAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.PlayerAct.Lewis.Begin", new { animalName })}\"");
 
                 if (score.AgePoints == 0)

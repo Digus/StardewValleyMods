@@ -16,7 +16,7 @@ namespace AnimalHusbandryMod.animals.data
         public int MinimumNumberOfExtraWool { get; set; }
         public int MaximumNumberOfExtraWool { get; set; }        
         public int? MinimumDaysUtillBirth { get; set; }
-        public bool CanUseDeluxeItemForPregancy { get; set; }
+        public bool CanUseDeluxeItemForPregnancy { get; set; }
 
         public SheepItem()
         {
