@@ -362,6 +362,7 @@ namespace AnimalHusbandryMod.common
                     AnimalHusbandryModEntry.monitor.Log($"Ignoring content pack: {contentPack.Manifest.Name} {contentPack.Manifest.Version} from {contentPack.DirectoryPath}\nIt does not have an customAnimals.json file.", LogLevel.Warn);
                 }
             }
+            AnimalData.FillLikedTreatsIds();
         }
 
         enum Taste {
