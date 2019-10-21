@@ -16,6 +16,7 @@ namespace AnimalHusbandryMod.animals.data
         public List<string> Contenders;
         public string VincentAnimal;
         public string MarnieAnimal;
+        public string PlayerAnimal;
         public string Winner;
         public long? ParticipantId;
         public AnimalContestScore FarmAnimalScore;

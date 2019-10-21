@@ -45,7 +45,7 @@ namespace AnimalHusbandryMod.animals
 
             //Player and Participant init
             long? contestParticipantId = AnimalContestController.ContestParticipantId(contestDate);
-            AnimalStatus participantAnimalStatus = contestParticipantId != null ?AnimalStatusController.GetAnimalStatus((long)contestParticipantId): null;
+            AnimalStatus participantAnimalStatus = contestParticipantId != null ? AnimalStatusController.GetAnimalStatus((long)contestParticipantId): null;
             bool isPlayerJustWatching = participantAnimalStatus == null;
             bool isParticipantPet = !isPlayerJustWatching && participantAnimalStatus.Id == AnimalData.PetId;
             FarmAnimal farmAnimal = null;
@@ -56,7 +56,14 @@ namespace AnimalHusbandryMod.animals
             else if (!isPlayerJustWatching)
             {
                 farmAnimal = AnimalContestController.GetAnimal(participantAnimalStatus.Id);
-                AnimalContestController.TemporalyRemoveFarmAnimal(farmAnimal);
+                if (farmAnimal == null)
+                {
+                    isPlayerJustWatching = true;
+                }
+                else
+                {
+                    AnimalContestController.TemporalyRemoveFarmAnimal(farmAnimal);
+                }
             }
 
             List<AnimalContestItem> history = FarmerLoader.FarmerData.AnimalContestData;
@@ -71,7 +78,8 @@ namespace AnimalHusbandryMod.animals
 
             AnimalContestItem animalContestInfo = new AnimalContestItem(eventId, contestDate, contenders.ToList(), vincentAnimal.ToString(), marnieAnimal)
             {
-                ParticipantId = isParticipantPet ? AnimalData.PetId : farmAnimal?.myID.Value
+                ParticipantId = isParticipantPet ? AnimalData.PetId : farmAnimal?.myID.Value,
+                PlayerAnimal = isParticipantPet ? Game1.player.catPerson ? "Cat" : "Dog" : farmAnimal?.type.Value
             };
             animalContestInfo = PickTheWinner(animalContestInfo, history, participantAnimalStatus, farmAnimal, contenders[2]);
 
@@ -206,8 +214,20 @@ namespace AnimalHusbandryMod.animals
             {
                 if (!isPlayerJustWatching)
                 {
-                    string playerAnimalTextureName = farmAnimal.Sprite.textureName.Value.Split('\\')[1].Replace(' ', '_');
-                    bool isPlayerAnimalSmall = IsAnimalSmall(playerAnimalTextureName);
+                    string spriteTextureName = farmAnimal.Sprite.textureName.Value;
+                    string playerAnimalTextureName;
+                    if (spriteTextureName.StartsWith("Animals\\"))
+                    {
+                        playerAnimalTextureName = farmAnimal.Sprite.textureName.Value
+                            .Substring(farmAnimal.Sprite.textureName.Value.IndexOf('\\')+1)
+                            .Replace(' ', '_');
+                    }
+                    else
+                    {
+                        DataLoader.AssetsToLoad["Animals\\" + spriteTextureName.Replace('_', ' ')] = farmAnimal.Sprite.Texture;
+                        playerAnimalTextureName = spriteTextureName.Replace(' ', '_'); ;
+                    }
+                    bool isPlayerAnimalSmall = IsAnimalSmall(farmAnimal);
                     initialPosition.Append($"/addTemporaryActor {playerAnimalTextureName} {(isPlayerAnimalSmall? SmallSize : BigSize)} {(isPlayerAnimalSmall?26:25)} 66 0 false Animal participant/showFrame participant 0");
                     if (!isPlayerAnimalSmall)
                     {
@@ -233,7 +253,12 @@ namespace AnimalHusbandryMod.animals
             if (!isPlayerJustWatching)
             {
                 faceDirectionPlayerPosition = "farmer";
-                eventAction.Append("/move farmer 0 4 2/faceDirection farmer 3/emote farmer 32");
+                eventAction.Append("/move farmer 0 4 2/faceDirection farmer 3");
+                if (isParticipantPet)
+                {
+                    eventAction.Append($"/playSound {(Game1.player.catPerson ? "cat" : "dog_bark")}");
+                }
+                eventAction.Append("/emote farmer 32");
                 //eventAction.Append($"/emote {(isParticipantPet?!Game1.player.catPerson? "Dog":"Cat": "participant")} 20");
             }
             else
@@ -307,7 +332,7 @@ namespace AnimalHusbandryMod.animals
             eventAction.Append($"/faceDirection Lewis 1/move Lewis 1 0 1/faceDirection {contenders[0]} 2 true/move Lewis 2 0 1/faceDirection {contenders[0]} 1 true/faceDirection Lewis 0");
             if (!isPlayerJustWatching)
             {
-                eventAction.Append(GetPlayerAct(animalContestInfo, farmAnimal));
+                eventAction.Append(GetPlayerAct(animalContestInfo, farmAnimal, history));
             }
             else
             {
@@ -557,15 +582,25 @@ namespace AnimalHusbandryMod.animals
         {
             return Array.IndexOf(MarnieJasPossibleAnimals, animal) > 4;
         }
+
+        private static bool IsAnimalSmall(FarmAnimal farmAnimal)
+        {
+            return farmAnimal.Sprite.SpriteWidth == 16;
+        }
         
-        private static string GetPlayerAct(AnimalContestItem animalContestInfo, FarmAnimal farmAnimal)
+        private static string GetPlayerAct(AnimalContestItem animalContestInfo, FarmAnimal farmAnimal, List<AnimalContestItem> history)
         {
             StringBuilder playerAct = new StringBuilder();
 
             if (animalContestInfo.FarmAnimalScore is AnimalContestScore score)
             {
-
                 string animalName = farmAnimal.displayName;
+                if (AnimalExtension.GetAnimalFromType(farmAnimal.type.Value) == Animal.Dinosaur && !history.Exists(h=> h.PlayerAnimal == farmAnimal.type.Value))
+                {
+                    playerAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.PlayerAct.Lewis.Dinosaur")}\"");
+                    playerAct.Append($"/question null \"{i18n.Get("AnimalContest.Dialog.PlayerAct.Player.DinosaurAnswers")}\"");
+                    playerAct.Append($"/splitSpeak Lewis \"{i18n.Get("AnimalContest.Dialog.PlayerAct.Lewis.DinosaurAnswers")}\"");
+                }
                 playerAct.Append($"/speak Lewis \"{i18n.Get("AnimalContest.Dialog.PlayerAct.Lewis.Begin", new { animalName })}\"");
 
                 if (score.AgePoints == 0)

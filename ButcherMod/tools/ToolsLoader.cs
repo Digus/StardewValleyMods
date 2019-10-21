@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AnimalHusbandryMod.animals;
+using AnimalHusbandryMod.common;
 using AnimalHusbandryMod.farmer;
 using MailFrameworkMod;
 using Microsoft.Xna.Framework;
@@ -327,6 +328,14 @@ namespace AnimalHusbandryMod.tools
                 }
                 return false;
             });
+        }
+
+        public void RemoveAllToolsCommand(string n, string[] d)
+        {
+            ItemUtility.RemoveItemAnywhere(typeof(MeatCleaver));
+            ItemUtility.RemoveItemAnywhere(typeof(InseminationSyringe));
+            ItemUtility.RemoveItemAnywhere(typeof(FeedingBasket));
+            ItemUtility.RemoveItemAnywhere(typeof(ParticipantRibbon));
         }
     }
 }

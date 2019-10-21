@@ -74,6 +74,9 @@
     <Compile Include="animals\Animal.cs" />
     <Compile Include="animals\AnimalContestController.cs" />
     <Compile Include="animals\data\AnimalContestData.cs" />
+    <Compile Include="animals\data\CustomAnimalItem.cs" />
+    <Compile Include="animals\data\DinosaurItem.cs" />
+    <Compile Include="animals\data\MeatAnimalItem.cs" />
     <Compile Include="animals\events\AbigailAct.cs" />
     <Compile Include="animals\events\AbstractAct.cs" />
     <Compile Include="animals\events\AlexAct.cs" />
@@ -150,9 +153,21 @@
     <Compile Include="tools\ToolsLoader.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="i18n\pt.json" />
-    <None Include="i18n\default.json" />
-    <None Include="manifest.json" />
+    <None Include="contentPackTemplate\customAnimals.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="contentPackTemplate\manifest.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="i18n\pt.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="i18n\default.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="manifest.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MailFrameworkMod\MailFrameworkMod.csproj">

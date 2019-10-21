@@ -115,7 +115,9 @@
 	"TV.LivingWithTheAnimals.Episode.PigWinterPart4": "I hope you didn't get too attached to your winter animal, you'll soon need to make room in your barn for the new piglet.",
 	"TV.LivingWithTheAnimals.Episode.PigWinterPart5": "With your new piglet born, have you given it a treat yet? You still have time to give 3 more treats before spring, so it can start the year finding truffles like a champion.",
 	"TV.LivingWithTheAnimals.Episode.Retirement": "Folks, I've got an announcement to make. This is the last new episode of Livin' With The Animals before my retirement. I'm going to live with my twin brother on his farm, he sure needs my help with his animals. Oh, and I've been told the station's going to start playing reruns next year. Take care! ",
-
+	// Feeding
+	"Feeding.TreatDaffodil.Letter": "Mr. @,^I'm writing just to let you know that the dinosaur egg you donated the other day allowed us to make a groundbreaking discovery.^The creature who laid that egg was really fond of daffodils. Botanists around the world are exited with the discovery as they knew daffodils were ancient, but not as ancient as dinosaurs.^Thank you again for all your contributions.^   -Gunther¦Ms. @,^I'm writing just to let you know that the dinosaur egg you donated the other day allowed us to make a groundbreaking discovery.^The creature who laid that egg was really fond of daffodils. Botanists around the world are exited with the discovery as they knew daffodils were ancient, but not as ancient as dinosaurs.^Thank you again for all your contributions.^   -Gunther",
+	"Feeding.TreatCrocus.Letter": "Mr. @,^all that fossil you have been finding are helping us discover all kinds of things.^Did you know saffron is made from crocus and is an ancient culinary ingredient? What we didn't know is that humans were not the first ones to try it.^We just discovered that dinosaurs had crocus in their diet.^Thank you again for all your contributions.^   -Gunther¦Ms. @,^all that fossil you have been finding are helping us discover all kinds of things.^Did you know saffron is made from crocus and is an ancient culinary ingredient? What we didn't know is that humans were not the first ones to try it.^We just discovered that dinosaurs had crocus in their diet.^Thank you again for all your contributions.^   -Gunther",
 	// Tools
 	"Tool.MeatCleaver.Name": "Meat Cleaver",
 	"Tool.MeatCleaver.Description": "Turn your animals into meat.",
@@ -285,6 +287,9 @@
 	"AnimalContest.Dialog.MarnieAct.Lewis.Closure": "{{closurePrefix}} a really well treated animal.$h",
 	"AnimalContest.Dialog.MarnieAct.Marnie.Thanks": "Thank you Lewis.$h",
 	"AnimalContest.Dialog.MarnieAct.Lewis.Ending": "I'll see the rest of them now.",
+	"AnimalContest.Dialog.PlayerAct.Lewis.Dinosaur": "Hi @, I was curious this morning when I brought your animal. What kind of lizard is it?",
+	"AnimalContest.Dialog.PlayerAct.Player.DinosaurAnswers": "#I don't know.#It's an iguana.#It's a dinosaur.",
+	"AnimalContest.Dialog.PlayerAct.Lewis.DinosaurAnswers": "I don't know why you would raise an animal you don't know what it is, but that isn't against the rules.~That's what I thought. I've never evaluated a lizard before, but it's in the animal contest manual.$h~You don't need to joke about it if you don't want to tell.$u",
 	"AnimalContest.Dialog.PlayerAct.Lewis.Begin": "Now, let's take a look at {{animalName}}.",
 	"AnimalContest.Dialog.PlayerAct.Lewis.DisqualifyAge": "I'm sorry @ but {{animalName}} is too old, I have to disqualify it.$s#$b#That's not a matter of prejudice against old animals, it's just that these contests can be quite stressful for them.#$b#After serving us so well for years, the animals also deserve their rest.",
 	"AnimalContest.Dialog.PlayerAct.Lewis.DisqualifyTreatVariaty": "Haven't you ever given any treat to {{animalName}}? I have to disqualify it, poor thing.$s",
