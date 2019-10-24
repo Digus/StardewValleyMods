@@ -97,16 +97,16 @@ namespace AnimalHusbandryMod.common
                 loaders.Add(this);
             }
             editors.Add(ToolsLoader);
+            editors.Add(this);
             if (!ModConfig.DisableMeat)
             {
-                editors.Add(this);
                 editors.Add(RecipeLoader);
             }
         }
 
         public bool CanEdit<T>(IAssetInfo asset)
         {
-            return asset.AssetNameEquals("Data\\ObjectInformation") || asset.AssetNameEquals("Data\\Bundles") || asset.AssetNameEquals("Data\\NPCGiftTastes") || asset.AssetNameEquals("Data\\FarmAnimals");
+            return (!ModConfig.DisableMeat && (asset.AssetNameEquals("Data\\ObjectInformation") || asset.AssetNameEquals("Data\\Bundles") || asset.AssetNameEquals("Data\\NPCGiftTastes"))) || asset.AssetNameEquals("Data\\FarmAnimals");
         }
 
         public void Edit<T>(IAssetData asset)
@@ -315,23 +315,26 @@ namespace AnimalHusbandryMod.common
                     }
                 }
 
-                AnimalItem animalItem = DataLoader.AnimalData.GetAnimalItem(farmAnimal.Key);
-                if (animalItem is ImpregnatableAnimalItem impregnatableAnimalItem)
+                if (!ModConfig.DisablePregnancy)
                 {
-                    try
+                    AnimalItem animalItem = DataLoader.AnimalData.GetAnimalItem(farmAnimal.Key);
+                    if (animalItem is ImpregnatableAnimalItem impregnatableAnimalItem)
                     {
-                        if (impregnatableAnimalItem.MinimumDaysUtillBirth.HasValue)
+                        try
                         {
-                            syringeItemsIds.Add(Convert.ToInt32(farmAnimal.Value.Split('/')[2]));
-                            if (impregnatableAnimalItem.CanUseDeluxeItemForPregnancy)
+                            if (impregnatableAnimalItem.MinimumDaysUtillBirth.HasValue)
                             {
-                                syringeItemsIds.Add(Convert.ToInt32(farmAnimal.Value.Split('/')[3]));
+                                syringeItemsIds.Add(Convert.ToInt32(farmAnimal.Value.Split('/')[2]));
+                                if (impregnatableAnimalItem.CanUseDeluxeItemForPregnancy)
+                                {
+                                    syringeItemsIds.Add(Convert.ToInt32(farmAnimal.Value.Split('/')[3]));
+                                }
                             }
                         }
-                    }
-                    catch (Exception)
-                    {
-                        AnimalHusbandryModEntry.monitor.Log($"Item to use in the syringe for {farmAnimal.Key} was not indentified.", LogLevel.Warn);
+                        catch (Exception)
+                        {
+                            AnimalHusbandryModEntry.monitor.Log($"Item to use in the syringe for {farmAnimal.Key} was not indentified.", LogLevel.Warn);
+                        }
                     }
                 }
             }
