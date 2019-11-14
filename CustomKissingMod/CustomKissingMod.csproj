@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="DataLoader.cs" />
     <Compile Include="CustomKissingModEntry.cs" />
+    <Compile Include="FarmerOverrides.cs" />
     <Compile Include="ModConfig.cs" />
     <Compile Include="NpcConfig.cs" />
     <Compile Include="NPCOverrides.cs" />

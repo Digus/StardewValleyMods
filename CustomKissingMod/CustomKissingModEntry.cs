@@ -28,6 +28,11 @@ namespace CustomKissingMod
                 original: AccessTools.Method(typeof(NPC), nameof(NPC.checkAction)),
                 postfix: new HarmonyMethod(typeof(NPCOverrides), nameof(NPCOverrides.checkAction))
             );
+
+            harmony.Patch(
+                original: AccessTools.Method(typeof(Farmer), nameof(Farmer.checkAction)),
+                postfix: new HarmonyMethod(typeof(FarmerOverrides), nameof(FarmerOverrides.checkAction))
+            );
         }
     }
 }
