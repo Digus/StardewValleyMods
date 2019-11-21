@@ -127,6 +127,10 @@ namespace MailFrameworkMod
                                     rightNeighborID = 102
                                 }
                             );
+                            activeClickableMenu.backButton.rightNeighborID = 104;
+                            activeClickableMenu.forwardButton.leftNeighborID = 104;
+                            activeClickableMenu.populateClickableComponentList();
+                            activeClickableMenu.snapToDefaultClickableComponent();
                         });
                     if (_shownLetter.Recipe != null)
                     {
