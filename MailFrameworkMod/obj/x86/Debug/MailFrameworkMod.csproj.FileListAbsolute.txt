@@ -1,0 +1,10 @@
+C:\Users\Courtney\Documents\Stardew\Modding\Mod Tools\StardewValleyMods-feature-mail_framework-content_pack\MailFrameworkMod\bin\x86\Debug\ContentPackTemplate\mail.json
+C:\Users\Courtney\Documents\Stardew\Modding\Mod Tools\StardewValleyMods-feature-mail_framework-content_pack\MailFrameworkMod\bin\x86\Debug\ContentPackTemplate\manifest.json
+C:\Users\Courtney\Documents\Stardew\Modding\Mod Tools\StardewValleyMods-feature-mail_framework-content_pack\MailFrameworkMod\bin\x86\Debug\MailFrameworkMod.dll
+C:\Users\Courtney\Documents\Stardew\Modding\Mod Tools\StardewValleyMods-feature-mail_framework-content_pack\MailFrameworkMod\bin\x86\Debug\MailFrameworkMod.pdb
+C:\Users\Courtney\Documents\Stardew\Modding\Mod Tools\StardewValleyMods-feature-mail_framework-content_pack\MailFrameworkMod\bin\x86\Debug\Newtonsoft.Json.dll
+C:\Users\Courtney\Documents\Stardew\Modding\Mod Tools\StardewValleyMods-feature-mail_framework-content_pack\MailFrameworkMod\obj\x86\Debug\MailFrameworkMod.csprojAssemblyReference.cache
+C:\Users\Courtney\Documents\Stardew\Modding\Mod Tools\StardewValleyMods-feature-mail_framework-content_pack\MailFrameworkMod\obj\x86\Debug\MailFrameworkMod.csproj.CoreCompileInputs.cache
+C:\Users\Courtney\Documents\Stardew\Modding\Mod Tools\StardewValleyMods-feature-mail_framework-content_pack\MailFrameworkMod\obj\x86\Debug\MailFrameworkMod.csproj.CopyComplete
+C:\Users\Courtney\Documents\Stardew\Modding\Mod Tools\StardewValleyMods-feature-mail_framework-content_pack\MailFrameworkMod\obj\x86\Debug\MailFrameworkMod.dll
+C:\Users\Courtney\Documents\Stardew\Modding\Mod Tools\StardewValleyMods-feature-mail_framework-content_pack\MailFrameworkMod\obj\x86\Debug\MailFrameworkMod.pdb
