@@ -1,0 +1,10 @@
+﻿{
+  "Name": "Producer Framework Mod",
+  "Author": "Digus",
+  "Version": "0.1.0",
+  "Description": "Mod Template",
+  "UniqueID": "Digus.ProducerFrameworkMod",
+  "EntryDll": "ProducerFrameworkMod.dll",
+  "MinimumApiVersion": "3.0.0",
+  "UpdateKeys": [ "Nexus:" ]
+}
