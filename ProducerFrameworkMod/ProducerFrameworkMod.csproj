@@ -34,6 +34,7 @@
   <ItemGroup>
     <Reference Include="0Harmony">
       <HintPath>G:\Program Files (x86)\Steam\steamapps\common\Stardew Valley\smapi-internal\0Harmony.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -45,7 +46,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ContentPack\ProducerItem.cs" />
+    <Compile Include="ContentPack\AffixType.cs" />
+    <Compile Include="ContentPack\PlacingAnimation.cs" />
+    <Compile Include="ContentPack\ProducerConfig.cs" />
+    <Compile Include="ContentPack\ProducerRule.cs" />
     <Compile Include="DataLoader.cs" />
     <Compile Include="ObjectOverrides.cs" />
     <Compile Include="ProducerController.cs" />
@@ -53,6 +57,17 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="ContentPackTemplate\manifest.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="ContentPackTemplate\ProducerRules.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="ContentPackTemplate\ProducersConfig.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="i18n\default.json" />
+    <None Include="i18n\pt.json" />
     <None Include="manifest.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

@@ -36,6 +36,17 @@ namespace ProducerFrameworkMod
                 original: AccessTools.Method(typeof(SObject), nameof(SObject.performObjectDropInAction)),
                 prefix: new HarmonyMethod(typeof(ObjectOverrides), nameof(ObjectOverrides.PerformObjectDropInAction))
             );
+            harmony.Patch(
+                original: AccessTools.Method(typeof(SObject), "loadDisplayName"),
+                prefix: new HarmonyMethod(typeof(ObjectOverrides), nameof(ObjectOverrides.LoadDisplayName))
+            );
+            harmony.Patch(
+                original: AccessTools.Method(typeof(SObject), nameof(SObject.checkForAction)),
+                postfix: new HarmonyMethod(typeof(ObjectOverrides), nameof(ObjectOverrides.checkForAction))
+            ); harmony.Patch(
+                original: AccessTools.Method(typeof(SObject), nameof(SObject.minutesElapsed)),
+                postfix: new HarmonyMethod(typeof(ObjectOverrides), nameof(ObjectOverrides.minutesElapsed))
+            );
         }
     }
 }
