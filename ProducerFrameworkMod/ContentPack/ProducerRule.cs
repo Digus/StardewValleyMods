@@ -27,7 +27,7 @@ namespace ProducerFrameworkMod.ContentPack
         public int? OutputQuality = 0;
         public int OutputStack = 1;
         public List<string> Sounds = new List<string>();
-        public PlacingAnimation PlacingAnimation;
+        public PlacingAnimation? PlacingAnimation;
         public string PlacingAnimationColorName;
         internal int OutputIndex;
         internal int? FuelIndex;

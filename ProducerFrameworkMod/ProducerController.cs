@@ -103,11 +103,6 @@ namespace ProducerFrameworkMod
             RulesRepository.TryGetValue(new Tuple<string, object>(producerName, input.ParentSheetIndex), out value);
             if (value == null)
             {
-                RulesRepository.TryGetValue(new Tuple<string, object>(producerName, input.Category), out value);
-            }
-
-            if (value == null)
-            {
                 foreach (string tag in input.GetContextTagList())
                 {
                     if (RulesRepository.TryGetValue(new Tuple<string, object>(producerName, tag), out value))
@@ -116,6 +111,11 @@ namespace ProducerFrameworkMod
                     }
                 }
             }
+            if (value == null)
+            {
+                RulesRepository.TryGetValue(new Tuple<string, object>(producerName, input.Category), out value);
+            }
+
             return value;
         }
 

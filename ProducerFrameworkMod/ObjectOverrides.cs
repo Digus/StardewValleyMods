@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Harmony;
 using Microsoft.Xna.Framework;
 using Netcode;
 using ProducerFrameworkMod.ContentPack;
@@ -14,6 +15,7 @@ namespace ProducerFrameworkMod
 
     internal class ObjectOverrides
     {
+        [HarmonyPriority(800)]
         internal static bool PerformObjectDropInAction(Object __instance, Item dropInItem, bool probe, Farmer who, ref bool __result)
         {
             if (__instance.isTemporarilyInvisible || !(dropInItem is Object))
@@ -29,13 +31,21 @@ namespace ProducerFrameworkMod
                 if ((bool)((NetFieldBase<bool, NetBool>)__instance.bigCraftable) && !probe && (__instance.heldObject.Value == null))
                     __instance.scale.X = 5f;
                 
-                if (who.IsLocalPlayer && producerRule.FuelIndex.HasValue && who.getTallyOfObject(producerRule.FuelIndex.Value, false) < producerRule.FuelStack)
+                if (who.IsLocalPlayer && producerRule.FuelIndex.HasValue && !who.hasItemInInventory(producerRule.FuelIndex.Value, producerRule.FuelStack))
                 {
                     if (!probe)
                     {
-                        Dictionary<int, string> objects = DataLoader.Helper.Content.Load<Dictionary<int, string>>("Data\\ObjectInformation", ContentSource.GameContent);
-                        var objectName = objects[producerRule.FuelIndex.Value].Split('/')[4];
-                        Game1.showRedMessage(DataLoader.Helper.Translation.Get("Message.Requirement.Amount",new {amount = producerRule.FuelStack, objectName }));
+                        if (producerRule.FuelIndex.Value >= 0)
+                        {
+
+                            Dictionary<int, string> objects = DataLoader.Helper.Content.Load<Dictionary<int, string>>("Data\\ObjectInformation", ContentSource.GameContent);
+                            var objectName = objects[producerRule.FuelIndex.Value].Split('/')[4];
+                            Game1.showRedMessage(DataLoader.Helper.Translation.Get("Message.Requirement.Amount", new { amount = producerRule.FuelStack, objectName }));
+                        }
+                        else
+                        {
+                            Game1.showRedMessage(DataLoader.Helper.Translation.Get("Message.Requirement.Amount", new { amount = producerRule.FuelStack, objectName = producerRule.FuelIndex.Value }));
+                        }
                     }
                     return false;
                 }
@@ -139,7 +149,7 @@ namespace ProducerFrameworkMod
 
                     if (producerRule.FuelIndex.HasValue)
                     {
-                        who.removeItemsFromInventory(producerRule.FuelIndex.Value, producerRule.FuelStack);
+                        RemoveItemsFromInventory(who, producerRule.FuelIndex.Value, producerRule.FuelStack);
                     }
 
                     input.Stack -= producerRule.InputStack;
@@ -214,6 +224,29 @@ namespace ProducerFrameworkMod
                     return $"Aged {preserveParentName}";
             }
             return null;
+        }
+
+        private static bool RemoveItemsFromInventory(Farmer farmer, int index, int stack)
+        {
+            if (farmer.hasItemInInventory(index, stack, 0))
+            {
+                for (int index1 = 0; index1 < farmer.items.Count; ++index1)
+                {
+                    if (farmer.items[index1] != null && farmer.items[index1] is Object object1 && (object1.ParentSheetIndex == index || object1.Category == index))
+                    {
+                        if (farmer.items[index1].Stack > stack)
+                        {
+                            farmer.items[index1].Stack -= stack;
+                            return true;
+                        }
+                        stack -= farmer.items[index1].Stack;
+                        farmer.items[index1] = (Item)null;
+                    }
+                    if (stack <= 0)
+                        return true;
+                }
+            }
+            return false;
         }
     }
 }
