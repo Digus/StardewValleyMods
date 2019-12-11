@@ -8,6 +8,7 @@ using StardewModdingAPI;
 using StardewValley;
 using StardewValley.BellsAndWhistles;
 using StardewValley.Network;
+using Enumerable = System.Linq.Enumerable;
 using Object = StardewValley.Object;
 
 namespace ProducerFrameworkMod
@@ -28,26 +29,45 @@ namespace ProducerFrameworkMod
                 {
                     return true;
                 }
+
+                if (producerRule.ExcludeIdentifiers != null)
+                {
+                    if (producerRule.ExcludeIdentifiers.Contains(input.ParentSheetIndex.ToString())
+                        || producerRule.ExcludeIdentifiers.Contains(input.Name)
+                        || producerRule.ExcludeIdentifiers.Contains(input.Category.ToString())
+                        || Enumerable.Any(Enumerable.Intersect(producerRule.ExcludeIdentifiers,
+                            input.GetContextTags())))
+                    {
+                        return true;
+                    }
+                }
+
                 if ((bool)((NetFieldBase<bool, NetBool>)__instance.bigCraftable) && !probe && (__instance.heldObject.Value == null))
                     __instance.scale.X = 5f;
                 
-                if (who.IsLocalPlayer && producerRule.FuelIndex.HasValue && !who.hasItemInInventory(producerRule.FuelIndex.Value, producerRule.FuelStack))
+                if (who.IsLocalPlayer)
                 {
-                    if (!probe)
+                    foreach (var fuel in producerRule.FuelList)
                     {
-                        if (producerRule.FuelIndex.Value >= 0)
+                        if (!who.hasItemInInventory(fuel.Item1, fuel.Item2))
                         {
+                            if (!probe)
+                            {
+                                if (fuel.Item1 >= 0)
+                                {
 
-                            Dictionary<int, string> objects = DataLoader.Helper.Content.Load<Dictionary<int, string>>("Data\\ObjectInformation", ContentSource.GameContent);
-                            var objectName = objects[producerRule.FuelIndex.Value].Split('/')[4];
-                            Game1.showRedMessage(DataLoader.Helper.Translation.Get("Message.Requirement.Amount", new { amount = producerRule.FuelStack, objectName }));
-                        }
-                        else
-                        {
-                            Game1.showRedMessage(DataLoader.Helper.Translation.Get("Message.Requirement.Amount", new { amount = producerRule.FuelStack, objectName = producerRule.FuelIndex.Value }));
+                                    Dictionary<int, string> objects = DataLoader.Helper.Content.Load<Dictionary<int, string>>("Data\\ObjectInformation", ContentSource.GameContent);
+                                    var objectName = objects[fuel.Item1].Split('/')[4];
+                                    Game1.showRedMessage(DataLoader.Helper.Translation.Get("Message.Requirement.Amount", new { amount = fuel.Item2, objectName }));
+                                }
+                                else
+                                {
+                                    Game1.showRedMessage(DataLoader.Helper.Translation.Get("Message.Requirement.Amount", new { amount = fuel.Item2, objectName = fuel.Item1 }));
+                                }
+                            }
+                            return false;
                         }
                     }
-                    return false;
                 }
 
                 if ((int)((NetFieldBase<int, NetInt>)input.stack) < producerRule.InputStack)
@@ -147,9 +167,9 @@ namespace ProducerFrameworkMod
 
                     __instance.initializeLightSource((Vector2)((NetFieldBase<Vector2, NetVector2>)__instance.tileLocation), false);
 
-                    if (producerRule.FuelIndex.HasValue)
+                    foreach (var fuel in producerRule.FuelList)
                     {
-                        RemoveItemsFromInventory(who, producerRule.FuelIndex.Value, producerRule.FuelStack);
+                        RemoveItemsFromInventory(who, fuel.Item1, fuel.Item2);
                     }
 
                     input.Stack -= producerRule.InputStack;

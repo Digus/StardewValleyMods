@@ -3,8 +3,10 @@
 		"ProducerName": "ProducerName", //Name of the producer.
 		"InputIdentifier": "fruit_tree_item", //The identifier of the input. Can be the Index of the object, the category of the object if it's a negative value. Can be the name of the object, or a context_tag of the object.
 		"InputStack": 2, //The required stack of the input. Default value is 1.
-		"FuelIdentifier":"Coal", //The identifier of the Fuel. Fuel is the extra item used when producing. Default is null. Can be the Index or the Name of the object. 
-		"FuelStack":4, //The required stack of the fuel. Default is 1. Only used if fuel is not null.
+		"ExcludeIdentifiers": ["Peach"], //List of identifiers to exclude from the rule. Follow the same rules for InputIdentifier. Default value is null.
+		"FuelIdentifier":"Coal", //The identifier of the Fuel. Fuel is the extra item used when producing. Default is null. Can be the Index, the Name or the category of the object. 
+		"FuelStack":4, //The required stack of the Fuel. Default is 1. Only used if fuel is not null.
+		"AdditionalFuel": {"-6":2,"Coal":1,"246":5}, //Additional fuel if needed. Default is null. You don't need to set a Fuel to use AdditionalFuel. The format is a pair of identifier and stack amount, following the same rules of the other fuel property.
 		"MinutesUntilReady": 10, //The amount of minutes it takes to produce. Should be divisible by 10.
 		"OutputIdentifier":"Beer", //The identifier of the output. Can be the Index or the Name of the object. 
 		"OutputName": " Beer", //The Name of the object. Default is null. Replace the name of the object. Better used for Compound Names.
@@ -17,7 +19,7 @@
 		"OutputQuality": 2, //Set the output quality. Default is 0.
 		"OutputStack": 2, //Set the output stack. Default is 1.
 		"Sounds": ["furnace"], //List of sound to make when an input is placed.
-		"PlacingAnimation": "Fire", //[Boobles|Fire] //Animation to make when placing the input.
+		"PlacingAnimation": "Fire", //[Bubbles|Fire] //Animation to make when placing the input.
 		"PlacingAnimationColorName": "White" //The color of the animation. Default White.
 	}
 ]

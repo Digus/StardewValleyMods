@@ -13,8 +13,10 @@ namespace ProducerFrameworkMod.ContentPack
         public string ProducerName;
         public string InputIdentifier;
         public int InputStack = 1;
+        public List<string> ExcludeIdentifiers;
         public string FuelIdentifier;
         public int FuelStack = 1;
+        public Dictionary<string, int> AdditionalFuel = new Dictionary<string, int>();
         public int MinutesUntilReady;
         public string OutputIdentifier;
         public string OutputName;
@@ -30,7 +32,7 @@ namespace ProducerFrameworkMod.ContentPack
         public PlacingAnimation? PlacingAnimation;
         public string PlacingAnimationColorName;
         internal int OutputIndex;
-        internal int? FuelIndex;
+        internal List<Tuple<int,int>> FuelList = new List<Tuple<int, int>>();
         internal Color PlacingAnimationColor = Color.White;
     }
 }

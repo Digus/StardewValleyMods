@@ -60,20 +60,29 @@ namespace ProducerFrameworkMod
 
                 if (producerRule.FuelIdentifier != null)
                 {
-                    if (!Int32.TryParse(producerRule.FuelIdentifier, out int fuelIndex))
+                    producerRule.AdditionalFuel[producerRule.FuelIdentifier] = producerRule.FuelStack;
+
+                    foreach (var fuel in producerRule.AdditionalFuel)
                     {
-                        KeyValuePair<int, string> pair = objects.FirstOrDefault(o => o.Value.StartsWith(producerRule.FuelIdentifier + "/"));
-                        if (pair.Value != null)
+                        if (!Int32.TryParse(fuel.Key, out int fuelIndex))
                         {
-                            fuelIndex = pair.Key;
+                            KeyValuePair<int, string> pair = objects.FirstOrDefault(o => o.Value.StartsWith(fuel.Key + "/"));
+                            if (pair.Value != null)
+                            {
+                                fuelIndex = pair.Key;
+                            }
+                            else
+                            {
+                                ProducerFrameworkModEntry.ModMonitor.Log($"Fuel not found for producer '{producerRule.ProducerName}' and input '{fuel.Key}'.", LogLevel.Warn);
+                                break;
+                            }
                         }
-                        else
-                        {
-                            ProducerFrameworkModEntry.ModMonitor.Log($"Fuel not found for producer '{producerRule.ProducerName}' and input '{producerRule.InputIdentifier}'.", LogLevel.Warn);
-                            continue;
-                        }
+                        producerRule.FuelList.Add(new Tuple<int, int>(fuelIndex,fuel.Value));
                     }
-                    producerRule.FuelIndex = fuelIndex;
+                    if (producerRule.AdditionalFuel.Count != producerRule.FuelList.Count)
+                    {
+                        continue;
+                    }
                 }
 
                 if (producerRule.PlacingAnimationColorName != null)
