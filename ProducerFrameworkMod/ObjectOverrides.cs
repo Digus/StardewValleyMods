@@ -84,19 +84,6 @@ namespace ProducerFrameworkMod
                 {
                     outputName = GetPreserveName(producerRule.PreserveType.Value, input.Name);
                 }
-                else if (producerRule.OutputName != null)
-                {
-                    if (!producerRule.CompoundOutputName.HasValue)
-                    {
-                        outputName = producerRule.OutputName;
-                    }
-                    else
-                    {
-                        outputName = producerRule.CompoundOutputName == AffixType.Prefix
-                            ? producerRule.OutputName + input.DisplayName
-                            : input.DisplayName + producerRule.OutputName;
-                    }
-                }
 
                 Object output = new Object(Vector2.Zero, producerRule.OutputIndex, outputName, false, true, false, false);
 
@@ -112,12 +99,20 @@ namespace ProducerFrameworkMod
 
                 if (!probe)
                 {
-                    if (outputName != null)
+                    bool inputUsed = false;
+                    if (producerRule.OutputName != null)
                     {
-                        __instance.heldObject.Value.name = outputName;
+                        outputName = producerRule.OutputName
+                            .Replace("{inputName}", input.Name)
+                            .Replace("{outputName}", output.Name)
+                            .Replace("{farmerName}", who.Name)
+                            .Replace("{farmName}", who.farmName.Value);
+                        inputUsed = producerRule.OutputName.Contains("{inputName}");
                     }
+                    __instance.heldObject.Value.name = outputName;
+
                     __instance.heldObject.Value.preserve.Value = producerRule.PreserveType;
-                    if (producerRule.CompoundOutputName.HasValue || producerRule.PreserveType.HasValue)
+                    if (inputUsed || producerRule.PreserveType.HasValue)
                     {
                         __instance.heldObject.Value.preservedParentSheetIndex.Value = input.parentSheetIndex;
                     }

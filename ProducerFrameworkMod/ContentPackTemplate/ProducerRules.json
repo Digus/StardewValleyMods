@@ -9,8 +9,7 @@
 		"AdditionalFuel": {"-6":2,"Coal":1,"246":5}, //Additional fuel if needed. Default is null. You don't need to set a Fuel to use AdditionalFuel. The format is a pair of identifier and stack amount, following the same rules of the other fuel property.
 		"MinutesUntilReady": 10, //The amount of minutes it takes to produce. Should be divisible by 10.
 		"OutputIdentifier":"Beer", //The identifier of the output. Can be the Index or the Name of the object. 
-		"OutputName": " Beer", //The Name of the object. Default is null. Replace the name of the object. Better used for Compound Names.
-		"CompoundOutputName": "Suffix", //[Prefix|Suffix] - If the name should be a compound word, and if the OutputName came before of after the input name.
+		"OutputName": "{farmerName}'s {inputName} {outputName} from {farmName}", //The Name of the object. This will replace the original name. Default is null. It accepts 4 tags that are dynamicly replaced. 
 		"PreserveType": "Wine", //[Wine|Jelly|Pickle|Juice|Roe|AgedRoe] - If the output is one of the vanilla game Preserves Type. Default is null.
 		"InputPriceBased": true, //If the price of the object should be calculated from the price of the input.
 		"OutputPriceIncrement": 200, //If InputPriceBased is true, increment the input value by this amount. Default is 0.

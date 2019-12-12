@@ -20,7 +20,6 @@ namespace ProducerFrameworkMod.ContentPack
         public int MinutesUntilReady;
         public string OutputIdentifier;
         public string OutputName;
-        public AffixType? CompoundOutputName;
         public Object.PreserveType? PreserveType;
         public bool InputPriceBased;
         public int OutputPriceIncrement = 0;
