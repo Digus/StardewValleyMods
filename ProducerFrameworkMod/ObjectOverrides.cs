@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Harmony;
 using Microsoft.Xna.Framework;
 using Netcode;
@@ -78,41 +79,68 @@ namespace ProducerFrameworkMod
                     }
                     return false;
                 }
+                Random random = new Random((int)Game1.uniqueIDForThisGame / 2 + (int)Game1.stats.DaysPlayed + Game1.timeOfDay + (int)__instance.tileLocation.X * 200 + (int)__instance.tileLocation.Y);
+                OutputConfig outputConfig = ChooseOutput(producerRule.OutputConfigs, random);
 
                 string outputName = null;
-                if (producerRule.PreserveType.HasValue)
+                if (outputConfig.PreserveType.HasValue)
                 {
-                    outputName = GetPreserveName(producerRule.PreserveType.Value, input.Name);
+                    outputName = GetPreserveName(outputConfig.PreserveType.Value, input.Name);
                 }
 
-                Object output = new Object(Vector2.Zero, producerRule.OutputIndex, outputName, false, true, false, false);
+                Object output = new Object(Vector2.Zero, outputConfig.OutputIndex, outputName, false, true, false, false);
 
-                if (producerRule.InputPriceBased)
+                if (outputConfig.InputPriceBased)
                 {
-                    output.Price = (int) (producerRule.OutputPriceIncrement + input.Price * producerRule.OutputPriceMultiplier);
+                    output.Price = (int) (outputConfig.OutputPriceIncrement + input.Price * outputConfig.OutputPriceMultiplier);
                 }
 
-                output.Quality = producerRule.KeepInputQuality ? input.Quality : producerRule.OutputQuality ?? 0;
-                output.Stack = producerRule.OutputStack;
+                output.Quality = outputConfig.KeepInputQuality ? input.Quality : outputConfig.OutputQuality;
+
+                
+                double chance = random.NextDouble();
+                StackConfig stackConfig;
+                if (input.Quality == 4 && chance < outputConfig.IridiumQualityInput.Probability)
+                {
+                    stackConfig = outputConfig.IridiumQualityInput;
+                }
+                else if (input.Quality == 2 && chance < outputConfig.GoldQualityInput.Probability)
+                {
+                    stackConfig = outputConfig.GoldQualityInput;
+                }
+                else if(input.Quality == 1 && chance < outputConfig.SilverQualityInput.Probability)
+                {
+                    stackConfig = outputConfig.SilverQualityInput;
+                }
+                else
+                {
+                    stackConfig = new StackConfig(outputConfig.OutputStack, outputConfig.OutputMaxStack);
+                }
+
+
+                output.Stack = random.Next(stackConfig.OutputStack, Math.Max(stackConfig.OutputStack,stackConfig.OutputMaxStack));
 
                 __instance.heldObject.Value = output;
 
                 if (!probe)
                 {
                     bool inputUsed = false;
-                    if (producerRule.OutputName != null)
+                    if (outputConfig.OutputName != null)
                     {
-                        outputName = producerRule.OutputName
+                        outputName = outputConfig.OutputName
                             .Replace("{inputName}", input.Name)
                             .Replace("{outputName}", output.Name)
                             .Replace("{farmerName}", who.Name)
                             .Replace("{farmName}", who.farmName.Value);
-                        inputUsed = producerRule.OutputName.Contains("{inputName}");
+                        inputUsed = outputConfig.OutputName.Contains("{inputName}");
                     }
-                    __instance.heldObject.Value.name = outputName;
+                    if (outputName != null)
+                    {
+                        __instance.heldObject.Value.name = outputName;
+                    }
 
-                    __instance.heldObject.Value.preserve.Value = producerRule.PreserveType;
-                    if (inputUsed || producerRule.PreserveType.HasValue)
+                    __instance.heldObject.Value.preserve.Value = outputConfig.PreserveType;
+                    if (inputUsed || outputConfig.PreserveType.HasValue)
                     {
                         __instance.heldObject.Value.preservedParentSheetIndex.Value = input.parentSheetIndex;
                     }
@@ -262,6 +290,32 @@ namespace ProducerFrameworkMod
                 }
             }
             return false;
+        }
+
+        private static OutputConfig ChooseOutput(List<OutputConfig> producerRuleOutputConfig, Random random)
+        {
+            List<OutputConfig> outputConfigs = producerRuleOutputConfig.FindAll(o => o.OutputProbability > 0);
+            Double chance = random.NextDouble();
+            Double probabilies = 0;
+            foreach (OutputConfig outputConfig in outputConfigs)
+            {
+                probabilies += outputConfig.OutputProbability;
+                if (chance - probabilies < 0)
+                {
+                    return outputConfig;
+                }
+            }
+            outputConfigs = producerRuleOutputConfig.FindAll(o => o.OutputProbability <= 0);
+            double increment = (1 - probabilies) / outputConfigs.Count;
+            foreach (OutputConfig outputConfig in outputConfigs)
+            {
+                probabilies += increment;
+                if (chance - probabilies < 0)
+                {
+                    return outputConfig;
+                }
+            }
+            return producerRuleOutputConfig.FirstOrDefault();
         }
     }
 }

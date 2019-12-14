@@ -43,47 +43,77 @@ namespace ProducerFrameworkMod
                 {
                     inputIdentifier = intInputIdentifier;
                 }
-                if (!Int32.TryParse(producerRule.OutputIdentifier, out int outputIndex))
+
+                if (producerRule.OutputIdentifier != null)
                 {
-                    KeyValuePair<int, string> pair = objects.FirstOrDefault(o => o.Value.StartsWith(producerRule.OutputIdentifier + "/"));
-                    if (pair.Value != null)
+                    producerRule.OutputConfigs.Add(new OutputConfig()
                     {
-                        outputIndex = pair.Key;
-                    }
-                    else
-                    {
-                        ProducerFrameworkModEntry.ModMonitor.Log($"Output not found for producer '{producerRule.ProducerName}' and input '{producerRule.InputIdentifier}'.",LogLevel.Warn);
-                        continue;
-                    }
+                        OutputIdentifier = producerRule.OutputIdentifier,
+                        OutputName = producerRule.OutputName,
+                        PreserveType = producerRule.PreserveType,
+                        InputPriceBased = producerRule.InputPriceBased,
+                        OutputPriceIncrement = producerRule.OutputPriceIncrement,
+                        OutputPriceMultiplier = producerRule.OutputPriceMultiplier,
+                        KeepInputQuality = producerRule.KeepInputQuality,
+                        OutputQuality = producerRule.OutputQuality,
+                        OutputStack = producerRule.OutputStack,
+                        OutputMaxStack = producerRule.OutputMaxStack,
+                        SilverQualityInput = producerRule.SilverQualityInput,
+                        GoldQualityInput = producerRule.GoldQualityInput,
+                        IridiumQualityInput = producerRule.IridiumQualityInput
+                    });
                 }
-                producerRule.OutputIndex = outputIndex;
+                producerRule.OutputConfigs.AddRange(producerRule.AdditionalOutputs);
+
+                foreach (OutputConfig outputConfig in producerRule.OutputConfigs)
+                {
+                    if (!Int32.TryParse(outputConfig.OutputIdentifier, out int outputIndex))
+                    {
+                        KeyValuePair<int, string> pair = objects.FirstOrDefault(o => o.Value.StartsWith(outputConfig.OutputIdentifier + "/"));
+                        if (pair.Value != null)
+                        {
+                            outputIndex = pair.Key;
+                        }
+                        else
+                        {
+                            ProducerFrameworkModEntry.ModMonitor.Log($"Output not found for producer '{producerRule.ProducerName}' and input '{producerRule.InputIdentifier}'.", LogLevel.Warn);
+                            break;
+                        }
+                    }
+                    outputConfig.OutputIndex = outputIndex;
+                }
+                if (producerRule.OutputConfigs.Any(p=>p.OutputIndex <0))
+                {
+                    continue;
+                }
 
                 if (producerRule.FuelIdentifier != null)
                 {
                     producerRule.AdditionalFuel[producerRule.FuelIdentifier] = producerRule.FuelStack;
-
-                    foreach (var fuel in producerRule.AdditionalFuel)
-                    {
-                        if (!Int32.TryParse(fuel.Key, out int fuelIndex))
-                        {
-                            KeyValuePair<int, string> pair = objects.FirstOrDefault(o => o.Value.StartsWith(fuel.Key + "/"));
-                            if (pair.Value != null)
-                            {
-                                fuelIndex = pair.Key;
-                            }
-                            else
-                            {
-                                ProducerFrameworkModEntry.ModMonitor.Log($"Fuel not found for producer '{producerRule.ProducerName}' and input '{fuel.Key}'.", LogLevel.Warn);
-                                break;
-                            }
-                        }
-                        producerRule.FuelList.Add(new Tuple<int, int>(fuelIndex,fuel.Value));
-                    }
-                    if (producerRule.AdditionalFuel.Count != producerRule.FuelList.Count)
-                    {
-                        continue;
-                    }
                 }
+
+                foreach (var fuel in producerRule.AdditionalFuel)
+                {
+                    if (!Int32.TryParse(fuel.Key, out int fuelIndex))
+                    {
+                        KeyValuePair<int, string> pair = objects.FirstOrDefault(o => o.Value.StartsWith(fuel.Key + "/"));
+                        if (pair.Value != null)
+                        {
+                            fuelIndex = pair.Key;
+                        }
+                        else
+                        {
+                            ProducerFrameworkModEntry.ModMonitor.Log($"Fuel not found for producer '{producerRule.ProducerName}' and input '{fuel.Key}'.", LogLevel.Warn);
+                            break;
+                        }
+                    }
+                    producerRule.FuelList.Add(new Tuple<int, int>(fuelIndex,fuel.Value));
+                }
+                if (producerRule.AdditionalFuel.Count != producerRule.FuelList.Count)
+                {
+                    continue;
+                }
+                
 
                 if (producerRule.PlacingAnimationColorName != null)
                 {

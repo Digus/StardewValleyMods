@@ -46,7 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ContentPack\AffixType.cs" />
+    <Compile Include="ContentPack\OutputConfig.cs" />
     <Compile Include="ContentPack\PlacingAnimation.cs" />
     <Compile Include="ContentPack\ProducerConfig.cs" />
     <Compile Include="ContentPack\ProducerRule.cs" />

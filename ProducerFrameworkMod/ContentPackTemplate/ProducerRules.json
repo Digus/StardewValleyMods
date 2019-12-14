@@ -17,6 +17,28 @@
 		"KeepInputQuanlity": false, //If the output should have the same quality as the input.
 		"OutputQuality": 2, //Set the output quality. Default is 0.
 		"OutputStack": 2, //Set the output stack. Default is 1.
+		"OutputMaxStack": 2, //Set the max output stack, if you want a random output stack. It'll be ignored if smaller than OutputStack. Default is 1.
+		"SilverQualityInput": { //Define an alternative stack if they input is silver quality.
+			"Probability": 0.2, //Probability to use the alternative stack. Default is 0.
+			"OutputStack": 2, //Same as others.
+			"OutputMaxStack": 4 //Same as others.
+		},		
+		"GoldQualityInput": { //Define an alternative stack if they input is gold quality.
+			"Probability": 0.4, //Same as others.
+			"OutputStack": 3, //Same as others.
+			"OutputMaxStack": 4 //Same as others.
+		},		
+		"IridiumQualityInput": { //Define an alternative stack if they input is iridium quality.
+			"Probability": 1, //Same as others.
+			"OutputStack": 4, //Same as others.
+			"OutputMaxStack": 4 //Same as others.
+		},
+		"AdditionalOutputs": [ // Define a list of additional outputs. You don't need to set a default output to use de aditional ones, the first additional output will be the default in that case. Only one output is given, randomly chosen between the options. Default is an empty list.
+			{
+				"OutputProbability": 0.2, //The absolute probability of geting that output, from 0 to 1. Default is 0. If 0 the remain percent not defined will be equaly divided between all outputs with 0 probability. Probability are checked from the first to the last output, so with the total is bigger than 1, the remaning outputs will be ignored.
+				"OutputIdentifier": "" //This is obrigatory. All other possible output properties repeat here.
+			}
+		],
 		"Sounds": ["furnace"], //List of sound to make when an input is placed.
 		"PlacingAnimation": "Fire", //[Bubbles|Fire] //Animation to make when placing the input.
 		"PlacingAnimationColorName": "White" //The color of the animation. Default White.
