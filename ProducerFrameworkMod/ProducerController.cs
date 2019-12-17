@@ -13,121 +13,171 @@ namespace ProducerFrameworkMod
 {
     internal class ProducerController
     {
+        public static readonly List<string> UnsupportedMachines = new List<string>()
+            { "Crystalarium", "Cask", "Incubator", "Slime Incubator", "Hopper", "Chest", "Garden Pot", "Mini-Jukebox"
+                , "Workbench", "Bee House", "Worm Bin", "Tapper", "Singing Stone", "Drum Block", "Flute Block"
+                , "Slime Ball", "Staircase", "Junimo Kart Arcade System", "Prairie King Arcade System" };
+
         private static readonly Dictionary<Tuple<string, object>, ProducerRule> RulesRepository = new Dictionary<Tuple<string, object>, ProducerRule>();
         private static readonly Dictionary<string, ProducerConfig> ConfigRepository = new Dictionary<string, ProducerConfig>()
         {
             {
+                "Bee House", new ProducerConfig("Bee House",false,true)
+            },
+            {
                 "Furnace", new ProducerConfig("Furnace",true)
+            },
+            {
+                "Loom", new ProducerConfig("Loom",false,true)
+            },
+            {
+                "Charcoal Kiln", new ProducerConfig("Charcoal Kiln",true)
             }
         };
 
-        public static void AddProducerItems(List<ProducerRule> producerRules)
+        public static void AddProducerItems(ProducerRule producerRules, ITranslationHelper i18n = null)
+        {
+            AddProducerItems(new List<ProducerRule>() { producerRules }, i18n);
+        }
+
+        public static void AddProducerItems(List<ProducerRule> producerRules, ITranslationHelper i18n = null)
         {
             Dictionary<int, string> objects = DataLoader.Helper.Content.Load<Dictionary<int, string>>("Data\\ObjectInformation", ContentSource.GameContent);
             foreach (var producerRule in producerRules)
             {
-                object inputIdentifier;
-                if (!Int32.TryParse(producerRule.InputIdentifier, out int intInputIdentifier))
+                if (string.IsNullOrEmpty(producerRule.ProducerName))
                 {
-                    KeyValuePair<int, string> pair = objects.FirstOrDefault(o => o.Value.StartsWith(producerRule.InputIdentifier + "/"));
-                    if (pair.Value != null)
+                    ProducerFrameworkModEntry.ModMonitor.Log($"The ProducerName property can't be null or empty. This rule will be ignored.", LogLevel.Warn);
+                    continue;
+                }
+                else if (UnsupportedMachines.Contains(producerRule.ProducerName) || producerRule.ProducerName.Contains("arecrow"))
+                {
+                    if (producerRule.ProducerName == "Crystalarium")
                     {
-                        inputIdentifier = pair.Key;
+                        ProducerFrameworkModEntry.ModMonitor.Log($"Producer Framework Mod doesn't support Crystalariums. Use Custom Cristalarium Mod instead.", LogLevel.Warn);
+                    }
+                    else if (producerRule.ProducerName == "Cask")
+                    {
+                        ProducerFrameworkModEntry.ModMonitor.Log($"Producer Framework Mod doesn't support Casks. Use Custom Cask Mod instead.", LogLevel.Warn);
                     }
                     else
                     {
-                        inputIdentifier = producerRule.InputIdentifier;
+                        ProducerFrameworkModEntry.ModMonitor.Log($"Producer Framework Mod doesn't support {producerRule.ProducerName}. This rule will be ignored.", LogLevel.Warn);
                     }
+                }
+                else if (string.IsNullOrEmpty(producerRule.InputIdentifier))
+                {
+                    ProducerFrameworkModEntry.ModMonitor.Log($"The InputIdentifier property can't be null or empty. This rule for '{producerRule.ProducerName}' will be ignored.", LogLevel.Warn);
+                    continue;
                 }
                 else
                 {
-                    inputIdentifier = intInputIdentifier;
-                }
-
-                if (producerRule.OutputIdentifier != null)
-                {
-                    producerRule.OutputConfigs.Add(new OutputConfig()
+                    object inputIdentifier;
+                    if (!int.TryParse(producerRule.InputIdentifier, out var intInputIdentifier))
                     {
-                        OutputIdentifier = producerRule.OutputIdentifier,
-                        OutputName = producerRule.OutputName,
-                        PreserveType = producerRule.PreserveType,
-                        InputPriceBased = producerRule.InputPriceBased,
-                        OutputPriceIncrement = producerRule.OutputPriceIncrement,
-                        OutputPriceMultiplier = producerRule.OutputPriceMultiplier,
-                        KeepInputQuality = producerRule.KeepInputQuality,
-                        OutputQuality = producerRule.OutputQuality,
-                        OutputStack = producerRule.OutputStack,
-                        OutputMaxStack = producerRule.OutputMaxStack,
-                        SilverQualityInput = producerRule.SilverQualityInput,
-                        GoldQualityInput = producerRule.GoldQualityInput,
-                        IridiumQualityInput = producerRule.IridiumQualityInput
-                    });
-                }
-                producerRule.OutputConfigs.AddRange(producerRule.AdditionalOutputs);
-
-                foreach (OutputConfig outputConfig in producerRule.OutputConfigs)
-                {
-                    if (!Int32.TryParse(outputConfig.OutputIdentifier, out int outputIndex))
-                    {
-                        KeyValuePair<int, string> pair = objects.FirstOrDefault(o => o.Value.StartsWith(outputConfig.OutputIdentifier + "/"));
+                        KeyValuePair<int, string> pair = objects.FirstOrDefault(o => ObjectUtils.IsObjectStringFromObjectName(o.Value, producerRule.InputIdentifier));
                         if (pair.Value != null)
                         {
-                            outputIndex = pair.Key;
+                            inputIdentifier = pair.Key;
                         }
                         else
                         {
-                            ProducerFrameworkModEntry.ModMonitor.Log($"Output not found for producer '{producerRule.ProducerName}' and input '{producerRule.InputIdentifier}'.", LogLevel.Warn);
-                            break;
+                            inputIdentifier = producerRule.InputIdentifier;
                         }
                     }
-                    outputConfig.OutputIndex = outputIndex;
-                }
-                if (producerRule.OutputConfigs.Any(p=>p.OutputIndex <0))
-                {
-                    continue;
-                }
-
-                if (producerRule.FuelIdentifier != null)
-                {
-                    producerRule.AdditionalFuel[producerRule.FuelIdentifier] = producerRule.FuelStack;
-                }
-
-                foreach (var fuel in producerRule.AdditionalFuel)
-                {
-                    if (!Int32.TryParse(fuel.Key, out int fuelIndex))
+                    else
                     {
-                        KeyValuePair<int, string> pair = objects.FirstOrDefault(o => o.Value.StartsWith(fuel.Key + "/"));
-                        if (pair.Value != null)
+                        inputIdentifier = intInputIdentifier;
+                    }
+
+                    if (producerRule.OutputIdentifier != null)
+                    {
+                        producerRule.OutputConfigs.Add(new OutputConfig()
                         {
-                            fuelIndex = pair.Key;
-                        }
-                        else
+                            OutputIdentifier = producerRule.OutputIdentifier,
+                            OutputName = producerRule.OutputName,
+                            OutputTranslationKey = producerRule.OutputTranslationKey,
+                            PreserveType = producerRule.PreserveType,
+                            InputPriceBased = producerRule.InputPriceBased,
+                            OutputPriceIncrement = producerRule.OutputPriceIncrement,
+                            OutputPriceMultiplier = producerRule.OutputPriceMultiplier,
+                            KeepInputQuality = producerRule.KeepInputQuality,
+                            OutputQuality = producerRule.OutputQuality,
+                            OutputStack = producerRule.OutputStack,
+                            OutputMaxStack = producerRule.OutputMaxStack,
+                            SilverQualityInput = producerRule.SilverQualityInput,
+                            GoldQualityInput = producerRule.GoldQualityInput,
+                            IridiumQualityInput = producerRule.IridiumQualityInput
+                        });
+                    }
+                    producerRule.OutputConfigs.AddRange(producerRule.AdditionalOutputs);
+
+                    foreach (OutputConfig outputConfig in producerRule.OutputConfigs)
+                    {
+                        if (!Int32.TryParse(outputConfig.OutputIdentifier, out int outputIndex))
                         {
-                            ProducerFrameworkModEntry.ModMonitor.Log($"Fuel not found for producer '{producerRule.ProducerName}' and input '{fuel.Key}'.", LogLevel.Warn);
-                            break;
+                            KeyValuePair<int, string> pair = objects.FirstOrDefault(o => ObjectUtils.IsObjectStringFromObjectName(o.Value, producerRule.OutputIdentifier));
+                            if (pair.Value != null)
+                            {
+                                outputIndex = pair.Key;
+                            }
+                            else
+                            {
+                                ProducerFrameworkModEntry.ModMonitor.Log($"No Output found for '{producerRule.OutputIdentifier}', producer '{producerRule.ProducerName}' and input '{producerRule.InputIdentifier}'. This rule will be ignored.", LogLevel.Warn);
+                                break;
+                            }
+                        }
+                        outputConfig.OutputIndex = outputIndex;
+                        if (outputConfig.OutputTranslationKey != null && i18n != null)
+                        {
+                            TranslationUtils.AddTranslation(outputConfig.OutputTranslationKey, i18n.Get(outputConfig.OutputTranslationKey));
                         }
                     }
-                    producerRule.FuelList.Add(new Tuple<int, int>(fuelIndex,fuel.Value));
-                }
-                if (producerRule.AdditionalFuel.Count != producerRule.FuelList.Count)
-                {
-                    continue;
-                }
-                
-
-                if (producerRule.PlacingAnimationColorName != null)
-                {
-                    try
+                    if (producerRule.OutputConfigs.Any(p => p.OutputIndex < 0))
                     {
-                        producerRule.PlacingAnimationColor = DataLoader.Helper.Reflection.GetProperty<Color>(typeof(Color), producerRule.PlacingAnimationColorName).GetValue();
+                        continue;
                     }
-                    catch (Exception)
-                    {
-                        ProducerFrameworkModEntry.ModMonitor.Log($"Color '{producerRule.PlacingAnimationColorName}' not valid, will use the default color '{producerRule.PlacingAnimationColor}'.");
-                    }
-                }
 
-                RulesRepository[new Tuple<string, object>(producerRule.ProducerName, inputIdentifier)] = producerRule;
+                    if (producerRule.FuelIdentifier != null)
+                    {
+                        producerRule.AdditionalFuel[producerRule.FuelIdentifier] = producerRule.FuelStack;
+                    }
+                    foreach (var fuel in producerRule.AdditionalFuel)
+                    {
+                        if (!Int32.TryParse(fuel.Key, out int fuelIndex))
+                        {
+                            KeyValuePair<int, string> pair = objects.FirstOrDefault(o => ObjectUtils.IsObjectStringFromObjectName(o.Value, fuel.Key));
+                            if (pair.Value != null)
+                            {
+                                fuelIndex = pair.Key;
+                            }
+                            else
+                            {
+                                ProducerFrameworkModEntry.ModMonitor.Log($"No fuel found for '{fuel.Key}', producer '{producerRule.ProducerName}' and input '{fuel.Key}'. This rule will be ignored.", LogLevel.Warn);
+                                break;
+                            }
+                        }
+                        producerRule.FuelList.Add(new Tuple<int, int>(fuelIndex, fuel.Value));
+                    }
+                    if (producerRule.AdditionalFuel.Count != producerRule.FuelList.Count)
+                    {
+                        continue;
+                    }
+
+                    if (producerRule.PlacingAnimationColorName != null)
+                    {
+                        try
+                        {
+                            producerRule.PlacingAnimationColor = DataLoader.Helper.Reflection.GetProperty<Color>(typeof(Color), producerRule.PlacingAnimationColorName).GetValue();
+                        }
+                        catch (Exception)
+                        {
+                            ProducerFrameworkModEntry.ModMonitor.Log($"Color '{producerRule.PlacingAnimationColorName}' isn't valid. Check XNA Color Chart for valid names. It'll use the default color '{producerRule.PlacingAnimationColor}'.");
+                        }
+                    }
+
+                    RulesRepository[new Tuple<string, object>(producerRule.ProducerName, inputIdentifier)] = producerRule;
+                }
             }
         }
 

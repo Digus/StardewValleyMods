@@ -46,15 +46,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AnimationController.cs" />
     <Compile Include="ContentPack\OutputConfig.cs" />
     <Compile Include="ContentPack\PlacingAnimation.cs" />
     <Compile Include="ContentPack\ProducerConfig.cs" />
     <Compile Include="ContentPack\ProducerRule.cs" />
     <Compile Include="DataLoader.cs" />
     <Compile Include="ObjectOverrides.cs" />
+    <Compile Include="ObjectUtils.cs" />
     <Compile Include="ProducerController.cs" />
     <Compile Include="ProducerFrameworkModEntry.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TranslationUtils.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ContentPackTemplate\manifest.json">

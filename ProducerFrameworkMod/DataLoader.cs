@@ -24,18 +24,20 @@ namespace ProducerFrameworkMod
         {
             foreach (IContentPack contentPack in Helper.ContentPacks.GetOwned())
             {
-                if (File.Exists(Path.Combine(contentPack.DirectoryPath, ProducerRulesJson)))
+                bool haveProducerRulesFile = File.Exists(Path.Combine(contentPack.DirectoryPath, ProducerRulesJson));
+                if (haveProducerRulesFile)
                 {
                     ProducerFrameworkModEntry.ModMonitor.Log($"Reading content pack: {contentPack.Manifest.Name} {contentPack.Manifest.Version} from {contentPack.DirectoryPath}");
                     List<ProducerRule> producerItems = contentPack.ReadJsonFile<List<ProducerRule>>(ProducerRulesJson);
-                    ProducerController.AddProducerItems(producerItems);
+                    ProducerController.AddProducerItems(producerItems,contentPack.Translation);
                 }
                 else
                 {
-                    ProducerFrameworkModEntry.ModMonitor.Log($"Ignoring content pack: {contentPack.Manifest.Name} {contentPack.Manifest.Version} from {contentPack.DirectoryPath}\nIt does not have an {ProducerRulesJson} file.", LogLevel.Warn);
+                    ProducerFrameworkModEntry.ModMonitor.Log($"Content pack: {contentPack.Manifest.Name} {contentPack.Manifest.Version} from {contentPack.DirectoryPath}\nIt does not have an {ProducerRulesJson} file.", LogLevel.Trace);
                 }
 
-                if (File.Exists(Path.Combine(contentPack.DirectoryPath, ProducersConfigJson)))
+                bool haveProducersConfigFile = File.Exists(Path.Combine(contentPack.DirectoryPath, ProducersConfigJson));
+                if (haveProducersConfigFile)
                 {
                     ProducerFrameworkModEntry.ModMonitor.Log($"Reading content pack: {contentPack.Manifest.Name} {contentPack.Manifest.Version} from {contentPack.DirectoryPath}");
                     List<ProducerConfig> producersConfigs = contentPack.ReadJsonFile<List<ProducerConfig>>(ProducersConfigJson);
@@ -43,7 +45,12 @@ namespace ProducerFrameworkMod
                 }
                 else
                 {
-                    ProducerFrameworkModEntry.ModMonitor.Log($"Ignoring content pack: {contentPack.Manifest.Name} {contentPack.Manifest.Version} from {contentPack.DirectoryPath}\nIt does not have an {ProducersConfigJson} file.", LogLevel.Warn);
+                    ProducerFrameworkModEntry.ModMonitor.Log($"Content pack: {contentPack.Manifest.Name} {contentPack.Manifest.Version} from {contentPack.DirectoryPath}\nIt does not have an {ProducersConfigJson} file.", LogLevel.Trace);
+                }
+
+                if (haveProducerRulesFile && haveProducersConfigFile)
+                {
+                    ProducerFrameworkModEntry.ModMonitor.Log($"Ignoring content pack: {contentPack.Manifest.Name} {contentPack.Manifest.Version} from {contentPack.DirectoryPath}\nIt does not have any of the required files.", LogLevel.Warn);
                 }
             }
         }

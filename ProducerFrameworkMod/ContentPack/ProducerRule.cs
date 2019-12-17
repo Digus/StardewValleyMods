@@ -29,6 +29,7 @@ namespace ProducerFrameworkMod.ContentPack
         //Default output
         public string OutputIdentifier;
         public string OutputName;
+        public string OutputTranslationKey;
         public Object.PreserveType? PreserveType;
         public bool InputPriceBased;
         public int OutputPriceIncrement = 0;

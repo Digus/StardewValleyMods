@@ -26,106 +26,64 @@ namespace ProducerFrameworkMod
 
             if (ProducerController.GetProducerItem(__instance.name, input) is ProducerRule producerRule)
             {
-                if (__instance.heldObject.Value != null && !__instance.name.Equals("Recycling Machine") && !__instance.name.Equals("Crystalarium") || (bool)((NetFieldBase<bool, NetBool>)input.bigCraftable))
+                if (__instance.heldObject.Value != null && !__instance.name.Equals("Crystalarium") || (bool)((NetFieldBase<bool, NetBool>)input.bigCraftable))
+                {
+                    return true;
+                }
+                if (IsInputExcluded(input, producerRule))
                 {
                     return true;
                 }
 
-                if (producerRule.ExcludeIdentifiers != null)
-                {
-                    if (producerRule.ExcludeIdentifiers.Contains(input.ParentSheetIndex.ToString())
-                        || producerRule.ExcludeIdentifiers.Contains(input.Name)
-                        || producerRule.ExcludeIdentifiers.Contains(input.Category.ToString())
-                        || Enumerable.Any(Enumerable.Intersect(producerRule.ExcludeIdentifiers,
-                            input.GetContextTags())))
-                    {
-                        return true;
-                    }
-                }
-
                 if ((bool)((NetFieldBase<bool, NetBool>)__instance.bigCraftable) && !probe && (__instance.heldObject.Value == null))
-                    __instance.scale.X = 5f;
-                
-                if (who.IsLocalPlayer)
                 {
-                    foreach (var fuel in producerRule.FuelList)
-                    {
-                        if (!who.hasItemInInventory(fuel.Item1, fuel.Item2))
-                        {
-                            if (!probe)
-                            {
-                                if (fuel.Item1 >= 0)
-                                {
-
-                                    Dictionary<int, string> objects = DataLoader.Helper.Content.Load<Dictionary<int, string>>("Data\\ObjectInformation", ContentSource.GameContent);
-                                    var objectName = objects[fuel.Item1].Split('/')[4];
-                                    Game1.showRedMessage(DataLoader.Helper.Translation.Get("Message.Requirement.Amount", new { amount = fuel.Item2, objectName }));
-                                }
-                                else
-                                {
-                                    Game1.showRedMessage(DataLoader.Helper.Translation.Get("Message.Requirement.Amount", new { amount = fuel.Item2, objectName = fuel.Item1 }));
-                                }
-                            }
-                            return false;
-                        }
-                    }
+                    __instance.scale.X = 5f;
                 }
 
-                if ((int)((NetFieldBase<int, NetInt>)input.stack) < producerRule.InputStack)
+                bool shouldDisplayMessages = !probe && who.IsLocalPlayer;
+
+                if (IsStackLessThanRequired(input, producerRule.InputStack, shouldDisplayMessages))
                 {
-                    if (!probe && who.IsLocalPlayer)
-                    {
-                        Game1.showRedMessage(DataLoader.Helper.Translation.Get("Message.Requirement.Amount", new { amount = producerRule.InputStack, objectName = Lexicon.makePlural(input.DisplayName, producerRule.InputStack == 1 ) }));
-                    }
                     return false;
                 }
-                Random random = new Random((int)Game1.uniqueIDForThisGame / 2 + (int)Game1.stats.DaysPlayed + Game1.timeOfDay + (int)__instance.tileLocation.X * 200 + (int)__instance.tileLocation.Y);
+
+                foreach (var fuel in producerRule.FuelList)
+                {
+                    if (IsFuelStackLessThanRequired(fuel, shouldDisplayMessages, who))
+                    {
+                        return false;
+                    }
+                }
+
+                Vector2 tileLocation = __instance.tileLocation.Value;
+                Random random = new Random((int)Game1.uniqueIDForThisGame / 2 + (int)Game1.stats.DaysPlayed * 10000000 + Game1.timeOfDay *10000 + (int)tileLocation.X * 200 + (int)tileLocation.Y);
                 OutputConfig outputConfig = ChooseOutput(producerRule.OutputConfigs, random);
 
                 string outputName = null;
-                if (outputConfig.PreserveType.HasValue)
-                {
-                    outputName = GetPreserveName(outputConfig.PreserveType.Value, input.Name);
-                }
 
-                Object output = new Object(Vector2.Zero, outputConfig.OutputIndex, outputName, false, true, false, false);
+                Object output = new Object(Vector2.Zero, outputConfig.OutputIndex, (string) null, false, true, false, false);
 
                 if (outputConfig.InputPriceBased)
                 {
-                    output.Price = (int) (outputConfig.OutputPriceIncrement + input.Price * outputConfig.OutputPriceMultiplier);
+                    output.Price = (int)(outputConfig.OutputPriceIncrement + input.Price * outputConfig.OutputPriceMultiplier);
                 }
 
                 output.Quality = outputConfig.KeepInputQuality ? input.Quality : outputConfig.OutputQuality;
 
-                
-                double chance = random.NextDouble();
-                StackConfig stackConfig;
-                if (input.Quality == 4 && chance < outputConfig.IridiumQualityInput.Probability)
-                {
-                    stackConfig = outputConfig.IridiumQualityInput;
-                }
-                else if (input.Quality == 2 && chance < outputConfig.GoldQualityInput.Probability)
-                {
-                    stackConfig = outputConfig.GoldQualityInput;
-                }
-                else if(input.Quality == 1 && chance < outputConfig.SilverQualityInput.Probability)
-                {
-                    stackConfig = outputConfig.SilverQualityInput;
-                }
-                else
-                {
-                    stackConfig = new StackConfig(outputConfig.OutputStack, outputConfig.OutputMaxStack);
-                }
-
-
-                output.Stack = random.Next(stackConfig.OutputStack, Math.Max(stackConfig.OutputStack,stackConfig.OutputMaxStack));
+                output.Stack = GetOutputStack(outputConfig, input, random);
 
                 __instance.heldObject.Value = output;
 
                 if (!probe)
                 {
                     bool inputUsed = false;
-                    if (outputConfig.OutputName != null)
+                    if (outputConfig.PreserveType.HasValue)
+                    {
+                        outputName = ObjectUtils.GetPreserveName(outputConfig.PreserveType.Value, input.Name);
+                        __instance.heldObject.Value.preserve.Value = outputConfig.PreserveType;
+                        inputUsed = true;
+                    }
+                    else if (outputConfig.OutputName != null)
                     {
                         outputName = outputConfig.OutputName
                             .Replace("{inputName}", input.Name)
@@ -133,30 +91,30 @@ namespace ProducerFrameworkMod
                             .Replace("{farmerName}", who.Name)
                             .Replace("{farmName}", who.farmName.Value);
                         inputUsed = outputConfig.OutputName.Contains("{inputName}");
+                        if (outputConfig.OutputTranslationKey != null)
+                        {
+                            output.GetContextTags().Add(TranslationUtils.GetContextTagForKey(outputConfig.OutputTranslationKey));
+                            if (outputConfig.OutputName.Contains("{farmerName}"))
+                            {
+                                output.GetContextTags().Add("farmer_id_" + who.uniqueMultiplayerID.Value);
+                            }
+                        }
                     }
                     if (outputName != null)
                     {
                         __instance.heldObject.Value.name = outputName;
                     }
 
-                    __instance.heldObject.Value.preserve.Value = outputConfig.PreserveType;
-                    if (inputUsed || outputConfig.PreserveType.HasValue)
+                    if (inputUsed)
                     {
                         __instance.heldObject.Value.preservedParentSheetIndex.Value = input.parentSheetIndex;
                     }
-                    string loadingDisplayName =__instance.DisplayName;
+                    //Called just to load the display name.
+                    string loadingDisplayName = output.DisplayName;
 
-                    producerRule.Sounds.ForEach(s=>
-                    {
-                        try
-                        {
-                            who.currentLocation.playSound(s, NetAudio.SoundContext.Default);
-                        }
-                        catch (Exception e)
-                        {
-                            ProducerFrameworkModEntry.ModMonitor.Log($"Error trying to play sound '{s}'.");
-                        }
-                    });
+                    GameLocation currentLocation = who.currentLocation;
+                    PlaySound(producerRule.Sounds, currentLocation);
+
                     __instance.minutesUntilReady.Value = producerRule.MinutesUntilReady;
 
                     if (ProducerController.GetProducerConfig(__instance.Name) is ProducerConfig producerConfig)
@@ -164,31 +122,12 @@ namespace ProducerFrameworkMod
                         __instance.showNextIndex.Value = producerConfig.AlternateFrameProducing;
                     }
 
-                    Multiplayer multiplayer = DataLoader.Helper.Reflection.GetField<Multiplayer>(typeof(Game1), "multiplayer").GetValue();
-
-                    switch (producerRule.PlacingAnimation)
+                    if (producerRule.PlacingAnimation.HasValue)
                     {
-                        case PlacingAnimation.Bubbles:
-                            multiplayer.broadcastSprites(who.currentLocation, new TemporaryAnimatedSprite[1]
-                            {
-                                new TemporaryAnimatedSprite("TileSheets\\animations", new Microsoft.Xna.Framework.Rectangle(256, 1856, 64, 128), 80f, 6, 999999, __instance.tileLocation.Value * 64f + new Vector2(0.0f, (float) sbyte.MinValue), false, false, (float) (((double) __instance.tileLocation.Y + 1.0) * 64.0 / 10000.0 + 9.99999974737875E-05), 0.0f, producerRule.PlacingAnimationColor * 0.75f, 1f, 0.0f, 0.0f, 0.0f, false)
-                                {
-                                    alphaFade = 0.005f
-                                }
-                            });
-                            break;
-                        case PlacingAnimation.Fire:
-                            multiplayer.broadcastSprites(who.currentLocation, new TemporaryAnimatedSprite[1]
-                            {
-                                new TemporaryAnimatedSprite(30, __instance.tileLocation.Value * 64f + new Vector2(0.0f, -16f), producerRule.PlacingAnimationColor, 4, false, 50f, 10, 64, (float) (((double) __instance.tileLocation.Y + 1.0) * 64.0 / 10000.0 + 9.99999974737875E-05), -1, 0)
-                                {
-                                    alphaFade = 0.005f
-                                }
-                            });
-                            break;
+                        AnimationController.DisplayAnimation(producerRule.PlacingAnimation.Value, producerRule.PlacingAnimationColor, currentLocation, tileLocation);
                     }
 
-                    __instance.initializeLightSource((Vector2)((NetFieldBase<Vector2, NetVector2>)__instance.tileLocation), false);
+                    __instance.initializeLightSource(tileLocation, false);
 
                     foreach (var fuel in producerRule.FuelList)
                     {
@@ -206,6 +145,91 @@ namespace ProducerFrameworkMod
             }
 
             return true;
+        }
+
+        private static void PlaySound(List<string> soundList, GameLocation currentLocation)
+        {
+            soundList.ForEach(s =>
+            {
+                try
+                {
+                    currentLocation.playSound(s, NetAudio.SoundContext.Default);
+                }
+                catch (Exception e)
+                {
+                    ProducerFrameworkModEntry.ModMonitor.Log($"Error trying to play sound '{s}'.");
+                }
+            });
+        }
+
+        private static bool IsInputExcluded(Object input, ProducerRule producerRule)
+        {
+            return producerRule.ExcludeIdentifiers != null && (producerRule.ExcludeIdentifiers.Contains(input.ParentSheetIndex.ToString())
+                                                               || producerRule.ExcludeIdentifiers.Contains(input.Name)
+                                                               || producerRule.ExcludeIdentifiers.Contains(input.Category.ToString())
+                                                               || producerRule.ExcludeIdentifiers.Intersect(input.GetContextTags()).Any());
+        }
+
+        private static bool IsStackLessThanRequired(Object object1, int requiredStack, bool shouldDisplayMessages)
+        {
+            if (object1.Stack < requiredStack)
+            {
+                if (shouldDisplayMessages)
+                {
+                    Game1.showRedMessage(DataLoader.Helper.Translation.Get(
+                        "Message.Requirement.Amount"
+                        , new { amount = requiredStack, objectName = Lexicon.makePlural(object1.DisplayName, requiredStack == 1)}
+                    ));
+                }
+                return true;
+            }
+            return false;
+        }
+
+        private static bool IsFuelStackLessThanRequired(Tuple<int, int> fuel, bool shouldDisplayMessages, Farmer who)
+        {
+            if (!who.hasItemInInventory(fuel.Item1, fuel.Item2))
+            {
+                if (shouldDisplayMessages)
+                {
+                    if (fuel.Item1 >= 0)
+                    {
+                        Dictionary<int, string> objects = DataLoader.Helper.Content.Load<Dictionary<int, string>>("Data\\ObjectInformation", ContentSource.GameContent);
+                        var objectName = Lexicon.makePlural(ObjectUtils.GetObjectParameter(objects[fuel.Item1], (int)ObjectParameter.DisplayName), fuel.Item2 == 1);
+                        Game1.showRedMessage(DataLoader.Helper.Translation.Get("Message.Requirement.Amount", new { amount = fuel.Item2, objectName }));
+                    }
+                    else
+                    {
+                        var objectName = ObjectUtils.GetCategoryName(fuel.Item1);
+                        Game1.showRedMessage(DataLoader.Helper.Translation.Get("Message.Requirement.Amount", new { amount = fuel.Item2, objectName }));
+                    }
+                }
+                return true;
+            }
+            return false;
+        }
+
+        private static int GetOutputStack(OutputConfig outputConfig, Object input, Random random)
+        {
+            double chance = random.NextDouble();
+            StackConfig stackConfig;
+            if (input.Quality == 4 && chance < outputConfig.IridiumQualityInput.Probability)
+            {
+                stackConfig = outputConfig.IridiumQualityInput;
+            }
+            else if (input.Quality == 2 && chance < outputConfig.GoldQualityInput.Probability)
+            {
+                stackConfig = outputConfig.GoldQualityInput;
+            }
+            else if (input.Quality == 1 && chance < outputConfig.SilverQualityInput.Probability)
+            {
+                stackConfig = outputConfig.SilverQualityInput;
+            }
+            else
+            {
+                stackConfig = new StackConfig(outputConfig.OutputStack, outputConfig.OutputMaxStack);
+            }
+            return random.Next(stackConfig.OutputStack, Math.Max(stackConfig.OutputStack, stackConfig.OutputMaxStack));
         }
 
         internal static void checkForAction(Object __instance, bool justCheckingForActivity, bool __result)
@@ -228,45 +252,61 @@ namespace ProducerFrameworkMod
         {
             if (__instance.preserve.Value == null && __instance.preservedParentSheetIndex.Value > 0 && __instance.ParentSheetIndex != 463 && __instance.ParentSheetIndex != 464)
             {
-                IDictionary<int, string> objects = Game1.objectInformation;
-                objects.TryGetValue(__instance.preservedParentSheetIndex.Value, out var preservedData);
-                objects.TryGetValue(__instance.ParentSheetIndex, out var instanceData);
-                if (!string.IsNullOrEmpty(preservedData) && !string.IsNullOrEmpty(instanceData))
+                string contextTagKey = __instance.GetContextTags().FirstOrDefault(c => c.StartsWith(TranslationUtils.ContextTagPrefix));
+                if (contextTagKey != null)
                 {
-                    string preservedName = preservedData.Split('/')[0];
-                    string preservedDisplayName = preservedData.Split('/')[4];
-
-                    string instanceName = instanceData.Split('/')[0];
-                    string instanceDisplayName = instanceData.Split('/')[4];
-
-                    __result = __instance.Name
-                        .Replace(preservedName, preservedDisplayName)
-                        .Replace(instanceName, instanceDisplayName);
-                    
+                    IDictionary<int, string> objects = Game1.objectInformation;
+                    string translation = TranslationUtils.GetTranslationFromContextTag(contextTagKey);
+                    if (translation.Contains("{inputName}"))
+                    {
+                        if (objects.TryGetValue(__instance.preservedParentSheetIndex.Value, out var preservedData))
+                        {
+                            translation = translation.Replace("{inputName}", ObjectUtils.GetObjectParameter(preservedData,(int)ObjectParameter.DisplayName));
+                        }
+                        else
+                        {
+                            __result = __instance.Name;
+                            return false;
+                        }
+                    }
+                    if (translation.Contains("{outputName}"))
+                    {
+                        if (objects.TryGetValue(__instance.ParentSheetIndex, out var instanceData))
+                        {
+                            translation = translation.Replace("{outputName}", ObjectUtils.GetObjectParameter(instanceData, (int)ObjectParameter.DisplayName));
+                        }
+                        else
+                        {
+                            __result = __instance.Name;
+                            return false;
+                        }
+                    }
+                    if (translation.Contains("{farmerName}"))
+                    {
+                        string farmerContextTag = __instance.GetContextTags().FirstOrDefault(c => c.StartsWith("farmer_uid_"));
+                        string farmerName = null;
+                        if (farmerContextTag != null)
+                        {
+                            farmerName = Game1.getAllFarmers().FirstOrDefault(f => f.uniqueMultiplayerID.Value == long.Parse(farmerContextTag.Replace("farmer_uid_", "")))?.Name;
+                        }
+                        if (farmerName == null)
+                        {
+                            __instance.GetContextTagList().Add("farmer_id_" + Game1.player.uniqueMultiplayerID.Value);
+                            farmerName = Game1.player.Name;
+                        }
+                        translation = translation.Replace("{farmerName}", farmerName);
+                    }
+                    if (translation.Contains("{farmName}"))
+                    {
+                        translation = translation.Replace("{farmName}", Game1.player.farmName.Value);
+                    }
+                    __result = translation;
                     return false;
                 }
+                __result = __instance.Name;
+                return false;
             }
             return true;
-        }
-
-        private static string GetPreserveName(Object.PreserveType preserveType, string preserveParentName)
-        {
-            switch (preserveType)
-            {
-                case Object.PreserveType.Wine:
-                    return $"{preserveParentName} Wine";
-                case Object.PreserveType.Jelly:
-                    return $"{preserveParentName} Jelly";
-                case Object.PreserveType.Pickle:
-                    return $"Pickled {preserveParentName}";
-                case Object.PreserveType.Juice:
-                    return $"{preserveParentName} Juice";
-                case Object.PreserveType.Roe:
-                    return $"{preserveParentName} Roe";
-                case Object.PreserveType.AgedRoe:
-                    return $"Aged {preserveParentName}";
-            }
-            return null;
         }
 
         private static bool RemoveItemsFromInventory(Farmer farmer, int index, int stack)

@@ -12,6 +12,7 @@ namespace ProducerFrameworkMod.ContentPack
         public double OutputProbability = 0;
         public string OutputIdentifier;
         public string OutputName;
+        public string OutputTranslationKey;
         public Object.PreserveType? PreserveType;
         public bool InputPriceBased;
         public int OutputPriceIncrement = 0;
