@@ -3,37 +3,43 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using StardewModdingAPI;
+using StardewValley;
 
 namespace ProducerFrameworkMod
 {
     internal class TranslationUtils
     {
-        internal const string ContextTagPrefix = "pfm_key_";
         private static readonly Dictionary<int, string> Translations = new Dictionary<int, string>();
 
-        internal static void AddTranslation(string key, string value)
+        private static LocalizedContentManager.LanguageCode? _activeLanguageCode = null;
+
+        internal static void AddTranslation(int index, string value)
         {
-            Translations[GenerateHashFromKey(key)] = value;
+            if (Game1.content.GetCurrentLanguage() != _activeLanguageCode)
+            {
+                _activeLanguageCode = Game1.content.GetCurrentLanguage();
+                Translations.Clear();
+            }
+
+            if (!Translations.ContainsKey(index))
+            {
+                Translations[index] = value;
+            }
+            else if (Translations[index] != value)
+            {
+                ProducerFrameworkModEntry.ModMonitor.Log($"There is already a translation for the object with the index '{index}'. The translation '{value}' will be ignored.",LogLevel.Warn);
+            }
         }
 
-        internal static string GetTranslationFromContextTag(string context)
+        internal static string GetTranslationFromIndex(int index)
         {
-            return Translations[int.Parse(context.Replace(ContextTagPrefix, ""))];
+            return Translations[index];
         }
 
-        internal static string GetTranslationFromKey(string key)
+        internal static bool HasTranslationForIndex(int index)
         {
-            return Translations[GenerateHashFromKey(key)];
-        }
-
-        internal static string GetContextTagForKey(string key)
-        {
-            return ContextTagPrefix + GenerateHashFromKey(key);
-        }
-
-        internal static int GenerateHashFromKey(string key)
-        {
-            return key.GetHashCode();
+            return Translations.ContainsKey(index);
         }
     }
 }

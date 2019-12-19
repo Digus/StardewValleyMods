@@ -48,7 +48,7 @@ namespace ProducerFrameworkMod
                     ProducerFrameworkModEntry.ModMonitor.Log($"Content pack: {contentPack.Manifest.Name} {contentPack.Manifest.Version} from {contentPack.DirectoryPath}\nIt does not have an {ProducersConfigJson} file.", LogLevel.Trace);
                 }
 
-                if (haveProducerRulesFile && haveProducersConfigFile)
+                if (!haveProducerRulesFile && !haveProducersConfigFile)
                 {
                     ProducerFrameworkModEntry.ModMonitor.Log($"Ignoring content pack: {contentPack.Manifest.Name} {contentPack.Manifest.Version} from {contentPack.DirectoryPath}\nIt does not have any of the required files.", LogLevel.Warn);
                 }

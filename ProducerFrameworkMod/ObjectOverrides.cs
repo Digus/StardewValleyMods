@@ -91,24 +91,16 @@ namespace ProducerFrameworkMod
                             .Replace("{farmerName}", who.Name)
                             .Replace("{farmName}", who.farmName.Value);
                         inputUsed = outputConfig.OutputName.Contains("{inputName}");
-                        if (outputConfig.OutputTranslationKey != null)
-                        {
-                            output.GetContextTags().Add(TranslationUtils.GetContextTagForKey(outputConfig.OutputTranslationKey));
-                            if (outputConfig.OutputName.Contains("{farmerName}"))
-                            {
-                                output.GetContextTags().Add("farmer_id_" + who.uniqueMultiplayerID.Value);
-                            }
-                        }
                     }
                     if (outputName != null)
                     {
                         __instance.heldObject.Value.name = outputName;
                     }
-
                     if (inputUsed)
                     {
                         __instance.heldObject.Value.preservedParentSheetIndex.Value = input.parentSheetIndex;
                     }
+
                     //Called just to load the display name.
                     string loadingDisplayName = output.DisplayName;
 
@@ -250,60 +242,46 @@ namespace ProducerFrameworkMod
 
         internal static bool LoadDisplayName(Object __instance, ref string __result)
         {
-            if (__instance.preserve.Value == null && __instance.preservedParentSheetIndex.Value > 0 && __instance.ParentSheetIndex != 463 && __instance.ParentSheetIndex != 464)
+            if (TranslationUtils.HasTranslationForIndex(__instance.ParentSheetIndex) && !__instance.preserve.Value.HasValue && __instance.ParentSheetIndex != 463 && __instance.ParentSheetIndex != 464)
             {
-                string contextTagKey = __instance.GetContextTags().FirstOrDefault(c => c.StartsWith(TranslationUtils.ContextTagPrefix));
-                if (contextTagKey != null)
+                IDictionary<int, string> objects = Game1.objectInformation;
+                string translation = TranslationUtils.GetTranslationFromIndex(__instance.ParentSheetIndex);
+                
+                if (objects.TryGetValue(__instance.ParentSheetIndex, out var instanceData) && ObjectUtils.GetObjectParameter(instanceData, (int)ObjectParameter.Name) != __instance.Name)
                 {
-                    IDictionary<int, string> objects = Game1.objectInformation;
-                    string translation = TranslationUtils.GetTranslationFromContextTag(contextTagKey);
-                    if (translation.Contains("{inputName}"))
-                    {
-                        if (objects.TryGetValue(__instance.preservedParentSheetIndex.Value, out var preservedData))
-                        {
-                            translation = translation.Replace("{inputName}", ObjectUtils.GetObjectParameter(preservedData,(int)ObjectParameter.DisplayName));
-                        }
-                        else
-                        {
-                            __result = __instance.Name;
-                            return false;
-                        }
-                    }
                     if (translation.Contains("{outputName}"))
                     {
-                        if (objects.TryGetValue(__instance.ParentSheetIndex, out var instanceData))
-                        {
-                            translation = translation.Replace("{outputName}", ObjectUtils.GetObjectParameter(instanceData, (int)ObjectParameter.DisplayName));
-                        }
-                        else
-                        {
-                            __result = __instance.Name;
-                            return false;
-                        }
+                        translation = translation.Replace("{outputName}",ObjectUtils.GetObjectParameter(instanceData, (int) ObjectParameter.DisplayName));
                     }
-                    if (translation.Contains("{farmerName}"))
-                    {
-                        string farmerContextTag = __instance.GetContextTags().FirstOrDefault(c => c.StartsWith("farmer_uid_"));
-                        string farmerName = null;
-                        if (farmerContextTag != null)
-                        {
-                            farmerName = Game1.getAllFarmers().FirstOrDefault(f => f.uniqueMultiplayerID.Value == long.Parse(farmerContextTag.Replace("farmer_uid_", "")))?.Name;
-                        }
-                        if (farmerName == null)
-                        {
-                            __instance.GetContextTagList().Add("farmer_id_" + Game1.player.uniqueMultiplayerID.Value);
-                            farmerName = Game1.player.Name;
-                        }
-                        translation = translation.Replace("{farmerName}", farmerName);
-                    }
-                    if (translation.Contains("{farmName}"))
-                    {
-                        translation = translation.Replace("{farmName}", Game1.player.farmName.Value);
-                    }
-                    __result = translation;
+                }
+                else
+                {
+                    __result = __instance.Name;
                     return false;
                 }
-                __result = __instance.Name;
+                
+                if (translation.Contains("{inputName}"))
+                {
+                    if (objects.TryGetValue(__instance.preservedParentSheetIndex.Value, out var preservedData))
+                    {
+                        translation = translation.Replace("{inputName}", ObjectUtils.GetObjectParameter(preservedData,(int)ObjectParameter.DisplayName));
+                    }
+                    else
+                    {
+                        __result = __instance.Name;
+                        return false;
+                    }
+                }
+                if (translation.Contains("{farmName}"))
+                {
+                    translation = translation.Replace("{farmName}", Game1.player.farmName.Value);
+                }
+                if (translation.Contains("{farmerName}"))
+                {
+                    string farmerName = Game1.getAllFarmers().FirstOrDefault(f => __instance.Name.Contains(f.name))?.Name ?? Game1.player.Name;
+                    translation = translation.Replace("{farmerName}", farmerName);
+                }
+                __result = translation;
                 return false;
             }
             return true;

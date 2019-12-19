@@ -116,21 +116,29 @@ namespace ProducerFrameworkMod
                     {
                         if (!Int32.TryParse(outputConfig.OutputIdentifier, out int outputIndex))
                         {
-                            KeyValuePair<int, string> pair = objects.FirstOrDefault(o => ObjectUtils.IsObjectStringFromObjectName(o.Value, producerRule.OutputIdentifier));
+                            KeyValuePair<int, string> pair = objects.FirstOrDefault(o => ObjectUtils.IsObjectStringFromObjectName(o.Value, outputConfig.OutputIdentifier));
                             if (pair.Value != null)
                             {
                                 outputIndex = pair.Key;
                             }
                             else
                             {
-                                ProducerFrameworkModEntry.ModMonitor.Log($"No Output found for '{producerRule.OutputIdentifier}', producer '{producerRule.ProducerName}' and input '{producerRule.InputIdentifier}'. This rule will be ignored.", LogLevel.Warn);
+                                ProducerFrameworkModEntry.ModMonitor.Log($"No Output found for '{outputConfig.OutputIdentifier}', producer '{producerRule.ProducerName}' and input '{producerRule.InputIdentifier}'. This rule will be ignored.", LogLevel.Warn);
                                 break;
                             }
                         }
                         outputConfig.OutputIndex = outputIndex;
                         if (outputConfig.OutputTranslationKey != null && i18n != null)
                         {
-                            TranslationUtils.AddTranslation(outputConfig.OutputTranslationKey, i18n.Get(outputConfig.OutputTranslationKey));
+                            string translation = i18n.Get(outputConfig.OutputTranslationKey);
+                            if (!translation.Contains("(no translation:"))
+                            {
+                                TranslationUtils.AddTranslation(outputConfig.OutputIndex, translation);
+                            }
+                            else
+                            {
+                                TranslationUtils.AddTranslation(outputConfig.OutputIndex, outputConfig.OutputName);
+                            }
                         }
                     }
                     if (producerRule.OutputConfigs.Any(p => p.OutputIndex < 0))
