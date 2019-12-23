@@ -133,12 +133,16 @@ namespace ProducerFrameworkMod
                             string translation = i18n.Get(outputConfig.OutputTranslationKey);
                             if (!translation.Contains("(no translation:"))
                             {
-                                TranslationUtils.AddTranslation(outputConfig.OutputIndex, translation);
+                                NameUtils.AddCustomName(outputConfig.OutputIndex, translation);
                             }
                             else
                             {
-                                TranslationUtils.AddTranslation(outputConfig.OutputIndex, outputConfig.OutputName);
+                                NameUtils.AddCustomName(outputConfig.OutputIndex, outputConfig.OutputName);
                             }
+                        }
+                        else if(outputConfig.OutputName != null)
+                        {
+                            NameUtils.AddCustomName(outputConfig.OutputIndex, outputConfig.OutputName);
                         }
                     }
                     if (producerRule.OutputConfigs.Any(p => p.OutputIndex < 0))

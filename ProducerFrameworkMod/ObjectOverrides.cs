@@ -94,7 +94,7 @@ namespace ProducerFrameworkMod
                     }
                     if (outputName != null)
                     {
-                        __instance.heldObject.Value.name = outputName;
+                        __instance.heldObject.Value.Name = outputName;
                     }
                     if (inputUsed)
                     {
@@ -242,10 +242,10 @@ namespace ProducerFrameworkMod
 
         internal static bool LoadDisplayName(Object __instance, ref string __result)
         {
-            if (TranslationUtils.HasTranslationForIndex(__instance.ParentSheetIndex) && !__instance.preserve.Value.HasValue && __instance.ParentSheetIndex != 463 && __instance.ParentSheetIndex != 464)
+            if (NameUtils.HasCustomNameForIndex(__instance.ParentSheetIndex) && !__instance.preserve.Value.HasValue && __instance.ParentSheetIndex != 463 && __instance.ParentSheetIndex != 464)
             {
                 IDictionary<int, string> objects = Game1.objectInformation;
-                string translation = TranslationUtils.GetTranslationFromIndex(__instance.ParentSheetIndex);
+                string translation = NameUtils.GetCustomNameFromIndex(__instance.ParentSheetIndex);
                 
                 if (objects.TryGetValue(__instance.ParentSheetIndex, out var instanceData) && ObjectUtils.GetObjectParameter(instanceData, (int)ObjectParameter.Name) != __instance.Name)
                 {

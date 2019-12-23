@@ -57,7 +57,7 @@
     <Compile Include="ProducerController.cs" />
     <Compile Include="ProducerFrameworkModEntry.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TranslationUtils.cs" />
+    <Compile Include="NameUtils.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ContentPackTemplate\manifest.json">
