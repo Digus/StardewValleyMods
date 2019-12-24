@@ -35,11 +35,25 @@ namespace ProducerFrameworkMod
             }
         };
 
-        public static void AddProducerItems(ProducerRule producerRules, ITranslationHelper i18n = null)
+        /// <summary>
+        /// Adds or replace a custom producer rule to the game.
+        /// You should probably call this method everytime a save game loads, to ensure all custom objects are properly loaded.
+        /// Producer rule should be unique per name of producer and input identifier.
+        /// </summary>
+        /// <param name="producerRule">The producer rule to be added or replaced.</param>
+        /// <param name="i18n">Optional i18n object, to look for the output name in case a translation key was used.</param>
+        public static void AddProducerItems(ProducerRule producerRule, ITranslationHelper i18n = null)
         {
-            AddProducerItems(new List<ProducerRule>() { producerRules }, i18n);
+            AddProducerItems(new List<ProducerRule>() { producerRule }, i18n);
         }
 
+        /// <summary>
+        /// Adds or replace a list of custom producer rules to the game.
+        /// You should probably call this method everytime a save game loads, to ensure all custom objects are properly loaded.
+        /// Producer rules should be unique per name of producer and input identifier.
+        /// </summary>
+        /// <param name="producerRules">A list of producer rules to be added or replaced.</param>
+        /// <param name="i18n">Optional i18n object, to look for the output name in case a translation key was used.</param>
         public static void AddProducerItems(List<ProducerRule> producerRules, ITranslationHelper i18n = null)
         {
             Dictionary<int, string> objects = DataLoader.Helper.Content.Load<Dictionary<int, string>>("Data\\ObjectInformation", ContentSource.GameContent);
@@ -193,11 +207,30 @@ namespace ProducerFrameworkMod
             }
         }
 
+        /// <summary>
+        /// Adds or replace the producer config.
+        /// </summary>
+        /// <param name="producersConfig">The producer config to be added or replaced.</param>
+        public static void AddProducerConfig(ProducerConfig producersConfig)
+        {
+            AddProducersConfig(new List<ProducerConfig>(){ producersConfig });
+        }
+
+        /// <summary>
+        /// Adds or replace the producers config.
+        /// </summary>
+        /// <param name="producersConfig">A list of producer config to add or replace.</param>
         public static void AddProducersConfig(List<ProducerConfig> producersConfig)
         {
             producersConfig.ForEach(c => ConfigRepository[c.ProducerName] = c);
         }
 
+        /// <summary>
+        /// Get a producer rule for a given producer name and input.
+        /// </summary>
+        /// <param name="producerName">Name of the producer</param>
+        /// <param name="input">Input object of a rule</param>
+        /// <returns>The producer config</returns>
         public static ProducerRule GetProducerItem(string producerName, Object input)
         {
             ProducerRule value;
@@ -220,6 +253,11 @@ namespace ProducerFrameworkMod
             return value;
         }
 
+        /// <summary>
+        /// Get the producer config from the name of the producer.
+        /// </summary>
+        /// <param name="producerName">The producer name</param>
+        /// <returns>The producer config</returns>
         public static ProducerConfig GetProducerConfig(string producerName)
         {
             ConfigRepository.TryGetValue(producerName, out ProducerConfig producerConfig);

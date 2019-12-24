@@ -224,6 +224,55 @@ namespace ProducerFrameworkMod
             return random.Next(stackConfig.OutputStack, Math.Max(stackConfig.OutputStack, stackConfig.OutputMaxStack));
         }
 
+        private static bool RemoveItemsFromInventory(Farmer farmer, int index, int stack)
+        {
+            if (farmer.hasItemInInventory(index, stack, 0))
+            {
+                for (int index1 = 0; index1 < farmer.items.Count; ++index1)
+                {
+                    if (farmer.items[index1] != null && farmer.items[index1] is Object object1 && (object1.ParentSheetIndex == index || object1.Category == index))
+                    {
+                        if (farmer.items[index1].Stack > stack)
+                        {
+                            farmer.items[index1].Stack -= stack;
+                            return true;
+                        }
+                        stack -= farmer.items[index1].Stack;
+                        farmer.items[index1] = (Item)null;
+                    }
+                    if (stack <= 0)
+                        return true;
+                }
+            }
+            return false;
+        }
+
+        private static OutputConfig ChooseOutput(List<OutputConfig> producerRuleOutputConfig, Random random)
+        {
+            List<OutputConfig> outputConfigs = producerRuleOutputConfig.FindAll(o => o.OutputProbability > 0);
+            Double chance = random.NextDouble();
+            Double probabilies = 0;
+            foreach (OutputConfig outputConfig in outputConfigs)
+            {
+                probabilies += outputConfig.OutputProbability;
+                if (chance - probabilies < 0)
+                {
+                    return outputConfig;
+                }
+            }
+            outputConfigs = producerRuleOutputConfig.FindAll(o => o.OutputProbability <= 0);
+            double increment = (1 - probabilies) / outputConfigs.Count;
+            foreach (OutputConfig outputConfig in outputConfigs)
+            {
+                probabilies += increment;
+                if (chance - probabilies < 0)
+                {
+                    return outputConfig;
+                }
+            }
+            return producerRuleOutputConfig.FirstOrDefault();
+        }
+
         internal static void checkForAction(Object __instance, bool justCheckingForActivity, bool __result)
         {
             if (ProducerController.GetProducerConfig(__instance.Name) is ProducerConfig producerConfig && __instance.heldObject.Value == null && __instance.MinutesUntilReady <= 0)
@@ -285,55 +334,6 @@ namespace ProducerFrameworkMod
                 return false;
             }
             return true;
-        }
-
-        private static bool RemoveItemsFromInventory(Farmer farmer, int index, int stack)
-        {
-            if (farmer.hasItemInInventory(index, stack, 0))
-            {
-                for (int index1 = 0; index1 < farmer.items.Count; ++index1)
-                {
-                    if (farmer.items[index1] != null && farmer.items[index1] is Object object1 && (object1.ParentSheetIndex == index || object1.Category == index))
-                    {
-                        if (farmer.items[index1].Stack > stack)
-                        {
-                            farmer.items[index1].Stack -= stack;
-                            return true;
-                        }
-                        stack -= farmer.items[index1].Stack;
-                        farmer.items[index1] = (Item)null;
-                    }
-                    if (stack <= 0)
-                        return true;
-                }
-            }
-            return false;
-        }
-
-        private static OutputConfig ChooseOutput(List<OutputConfig> producerRuleOutputConfig, Random random)
-        {
-            List<OutputConfig> outputConfigs = producerRuleOutputConfig.FindAll(o => o.OutputProbability > 0);
-            Double chance = random.NextDouble();
-            Double probabilies = 0;
-            foreach (OutputConfig outputConfig in outputConfigs)
-            {
-                probabilies += outputConfig.OutputProbability;
-                if (chance - probabilies < 0)
-                {
-                    return outputConfig;
-                }
-            }
-            outputConfigs = producerRuleOutputConfig.FindAll(o => o.OutputProbability <= 0);
-            double increment = (1 - probabilies) / outputConfigs.Count;
-            foreach (OutputConfig outputConfig in outputConfigs)
-            {
-                probabilies += increment;
-                if (chance - probabilies < 0)
-                {
-                    return outputConfig;
-                }
-            }
-            return producerRuleOutputConfig.FirstOrDefault();
         }
     }
 }
