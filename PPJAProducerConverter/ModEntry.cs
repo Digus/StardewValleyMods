@@ -47,6 +47,7 @@ namespace PPJAProducerConverter
             ,{"New Machines.New_Machines.json.12", "Loom"}
             ,{"New Machines.New_Machines.json.21", "Cask"}
             ,{"New Machines.New_Machines.json.18", "Cheese Press"}
+            ,{"Recovery Machine.RecoveryMachine.json.20","Recycling Machine"}
         };
 
         public override void Entry(IModHelper helper)
