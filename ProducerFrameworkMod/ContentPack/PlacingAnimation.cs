@@ -3,6 +3,7 @@
     public enum PlacingAnimation
     {
         Bubbles,
-        Fire
+        Fire,
+        CharcoalKilnSmoke
     }
 }
