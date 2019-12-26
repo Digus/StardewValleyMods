@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Design;
 using Object = StardewValley.Object;
 
 namespace ProducerFrameworkMod.ContentPack
@@ -20,8 +19,14 @@ namespace ProducerFrameworkMod.ContentPack
         public int MinutesUntilReady;
         public List<OutputConfig> AdditionalOutputs = new List<OutputConfig>();
         public List<string> Sounds = new List<string>();
+        public List<Dictionary<string,int>> DelayedSounds = new List<Dictionary<string, int>> ();
         public PlacingAnimation? PlacingAnimation;
         public string PlacingAnimationColorName;
+        public float PlacingAnimationOffsetX = 0.0f;
+        public float PlacingAnimationOffsetY = 0.0f;
+        public List<StardewStats> IncrementStatsOnInput = new List<StardewStats>();
+
+        // Generated attributes
         internal List<Tuple<int,int>> FuelList = new List<Tuple<int, int>>();
         internal Color PlacingAnimationColor = Color.White;
         internal List<OutputConfig> OutputConfigs = new List<OutputConfig>();

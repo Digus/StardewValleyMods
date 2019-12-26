@@ -48,6 +48,8 @@ namespace PPJAProducerConverter
             ,{"New Machines.New_Machines.json.21", "Cask"}
             ,{"New Machines.New_Machines.json.18", "Cheese Press"}
             ,{"Recovery Machine.RecoveryMachine.json.20","Recycling Machine"}
+            ,{"Manure Handling Machines.Manure_Machines.json.14","Manure Grinder"}
+            ,{"Manure Handling Machines.Manure_Machines.json.17","Fertilizer Mixer"}
         };
 
         public override void Entry(IModHelper helper)
