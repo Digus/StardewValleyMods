@@ -61,7 +61,9 @@ namespace ProducerFrameworkMod
 
                 string outputName = null;
 
-                Object output = new Object(Vector2.Zero, outputConfig.OutputIndex, (string) null, false, true, false, false);
+                Object output = outputConfig.OutputIndex != 93 && outputConfig.OutputIndex != 94 ? //Torches indexs
+                    new Object(Vector2.Zero, outputConfig.OutputIndex, (string) null, false, true, false, false) :
+                    new Torch(Vector2.Zero, outputConfig.OutputStack, outputConfig.OutputIndex);
 
                 if (outputConfig.InputPriceBased)
                 {
@@ -106,6 +108,7 @@ namespace ProducerFrameworkMod
 
                     GameLocation currentLocation = who.currentLocation;
                     PlaySound(producerRule.Sounds, currentLocation);
+                    PlayDelayedSound(producerRule.DelayedSounds, currentLocation);
 
                     __instance.minutesUntilReady.Value = producerRule.MinutesUntilReady;
 
@@ -116,7 +119,7 @@ namespace ProducerFrameworkMod
 
                     if (producerRule.PlacingAnimation.HasValue)
                     {
-                        AnimationController.DisplayAnimation(producerRule.PlacingAnimation.Value, producerRule.PlacingAnimationColor, currentLocation, tileLocation);
+                        AnimationController.DisplayAnimation(producerRule.PlacingAnimation.Value, producerRule.PlacingAnimationColor, currentLocation, tileLocation, new Vector2( producerRule.PlacingAnimationOffsetX, producerRule.PlacingAnimationOffsetY));
                     }
 
                     __instance.initializeLightSource(tileLocation, false);
@@ -125,6 +128,8 @@ namespace ProducerFrameworkMod
                     {
                         RemoveItemsFromInventory(who, fuel.Item1, fuel.Item2);
                     }
+
+                    producerRule.IncrementStatsOnInput.ForEach(s=> StatsController.IncrementStardewStats(s, producerRule.InputStack));
 
                     input.Stack -= producerRule.InputStack;
                     __result = input.Stack <= 0;
@@ -152,6 +157,17 @@ namespace ProducerFrameworkMod
                     ProducerFrameworkModEntry.ModMonitor.Log($"Error trying to play sound '{s}'.");
                 }
             });
+        }
+
+        private static void PlayDelayedSound(List<Dictionary<string,int>> delayedSoundList, GameLocation currentLocation)
+        {
+            foreach (Dictionary<string, int> dictionary in delayedSoundList)
+            {
+                foreach (KeyValuePair<string, int> pair in dictionary)
+                {
+                    DelayedAction.playSoundAfterDelay(pair.Key, pair.Value, (GameLocation)null, -1);
+                }
+            }
         }
 
         private static bool IsInputExcluded(Object input, ProducerRule producerRule)
@@ -221,7 +237,7 @@ namespace ProducerFrameworkMod
             {
                 stackConfig = new StackConfig(outputConfig.OutputStack, outputConfig.OutputMaxStack);
             }
-            return random.Next(stackConfig.OutputStack, Math.Max(stackConfig.OutputStack, stackConfig.OutputMaxStack));
+            return random.Next(stackConfig.OutputStack, Math.Max(stackConfig.OutputStack, stackConfig.OutputMaxStack+1));
         }
 
         private static bool RemoveItemsFromInventory(Farmer farmer, int index, int stack)

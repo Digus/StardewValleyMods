@@ -15,7 +15,7 @@
 		"InputPriceBased": true, //If the price of the object should be calculated from the price of the input. Default is false.
 		"OutputPriceIncrement": 200, //If InputPriceBased is true, increment the input value by this amount. Default is 0.
 		"OutputPriceMultiplier": 2.5, //If InputPriceBased is true, multiplay the input value by this amount. Default is 1.
-		"KeepInputQuanlity": false, //If the output should have the same quality as the input. Default is false.
+		"KeepInputQuality": false, //If the output should have the same quality as the input. Default is false.
 		"OutputQuality": 2, //Set the output quality. Default is 0.
 		"OutputStack": 2, //Set the output stack. Default is 1.
 		"OutputMaxStack": 2, //Set the max output stack, if you want a random output stack. It'll be ignored if smaller than OutputStack. Default is 1.
@@ -42,7 +42,11 @@
 			}
 		],
 		"Sounds": ["furnace"], //List of sound to make when an input is placed. Default is an empty list.
-		"PlacingAnimation": "Fire", //[Bubbles|Fire] //Animation to make when placing the input. Default is null.
-		"PlacingAnimationColorName": "White" //The color of the animation. Default White.
+		"DelayedSounds": [{ "bubbles": 50 }], //List of sounds to make after a dalay. Default is an empty list.
+		"PlacingAnimation": "Fire", //[Bubbles|Fire|CharcoalKiltSmoke] //Animation to make when placing the input. Default is null.
+		"PlacingAnimationColorName": "White", //The color of the animation. Default White.
+		"PlacingAnimationOffsetX": 0, //The offset of the X axis. The offset is relative to the animation default location, not the position of the machine. Default is 0.
+		"PlacingAnimationOffsetY": -32, //The offset of the Y axis. The offset is relative to the animation default location, not the position of the machine. Default is 0.
+		"IncrementStatsOnInput":  ["PiecesOfTrashRecycled"] // [PiecesOfTrashRecycled|GoatCheeseMade|CheeseMade|PreservesMade|BeveragesMade] Game stats to increment when a input is placed. Will increment the stats by the amount of the stack. Vanilla machines already add stats when an item is removed from the machine. Only the Recycle Machine increment the stats on input. Default is an empty list.
 	}
 ]

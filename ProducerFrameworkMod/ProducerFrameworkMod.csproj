@@ -36,6 +36,9 @@
       <HintPath>G:\Program Files (x86)\Steam\steamapps\common\Stardew Valley\smapi-internal\0Harmony.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\..\..\Users\Digus\.nuget\packages\newtonsoft.json\12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -58,6 +61,7 @@
     <Compile Include="ProducerFrameworkModEntry.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="NameUtils.cs" />
+    <Compile Include="StatsController.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ContentPackTemplate\manifest.json">
