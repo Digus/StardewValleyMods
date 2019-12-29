@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{387C097A-0DD6-46A6-B7D0-27E2B19D4DD1}</ProjectGuid>
+    <ProjectGuid>{811039FD-5162-4CE3-B13E-972AC5EC9A17}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ProducerFrameworkMod</RootNamespace>
-    <AssemblyName>ProducerFrameworkMod</AssemblyName>
+    <RootNamespace>PFMAutomate</RootNamespace>
+    <AssemblyName>PFMAutomate</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>
@@ -39,8 +39,9 @@
       <HintPath>G:\Program Files (x86)\Steam\steamapps\common\Stardew Valley\smapi-internal\0Harmony.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\..\..\..\Users\Digus\.nuget\packages\newtonsoft.json\12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Automate">
+      <HintPath>G:\Program Files (x86)\Steam\steamapps\common\Stardew Valley\Mods\Automate\Automate.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -52,42 +53,25 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AnimationController.cs" />
-    <Compile Include="ContentPack\OutputConfig.cs" />
-    <Compile Include="ContentPack\PlacingAnimation.cs" />
-    <Compile Include="ContentPack\ProducerConfig.cs" />
-    <Compile Include="ContentPack\ProducerRule.cs" />
-    <Compile Include="DataLoader.cs" />
-    <Compile Include="ObjectOverrides.cs" />
-    <Compile Include="ObjectUtils.cs" />
-    <Compile Include="OutputConfigController.cs" />
-    <Compile Include="ProducerController.cs" />
-    <Compile Include="ProducerFrameworkModEntry.cs" />
-    <Compile Include="ProducerRuleController.cs" />
+    <Compile Include="AutomateOverrides.cs" />
+    <Compile Include="Automate\CustomProducerMachine.cs" />
+    <Compile Include="Automate\ProducerFrameworkAutomationFactory.cs" />
+    <Compile Include="Automate\VanillaProducerMachine.cs" />
+    <Compile Include="PFMAutomateModEntry.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="NameUtils.cs" />
-    <Compile Include="StatsController.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="ContentPackTemplate\manifest.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="ContentPackTemplate\ProducerRules.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="ContentPackTemplate\ProducersConfig.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="i18n\default.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="i18n\pt.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Include="manifest.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ProducerFrameworkMod\ProducerFrameworkMod.csproj">
+      <Project>{387c097a-0dd6-46a6-b7d0-27e2b19d4dd1}</Project>
+      <Name>ProducerFrameworkMod</Name>
+      <Private>False</Private>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Pathoschild.Stardew.ModBuildConfig.3.0.0\build\Pathoschild.Stardew.ModBuildConfig.targets" Condition="Exists('..\packages\Pathoschild.Stardew.ModBuildConfig.3.0.0\build\Pathoschild.Stardew.ModBuildConfig.targets')" />

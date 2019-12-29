@@ -7,9 +7,14 @@ using StardewValley;
 
 namespace ProducerFrameworkMod
 {
-    internal class StatsController
+    public class StatsController
     {
-        internal static void IncrementStardewStats(StardewStats stats, int amount = 1)
+        /// <summary>
+        /// Increment the given stats for the given amout
+        /// </summary>
+        /// <param name="stats">The stat to increment</param>
+        /// <param name="amount">The amount to increment</param>
+        public static void IncrementStardewStats(StardewStats stats, int amount = 1)
         {
             switch (stats)
             {
