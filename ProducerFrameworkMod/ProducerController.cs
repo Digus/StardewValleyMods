@@ -11,7 +11,7 @@ using Object = StardewValley.Object;
 
 namespace ProducerFrameworkMod
 {
-    internal class ProducerController
+    public class ProducerController
     {
         public static readonly List<string> UnsupportedMachines = new List<string>()
             { "Crystalarium", "Cask", "Incubator", "Slime Incubator", "Hopper", "Chest", "Garden Pot", "Mini-Jukebox"
@@ -251,6 +251,16 @@ namespace ProducerFrameworkMod
             }
 
             return value;
+        }
+
+        /// <summary>
+        /// Check if a producer rule for a given producer exist.
+        /// </summary>
+        /// <param name="producerName">The name of the producer</param>
+        /// <returns>true if there is a rule for the producer</returns>
+        public static bool HasProducerRule(string producerName)
+        {
+            return RulesRepository.Keys.Any(k => k.Item1 == producerName);
         }
 
         /// <summary>

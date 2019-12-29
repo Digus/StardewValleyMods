@@ -24,7 +24,7 @@ namespace ProducerFrameworkMod.ContentPack
         public StackConfig SilverQualityInput = new StackConfig();
         public StackConfig GoldQualityInput = new StackConfig();
         public StackConfig IridiumQualityInput = new StackConfig();
-        internal int OutputIndex = -1;
+        public int OutputIndex = -1;
     }
 
     public class StackConfig

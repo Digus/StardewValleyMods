@@ -28,7 +28,7 @@ namespace ProducerFrameworkMod
             }
             else if (CustomNames[index] != value)
             {
-                ProducerFrameworkModEntry.ModMonitor.Log($"There is already a custom name for the object with the index '{index}'. The custom name '{value}' will be ignored.",LogLevel.Warn);
+                ProducerFrameworkModEntry.ModMonitor.Log($"The custom name '{CustomNames[index]}' is already in use for the object with the index '{index}'. The custom name '{value}' will be ignored.",LogLevel.Warn);
             }
         }
 
