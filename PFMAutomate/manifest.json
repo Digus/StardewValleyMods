@@ -10,5 +10,5 @@
 	{ "UniqueID": "Digus.ProducerFrameworkMod", "MinimumVersion": "1.2.0" }
     ,{ "UniqueID": "Pathoschild.Automate", "MinimumVersion": "1.14.2" }
   ],
-  "UpdateKeys": [ "Nexus:" ]
+  "UpdateKeys": [ "Nexus:5038" ]
 }
