@@ -37,8 +37,8 @@ namespace ProducerFrameworkMod.Api
                 {
                     Dictionary<string, object> outputRuleMap = new Dictionary<string, object>(ruleMap);
                     outputRuleMap["Output"] = outputConfig.OutputIndex;
-                    outputRuleMap["MinOutput"] = Math.Min(outputConfig.OutputStack,Math.Min(outputConfig.SilverQualityInput.OutputStack,Math.Min(outputConfig.GoldQualityInput.OutputStack,outputConfig.IridiumQualityInput.OutputStack)));
-                    outputRuleMap["MaxOutput"] = Math.Min(outputConfig.OutputMaxStack, Math.Min(outputConfig.SilverQualityInput.OutputMaxStack, Math.Min(outputConfig.GoldQualityInput.OutputMaxStack, outputConfig.IridiumQualityInput.OutputMaxStack)));
+                    outputRuleMap["MinOutput"] = new int[] { outputConfig.OutputStack, outputConfig.SilverQualityInput.OutputStack, outputConfig.GoldQualityInput.OutputStack, outputConfig.IridiumQualityInput.OutputStack }.Min();
+                    outputRuleMap["MaxOutput"] = new int[] { outputConfig.OutputMaxStack, outputConfig.SilverQualityInput.OutputMaxStack, outputConfig.GoldQualityInput.OutputMaxStack, outputConfig.IridiumQualityInput.OutputMaxStack }.Max();
                     outputRuleMap["OutputChance"] = outputConfig.OutputProbability;
                     probabilies += outputConfig.OutputProbability;
 
