@@ -1,4 +1,5 @@
 ﻿using Harmony;
+using ProducerFrameworkMod.Api;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using SObject = StardewValley.Object;
@@ -46,6 +47,11 @@ namespace ProducerFrameworkMod
                 original: AccessTools.Method(typeof(SObject), nameof(SObject.minutesElapsed)),
                 postfix: new HarmonyMethod(typeof(ObjectOverrides), nameof(ObjectOverrides.minutesElapsed))
             );
+        }
+
+        public override object GetApi()
+        {
+            return new ProducerFrameworkModApi();
         }
     }
 }

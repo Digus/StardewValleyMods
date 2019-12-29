@@ -53,6 +53,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AnimationController.cs" />
+    <Compile Include="Api\IProducerFrameworkModAPI.cs" />
+    <Compile Include="Api\ProducerFrameworkModApi.cs" />
     <Compile Include="ContentPack\OutputConfig.cs" />
     <Compile Include="ContentPack\PlacingAnimation.cs" />
     <Compile Include="ContentPack\ProducerConfig.cs" />

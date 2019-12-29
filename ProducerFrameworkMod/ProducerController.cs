@@ -273,5 +273,13 @@ namespace ProducerFrameworkMod
             ConfigRepository.TryGetValue(producerName, out ProducerConfig producerConfig);
             return producerConfig;
         }
+
+        public static List<ProducerRule> GetProducerRules(string producerName)
+        {
+            return RulesRepository
+                .Where(e => e.Key.Item1 == producerName)
+                .Select(e=>e.Value)
+                .ToList();
+        }
     }
 }
