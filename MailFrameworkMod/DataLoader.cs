@@ -46,6 +46,8 @@ namespace MailFrameworkMod
             {
                 if (File.Exists(Path.Combine(contentPack.DirectoryPath, "mail.json")))
                 {
+                    bool hasTranslation = contentPack.Translation.GetTranslations().Any();
+
                     MailFrameworkModEntry.ModMonitor.Log($"Reading content pack: {contentPack.Manifest.Name} {contentPack.Manifest.Version} from {contentPack.DirectoryPath}");
                     List<MailItem> mailItems = contentPack.ReadJsonFile<List<MailItem>>("mail.json");
                     foreach (MailItem mailItem in mailItems)
@@ -60,6 +62,9 @@ namespace MailFrameworkMod
                             && (mailItem.FriendshipConditions == null || mailItem.FriendshipConditions.TrueForAll(f => Game1.player.getFriendshipHeartLevelForNPC(f.NpcName) >= f.FriendshipLevel))
                             && (mailItem.SkillConditions == null || mailItem.SkillConditions.TrueForAll(s => Game1.player.getEffectiveSkillLevel((int)s.SkillName) >= s.SkillLevel))
                             && (mailItem.RandomChance == null || new Random((int)(((ulong)Game1.stats.DaysPlayed * 1000000000000000) + (((ulong)l.Id.GetHashCode()) % 1000000000 * 1000000) + Game1.uniqueIDForThisGame % 1000000)).NextDouble() < mailItem.RandomChance)
+                            && (mailItem.Buildings == null || (mailItem.RequireAllBuildings ? mailItem.Buildings.TrueForAll(b=> Game1.getFarm().isBuildingConstructed(b)) : mailItem.Buildings.Any(b => Game1.getFarm().isBuildingConstructed(b))))
+                            && (mailItem.MailReceived == null || (mailItem.RequireAllMailReceived ? !mailItem.MailReceived.Except(Game1.player.mailReceived).Any() : mailItem.MailReceived.Intersect(Game1.player.mailReceived).Any()))
+                            && (mailItem.EventsSeen == null || (mailItem.RequireAllEventsSeen ? !mailItem.EventsSeen.Except(Game1.player.eventsSeen).Any() : mailItem.EventsSeen.Intersect(Game1.player.eventsSeen).Any()))
                         ;
                         
 
@@ -156,7 +161,7 @@ namespace MailFrameworkMod
                             MailDao.SaveLetter(
                                 new Letter(
                                     mailItem.Id
-                                    , mailItem.Text
+                                    , hasTranslation? contentPack.Translation.Get(mailItem.Text) : mailItem.Text
                                     , attachments
                                     , Condition
                                     , (l) => Game1.player.mailReceived.Add(l.Id)
@@ -164,7 +169,7 @@ namespace MailFrameworkMod
                                 )
                                 {
                                     TextColor = mailItem.TextColor,
-                                    Title = mailItem.Title,
+                                    Title = hasTranslation && mailItem.Title != null ? contentPack.Translation.Get(mailItem.Title) : mailItem.Title,
                                     GroupId = mailItem.GroupId
                                 });
                         }
@@ -173,7 +178,7 @@ namespace MailFrameworkMod
                             MailDao.SaveLetter(
                                 new Letter(
                                     mailItem.Id
-                                    , mailItem.Text
+                                    , hasTranslation ? contentPack.Translation.Get(mailItem.Text) : mailItem.Text
                                     , mailItem.Recipe
                                     , Condition
                                     , (l) => Game1.player.mailReceived.Add(l.Id)
@@ -181,7 +186,7 @@ namespace MailFrameworkMod
                                 )
                                 {
                                     TextColor = mailItem.TextColor,
-                                    Title = mailItem.Title,
+                                    Title = hasTranslation && mailItem.Title != null ? contentPack.Translation.Get(mailItem.Title) : mailItem.Title,
                                     GroupId = mailItem.GroupId
                                 });
                         }
