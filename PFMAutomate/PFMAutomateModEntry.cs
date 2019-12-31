@@ -39,7 +39,8 @@ namespace PFMAutomate
 
             var harmony = HarmonyInstance.Create("Digus.PFMAutomate");
 
-            MethodInfo methodInfo = AccessTools.GetDeclaredMethods(AccessTools.TypeByName("Pathoschild.Stardew.Automate.Framework.AutomationFactory")).Find(m=> m.GetParameters().Any(p=>p.ParameterType == typeof(SObject)));
+            Assembly automateAssembly = AppDomain.CurrentDomain.GetAssemblies().First(a => a.FullName.StartsWith("Automate,"));
+            MethodInfo methodInfo = AccessTools.GetDeclaredMethods(automateAssembly.GetType("Pathoschild.Stardew.Automate.Framework.AutomationFactory")).Find(m=> m.GetParameters().Any(p=>p.ParameterType == typeof(SObject)));
             harmony.Patch(
                 original: methodInfo,
                 postfix: new HarmonyMethod(typeof(AutomateOverrides), nameof(AutomateOverrides.GetFor))
