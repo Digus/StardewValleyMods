@@ -61,10 +61,13 @@ namespace MailFrameworkMod
                             && (mailItem.Weather == null || (Game1.isRaining && "rainy".Equals(mailItem.Weather)) || (!Game1.isRaining && "sunny".Equals(mailItem.Weather)))
                             && (mailItem.FriendshipConditions == null || mailItem.FriendshipConditions.TrueForAll(f => Game1.player.getFriendshipHeartLevelForNPC(f.NpcName) >= f.FriendshipLevel))
                             && (mailItem.SkillConditions == null || mailItem.SkillConditions.TrueForAll(s => Game1.player.getEffectiveSkillLevel((int)s.SkillName) >= s.SkillLevel))
+                            && (mailItem.StatsConditions == null || mailItem.StatsConditions.TrueForAll(s => s.StatsLabel == null || Game1.player.stats.getStat(s.StatsLabel) >= s.RequiredAmount) || mailItem.StatsConditions.TrueForAll(s => s.StatsLabel == null || MailFrameworkModEntry.ModHelper.Reflection.GetProperty<uint>(typeof(Stats),s.StatsName.ToString()).GetValue() >= s.RequiredAmount))
                             && (mailItem.RandomChance == null || new Random((int)(((ulong)Game1.stats.DaysPlayed * 1000000000000000) + (((ulong)l.Id.GetHashCode()) % 1000000000 * 1000000) + Game1.uniqueIDForThisGame % 1000000)).NextDouble() < mailItem.RandomChance)
                             && (mailItem.Buildings == null || (mailItem.RequireAllBuildings ? mailItem.Buildings.TrueForAll(b=> Game1.getFarm().isBuildingConstructed(b)) : mailItem.Buildings.Any(b => Game1.getFarm().isBuildingConstructed(b))))
                             && (mailItem.MailReceived == null || (mailItem.RequireAllMailReceived ? !mailItem.MailReceived.Except(Game1.player.mailReceived).Any() : mailItem.MailReceived.Intersect(Game1.player.mailReceived).Any()))
+                            && (mailItem.MailNotReceived == null ||  mailItem.MailNotReceived.Intersect(Game1.player.mailReceived).Any())
                             && (mailItem.EventsSeen == null || (mailItem.RequireAllEventsSeen ? !mailItem.EventsSeen.Except(Game1.player.eventsSeen).Any() : mailItem.EventsSeen.Intersect(Game1.player.eventsSeen).Any()))
+                            && (mailItem.EventsNotSeen == null ||  mailItem.EventsNotSeen.Intersect(Game1.player.eventsSeen).Any())
                         ;
                         
 
