@@ -6,10 +6,12 @@ using System.Threading.Tasks;
 
 namespace MailFrameworkMod.ContentPack
 {
-    public class StatsCondition
+    public enum Collection
     {
-        public StardewStats? StatsName;
-        public string StatsLabel;
-        public uint Amount;
+        Shipped,
+        Fish,
+        Artifacts,
+        Minerals,
+        Cooking,
     }
 }

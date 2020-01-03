@@ -52,6 +52,30 @@ namespace MailFrameworkMod
                     List<MailItem> mailItems = contentPack.ReadJsonFile<List<MailItem>>("mail.json");
                     foreach (MailItem mailItem in mailItems)
                     {
+                        Dictionary<int, string> objects = null;
+                        Dictionary<int, string> bigObjects = null;
+
+                        //Populate all Indexs based on the given name. Ignore the letter otherwise.
+                        if (mailItem.CollectionConditions != null && mailItem.CollectionConditions.Any(c =>
+                        {
+                            if (c.Name != null)
+                            {
+                                objects = objects ?? MailFrameworkModEntry.ModHelper.Content.Load<Dictionary<int, string>>("Data\\ObjectInformation", ContentSource.GameContent);
+                                KeyValuePair<int, string> pair = objects.FirstOrDefault(o => o.Value.StartsWith(c.Name + "/"));
+                                if (pair.Value != null)
+                                {
+                                    c.Index = pair.Key;
+                                }
+                                else
+                                {
+                                    MailFrameworkModEntry.ModMonitor.Log($"No object found with the name '{c.Name}' for a condition for letter '{mailItem.Id}'.\n This letter will be ignored.", LogLevel.Warn);
+                                    MailDao.RemoveLetter(new Letter(mailItem.Id,null,null));
+                                    return true;
+                                }
+                            }
+                            return false;
+                        })) break;
+
                         bool Condition(Letter l) => 
                             (!Game1.player.mailReceived.Contains(l.Id) || mailItem.Repeatable)
                             && (mailItem.Recipe == null || !Game1.player.cookingRecipes.ContainsKey(mailItem.Recipe))
@@ -61,21 +85,26 @@ namespace MailFrameworkMod
                             && (mailItem.Weather == null || (Game1.isRaining && "rainy".Equals(mailItem.Weather)) || (!Game1.isRaining && "sunny".Equals(mailItem.Weather)))
                             && (mailItem.FriendshipConditions == null || mailItem.FriendshipConditions.TrueForAll(f => Game1.player.getFriendshipHeartLevelForNPC(f.NpcName) >= f.FriendshipLevel))
                             && (mailItem.SkillConditions == null || mailItem.SkillConditions.TrueForAll(s => Game1.player.getEffectiveSkillLevel((int)s.SkillName) >= s.SkillLevel))
-                            && (mailItem.StatsConditions == null || mailItem.StatsConditions.TrueForAll(s => s.StatsLabel == null || Game1.player.stats.getStat(s.StatsLabel) >= s.RequiredAmount) || mailItem.StatsConditions.TrueForAll(s => s.StatsLabel == null || MailFrameworkModEntry.ModHelper.Reflection.GetProperty<uint>(typeof(Stats),s.StatsName.ToString()).GetValue() >= s.RequiredAmount))
+                            && (mailItem.StatsConditions == null || (mailItem.StatsConditions.TrueForAll(s => s.StatsLabel == null || Game1.player.stats.getStat(s.StatsLabel) >= s.Amount) && mailItem.StatsConditions.TrueForAll(s => s.StatsName == null || MailFrameworkModEntry.ModHelper.Reflection.GetProperty<uint>(Game1.player.stats,s.StatsName.ToString()).GetValue() >= s.Amount)))
+                            && (mailItem.CollectionConditions == null || (mailItem.CollectionConditions.TrueForAll(c => 
+                                    (c.Collection == Collection.Shipped && Game1.player.basicShipped.ContainsKey(c.Index) && Game1.player.basicShipped[c.Index] >= c.Amount)
+                                    || (c.Collection == Collection.Fish && Game1.player.fishCaught.ContainsKey(c.Index) && Game1.player.fishCaught[c.Index][0] >= c.Amount)
+                                    || (c.Collection == Collection.Artifacts && Game1.player.archaeologyFound.ContainsKey(c.Index) && Game1.player.archaeologyFound[c.Index][0] >= c.Amount)
+                                    || (c.Collection == Collection.Minerals && Game1.player.mineralsFound.ContainsKey(c.Index) && Game1.player.mineralsFound[c.Index] >= c.Amount)
+                                    || (c.Collection == Collection.Cooking && Game1.player.recipesCooked.ContainsKey(c.Index) && Game1.player.recipesCooked[c.Index] >= c.Amount)
+                                    )))
                             && (mailItem.RandomChance == null || new Random((int)(((ulong)Game1.stats.DaysPlayed * 1000000000000000) + (((ulong)l.Id.GetHashCode()) % 1000000000 * 1000000) + Game1.uniqueIDForThisGame % 1000000)).NextDouble() < mailItem.RandomChance)
                             && (mailItem.Buildings == null || (mailItem.RequireAllBuildings ? mailItem.Buildings.TrueForAll(b=> Game1.getFarm().isBuildingConstructed(b)) : mailItem.Buildings.Any(b => Game1.getFarm().isBuildingConstructed(b))))
                             && (mailItem.MailReceived == null || (mailItem.RequireAllMailReceived ? !mailItem.MailReceived.Except(Game1.player.mailReceived).Any() : mailItem.MailReceived.Intersect(Game1.player.mailReceived).Any()))
-                            && (mailItem.MailNotReceived == null ||  mailItem.MailNotReceived.Intersect(Game1.player.mailReceived).Any())
+                            && (mailItem.MailNotReceived == null ||  !mailItem.MailNotReceived.Intersect(Game1.player.mailReceived).Any())
                             && (mailItem.EventsSeen == null || (mailItem.RequireAllEventsSeen ? !mailItem.EventsSeen.Except(Game1.player.eventsSeen).Any() : mailItem.EventsSeen.Intersect(Game1.player.eventsSeen).Any()))
-                            && (mailItem.EventsNotSeen == null ||  mailItem.EventsNotSeen.Intersect(Game1.player.eventsSeen).Any())
+                            && (mailItem.EventsNotSeen == null ||  !mailItem.EventsNotSeen.Intersect(Game1.player.eventsSeen).Any())
                         ;
                         
 
                         if (mailItem.Attachments != null && mailItem.Attachments.Count > 0)
                         {
                             List<Item> attachments = new List<Item>();
-                            Dictionary<int, string> objects = null;
-                            Dictionary<int, string> bigObjects = null;
                             mailItem.Attachments.ForEach(i =>
                             {
                                 switch (i.Type)
@@ -83,7 +112,7 @@ namespace MailFrameworkMod
                                     case ItemType.Object:
                                         if (i.Name != null)
                                         {
-                                            if (objects == null) objects = MailFrameworkModEntry.ModHelper.Content.Load<Dictionary<int, string>>("Data\\ObjectInformation", ContentSource.GameContent);
+                                            objects = objects ?? MailFrameworkModEntry.ModHelper.Content.Load<Dictionary<int, string>>("Data\\ObjectInformation", ContentSource.GameContent);
                                             KeyValuePair<int, string> pair = objects.FirstOrDefault(o => o.Value.StartsWith(i.Name + "/"));
                                             if (pair.Value != null)
                                             {
@@ -108,7 +137,7 @@ namespace MailFrameworkMod
                                     case ItemType.BigCraftable:
                                         if (i.Name != null)
                                         {
-                                            if (bigObjects == null) bigObjects = MailFrameworkModEntry.ModHelper.Content.Load<Dictionary<int, string>>("Data\\BigCraftablesInformation", ContentSource.GameContent);
+                                            bigObjects = bigObjects ?? MailFrameworkModEntry.ModHelper.Content.Load<Dictionary<int, string>>("Data\\BigCraftablesInformation", ContentSource.GameContent);
                                             KeyValuePair<int, string> pair = bigObjects.FirstOrDefault(o => o.Value.StartsWith(i.Name + "/"));
                                             if (pair.Value != null)
                                             {
@@ -158,8 +187,6 @@ namespace MailFrameworkMod
                                         }
                                         break;
                                 }
-
-                                
                             });
                             MailDao.SaveLetter(
                                 new Letter(

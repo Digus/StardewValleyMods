@@ -68,6 +68,8 @@
   <ItemGroup>
     <Compile Include="Commands.cs" />
     <Compile Include="ContentPack\Attachment.cs" />
+    <Compile Include="ContentPack\Collection.cs" />
+    <Compile Include="ContentPack\CollectionCondition.cs" />
     <Compile Include="ContentPack\StardewStats.cs" />
     <Compile Include="ContentPack\FriendshipCondition.cs" />
     <Compile Include="ContentPack\ItemType.cs" />
