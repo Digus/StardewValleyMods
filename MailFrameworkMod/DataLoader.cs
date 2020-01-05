@@ -83,7 +83,8 @@ namespace MailFrameworkMod
                             && (mailItem.Days == null || mailItem.Days.Contains(SDate.Now().Day))
                             && (mailItem.Seasons == null || mailItem.Seasons.Contains(SDate.Now().Season))
                             && (mailItem.Weather == null || (Game1.isRaining && "rainy".Equals(mailItem.Weather)) || (!Game1.isRaining && "sunny".Equals(mailItem.Weather)))
-                            && (mailItem.FriendshipConditions == null || mailItem.FriendshipConditions.TrueForAll(f => Game1.player.getFriendshipHeartLevelForNPC(f.NpcName) >= f.FriendshipLevel))
+                            && (mailItem.FriendshipConditions == null || (mailItem.FriendshipConditions.TrueForAll(f => Game1.player.getFriendshipHeartLevelForNPC(f.NpcName) >= f.FriendshipLevel)) 
+                                && mailItem.FriendshipConditions.TrueForAll(f => f.FriendshipStatus == null || (Game1.player.friendshipData.ContainsKey(f.NpcName) && f.FriendshipStatus.Any(s => s == Game1.player.friendshipData[f.NpcName].Status))))
                             && (mailItem.SkillConditions == null || mailItem.SkillConditions.TrueForAll(s => Game1.player.getEffectiveSkillLevel((int)s.SkillName) >= s.SkillLevel))
                             && (mailItem.StatsConditions == null || (mailItem.StatsConditions.TrueForAll(s => s.StatsLabel == null || Game1.player.stats.getStat(s.StatsLabel) >= s.Amount) && mailItem.StatsConditions.TrueForAll(s => s.StatsName == null || MailFrameworkModEntry.ModHelper.Reflection.GetProperty<uint>(Game1.player.stats,s.StatsName.ToString()).GetValue() >= s.Amount)))
                             && (mailItem.CollectionConditions == null || (mailItem.CollectionConditions.TrueForAll(c => 
