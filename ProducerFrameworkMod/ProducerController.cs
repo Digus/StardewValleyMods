@@ -86,22 +86,21 @@ namespace ProducerFrameworkMod
                 }
                 else
                 {
-                    object inputIdentifier;
                     if (!int.TryParse(producerRule.InputIdentifier, out var intInputIdentifier))
                     {
                         KeyValuePair<int, string> pair = objects.FirstOrDefault(o => ObjectUtils.IsObjectStringFromObjectName(o.Value, producerRule.InputIdentifier));
                         if (pair.Value != null)
                         {
-                            inputIdentifier = pair.Key;
+                            producerRule.InputKey = pair.Key;
                         }
                         else
                         {
-                            inputIdentifier = producerRule.InputIdentifier;
+                            producerRule.InputKey = producerRule.InputIdentifier;
                         }
                     }
                     else
                     {
-                        inputIdentifier = intInputIdentifier;
+                        producerRule.InputKey = intInputIdentifier;
                     }
 
                     if (producerRule.OutputIdentifier != null)
@@ -202,7 +201,7 @@ namespace ProducerFrameworkMod
                         }
                     }
 
-                    RulesRepository[new Tuple<string, object>(producerRule.ProducerName, inputIdentifier)] = producerRule;
+                    RulesRepository[new Tuple<string, object>(producerRule.ProducerName, producerRule.InputKey)] = producerRule;
                 }
             }
         }
@@ -280,6 +279,11 @@ namespace ProducerFrameworkMod
                 .Where(e => e.Key.Item1 == producerName)
                 .Select(e=>e.Value)
                 .ToList();
+        }
+
+        public static List<ProducerRule> GetProducerRules()
+        {
+            return RulesRepository.Values.ToList();
         }
     }
 }

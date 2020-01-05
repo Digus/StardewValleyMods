@@ -27,6 +27,7 @@ namespace ProducerFrameworkMod.ContentPack
         public List<StardewStats> IncrementStatsOnInput = new List<StardewStats>();
 
         // Generated attributes
+        public object InputKey;
         public List<Tuple<int,int>> FuelList = new List<Tuple<int, int>>();
         internal Color PlacingAnimationColor = Color.White;
         public List<OutputConfig> OutputConfigs = new List<OutputConfig>();
