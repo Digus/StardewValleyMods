@@ -30,7 +30,7 @@
 		[
 			{ 
 				"StatsName": "CheeseMade", //[SeedsSown|ItemsShipped|ItemsCooked|ItemsCrafted|ChickenEggsLayed|DuckEggsLayed|CowMilkProduced|GoatMilkProduced|RabbitWoolProduced|SheepWoolProduced|CheeseMade|GoatCheeseMade|TrufflesFound|StoneGathered|RocksCrushed|DirtHoed|GiftsGiven|TimesUnconscious|AverageBedtime|TimesFished|FishCaught|BouldersCracked|StumpsChopped|StepsTaken|MonstersKilled|DiamondsFound|PrismaticShardsFound|OtherPreciousGemsFound|CaveCarrotsFound|CopperFound|IronFound|CoalFound|CoinsFound|GoldFound|IridiumFound|BarsSmelted|BeveragesMade|PreservesMade|PiecesOfTrashRecycled|MysticStonesCrushed|DaysPlayed|WeedsEliminated|SticksChopped|NotesFound|QuestsCompleted|StarLevelCropsShipped|CropsShipped|ItemsForaged|SlimesKilled|GeodesCracked|GoodFriends|IndividualMoneyEarned] Default is null.
-				"StatsLabel": "Name", // [exMemoriesWiped|childrenTurnedToDoves|trashCansChecked] This are the currently games stats that are identied by label, if more are added, they should also be supported. It will also identify custom stats labels, added by other mods. Default is null.
+				"StatsLabel": "Name", // [exMemoriesWiped|childrenTurnedToDoves|trashCansChecked] This are the currently games stats that are identified by label, if more are added, they should also be supported. It will also identify custom stats labels added by other mods. Default is null.
 				"Amount": 1 // The amount the status should be equal or greater for the condition to be valid.
 			}
 		],
@@ -46,9 +46,9 @@
 		"RandomChance": 0.25, // The mod will check if a random number from 0 to 1 is bellow the given number. The same save, on the same day for the same letter will always have the same result to avoid cheating.
 		"Buildings": ["Coop","Big Coop", "Deluxe Coop"], // Require one of the buildings to be currently constructed in the farm.
 		"RequireAllBuildings":  false, // If true, require that all the buildings in the "Buildings" list to be currently constructed in the farm. Default is false.
-		"MailReceived": ["jojaVault","ccVault"], // Require one of the mails to have been recieved. The game list also contain others thing that are not mail, like comunity center flags.
-		"RequireAllMailReceived":  false, // If true, require that all mails in the "MailReceived" list to have been recieved. Default is false.
-		"MailNotReceived": ["jojaVault","ccVault"], // Require the mails to have not been recieved. The game list also contain others thing that are not mail, like comunity center flags.
+		"MailReceived": ["jojaVault","ccVault"], // Require one of the mails to have been received. The game list also contain others thing that are not mail, like community center flags.
+		"RequireAllMailReceived":  false, // If true, require that all mails in the "MailReceived" list to have been received. Default is false.
+		"MailNotReceived": ["jojaVault","ccVault"], // Require the mails to have not been received. The game list also contain others thing that are not mail, like community center flags.
 		"EventsSeen": [4,32423], // Require one of the events to have been seen by the player.
 		"RequireAllEventsSeen":  false, // If true, require that all the events in the "EventsSeen" list to have been seen by the player. Default is false.
 		"EventsNotSeen": [4,32423] // Require the events to have not been seen by the player.
