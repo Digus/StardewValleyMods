@@ -4,11 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ProducerFrameworkMod.ContentPack;
+using StardewModdingAPI;
 using Object = StardewValley.Object;
 
 namespace ProducerFrameworkMod.Api
 {
-    internal class ProducerFrameworkModApi : IProducerFrameworkModApi
+    public class ProducerFrameworkModApi : IProducerFrameworkModApi
     {
         public List<Dictionary<string, object>> GetRecipes()
         {
@@ -24,10 +25,36 @@ namespace ProducerFrameworkMod.Api
 
         private static List<Dictionary<string, object>> GetRecipes(List<ProducerRule> producerRules)
         {
+            Dictionary<string, int> machineCache = new Dictionary<string, int>();
+            Dictionary<int, string> bigObjects = ProducerFrameworkModEntry.Helper.Content.Load<Dictionary<int, string>>("Data\\BigCraftablesInformation", ContentSource.GameContent);
             List<Dictionary<string, object>> returnValue = new List<Dictionary<string, object>>();
             foreach (ProducerRule producerRule in producerRules)
             {
+                //TODO Handle context_tag
+                if (!(producerRule.InputKey is int))
+                    continue;
+
                 Dictionary<string, object> ruleMap = new Dictionary<string, object>();
+                if (machineCache.ContainsKey(producerRule.ProducerName))
+                {
+                    ruleMap["MachineID"] = machineCache[producerRule.ProducerName];
+                }
+                else
+                {
+                    bigObjects.FirstOrDefault(o => o.Value.StartsWith(producerRule.ProducerName + "/"));
+                    KeyValuePair<int, string> pair = bigObjects.FirstOrDefault(o => o.Value.StartsWith(producerRule.ProducerName + "/"));
+                    if (pair.Value != null)
+                    {
+                        ruleMap["MachineID"] = pair.Key;
+                        machineCache[producerRule.ProducerName] = pair.Key;
+                    }
+                    else
+                    {
+                        continue;
+                    }
+                }
+
+                ruleMap["InputKey"] = producerRule.InputKey;
                 List<Dictionary<string, object>> ingredients = new List<Dictionary<string, object>>
                 {
                     new Dictionary<string, object>()
@@ -41,11 +68,15 @@ namespace ProducerFrameworkMod.Api
                 ruleMap["Ingredients"] = ingredients;
 
                 List<Dictionary<string, object>> exceptIngredients = new List<Dictionary<string, object>>();
-                producerRule.ExcludeIdentifiers.ForEach(
+                producerRule.ExcludeIdentifiers?.ForEach(
                     i => exceptIngredients.Add(new Dictionary<string, object>() {{"ID", i}}));
                 ruleMap["ExceptIngredients"] = exceptIngredients;
 
+                //PFM Properties
+                ruleMap["MinutesUntilReady"] = producerRule.MinutesUntilReady;
+
                 double probabilities = 0;
+                List<Dictionary<string, object>> ruleMapPerOutput = new List<Dictionary<string, object>>();
                 foreach (OutputConfig outputConfig in producerRule.OutputConfigs)
                 {
                     Dictionary<string, object> outputRuleMap = new Dictionary<string, object>(ruleMap);
@@ -60,8 +91,9 @@ namespace ProducerFrameworkMod.Api
                         outputConfig.OutputMaxStack, outputConfig.SilverQualityInput.OutputMaxStack,
                         outputConfig.GoldQualityInput.OutputMaxStack, outputConfig.IridiumQualityInput.OutputMaxStack
                     }.Max();
-                    outputRuleMap["OutputChance"] = outputConfig.OutputProbability;
-                    probabilities += outputConfig.OutputProbability;
+                    double outputProbability = outputConfig.OutputProbability * 100;
+                    outputRuleMap["OutputChance"] = outputProbability;
+                    probabilities += outputProbability;
 
                     //PFM properties.
                     outputRuleMap["OutputIdentifier"] = outputConfig.OutputIdentifier;
@@ -74,12 +106,14 @@ namespace ProducerFrameworkMod.Api
                     outputRuleMap["OutputTranslationKey"] = outputConfig.OutputTranslationKey;
                     outputRuleMap["PreserveType"] = outputConfig.PreserveType;
 
-                    returnValue.Add(outputRuleMap);
+                    ruleMapPerOutput.Add(outputRuleMap);
                 }
 
-                var outputConfigs = returnValue.FindAll(r => (double) r["OutputChance"] <= 0);
-                double increment = (1 - probabilities) / outputConfigs.Count;
-                returnValue.FindAll(r => (double) r["OutputChance"] <= 0).ForEach(r => r["OutputChance"] = increment);
+                var outputConfigs = ruleMapPerOutput.FindAll(r => (double) r["OutputChance"] <= 0);
+                double increment = (100 - probabilities) / outputConfigs.Count;
+                ruleMapPerOutput.FindAll(r => (double) r["OutputChance"] <= 0).ForEach(r => r["OutputChance"] = increment);
+
+                returnValue.AddRange(ruleMapPerOutput);
             }
 
             return returnValue;
