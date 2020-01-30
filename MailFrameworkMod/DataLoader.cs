@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using MailFrameworkMod.ContentPack;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
 using StardewModdingAPI.Utilities;
 using StardewValley;
@@ -201,7 +202,8 @@ namespace MailFrameworkMod
                                 {
                                     TextColor = mailItem.TextColor,
                                     Title = hasTranslation && mailItem.Title != null ? contentPack.Translation.Get(mailItem.Title) : mailItem.Title,
-                                    GroupId = mailItem.GroupId
+                                    GroupId = mailItem.GroupId,
+                                    LetterTexture = mailItem.LetterBG != null ? contentPack.LoadAsset<Texture2D>(mailItem.LetterBG) : null
                                 });
                         }
                         else
@@ -218,7 +220,8 @@ namespace MailFrameworkMod
                                 {
                                     TextColor = mailItem.TextColor,
                                     Title = hasTranslation && mailItem.Title != null ? contentPack.Translation.Get(mailItem.Title) : mailItem.Title,
-                                    GroupId = mailItem.GroupId
+                                    GroupId = mailItem.GroupId,
+                                    LetterTexture = mailItem.LetterBG != null ? contentPack.LoadAsset<Texture2D>(mailItem.LetterBG) : null
                                 });
                         }
                     }

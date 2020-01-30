@@ -10,6 +10,7 @@ namespace MailFrameworkMod.ContentPack
         public string Text;
         public string Recipe;
         public List<Attachment> Attachments;
+        public string LetterBG;
         public int WhichBG;
         public int? TextColor;
         public bool Repeatable;

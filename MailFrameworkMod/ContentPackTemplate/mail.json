@@ -6,7 +6,8 @@
 		"Text": "Dear @^This is my custom mail.", // Text of the letter. You can use @ to put the players name and ^ for line breaks. You can also use the base game commands to add money, items and stuff. If an translation file is provide, you should put a translation key here.
 		"Attachments": [{"Type": "Tool", "Name": "Axe"},{"Type": "Object", "Index":78, "Stack": 1},{"Type": "BigCraftable", "Index":159, "Stack": 3}], // Remove the line to not attach items to the mail. You can use the Name properties for Object and BigCraftable items too, that's required if using Json Assets. Stack is optional o Objects and BigCraftable. A stack of 1 is used if none is provided.
 		"Recipe": "Recipe Name", // Remove the line if you don't want to attach a recipe to the mail. It will only work if you have no other attachments to the mail.
-		"WhichBG": 0, //The id of the letter background. 0 = classic, 1 = notepad, 2 = pyramids
+		"LetterBG": "CustomLetterBG.png", // Name of the file in your content pack that has the custom letter background to use. It should follow the same structure of the game LetterBG file . WhichBG will be relative to this file for this letter. If null or removed the mod will use the game LetterBG.
+        "WhichBG": 0, //The id of the letter background. 0 = classic, 1 = notepad, 2 = pyramids
 		"TextColor": -1, //Remove this line to use the default color. -1 = Dark Red, 0 = Black, 1 = Sky Blue, 2 = Red, 3 = Blue Violet, 4 = White, 5 = Orange Red, 6 = Lime Green, 7 = Cyan, 8 = Darkest Gray
 		"Repeatable": false, // If true the mod won't check it the letter Id has already been delivered. Default is false.
 		//Below are conditions for the delivery. Remove any of the lines if you don't want to check that condition.
