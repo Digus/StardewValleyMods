@@ -9,6 +9,8 @@ namespace ProducerFrameworkMod.ContentPack
 {
     public class ProducerRule
     {
+        public string ModUniqueID;
+        public List<string> OverrideMod = new List<string>();
         public string ProducerName;
         public string InputIdentifier;
         public int InputStack = 1;
@@ -17,6 +19,7 @@ namespace ProducerFrameworkMod.ContentPack
         public int FuelStack = 1;
         public Dictionary<string, int> AdditionalFuel = new Dictionary<string, int>();
         public int MinutesUntilReady;
+        public bool SubtractTimeOfDay;
         public List<OutputConfig> AdditionalOutputs = new List<OutputConfig>();
         public List<string> Sounds = new List<string>();
         public List<Dictionary<string,int>> DelayedSounds = new List<Dictionary<string, int>> ();

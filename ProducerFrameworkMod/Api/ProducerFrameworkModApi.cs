@@ -72,9 +72,6 @@ namespace ProducerFrameworkMod.Api
                     i => exceptIngredients.Add(new Dictionary<string, object>() {{"ID", i}}));
                 ruleMap["ExceptIngredients"] = exceptIngredients;
 
-                //PFM Properties
-                ruleMap["MinutesUntilReady"] = producerRule.MinutesUntilReady;
-
                 double probabilities = 0;
                 List<Dictionary<string, object>> ruleMapPerOutput = new List<Dictionary<string, object>>();
                 foreach (OutputConfig outputConfig in producerRule.OutputConfigs)
@@ -96,6 +93,8 @@ namespace ProducerFrameworkMod.Api
                     probabilities += outputProbability;
 
                     //PFM properties.
+
+                    outputRuleMap["MinutesUntilReady"] = outputConfig.MinutesUntilReady ?? producerRule.MinutesUntilReady;
                     outputRuleMap["OutputIdentifier"] = outputConfig.OutputIdentifier;
                     outputRuleMap["KeepInputQuality"] = outputConfig.KeepInputQuality;
                     outputRuleMap["OutputQuality"] = outputConfig.OutputQuality;
