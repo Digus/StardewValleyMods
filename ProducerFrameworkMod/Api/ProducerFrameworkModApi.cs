@@ -78,6 +78,15 @@ namespace ProducerFrameworkMod.Api
                 {
                     Dictionary<string, object> outputRuleMap = new Dictionary<string, object>(ruleMap);
                     outputRuleMap["Output"] = outputConfig.OutputIndex;
+
+                    List<Dictionary<string, object>> fuel = new List<Dictionary<string, object>>();
+
+                    outputRuleMap["Ingredients"] = new List<Dictionary<string, object>>((List<Dictionary<string, object>>)ruleMap["Ingredients"])
+                        .Union(outputConfig.FuelList
+                            .Select(f => new Dictionary<string, object>() { { "ID", f.Item1 }, { "Count", f.Item2 } })
+                            .ToList()
+                        ).ToList();
+
                     outputRuleMap["MinOutput"] = new int[]
                     {
                         outputConfig.OutputStack, outputConfig.SilverQualityInput.OutputStack,
@@ -93,7 +102,6 @@ namespace ProducerFrameworkMod.Api
                     probabilities += outputProbability;
 
                     //PFM properties.
-
                     outputRuleMap["MinutesUntilReady"] = outputConfig.MinutesUntilReady ?? producerRule.MinutesUntilReady;
                     outputRuleMap["OutputIdentifier"] = outputConfig.OutputIdentifier;
                     outputRuleMap["KeepInputQuality"] = outputConfig.KeepInputQuality;
@@ -104,6 +112,11 @@ namespace ProducerFrameworkMod.Api
                     outputRuleMap["OutputName"] = outputConfig.OutputName;
                     outputRuleMap["OutputTranslationKey"] = outputConfig.OutputTranslationKey;
                     outputRuleMap["PreserveType"] = outputConfig.PreserveType;
+                    outputRuleMap["RequiredInputQuality"] = outputConfig.RequiredInputQuality;
+                    outputRuleMap["RequiredSeason"] = outputConfig.RequiredSeason;
+                    outputRuleMap["RequiredWeather"] = outputConfig.RequiredWeather?.Select(w=> w.ToString()).ToList();
+                    outputRuleMap["RequiredLocation"] = outputConfig.RequiredLocation;
+                    outputRuleMap["RequiredOutdoors"] = outputConfig.RequiredOutdoors;
 
                     ruleMapPerOutput.Add(outputRuleMap);
                 }
