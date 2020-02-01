@@ -20,7 +20,8 @@
 			"ColorGreen": 0, // The green value of the light color. Default is 0.
 			"ColorBlue": 0, // The blue value of the light color. Default is 0.
 			"ColorAlpha": 255, // The transparency value of the light color. 0 is fully transparent, 255 is fully opaque. Default is 255.
-			"ColorFactor": 0.75 // The factor that will multiply all other colors parameters. Default is 1.
+			"ColorFactor": 0.75, // The factor that will multiply all other colors parameters. Default is 1.
+			"AlwaysOn": true // If true, the light source will be lit even while not producing. Default is false. 
 		},
 		"WorkingTime": { // If a value is defined, the machine will only produce during this period. Production will be on hold out of this period. Default is working any time.
 			"Begin": 600, //Format [HHmm]. The time from which the machine can start producing. Default is 0
