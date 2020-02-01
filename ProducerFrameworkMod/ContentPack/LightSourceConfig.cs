@@ -18,6 +18,7 @@ namespace ProducerFrameworkMod.ContentPack
         public int ColorBlue = 0;
         public int ColorAlpha = 255;
         public float ColorFactor = 1;
+        public bool AlwaysOn = false;
 
         internal Color Color = Color.White;
 
