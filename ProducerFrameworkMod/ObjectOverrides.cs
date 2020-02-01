@@ -407,7 +407,10 @@ namespace ProducerFrameworkMod
             {
                 if (ProducerController.GetProducerConfig(__instance.Name) is ProducerConfig producerConfig && producerConfig.LightSource is ContentPack.LightSourceConfig lightSourceConfig)
                 {
-                    LightSourceConfigController.CreateLightSource(__instance, tileLocation, lightSourceConfig);
+                    if (__instance.minutesUntilReady > 0 || lightSourceConfig.AlwaysOn)
+                    {
+                        LightSourceConfigController.CreateLightSource(__instance, tileLocation, lightSourceConfig);
+                    }
                     return false;
                 }
             }
