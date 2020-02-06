@@ -4,7 +4,7 @@
 		"AlternateFrameProducing": true, //If the producer should use the alternate frame when producing.
 		"AlternateFrameWhenReady": true, //If the producer should use the alternate frame and ready for harvest.
 		"DisableBouncingAnimationWhileWorking": false, // If the producer bouncing animation while working should be disabled.
-		"NoInputStartMode": "", // [Placement|DayUpdate] //If the machine has a value for this property, it can only have one ProducerRule without a InputIdentifier. If Placement, the machine will start on placement, and will restart every time the produced object is taken out. If DayUpdate, the machine will start at the begin of the day. Default is null.
+		"NoInputStartMode": "Placement", // [Placement|DayUpdate] //If the machine has a value for this property, it can only have one ProducerRule without a InputIdentifier. If Placement, the machine will start on placement, and will restart every time the produced object is taken out. If DayUpdate, the machine will start at the begin of the day. Default is null.
 		"IncrementStatsOnOutput": { //Pairs of "stats:object" that identify what should be incremented.
 			"GoatCheeseMade": "Goat Cheese", //First value is the stats to be incremented, second value is which output should be produced for the stat to be incremented. The identifier can be the index, name, category or context tag of the output. Will increment the stats by the amount of the stack.
 			"CheeseMade": null //If the identifier is null, any output will match.
@@ -30,8 +30,8 @@
 		"WorkingWeather": [ "Rainy", "Stormy" ], // [Sunny|Rainy|Stormy|Snowy|Windy] The weathers in which the machine works. Default is working in any weather.
 		"WorkingLocation": [ "Barn", "Big Barn", "Deluxe Barn" ], // The locations in which the machine will work. Can be any map of building. Default is working in any location. 
 		"WorkingOutdoors": true, // [true|false|null] If true, the machine will only work outdoor. If false, the machine will only work indoor. If the line is removed or the value is null, it will work on both kind of location.
-		"WorkingSeason": [ "Spring", "Summer", "Fall" ], // The seasons in which the machine will work. Different than other conditions, season clean the machine at the start of the day if in a not working season. The default is working in any season. 
-        "OverrideMod": [ "IdOfTheMod.ToOverride" ] //If defined, this config can override the configs for the same producer from the mods in the list. Otherwise the first one to be loaded will be used.
+		"WorkingSeason": [ "spring", "summer", "fall" ], // The seasons in which the machine will work. Different than other conditions, season clean the machine at the start of the day if in a not working season. The default is working in any season. 
+		"OverrideMod": [ "IdOfTheMod.ToOverride" ] //If defined, this config can override the configs for the same producer from the mods in the list. Otherwise the first one to be loaded will be used.
 	}
 ]
 /* Additional Notes
