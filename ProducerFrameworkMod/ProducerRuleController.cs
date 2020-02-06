@@ -132,7 +132,7 @@ namespace ProducerFrameworkMod
         /// <returns>The random instnace</returns>
         public static Random GetRandomForProducing(Vector2 tileLocation)
         {
-            return new Random((int)Game1.uniqueIDForThisGame / 2 + (int)Game1.stats.DaysPlayed * 10000000 + Game1.timeOfDay * 10000 + (int)tileLocation.X * 200 + (int)tileLocation.Y);
+            return new Random((int)Game1.uniqueIDForThisGame / 2 + (int)Game1.stats.DaysPlayed * (int)Game1.stats.DaysPlayed * 1000000531 + (int)tileLocation.X * (int)tileLocation.X * 100207 + (int)tileLocation.Y * (int)tileLocation.Y * 1031 + Game1.timeOfDay/10);
         }
 
         internal static void ClearProduction(Object producer)

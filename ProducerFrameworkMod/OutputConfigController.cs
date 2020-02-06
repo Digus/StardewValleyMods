@@ -81,11 +81,11 @@ namespace ProducerFrameworkMod
 
             if (outputConfig.InputPriceBased)
             {
-                output.Price = (int)(outputConfig.OutputPriceIncrement + input?.Price??0 * outputConfig.OutputPriceMultiplier);
+                output.Price = (int)(outputConfig.OutputPriceIncrement + (input?.Price??0) * outputConfig.OutputPriceMultiplier);
             }
             else
             {
-                output.Price = (int)(outputConfig.OutputPriceIncrement + output?.Price??0 * outputConfig.OutputPriceMultiplier);
+                output.Price = (int)(outputConfig.OutputPriceIncrement + (output?.Price??0) * outputConfig.OutputPriceMultiplier);
             }
 
             output.Quality = outputConfig.KeepInputQuality ? input?.Quality??0 : outputConfig.OutputQuality;
