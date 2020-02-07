@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework.Graphics;
 using ProducerFrameworkMod.ContentPack;
 using StardewModdingAPI;
 
@@ -31,7 +32,7 @@ namespace ProducerFrameworkMod
                 {
                     ProducerFrameworkModEntry.ModMonitor.Log($"Reading content pack: {contentPack.Manifest.Name} {contentPack.Manifest.Version} from {contentPack.DirectoryPath}");
                     List<ProducerConfig> producersConfigs = contentPack.ReadJsonFile<List<ProducerConfig>>(producersConfigJson);
-                    ProducerController.AddProducersConfig(producersConfigs, contentPack.Manifest.UniqueID);
+                    ProducerController.AddProducersConfig(producersConfigs, contentPack.Manifest.UniqueID, s=> contentPack.LoadAsset<Texture2D>(s));
                 }
                 else
                 {

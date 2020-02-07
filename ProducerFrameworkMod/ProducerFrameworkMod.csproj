@@ -55,6 +55,7 @@
     <Compile Include="AnimationController.cs" />
     <Compile Include="Api\IProducerFrameworkModAPI.cs" />
     <Compile Include="Api\ProducerFrameworkModApi.cs" />
+    <Compile Include="ContentPack\Animation.cs" />
     <Compile Include="ContentPack\LightSourceConfig.cs" />
     <Compile Include="ContentPack\NoInputStartMode.cs" />
     <Compile Include="ContentPack\OutputConfig.cs" />
