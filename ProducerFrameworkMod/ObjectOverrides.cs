@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Emit;
+using System.Text.RegularExpressions;
 using Harmony;
 using Microsoft.Xna.Framework;
 using Netcode;
 using ProducerFrameworkMod.ContentPack;
 using StardewValley;
+using StardewValley.Objects;
+using StardewValley.TerrainFeatures;
 using Object = StardewValley.Object;
 
 namespace ProducerFrameworkMod
@@ -247,11 +250,26 @@ namespace ProducerFrameworkMod
                 return true;
             }
 
+            Object previousObject = __instance.heldObject.Value;
+            foreach (ProducerRule producerRule in ProducerController.GetProducerRules(__instance.Name))
+            {
+                if (producerRule.LookForInputWhenReady is InputSearchConfig inputSearchConfig)
+                {
+                    if (producerRule.OutputConfigs.Find(o => o.OutputIndex == previousObject.ParentSheetIndex) is
+                        OutputConfig outputConfig)
+                    {
+                        Object input = ProducerRuleController.SearchInput(who.currentLocation, __instance.tileLocation, inputSearchConfig);
+                        previousObject = OutputConfigController.CreateOutput(outputConfig, input, ProducerRuleController.GetRandomForProducing(__instance.tileLocation));
+                        __instance.heldObject.Value = previousObject;
+                        OutputConfigController.LoadOutputName(outputConfig, __instance.heldObject.Value, input, who);
+                        break;
+                    }
+                }
+            }
             if (ProducerController.GetProducerConfig(__instance.Name) is ProducerConfig producerConfig)
             {
                 if (producerConfig.NoInputStartMode != null || producerConfig.IncrementStatsOnOutput.Count > 0)
                 {
-                    Object previousObject = __instance.heldObject.Value;
                     if (who.isMoving())
                     {
                         Game1.haltAfterCheck = false;
@@ -356,7 +374,7 @@ namespace ProducerFrameworkMod
 
         internal static bool LoadDisplayName(Object __instance, ref string __result)
         {
-            if (NameUtils.HasCustomNameForIndex(__instance.ParentSheetIndex) && !__instance.preserve.Value.HasValue && __instance.ParentSheetIndex != 463 && __instance.ParentSheetIndex != 464)
+            if (NameUtils.HasCustomNameForIndex(__instance.ParentSheetIndex) && !__instance.preserve.Value.HasValue && __instance.ParentSheetIndex != 463 && __instance.ParentSheetIndex != 464 && __instance.ParentSheetIndex != 340 )
             {
                 IDictionary<int, string> objects = Game1.objectInformation;
                 string translation = NameUtils.GetCustomNameFromIndex(__instance.ParentSheetIndex);
@@ -376,7 +394,11 @@ namespace ProducerFrameworkMod
                 
                 if (translation.Contains("{inputName}"))
                 {
-                    if (objects.TryGetValue(__instance.preservedParentSheetIndex.Value, out var preservedData))
+                    if (__instance.preservedParentSheetIndex.Value == -1)
+                    {
+                        translation = translation.Replace("{inputName}", NameUtils.GetGenericParentNameFromIndex(__instance.ParentSheetIndex));
+                    }
+                    else if (objects.TryGetValue(__instance.preservedParentSheetIndex.Value, out var preservedData))
                     {
                         translation = translation.Replace("{inputName}", ObjectUtils.GetObjectParameter(preservedData,(int)ObjectParameter.DisplayName));
                     }
@@ -395,7 +417,9 @@ namespace ProducerFrameworkMod
                     string farmerName = Game1.getAllFarmers().FirstOrDefault(f => __instance.Name.Contains(f.name))?.Name ?? Game1.player.Name;
                     translation = translation.Replace("{farmerName}", farmerName);
                 }
-                __result = translation;
+                Regex regex = new Regex("[ ]{2,}", RegexOptions.None);
+
+                __result = regex.Replace(translation, " ");
                 return false;
             }
             return true;

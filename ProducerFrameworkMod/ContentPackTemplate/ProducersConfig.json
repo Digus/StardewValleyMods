@@ -15,10 +15,10 @@
 			"Radius": 1.5, // The actual size of the light source depends on the texture used. Default is 1.5 (the size of the furnace light source with the sconceLight texture)
 			"OffsetX": 0, // The horizontal offset from the center of the producer tile. Default is 0.
 			"OffsetY": 0, // The vertical offset from the top of the producer tile. Default is 0.
-			// Light color work differently than object color. It's best to test the effect to find what looks best. (0,0,0,255) is white light and will keep the original color of objects lit by it.
-			"ColorRed": 0, // The red value of the light color. Default is 0.
-			"ColorGreen": 0, // The green value of the light color. Default is 0.
-			"ColorBlue": 0, // The blue value of the light color. Default is 0.
+			"ColorType": "DefinedColor", // [ObjectColor|ObjectDyeColor|DefinedColor] If ObjectColor and the output is a colored object, it will use the color of the output. If ObjectDyeColor and the output has a dye color, it will use this color. If DefinedColor or it doesn't find the color on the other options, it will create the color based on the Red, Green and Blue values.
+			"ColorRed": 255, // The red value of the light color. Default is 255.
+			"ColorGreen": 255, // The green value of the light color. Default is 255.
+			"ColorBlue": 255, // The blue value of the light color. Default is 255.
 			"ColorAlpha": 255, // The transparency value of the light color. 0 is fully transparent, 255 is fully opaque. Default is 255.
 			"ColorFactor": 0.75, // The factor that will multiply all other colors parameters. Default is 1.
 			"AlwaysOn": true // If true, the light source will be lit even while not producing. Default is false. 

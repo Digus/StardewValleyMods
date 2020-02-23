@@ -8,6 +8,8 @@ using ProducerFrameworkMod.ContentPack;
 using StardewModdingAPI;
 using StardewValley;
 using StardewValley.BellsAndWhistles;
+using StardewValley.Objects;
+using StardewValley.TerrainFeatures;
 using Object = StardewValley.Object;
 
 namespace ProducerFrameworkMod
@@ -85,12 +87,15 @@ namespace ProducerFrameworkMod
             OutputConfig outputConfig = OutputConfigController.ChooseOutput(producerRule.OutputConfigs, random, fuelSearch, location, input);
             if (outputConfig != null)
             {
-                Object output = OutputConfigController.CreateOutput(outputConfig, input, random);
+                Object output = producerRule.LookForInputWhenReady == null ? OutputConfigController.CreateOutput(outputConfig, input, random) : new Object(outputConfig.OutputIndex,1);
 
                 producer.heldObject.Value = output;
                 if (!probe)
                 {
-                    OutputConfigController.LoadOutputName(outputConfig, producer.heldObject.Value, input, who);
+                    if (producerRule.LookForInputWhenReady == null)
+                    {
+                        OutputConfigController.LoadOutputName(outputConfig, producer.heldObject.Value, input, who);
+                    }
 
                     if (!noSoundAndAnimation)
                     {
@@ -141,6 +146,109 @@ namespace ProducerFrameworkMod
             producer.readyForHarvest.Value = false;
             producer.showNextIndex.Value = false;
             producer.minutesUntilReady.Value = -1;
+        }
+
+        public static Object SearchInput(
+            GameLocation location,
+            Vector2 startTileLocation,
+            InputSearchConfig inputSearchConfig)
+        {
+            Queue<Vector2> vector2Queue = new Queue<Vector2>();
+            HashSet<Vector2> vector2Set = new HashSet<Vector2>();
+            vector2Queue.Enqueue(startTileLocation);
+            int range = inputSearchConfig.Range;
+            for (int index1 = 0; (range >= 0 || range < 0 && index1 <= 150) && vector2Queue.Count > 0; ++index1)
+            {
+                Vector2 index2 = vector2Queue.Dequeue();
+                if (inputSearchConfig.GardenPot || inputSearchConfig.Crop)
+                {
+                    Crop crop = null;
+                    if (inputSearchConfig.Crop && location.terrainFeatures.ContainsKey(index2) && location.terrainFeatures[index2] is HoeDirt hoeDirt && hoeDirt.crop != null && hoeDirt.readyForHarvest() &&  (!inputSearchConfig.ExcludeForageCrops || !(hoeDirt.crop.forageCrop)))
+                    {
+                        crop = hoeDirt.crop;
+                    }
+                    else if (inputSearchConfig.GardenPot && location.Objects.ContainsKey(index2) && location.Objects[index2] is IndoorPot indoorPot && indoorPot.hoeDirt.Value is HoeDirt potHoeDirt && potHoeDirt.crop != null && potHoeDirt.readyForHarvest() && (!inputSearchConfig.ExcludeForageCrops || !(potHoeDirt.crop.forageCrop)))
+                    {
+                        crop = potHoeDirt.crop;
+                    }
+                    if (crop != null)
+                    {
+                        bool found = false;
+                        if (inputSearchConfig.InputIdentifier.Contains(crop.indexOfHarvest.Value.ToString()))
+                        {
+                            found = true;
+                        }
+                        else
+                        {
+                            Object obj = new Object(crop.indexOfHarvest.Value, 1, false, -1, 0);
+                            if (inputSearchConfig.InputIdentifier.Any( i => i == obj.Name || i == obj.Category.ToString()))
+                            {
+                                found = true;
+                            }
+                        }
+                        if (found)
+                        {
+                            if (!crop.programColored.Value)
+                            {
+                                return new Object(crop.indexOfHarvest.Value, 1);
+                            }
+                            else
+                            {
+                                return new ColoredObject(crop.indexOfHarvest.Value, 1, crop.tintColor.Value);
+                            }
+                        }
+                    }
+                }
+                if (inputSearchConfig.FruitTree && location.terrainFeatures.ContainsKey(index2) && location.terrainFeatures[index2] is FruitTree fruitTree && fruitTree.fruitsOnTree.Value > 0)
+                {
+                    bool found = false;
+                    if (inputSearchConfig.InputIdentifier.Contains(fruitTree.indexOfFruit.Value.ToString()))
+                    {
+                        found = true;
+                    }
+                    else
+                    {
+                        Object obj = new Object(fruitTree.indexOfFruit.Value, 1, false, -1, 0);
+                        if (inputSearchConfig.InputIdentifier.Any(i => i == obj.Name || i == obj.Category.ToString()))
+                        {
+                            found = true;
+                        }
+                    }
+                    if (found)
+                    {
+                        return new Object(fruitTree.indexOfFruit.Value, 1);
+                    }
+                }
+                if (inputSearchConfig.BigCraftable && location.Objects.ContainsKey(index2) && location.Objects[index2] is Object bigCraftable && bigCraftable.bigCraftable && bigCraftable.heldObject.Value is Object heldObject && bigCraftable.readyForHarvest.Value)
+                {
+                    bool found = false;
+                    if (inputSearchConfig.InputIdentifier.Contains(heldObject.ParentSheetIndex.ToString()))
+                    {
+                        found = true;
+                    }
+                    else
+                    {
+                        Object obj = new Object(heldObject.ParentSheetIndex, 1, false, -1, 0);
+                        if (inputSearchConfig.InputIdentifier.Any(i => i == obj.Name || i == obj.Category.ToString()))
+                        {
+                            found = true;
+                        }
+                    }
+                    if (found)
+                    {
+                        return (Object) heldObject.getOne();
+                    }
+                }
+
+                //Look for in nearby tiles.
+                foreach (Vector2 adjacentTileLocation in Utility.getAdjacentTileLocations(index2))
+                {
+                    if (!vector2Set.Contains(adjacentTileLocation) && (range < 0 || (double)Math.Abs(adjacentTileLocation.X - startTileLocation.X) + (double)Math.Abs(adjacentTileLocation.Y - startTileLocation.Y) <= (double)range))
+                        vector2Queue.Enqueue(adjacentTileLocation);
+                }
+                vector2Set.Add(index2);
+            }
+            return (Object)null;
         }
     }
 }
