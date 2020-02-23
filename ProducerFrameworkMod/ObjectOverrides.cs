@@ -5,6 +5,7 @@ using System.Reflection.Emit;
 using System.Text.RegularExpressions;
 using Harmony;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Netcode;
 using ProducerFrameworkMod.ContentPack;
 using StardewValley;
@@ -162,6 +163,15 @@ namespace ProducerFrameworkMod
             {
                 linkedListNode.Value = new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(ObjectOverrides), "getScale", new Type[] {typeof(Object)}));
             }
+
+            codeInstruction = newInstructions.FirstOrDefault(c => c.opcode == OpCodes.Callvirt && c.operand?.ToString() == "Void Draw(Microsoft.Xna.Framework.Graphics.Texture2D, Microsoft.Xna.Framework.Rectangle, System.Nullable`1[Microsoft.Xna.Framework.Rectangle], Microsoft.Xna.Framework.Color, Single, Microsoft.Xna.Framework.Vector2, Microsoft.Xna.Framework.Graphics.SpriteEffects, Single)");
+            linkedListNode = newInstructions.Find(codeInstruction);
+            if (linkedListNode != null && codeInstruction != null)
+            {
+                newInstructions.AddBefore(linkedListNode, new CodeInstruction(OpCodes.Ldarg_0, null));
+                linkedListNode.Value = new CodeInstruction(OpCodes.Call, AccessTools.FirstMethod(typeof(ObjectOverrides), m=> m.Name == "DrawAnimation"));
+            }
+
             return newInstructions;
         }
 
@@ -205,6 +215,42 @@ namespace ProducerFrameworkMod
                 }
             }
             return __instance.getScale();
+        }
+
+        public static void DrawAnimation(
+            SpriteBatch spriteBatch,
+            Texture2D texture,
+            Rectangle destinationRectangle,
+            Rectangle? sourceRectangle,
+            Color color,
+            float rotation,
+            Vector2 origin,
+            SpriteEffects effects,
+            float layerDepth,
+            Object producer)
+        {
+            if (ProducerController.GetProducerConfig(producer.Name) is ProducerConfig producerConfig)
+            {
+                if (producerConfig.ProducingAnimation is Animation producingAnimation && producer.minutesUntilReady > 0 && producingAnimation.RelativeFrameIndex.Any())
+                {
+                    int frame = producingAnimation.RelativeFrameIndex[((Game1.ticks + GetLocationSeed(producer.TileLocation)) % (producingAnimation.RelativeFrameIndex.Count * producingAnimation.FrameInterval)) / producingAnimation.FrameInterval];
+                    spriteBatch.Draw(texture, destinationRectangle, new Rectangle?(Object.getSourceRectForBigCraftable(producer.ParentSheetIndex + frame)), color, rotation, origin, effects, layerDepth);
+                    return;
+                }
+                else if (producerConfig.ReadyAnimation is Animation readyAnimation && producer.readyForHarvest.Value && readyAnimation.RelativeFrameIndex.Any())
+                {
+                    int frame = readyAnimation.RelativeFrameIndex[((Game1.ticks + GetLocationSeed(producer.TileLocation)) % (readyAnimation.RelativeFrameIndex.Count * readyAnimation.FrameInterval)) / readyAnimation.FrameInterval];
+                    spriteBatch.Draw(texture, destinationRectangle, new Rectangle?(Object.getSourceRectForBigCraftable(producer.ParentSheetIndex + frame)), color, rotation, origin, effects, layerDepth);
+                    return;
+                }
+            }
+            spriteBatch.Draw(texture,destinationRectangle,sourceRectangle,color,rotation,origin,effects,layerDepth);
+            
+        }
+
+        private static int GetLocationSeed(Vector2 tileLocation)
+        {
+            return (int)tileLocation.X * (int)tileLocation.X * 13 + (int)tileLocation.Y * (int)tileLocation.Y * 1019;
         }
 
         [HarmonyPriority(800)]
