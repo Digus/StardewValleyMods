@@ -228,9 +228,9 @@ namespace ProducerFrameworkMod
         {
             if (ProducerController.GetProducerConfig(producer.Name) is ProducerConfig producerConfig)
             {
-                if (producerConfig.WorkingAnimation is Animation workingAnimation && producer.minutesUntilReady > 0 && workingAnimation.RelativeFrameIndex.Any())
+                if (producerConfig.ProducingAnimation is Animation producingAnimation && producer.minutesUntilReady > 0 && producingAnimation.RelativeFrameIndex.Any())
                 {
-                    int frame = workingAnimation.RelativeFrameIndex[((Game1.ticks + GetLocationSeed(producer.TileLocation)) % (workingAnimation.RelativeFrameIndex.Count * workingAnimation.FrameInterval)) / workingAnimation.FrameInterval];
+                    int frame = producingAnimation.RelativeFrameIndex[((Game1.ticks + GetLocationSeed(producer.TileLocation)) % (producingAnimation.RelativeFrameIndex.Count * producingAnimation.FrameInterval)) / producingAnimation.FrameInterval];
                     spriteBatch.Draw(texture, destinationRectangle, new Rectangle?(Object.getSourceRectForBigCraftable(producer.ParentSheetIndex + frame)), color, rotation, origin, effects, layerDepth);
                     return;
                 }

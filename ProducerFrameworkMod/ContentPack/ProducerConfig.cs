@@ -23,7 +23,7 @@ namespace ProducerFrameworkMod.ContentPack
         public List<string> WorkingLocation;
         public bool? WorkingOutdoors;
         public List<string> WorkingSeason;
-        public Animation WorkingAnimation;
+        public Animation ProducingAnimation;
         public Animation ReadyAnimation;
 
         public ProducerConfig()
