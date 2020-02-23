@@ -5,7 +5,6 @@ using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using ProducerFrameworkMod.ContentPack;
 using StardewModdingAPI;
 using Object = StardewValley.Object;
@@ -289,7 +288,7 @@ namespace ProducerFrameworkMod
         /// </summary>
         /// <param name="producersConfig">A list of producer config to add or replace.</param>
         /// <param name="modUniqueId">The mod unique id.</param>
-        public static void AddProducersConfig(List<ProducerConfig> producersConfig, string modUniqueId =  null, Func<string,Texture2D> textureLoader = null)
+        public static void AddProducersConfig(List<ProducerConfig> producersConfig, string modUniqueId =  null)
         {
             producersConfig.ForEach(producerConfig =>
             {
@@ -317,26 +316,6 @@ namespace ProducerFrameworkMod
                     if (producerConfig?.LightSource is LightSourceConfig lightSource)
                     {
                         producerConfig.LightSource.Color = new Color(lightSource.ColorRed, lightSource.ColorGreen, lightSource.ColorBlue, lightSource.ColorAlpha);
-                    }
-
-                    if (producerConfig?.WorkingAnimation?.TextureFile != null && textureLoader != null)
-                    {
-                        if (producerConfig.WorkingAnimation.TextureFile != null)
-                        {
-                            producerConfig.WorkingAnimation.Texture = textureLoader(producerConfig.WorkingAnimation.TextureFile);
-                        }
-                    }
-                    if (producerConfig.WorkingAnimation != null)
-                    {
-                        if (producerConfig.WorkingAnimation.Texture == null)
-                        {
-                            ProducerFrameworkModEntry.ModMonitor.Log($"Animation for producer '{producerConfig.ProducerName}' was not found and will be ignored.", LogLevel.Warn);
-                            producerConfig.WorkingAnimation = null;
-                        }
-                        else
-                        {
-                            producerConfig.WorkingAnimation.NumberOfFrames = producerConfig.WorkingAnimation.Texture.Width / 16;
-                        }
                     }
 
                     if (ConfigRepository.ContainsKey(producerConfig.ProducerName))

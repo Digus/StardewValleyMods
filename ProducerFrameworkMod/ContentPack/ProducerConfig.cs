@@ -24,6 +24,7 @@ namespace ProducerFrameworkMod.ContentPack
         public bool? WorkingOutdoors;
         public List<string> WorkingSeason;
         public Animation WorkingAnimation;
+        public Animation ReadyAnimation;
 
         public ProducerConfig()
         {

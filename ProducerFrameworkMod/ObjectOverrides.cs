@@ -226,24 +226,28 @@ namespace ProducerFrameworkMod
             float layerDepth,
             Object producer)
         {
-            if (ProducerController.GetProducerConfig(producer.Name) is ProducerConfig producerConfig && producerConfig.WorkingAnimation is Animation animation && producer.minutesUntilReady > 0)
+            if (ProducerController.GetProducerConfig(producer.Name) is ProducerConfig producerConfig)
             {
-                int frame;
-                if (animation.RelativeFrameIndex.Any())
+                if (producerConfig.WorkingAnimation is Animation workingAnimation && producer.minutesUntilReady > 0 && workingAnimation.RelativeFrameIndex.Any())
                 {
-                    frame = animation.RelativeFrameIndex[(Game1.ticks % (animation.RelativeFrameIndex.Count * animation.FrameInterval)) / animation.FrameInterval];
+                    int frame = workingAnimation.RelativeFrameIndex[((Game1.ticks + GetLocationSeed(producer.TileLocation)) % (workingAnimation.RelativeFrameIndex.Count * workingAnimation.FrameInterval)) / workingAnimation.FrameInterval];
                     spriteBatch.Draw(texture, destinationRectangle, new Rectangle?(Object.getSourceRectForBigCraftable(producer.ParentSheetIndex + frame)), color, rotation, origin, effects, layerDepth);
+                    return;
                 }
-                else
+                else if (producerConfig.ReadyAnimation is Animation readyAnimation && producer.readyForHarvest.Value && readyAnimation.RelativeFrameIndex.Any())
                 {
-                    frame = (Game1.ticks % (animation.NumberOfFrames * animation.FrameInterval)) / animation.FrameInterval;
-                    spriteBatch.Draw(animation.Texture, destinationRectangle, new Rectangle(16*frame,0,16,32),color,rotation,origin,effects,layerDepth);
+                    int frame = readyAnimation.RelativeFrameIndex[((Game1.ticks + GetLocationSeed(producer.TileLocation)) % (readyAnimation.RelativeFrameIndex.Count * readyAnimation.FrameInterval)) / readyAnimation.FrameInterval];
+                    spriteBatch.Draw(texture, destinationRectangle, new Rectangle?(Object.getSourceRectForBigCraftable(producer.ParentSheetIndex + frame)), color, rotation, origin, effects, layerDepth);
+                    return;
                 }
             }
-            else
-            {
-                spriteBatch.Draw(texture,destinationRectangle,sourceRectangle,color,rotation,origin,effects,layerDepth);
-            }
+            spriteBatch.Draw(texture,destinationRectangle,sourceRectangle,color,rotation,origin,effects,layerDepth);
+            
+        }
+
+        private static int GetLocationSeed(Vector2 tileLocation)
+        {
+            return (int)tileLocation.X * (int)tileLocation.X * 13 + (int)tileLocation.Y * (int)tileLocation.Y * 1019;
         }
 
         [HarmonyPriority(800)]
