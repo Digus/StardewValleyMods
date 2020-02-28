@@ -23,9 +23,6 @@ namespace ProducerFrameworkMod
         private static readonly Dictionary<string, ProducerConfig> ConfigRepository = new Dictionary<string, ProducerConfig>()
         {
             {
-                "Bee House", new ProducerConfig("Bee House",false,true)
-            },
-            {
                 "Furnace", new ProducerConfig("Furnace",true)
             },
             {
@@ -42,9 +39,6 @@ namespace ProducerFrameworkMod
             },
             {
                 "Cheese Press", new ProducerConfig("Cheese Press", new Dictionary<StardewStats, string>(){{StardewStats.GoatCheeseMade, "426" },{StardewStats.CheeseMade, null } })
-            },
-            {
-                "Mushroom Box", new ProducerConfig("Mushroom Box",false,true)
             }
         };
 
@@ -333,9 +327,6 @@ namespace ProducerFrameworkMod
                     {
                         ProducerFrameworkModEntry.ModMonitor.Log($"Producer Framework Mod doesn't support {producerConfig.ProducerName}. This config will be ignored.", LogLevel.Warn);
                     }
-                } else if (ConfigRepository.ContainsKey(producerConfig.ProducerName) && ConfigRepository[producerConfig.ProducerName].ModUniqueID != null && ConfigRepository[producerConfig.ProducerName].ModUniqueID != modUniqueId)
-                {
-                    ProducerFrameworkModEntry.ModMonitor.Log($"There's already a configuration for producer '${producerConfig.ProducerName}' added by '${ConfigRepository[producerConfig.ProducerName].ModUniqueID}'.\nThe configuration from '${modUniqueId}' will be ignored.");
                 }
                 else
                 {
@@ -356,7 +347,7 @@ namespace ProducerFrameworkMod
                             }
                             else if (producerConfig.OverrideMod.Contains(oldConfig.ModUniqueID))
                             {
-                                ProducerFrameworkModEntry.ModMonitor.Log($"Mod '{producerConfig.ModUniqueID}' if overriding mod '{oldConfig.ModUniqueID}' config for producer '{producerConfig.ProducerName}'.", LogLevel.Debug);
+                                ProducerFrameworkModEntry.ModMonitor.Log($"Mod '{producerConfig.ModUniqueID}' is overriding mod '{oldConfig.ModUniqueID}' config for producer '{producerConfig.ProducerName}'.", LogLevel.Debug);
                             }
                             else
                             {

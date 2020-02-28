@@ -25,12 +25,35 @@ namespace ProducerFrameworkMod
                 return false;
             Object input = (Object) dropInItem;
 
+            bool failLocationCondition = false;
+            bool failSeasonCondition = false;
+
+            if (__instance.heldObject.Value != null && !__instance.name.Equals("Crystalarium") || input.bigCraftable.Value)
+            {
+                return true;
+            }
+
+            ProducerConfig producerConfig = ProducerController.GetProducerConfig(__instance.Name);
+
+            GameLocation location = who.currentLocation;
+            if (producerConfig != null)
+            {
+                if (!producerConfig.CheckLocationCondition(location))
+                {
+                    failLocationCondition = true;
+                }
+                if (!producerConfig.CheckSeasonCondition())
+                {
+                    failSeasonCondition = true;
+                }
+                if (producerConfig.NoInputStartMode != null)
+                {
+                    return false;
+                }
+            }
+
             if (ProducerController.GetProducerItem(__instance.name, input) is ProducerRule producerRule)
             {
-                if (__instance.heldObject.Value != null && !__instance.name.Equals("Crystalarium") || input.bigCraftable.Value)
-                {
-                    return true;
-                }
                 if (ProducerRuleController.IsInputExcluded(producerRule, input))
                 {
                     return true;
@@ -40,21 +63,16 @@ namespace ProducerFrameworkMod
                 {
                     __instance.scale.X = 5f;
                 }
+
                 try
                 {
-                    ProducerConfig producerConfig = ProducerController.GetProducerConfig(__instance.Name);
-
-                    GameLocation location = who.currentLocation;
-                    if (producerConfig != null)
+                    if (failLocationCondition)
                     {
-                        if (!producerConfig.CheckLocationCondition(location))
-                        {
-                            throw new RestrictionException(DataLoader.Helper.Translation.Get("Message.Condition.Location"));
-                        }
-                        if (!producerConfig.CheckSeasonCondition())
-                        {
-                            throw new RestrictionException(DataLoader.Helper.Translation.Get("Message.Condition.Season"));
-                        }
+                        throw new RestrictionException(DataLoader.Helper.Translation.Get("Message.Condition.Location"));
+                    }
+                    if (failSeasonCondition)
+                    {
+                        throw new RestrictionException(DataLoader.Helper.Translation.Get("Message.Condition.Season"));
                     }
 
                     ProducerRuleController.ValidateIfInputStackLessThanRequired(producerRule, input);
@@ -95,7 +113,7 @@ namespace ProducerFrameworkMod
                 }
                 return false;
             }
-            return true;
+            return !failLocationCondition && !failSeasonCondition;
         }
 
         private static bool RemoveItemsFromInventory(Farmer farmer, int index, int stack)
@@ -138,7 +156,7 @@ namespace ProducerFrameworkMod
                     return false;
                 }
 
-                if (!producerConfig.CheckTimeCondition(ref minutes))
+                if (!producerConfig.CheckElapsedTimeCondition(ref minutes))
                 {
                     return false;
                 }
@@ -195,23 +213,9 @@ namespace ProducerFrameworkMod
                 {
                     return Vector2.Zero;
                 }
-                else if (producerConfig.WorkingTime != null)
+                else if (!producerConfig.CheckCurrentTimeCondition())
                 {
-                    if (producerConfig.WorkingTime.Begin <= producerConfig.WorkingTime.End)
-                    {
-                        if (Game1.timeOfDay < producerConfig.WorkingTime.Begin || Game1.timeOfDay >= producerConfig.WorkingTime.End)
-                        {
-                            return Vector2.Zero;
-                        }
-                    
-                    }
-                    else
-                    {
-                        if (Game1.timeOfDay >= producerConfig.WorkingTime.End && Game1.timeOfDay < producerConfig.WorkingTime.Begin)
-                        {
-                            return Vector2.Zero;
-                        }
-                    }
+                    return Vector2.Zero;
                 }
             }
             return __instance.getScale();
@@ -258,28 +262,29 @@ namespace ProducerFrameworkMod
         {
             if (ProducerController.GetProducerConfig(__instance.Name) is ProducerConfig producerConfig)
             {
-                if (producerConfig.NoInputStartMode != null)
+                try
                 {
-                    try
+                    if (!producerConfig.CheckLocationCondition(who.currentLocation))
                     {
-                        if (!producerConfig.CheckLocationCondition(who.currentLocation))
-                        {
-                            throw new RestrictionException(DataLoader.Helper.Translation.Get("Message.Condition.Location"));
-                        }
-                        else if (producerConfig.CheckSeasonCondition() && NoInputStartMode.Placement == producerConfig.NoInputStartMode)
+                        throw new RestrictionException(DataLoader.Helper.Translation.Get("Message.Condition.Location"));
+                    }
+                    if (producerConfig.NoInputStartMode != null)
+                    {
+                        if (producerConfig.CheckSeasonCondition() && NoInputStartMode.Placement == producerConfig.NoInputStartMode)
                         {
                             if (ProducerController.GetProducerItem(__instance.Name, null) is ProducerRule producerRule)
                             {
                                 ProducerRuleController.ProduceOutput(producerRule, __instance, (i, q) => who.hasItemInInventory(i, q), who, who.currentLocation, producerConfig);
                             }
                         }
+                        return __result = false;
                     }
-                    catch (RestrictionException e)
+                }
+                catch (RestrictionException e)
+                {
+                    if (e.Message != null && who.IsLocalPlayer)
                     {
-                        if (e.Message != null && who.IsLocalPlayer)
-                        {
-                            Game1.showRedMessage(e.Message);
-                        }
+                        Game1.showRedMessage(e.Message);
                     }
                     return __result = false;
                 }
@@ -296,22 +301,8 @@ namespace ProducerFrameworkMod
                 return true;
             }
 
-            Object previousObject = __instance.heldObject.Value;
-            foreach (ProducerRule producerRule in ProducerController.GetProducerRules(__instance.Name))
-            {
-                if (producerRule.LookForInputWhenReady is InputSearchConfig inputSearchConfig)
-                {
-                    if (producerRule.OutputConfigs.Find(o => o.OutputIndex == previousObject.ParentSheetIndex) is
-                        OutputConfig outputConfig)
-                    {
-                        Object input = ProducerRuleController.SearchInput(who.currentLocation, __instance.tileLocation, inputSearchConfig);
-                        previousObject = OutputConfigController.CreateOutput(outputConfig, input, ProducerRuleController.GetRandomForProducing(__instance.tileLocation));
-                        __instance.heldObject.Value = previousObject;
-                        OutputConfigController.LoadOutputName(outputConfig, __instance.heldObject.Value, input, who);
-                        break;
-                    }
-                }
-            }
+            ProducerRuleController.PrepareOutput(__instance, who.currentLocation, who);
+
             if (ProducerController.GetProducerConfig(__instance.Name) is ProducerConfig producerConfig)
             {
                 if (producerConfig.NoInputStartMode != null || producerConfig.IncrementStatsOnOutput.Count > 0)
@@ -320,6 +311,7 @@ namespace ProducerFrameworkMod
                     {
                         Game1.haltAfterCheck = false;
                     }
+                    Object previousObject = __instance.heldObject.Value;
                     __instance.heldObject.Value = (Object)null;
                     if (who.IsLocalPlayer)
                     {
@@ -330,24 +322,9 @@ namespace ProducerFrameworkMod
                             return __result = false;
                         }
                         Game1.playSound("coin");
-                        foreach (KeyValuePair<StardewStats, string> keyValuePair in producerConfig.IncrementStatsOnOutput)
-                        {
-                            if (keyValuePair.Value == null
-                                || keyValuePair.Value == previousObject.Name
-                                || keyValuePair.Value == previousObject.ParentSheetIndex.ToString()
-                                || keyValuePair.Value == previousObject.Category.ToString()
-                                || previousObject.HasContextTag(keyValuePair.Value))
-                            {
-                                StatsController.IncrementStardewStats(keyValuePair.Key, previousObject.Stack);
-                                if (!producerConfig.MultipleStatsIncrement)
-                                {
-                                    break;
-                                }
-                            }
-                        }
+                        producerConfig.IncrementStats(previousObject);
                     }
-                    __instance.readyForHarvest.Value = false;
-                    __instance.showNextIndex.Value = false;
+                    ProducerRuleController.ClearProduction(__instance);
                     __result = true;
                     if (producerConfig.NoInputStartMode == NoInputStartMode.Placement)
                     {
@@ -360,7 +337,11 @@ namespace ProducerFrameworkMod
                                 }
                                 else if(producerConfig.CheckSeasonCondition())
                                 {
-                                    __result = ProducerRuleController.ProduceOutput(producerRule, __instance, (i, q) => who.hasItemInInventory(i, q), who, who.currentLocation, producerConfig) != null;
+                                    __result = ProducerRuleController.ProduceOutput(producerRule, __instance, (i, q) => false, who, who.currentLocation, producerConfig) != null;
+                                }
+                                else
+                                {
+                                    __result = false;
                                 }
                             }
                             catch (RestrictionException e)

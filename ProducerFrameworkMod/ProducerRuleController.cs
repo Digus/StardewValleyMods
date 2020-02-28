@@ -140,7 +140,7 @@ namespace ProducerFrameworkMod
             return new Random((int)Game1.uniqueIDForThisGame / 2 + (int)Game1.stats.DaysPlayed * (int)Game1.stats.DaysPlayed * 1000000531 + (int)tileLocation.X * (int)tileLocation.X * 100207 + (int)tileLocation.Y * (int)tileLocation.Y * 1031 + Game1.timeOfDay/10);
         }
 
-        internal static void ClearProduction(Object producer)
+        public static void ClearProduction(Object producer)
         {
             producer.heldObject.Value = (Object)null;
             producer.readyForHarvest.Value = false;
@@ -148,26 +148,46 @@ namespace ProducerFrameworkMod
             producer.minutesUntilReady.Value = -1;
         }
 
-        public static Object SearchInput(
+        public static void PrepareOutput(Object producer, GameLocation location, Farmer who)
+        {
+            foreach (ProducerRule producerRule in ProducerController.GetProducerRules(producer.Name))
+            {
+                if (producerRule.LookForInputWhenReady is InputSearchConfig inputSearchConfig)
+                {
+                    if (producerRule.OutputConfigs.Find(o => o.OutputIndex == producer.heldObject.Value.ParentSheetIndex) is
+                        OutputConfig outputConfig)
+                    {
+                        Object input = ProducerRuleController.SearchInput(location, producer.tileLocation,
+                            inputSearchConfig);
+                        producer.heldObject.Value = OutputConfigController.CreateOutput(outputConfig, input,
+                            ProducerRuleController.GetRandomForProducing(producer.tileLocation));
+                        OutputConfigController.LoadOutputName(outputConfig, producer.heldObject.Value, input, who);
+                        break;
+                    }
+                }
+            }
+        }
+
+        private static Object SearchInput(
             GameLocation location,
             Vector2 startTileLocation,
             InputSearchConfig inputSearchConfig)
         {
-            Queue<Vector2> vector2Queue = new Queue<Vector2>();
-            HashSet<Vector2> vector2Set = new HashSet<Vector2>();
-            vector2Queue.Enqueue(startTileLocation);
-            int range = inputSearchConfig.Range;
-            for (int index1 = 0; (range >= 0 || range < 0 && index1 <= 150) && vector2Queue.Count > 0; ++index1)
+            Queue<Vector2> tilesQueue = new Queue<Vector2>();
+            HashSet<Vector2> visitedTiles = new HashSet<Vector2>();
+            tilesQueue.Enqueue(startTileLocation);
+            int maxRange = inputSearchConfig.Range;
+            for (int currentRange = 0; (maxRange >= 0 || maxRange < 0 && currentRange <= 150) && tilesQueue.Count > 0; ++currentRange)
             {
-                Vector2 index2 = vector2Queue.Dequeue();
+                Vector2 currentTile = tilesQueue.Dequeue();
                 if (inputSearchConfig.GardenPot || inputSearchConfig.Crop)
                 {
                     Crop crop = null;
-                    if (inputSearchConfig.Crop && location.terrainFeatures.ContainsKey(index2) && location.terrainFeatures[index2] is HoeDirt hoeDirt && hoeDirt.crop != null && hoeDirt.readyForHarvest() &&  (!inputSearchConfig.ExcludeForageCrops || !(hoeDirt.crop.forageCrop)))
+                    if (inputSearchConfig.Crop && location.terrainFeatures.ContainsKey(currentTile) && location.terrainFeatures[currentTile] is HoeDirt hoeDirt && hoeDirt.crop != null && hoeDirt.readyForHarvest() && (!inputSearchConfig.ExcludeForageCrops || !(hoeDirt.crop.forageCrop)))
                     {
                         crop = hoeDirt.crop;
                     }
-                    else if (inputSearchConfig.GardenPot && location.Objects.ContainsKey(index2) && location.Objects[index2] is IndoorPot indoorPot && indoorPot.hoeDirt.Value is HoeDirt potHoeDirt && potHoeDirt.crop != null && potHoeDirt.readyForHarvest() && (!inputSearchConfig.ExcludeForageCrops || !(potHoeDirt.crop.forageCrop)))
+                    else if (inputSearchConfig.GardenPot && location.Objects.ContainsKey(currentTile) && location.Objects[currentTile] is IndoorPot indoorPot && indoorPot.hoeDirt.Value is HoeDirt potHoeDirt && potHoeDirt.crop != null && potHoeDirt.readyForHarvest() && (!inputSearchConfig.ExcludeForageCrops || !(potHoeDirt.crop.forageCrop)))
                     {
                         crop = potHoeDirt.crop;
                     }
@@ -181,7 +201,7 @@ namespace ProducerFrameworkMod
                         else
                         {
                             Object obj = new Object(crop.indexOfHarvest.Value, 1, false, -1, 0);
-                            if (inputSearchConfig.InputIdentifier.Any( i => i == obj.Name || i == obj.Category.ToString()))
+                            if (inputSearchConfig.InputIdentifier.Any(i => i == obj.Name || i == obj.Category.ToString()))
                             {
                                 found = true;
                             }
@@ -199,7 +219,7 @@ namespace ProducerFrameworkMod
                         }
                     }
                 }
-                if (inputSearchConfig.FruitTree && location.terrainFeatures.ContainsKey(index2) && location.terrainFeatures[index2] is FruitTree fruitTree && fruitTree.fruitsOnTree.Value > 0)
+                if (inputSearchConfig.FruitTree && location.terrainFeatures.ContainsKey(currentTile) && location.terrainFeatures[currentTile] is FruitTree fruitTree && fruitTree.fruitsOnTree.Value > 0)
                 {
                     bool found = false;
                     if (inputSearchConfig.InputIdentifier.Contains(fruitTree.indexOfFruit.Value.ToString()))
@@ -219,7 +239,7 @@ namespace ProducerFrameworkMod
                         return new Object(fruitTree.indexOfFruit.Value, 1);
                     }
                 }
-                if (inputSearchConfig.BigCraftable && location.Objects.ContainsKey(index2) && location.Objects[index2] is Object bigCraftable && bigCraftable.bigCraftable && bigCraftable.heldObject.Value is Object heldObject && bigCraftable.readyForHarvest.Value)
+                if (inputSearchConfig.BigCraftable && location.Objects.ContainsKey(currentTile) && location.Objects[currentTile] is Object bigCraftable && bigCraftable.bigCraftable && bigCraftable.heldObject.Value is Object heldObject && bigCraftable.readyForHarvest.Value)
                 {
                     bool found = false;
                     if (inputSearchConfig.InputIdentifier.Contains(heldObject.ParentSheetIndex.ToString()))
@@ -236,17 +256,16 @@ namespace ProducerFrameworkMod
                     }
                     if (found)
                     {
-                        return (Object) heldObject.getOne();
+                        return (Object)heldObject.getOne();
                     }
                 }
-
                 //Look for in nearby tiles.
-                foreach (Vector2 adjacentTileLocation in Utility.getAdjacentTileLocations(index2))
+                foreach (Vector2 adjacentTileLocation in Utility.getAdjacentTileLocations(currentTile))
                 {
-                    if (!vector2Set.Contains(adjacentTileLocation) && (range < 0 || (double)Math.Abs(adjacentTileLocation.X - startTileLocation.X) + (double)Math.Abs(adjacentTileLocation.Y - startTileLocation.Y) <= (double)range))
-                        vector2Queue.Enqueue(adjacentTileLocation);
+                    if (!visitedTiles.Contains(adjacentTileLocation) && (maxRange < 0 || (double)Math.Abs(adjacentTileLocation.X - startTileLocation.X) + (double)Math.Abs(adjacentTileLocation.Y - startTileLocation.Y) <= (double)maxRange))
+                        tilesQueue.Enqueue(adjacentTileLocation);
                 }
-                vector2Set.Add(index2);
+                visitedTiles.Add(currentTile);
             }
             return (Object)null;
         }
