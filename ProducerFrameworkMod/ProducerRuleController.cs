@@ -121,6 +121,10 @@ namespace ProducerFrameworkMod
                             new Vector2(producerRule.PlacingAnimationOffsetX, producerRule.PlacingAnimationOffsetY));
                     }
 
+                    if (location.hasLightSource(LightSourceConfigController.GenerateIdentifier(tileLocation)))
+                    {
+                        location.removeLightSource(LightSourceConfigController.GenerateIdentifier(tileLocation));
+                    }
                     producer.initializeLightSource(tileLocation, false);
 
                     producerRule.IncrementStatsOnInput.ForEach(s => StatsController.IncrementStardewStats(s, producerRule.InputStack));
@@ -140,12 +144,22 @@ namespace ProducerFrameworkMod
             return new Random((int)Game1.uniqueIDForThisGame / 2 + (int)Game1.stats.DaysPlayed * (int)Game1.stats.DaysPlayed * 1000000531 + (int)tileLocation.X * (int)tileLocation.X * 100207 + (int)tileLocation.Y * (int)tileLocation.Y * 1031 + Game1.timeOfDay/10);
         }
 
-        public static void ClearProduction(Object producer)
+        public static void ClearProduction(Object producer, GameLocation location)
         {
             producer.heldObject.Value = (Object)null;
             producer.readyForHarvest.Value = false;
             producer.showNextIndex.Value = false;
             producer.minutesUntilReady.Value = -1;
+
+            if (ProducerController.GetProducerConfig(producer.Name) is ProducerConfig producerConfig && producerConfig.LightSource?.AlwaysOn == true)
+            {
+                int identifier = LightSourceConfigController.GenerateIdentifier(producer.tileLocation);
+                if (location.hasLightSource(identifier))
+                {
+                    location.removeLightSource(identifier);
+                    producer.initializeLightSource(producer.tileLocation);
+                }
+            }
         }
 
         public static void PrepareOutput(Object producer, GameLocation location, Farmer who)
