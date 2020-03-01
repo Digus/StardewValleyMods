@@ -62,7 +62,7 @@ namespace PFMAutomate.Automate
 
         internal void Reset(Item item)
         {
-            ProducerRuleController.ClearProduction(_machine);
+            ProducerRuleController.ClearProduction(_machine, Location);
             if (ProducerController.GetProducerConfig(_machine.Name) is ProducerConfig producerConfig)
             {
                 if (producerConfig.NoInputStartMode != null || producerConfig.IncrementStatsOnOutput.Count > 0)
