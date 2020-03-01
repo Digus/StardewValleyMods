@@ -23,6 +23,7 @@ namespace ProducerFrameworkMod.ContentPack
         public List<string> WorkingLocation;
         public bool? WorkingOutdoors;
         public List<string> WorkingSeason;
+        public bool MustBePlacedInWater;
 
         public ProducerConfig()
         {

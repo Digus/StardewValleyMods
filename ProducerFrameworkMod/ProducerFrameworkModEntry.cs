@@ -68,6 +68,14 @@ namespace ProducerFrameworkMod
                 original: AccessTools.Method(typeof(SObject), nameof(SObject.initializeLightSource)),
                 prefix: new HarmonyMethod(typeof(ObjectOverrides), nameof(ObjectOverrides.initializeLightSource))
             );
+            harmony.Patch(
+                original: AccessTools.Method(typeof(SObject), nameof(SObject.canBePlacedInWater)),
+                postfix: new HarmonyMethod(typeof(ObjectOverrides), nameof(ObjectOverrides.canBePlacedInWater))
+            );
+            harmony.Patch(
+                original: AccessTools.Method(typeof(SObject), nameof(SObject.canBePlacedHere)),
+                postfix: new HarmonyMethod(typeof(ObjectOverrides), nameof(ObjectOverrides.canBePlacedHere))
+            );
         }
 
         public override object GetApi()

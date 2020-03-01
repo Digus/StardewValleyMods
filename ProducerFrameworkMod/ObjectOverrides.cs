@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using Netcode;
 using ProducerFrameworkMod.ContentPack;
 using StardewValley;
+using StardewValley.Objects;
 using Object = StardewValley.Object;
 
 namespace ProducerFrameworkMod
@@ -14,6 +15,9 @@ namespace ProducerFrameworkMod
 
     internal class ObjectOverrides
     {
+
+        private static Object LastInstance;
+
         [HarmonyPriority(800)]
         internal static bool PerformObjectDropInAction(Object __instance, Item dropInItem, bool probe, Farmer who, ref bool __result)
         {
@@ -159,49 +163,84 @@ namespace ProducerFrameworkMod
             {
                 linkedListNode.Value = new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(ObjectOverrides), "getScale", new Type[] {typeof(Object)}));
             }
+
+            CodeInstruction codeInstructionOffset = newInstructions.FirstOrDefault(c => c.opcode == OpCodes.Call && c.operand?.ToString() == "Microsoft.Xna.Framework.Vector2 GlobalToLocal(xTile.Dimensions.Rectangle, Microsoft.Xna.Framework.Vector2)");
+            LinkedListNode<CodeInstruction> linkedListNodeOffset = newInstructions.Find(codeInstructionOffset);
+
+            if (linkedListNodeOffset != null && codeInstructionOffset != null)
+            {
+                linkedListNodeOffset.Value = new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(ObjectOverrides), "GlobalToLocal"));
+            }
+
             return newInstructions;
         }
 
         public static Vector2 getScale(Object __instance)
         {
-            if(ProducerController.GetProducerConfig(__instance.Name) is ProducerConfig producerConfig && __instance.MinutesUntilReady > 0 && __instance.heldObject.Value != null)
+            LastInstance = null;
+            if (ProducerController.GetProducerConfig(__instance.Name) is ProducerConfig producerConfig)
             {
-                if (producerConfig.DisableBouncingAnimationWhileWorking)
+                LastInstance =  producerConfig.MustBePlacedInWater ? __instance : null;
+                if (__instance.MinutesUntilReady > 0 && __instance.heldObject.Value != null)
                 {
-                    return Vector2.Zero;
-                }
-                else if (!producerConfig.CheckLocationCondition(Game1.currentLocation))
-                {
-                    return Vector2.Zero;
-                }
-                else if (!producerConfig.CheckSeasonCondition())
-                {
-                    return Vector2.Zero;
-                }
-                else if (!producerConfig.CheckWeatherCondition())
-                {
-                    return Vector2.Zero;
-                }
-                else if (producerConfig.WorkingTime != null)
-                {
-                    if (producerConfig.WorkingTime.Begin <= producerConfig.WorkingTime.End)
+                    if (producerConfig.DisableBouncingAnimationWhileWorking)
                     {
-                        if (Game1.timeOfDay < producerConfig.WorkingTime.Begin || Game1.timeOfDay >= producerConfig.WorkingTime.End)
-                        {
-                            return Vector2.Zero;
-                        }
-                    
+                        return Vector2.Zero;
                     }
-                    else
+                    else if (!producerConfig.CheckLocationCondition(Game1.currentLocation))
                     {
-                        if (Game1.timeOfDay >= producerConfig.WorkingTime.End && Game1.timeOfDay < producerConfig.WorkingTime.Begin)
+                        return Vector2.Zero;
+                    }
+                    else if (!producerConfig.CheckSeasonCondition())
+                    {
+                        return Vector2.Zero;
+                    }
+                    else if (!producerConfig.CheckWeatherCondition())
+                    {
+                        return Vector2.Zero;
+                    }
+                    else if (producerConfig.WorkingTime != null)
+                    {
+                        if (producerConfig.WorkingTime.Begin <= producerConfig.WorkingTime.End)
                         {
-                            return Vector2.Zero;
+                            if (Game1.timeOfDay < producerConfig.WorkingTime.Begin || Game1.timeOfDay >= producerConfig.WorkingTime.End)
+                            {
+                                return Vector2.Zero;
+                            }
+
+                        }
+                        else
+                        {
+                            if (Game1.timeOfDay >= producerConfig.WorkingTime.End && Game1.timeOfDay < producerConfig.WorkingTime.Begin)
+                            {
+                                return Vector2.Zero;
+                            }
                         }
                     }
                 }
             }
             return __instance.getScale();
+        }
+
+        public static Vector2 GlobalToLocal(xTile.Dimensions.Rectangle viewport, Vector2 globalPosition)
+        {
+            Vector2 local = Game1.GlobalToLocal(viewport, globalPosition);
+            if (LastInstance is Object obj && Game1.currentLocation is GameLocation location && location.Objects.TryGetValue(obj.TileLocation, out Object o) && o == obj)
+            {
+                Vector2 offset = new Vector2(obj.Edibility, obj.SpecialVariable);
+
+                if (obj.Edibility == -300)
+                {
+                    CrabPot pot = new CrabPot(obj.TileLocation);
+                    pot.updateOffset(location);
+                    obj.Edibility = (int)pot.directionOffset.Value.X;
+                    obj.SpecialVariable = (int)pot.directionOffset.Value.Y;
+                }
+
+                local += offset;
+            }
+            LastInstance = null;
+            return local;
         }
 
         [HarmonyPriority(800)]
@@ -416,5 +455,28 @@ namespace ProducerFrameworkMod
             }
             return true;
         }
+
+        internal static void canBePlacedInWater(Object __instance, ref bool __result)
+        {
+            if (__instance.bigCraftable.Value)
+            {
+                if (ProducerController.GetProducerConfig(__instance.Name) is ProducerConfig producerConfig)
+                {
+                    __result = producerConfig.MustBePlacedInWater;
+                }
+            }
+        }
+
+        internal static void canBePlacedHere(Object __instance, GameLocation l, Vector2 tile, ref bool __result)
+        {
+            if (__instance.bigCraftable.Value)
+            {
+                if (ProducerController.GetProducerConfig(__instance.Name) is ProducerConfig producerConfig && producerConfig.MustBePlacedInWater)
+                {
+                    __result = CrabPot.IsValidCrabPotLocationTile(l, (int)tile.X, (int)tile.Y);
+                }
+            }
+        }
+
     }
 }
