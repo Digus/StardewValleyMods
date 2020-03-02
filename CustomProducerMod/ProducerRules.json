@@ -104,7 +104,7 @@
         "InputPriceBased": true,
         "OutputPriceMultiplier": 2,
         "OutputColorConfig": {
-            "Type": "InputColor"
+            "Type": "ObjectColor"
         },
         "AdditionalOutputs": [
             {
