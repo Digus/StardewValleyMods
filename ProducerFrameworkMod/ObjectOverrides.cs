@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Netcode;
 using ProducerFrameworkMod.ContentPack;
 using StardewValley;
+using StardewValley.Network;
 using StardewValley.Objects;
 using StardewValley.TerrainFeatures;
 using Object = StardewValley.Object;
@@ -172,6 +173,35 @@ namespace ProducerFrameworkMod
 
                 if (!producerConfig.CheckElapsedTimeCondition(ref minutes))
                 {
+                    return false;
+                }
+
+                if (producerConfig.ProducerName == "Bee House" && producerConfig.WorkingOutdoors != true)
+                {
+                    if (Game1.IsMasterGame)
+                    {
+                        __instance.minutesUntilReady.Value -= minutes;
+                    }
+                    if (__instance.minutesUntilReady.Value <= 0)
+                    {
+                        if (!__instance.readyForHarvest.Value)
+                        {
+                            environment.playSound("dwop", NetAudio.SoundContext.Default);
+                        }
+                        __instance.readyForHarvest.Value = true;
+                        __instance.minutesUntilReady.Value = 0;
+                        __instance.onReadyForHarvest(environment);
+                        __instance.showNextIndex.Value = true;
+                        if (__instance.lightSource != null)
+                        {
+                            environment.removeLightSource(__instance.lightSource.identifier.Value);
+                            __instance.lightSource = (LightSource)null;
+                        }
+                    }
+                    if (!__instance.readyForHarvest.Value && Game1.random.NextDouble() < 0.33)
+                    {
+                        __instance.addWorkingAnimation(environment);
+                    }
                     return false;
                 }
 
