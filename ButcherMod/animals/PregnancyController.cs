@@ -119,8 +119,6 @@ namespace AnimalHusbandryMod.animals
         public static void UpdatePregnancy()
         {
             FarmerLoader.FarmerData.PregnancyData.ForEach(a => a.DaysUntilBirth--);
-
-            FarmerLoader.SaveData();
         }
 
         public static void CheckForBirth()
