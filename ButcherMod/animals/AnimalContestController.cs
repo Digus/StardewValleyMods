@@ -188,7 +188,7 @@ namespace AnimalHusbandryMod.animals
             }
             else
             {
-                AnimalHusbandryModEntry.monitor.Log($"The animal id '{id}' was not found in the game and its animal status data is being discarted.", LogLevel.Warn);
+                AnimalHusbandryModEntry.monitor.Log($"The animal id '{id}' was not found in the game and its animal status data is being discarded.", LogLevel.Warn);
                 RemoveAnimalStatus(id);
                 return null;
             }
