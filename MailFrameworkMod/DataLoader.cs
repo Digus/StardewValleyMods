@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using MailFrameworkMod.ContentPack;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -81,6 +79,7 @@ namespace MailFrameworkMod
                         bool Condition(Letter l) => 
                             (!Game1.player.mailReceived.Contains(l.Id) || mailItem.Repeatable)
                             && (mailItem.Recipe == null || !Game1.player.cookingRecipes.ContainsKey(mailItem.Recipe))
+                            && (MailFrameworkModEntry.QuestApi == null || ResolveQuestId(mailItem.Quest, out int id) && id > 0 && !Game1.player.hasQuest(id))
                             && (mailItem.Date == null || SDate.Now() >= new SDate(Convert.ToInt32(mailItem.Date.Split(' ')[0]), mailItem.Date.Split(' ')[1], Convert.ToInt32(mailItem.Date.Split(' ')[2].Replace("Y", ""))))
                             && (mailItem.Days == null || mailItem.Days.Contains(SDate.Now().Day))
                             && (mailItem.Seasons == null || mailItem.Seasons.Contains(SDate.Now().Season))
@@ -224,12 +223,12 @@ namespace MailFrameworkMod
                             });
                             MailDao.SaveLetter(
                                 new Letter(
-                                    mailItem.Id
-                                    , hasTranslation? contentPack.Translation.Get(mailItem.Text) : mailItem.Text
-                                    , attachments
-                                    , Condition
-                                    , (l) => Game1.player.mailReceived.Add(l.Id)
-                                    , mailItem.WhichBG
+                                    mailItem.Id,
+                                    hasTranslation? contentPack.Translation.Get(mailItem.Text) : mailItem.Text,
+                                    attachments,
+                                    Condition,
+                                    (l) => Game1.player.mailReceived.Add(l.Id),
+                                    mailItem.WhichBG
                                 )
                                 {
                                     TextColor = mailItem.TextColor,
@@ -241,14 +240,21 @@ namespace MailFrameworkMod
                         }
                         else
                         {
+                            string text = hasTranslation ? contentPack.Translation.Get(mailItem.Text) : mailItem.Text;
+
+                            if (!string.IsNullOrEmpty(mailItem.Quest) && ResolveQuestId(mailItem.Quest, out int questId))
+                            {
+                                text += $"%item quest {questId} {(mailItem.AutoAcceptQuest ? "true " : "")}%%";
+                            }
+
                             MailDao.SaveLetter(
                                 new Letter(
-                                    mailItem.Id
-                                    , hasTranslation ? contentPack.Translation.Get(mailItem.Text) : mailItem.Text
-                                    , mailItem.Recipe
-                                    , Condition
-                                    , (l) => Game1.player.mailReceived.Add(l.Id)
-                                    , mailItem.WhichBG
+                                    mailItem.Id,
+                                    text,
+                                    mailItem.Recipe,
+                                    Condition,
+                                    (l) => Game1.player.mailReceived.Add(l.Id),
+                                    mailItem.WhichBG
                                 )
                                 {
                                     TextColor = mailItem.TextColor,
@@ -265,6 +271,23 @@ namespace MailFrameworkMod
                     MailFrameworkModEntry.ModMonitor.Log($"Ignoring content pack: {contentPack.Manifest.Name} {contentPack.Manifest.Version} from {contentPack.DirectoryPath}\nIt does not have an mail.json file.", LogLevel.Warn);
                 }
             }
+        }
+
+        private static bool ResolveQuestId(string whichQuest, out int questId)
+        {
+            if (int.TryParse(whichQuest, out questId))
+            {
+                return true;
+            }
+
+            if (MailFrameworkModEntry.QuestApi != null)
+            {
+                questId = MailFrameworkModEntry.QuestApi.ResolveQuestId(whichQuest);
+                return questId > 0;
+            }
+
+            MailFrameworkModEntry.ModMonitor.Log($"Can't add quest with letter: Add quest with name `{whichQuest}` requires Quest Framework which is not installed! ", LogLevel.Error);
+            return false;
         }
     }
 }

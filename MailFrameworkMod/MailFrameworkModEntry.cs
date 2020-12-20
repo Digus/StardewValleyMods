@@ -1,5 +1,6 @@
 ﻿using System;
 using Harmony;
+using MailFrameworkMod.APIs;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley;
@@ -12,6 +13,7 @@ namespace MailFrameworkMod
     {
         public static IModHelper ModHelper;
         public static IMonitor ModMonitor;
+        internal static IQuestApi QuestApi;
 
         /*********
         ** Public methods
@@ -46,6 +48,7 @@ namespace MailFrameworkMod
         private void OnGameLaunched(object sender, GameLaunchedEventArgs e)
         {
             Helper.Content.AssetEditors.Add(new DataLoader());
+            QuestApi = Helper.ModRegistry.GetApi<IQuestApi>("PurrplingCat.QuestFramework");
             var harmony = HarmonyInstance.Create("Digus.MailFrameworkMod");
 
             harmony.Patch(

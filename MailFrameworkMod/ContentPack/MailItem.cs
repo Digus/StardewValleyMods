@@ -9,6 +9,8 @@ namespace MailFrameworkMod.ContentPack
         public string Title;
         public string Text;
         public string Recipe;
+        public string Quest;
+        public bool AutoAcceptQuest = false;
         public List<Attachment> Attachments;
         public string LetterBG;
         public int WhichBG;

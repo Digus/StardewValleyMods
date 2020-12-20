@@ -6,5 +6,12 @@
 	"Description": "Utility classes to send mail in the game.",
 	"UniqueID": "DIGUS.MailFrameworkMod",
 	"EntryDll": "MailFrameworkMod.dll",
-	"UpdateKeys": [ "Nexus:1536" ]
+	"UpdateKeys": [ "Nexus:1536" ],
+	"Dependencies": [
+		{
+			"UniqueID": "PurrplingCat.QuestFramework",
+			"MinimumVersion": "1.2.0",
+			"IsRequired": false
+		}
+	]
 }
