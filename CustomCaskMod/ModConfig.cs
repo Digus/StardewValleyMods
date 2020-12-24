@@ -4,6 +4,6 @@
     {
         public bool DisableLetter;
         public bool EnableCasksAnywhere;
-        public bool DisableAutomateCompatibility;
+        public bool EnableMoreThanOneQualityIncrementPerDay = true;
     }
 }
