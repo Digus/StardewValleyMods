@@ -172,7 +172,7 @@ namespace CropTransplantMod
                 {
                     spriteBatch.Draw(Game1.mouseCursors, tileLocation + new Vector2(-51, 150), new Microsoft.Xna.Framework.Rectangle?(Tree.shadowSourceRect), Color.White * (1.570796f - Math.Abs(shakeRotation)), 0.0f, Vector2.Zero, 4f, treeToDraw.flipped.Value ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 1E-06f);
                     SpriteBatch spriteBatch1 = spriteBatch;
-                    Microsoft.Xna.Framework.Rectangle? sourceRectangle = new Microsoft.Xna.Framework.Rectangle?(Tree.treeTopSourceRect);
+                    Microsoft.Xna.Framework.Rectangle? sourceRectangle = new Microsoft.Xna.Framework.Rectangle?(treeToDraw.treeTopSourceRect);
                     Color color = Color.White;
                     Vector2 origin = new Vector2(24f, 96f);
                     double num1 = 4.0;

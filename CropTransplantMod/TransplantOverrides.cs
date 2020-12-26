@@ -210,13 +210,19 @@ namespace CropTransplantMod
         }
 
         /// <summary>
-        /// Override to let you lift fruit trees
+        /// Override to let you lift trees
         /// </summary>
         /// <param name="__result"></param>
         /// <returns></returns>
-        public static void FruitTreePerformUseAction(ref bool __result)
+        public static void TreePerformUseAction(ref bool __result, Vector2 tileLocation, GameLocation location)
         {
-            __result = false;
+            if (__result == true
+                && IsGardenPot(Game1.player.ActiveObject)
+                && location.terrainFeatures.ContainsKey(tileLocation) 
+                && (location.terrainFeatures[tileLocation] is Tree || location.terrainFeatures[tileLocation] is FruitTree))
+            {
+                __result = false;
+            }
         }
 
         /// <summary>
@@ -299,7 +305,7 @@ namespace CropTransplantMod
                                 heldPot.hoeDirt.Value.crop != null
                                 && !location.farmers.Any(f=>f.GetBoundingBox().Intersects(new Microsoft.Xna.Framework.Rectangle((int)tileLocation.X * 64, (int)tileLocation.Y * 64, 64, 64))))
                             {
-                                if (!DataLoader.ModConfig.EnablePlacementOfCropsOutsideOutOfTheFarm && !Game1.player.currentLocation.IsFarm && Game1.player.currentLocation.IsOutdoors)
+                                if (!DataLoader.ModConfig.EnablePlacementOfCropsOutsideOutOfTheFarm && !Game1.player.currentLocation.IsFarm && !Game1.player.currentLocation.CanPlantSeedsHere(heldPot.hoeDirt.Value.crop.netSeedIndex.Value, x/64, y/64) && Game1.player.currentLocation.IsOutdoors)
                                 {
                                     Game1.showRedMessage(Game1.content.LoadString("Strings\\StringsFromCSFiles:HoeDirt.cs.13919"));
                                     return false;

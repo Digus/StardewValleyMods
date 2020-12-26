@@ -38,7 +38,7 @@ namespace CropTransplantMod
         {
             new DataLoader(Helper);
 
-            var harmony = HarmonyInstance.Create("Digus.CustomCrystalariumMod");
+            var harmony = HarmonyInstance.Create("Digus.CropTransplantMod");
 
             harmony.Patch(
                 original: AccessTools.Method(typeof(Utility), nameof(Utility.tryToPlaceItem)),
@@ -61,8 +61,13 @@ namespace CropTransplantMod
             );
 
             harmony.Patch(
+                original: AccessTools.Method(typeof(Tree), nameof(Tree.performUseAction)),
+                postfix: new HarmonyMethod(typeof(TransplantOverrides), nameof(TransplantOverrides.TreePerformUseAction))
+            );
+
+            harmony.Patch(
                 original: AccessTools.Method(typeof(FruitTree), nameof(FruitTree.performUseAction)),
-                postfix: new HarmonyMethod(typeof(TransplantOverrides), nameof(TransplantOverrides.FruitTreePerformUseAction))
+                postfix: new HarmonyMethod(typeof(TransplantOverrides), nameof(TransplantOverrides.TreePerformUseAction))
             );
 
             harmony.Patch(
