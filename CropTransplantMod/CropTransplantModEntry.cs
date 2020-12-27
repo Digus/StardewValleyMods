@@ -1,4 +1,5 @@
 ﻿using Harmony;
+using Microsoft.Xna.Framework;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley;
@@ -62,12 +63,17 @@ namespace CropTransplantMod
 
             harmony.Patch(
                 original: AccessTools.Method(typeof(Tree), nameof(Tree.performUseAction)),
-                postfix: new HarmonyMethod(typeof(TransplantOverrides), nameof(TransplantOverrides.TreePerformUseAction))
+                postfix: new HarmonyMethod(typeof(TransplantOverrides), nameof(TransplantOverrides.TreeOrBushPerformUseAction))
             );
 
             harmony.Patch(
                 original: AccessTools.Method(typeof(FruitTree), nameof(FruitTree.performUseAction)),
-                postfix: new HarmonyMethod(typeof(TransplantOverrides), nameof(TransplantOverrides.TreePerformUseAction))
+                postfix: new HarmonyMethod(typeof(TransplantOverrides), nameof(TransplantOverrides.TreeOrBushPerformUseAction))
+            );
+
+            harmony.Patch(
+                original: AccessTools.Method(typeof(Bush), nameof(Bush.performUseAction)),
+                postfix: new HarmonyMethod(typeof(TransplantOverrides), nameof(TransplantOverrides.TreeOrBushPerformUseAction))
             );
 
             harmony.Patch(
@@ -91,7 +97,8 @@ namespace CropTransplantMod
         {
             if (Game1.player.ActiveObject is HeldIndoorPot)
             {
-                Game1.player.ActiveObject = TransplantOverrides.RegularPotObject;
+                Game1.player.ActiveObject = (Object)TransplantOverrides.RegularPotObject.getOne();
+                Events.GameLoop.UpdateTicked -= TransplantOverrides.OnUpdateTicked;
                 TransplantOverrides.CurrentHeldIndoorPot = null;
             }
         }
