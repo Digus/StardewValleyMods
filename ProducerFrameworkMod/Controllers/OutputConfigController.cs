@@ -1,16 +1,16 @@
-﻿
+﻿using Microsoft.Xna.Framework;
+using ProducerFrameworkMod.ContentPack;
+using ProducerFrameworkMod.Utils;
+using StardewValley;
+using StardewValley.Menus;
+using StardewValley.Objects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using Microsoft.Xna.Framework;
-using ProducerFrameworkMod.ContentPack;
-using StardewValley;
-using StardewValley.Menus;
-using StardewValley.Objects;
 using Object = StardewValley.Object;
 
-namespace ProducerFrameworkMod
+namespace ProducerFrameworkMod.Controllers
 {
     public class OutputConfigController
     {

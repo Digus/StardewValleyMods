@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using ProducerFrameworkMod.ContentPack;
 using StardewValley;
 using StardewValley.Menus;
 using StardewValley.Objects;
 using Object = StardewValley.Object;
 
-namespace ProducerFrameworkMod
+namespace ProducerFrameworkMod.Controllers
 {
     public class LightSourceConfigController
     {

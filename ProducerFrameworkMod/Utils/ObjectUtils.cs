@@ -1,6 +1,6 @@
 ﻿using StardewValley;
 
-namespace ProducerFrameworkMod
+namespace ProducerFrameworkMod.Utils
 {
     internal class ObjectUtils
     {

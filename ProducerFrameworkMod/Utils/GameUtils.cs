@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ProducerFrameworkMod.ContentPack;
+﻿using ProducerFrameworkMod.ContentPack;
 using StardewValley;
 
-namespace ProducerFrameworkMod
+namespace ProducerFrameworkMod.Utils
 {
     public class GameUtils
     {
