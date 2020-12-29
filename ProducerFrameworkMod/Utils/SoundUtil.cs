@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using StardewModdingAPI;
+﻿using StardewModdingAPI;
 using StardewValley;
 using StardewValley.Network;
+using System;
+using System.Collections.Generic;
 
-namespace ProducerFrameworkMod
+namespace ProducerFrameworkMod.Utils
 {
     internal class SoundUtil
     {

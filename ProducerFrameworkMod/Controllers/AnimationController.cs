@@ -2,7 +2,7 @@ using Microsoft.Xna.Framework;
 using ProducerFrameworkMod.ContentPack;
 using StardewValley;
 
-namespace ProducerFrameworkMod
+namespace ProducerFrameworkMod.Controllers
 {
     internal class AnimationController
     {

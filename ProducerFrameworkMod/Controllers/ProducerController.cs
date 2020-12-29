@@ -1,16 +1,13 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using ProducerFrameworkMod.ContentPack;
+using ProducerFrameworkMod.Utils;
+using StardewModdingAPI;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Remoting.Messaging;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
-using ProducerFrameworkMod.ContentPack;
-using StardewModdingAPI;
-using StardewValley;
 using Object = StardewValley.Object;
 
-namespace ProducerFrameworkMod
+namespace ProducerFrameworkMod.Controllers
 {
     public class ProducerController
     {
