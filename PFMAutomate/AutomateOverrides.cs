@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using Harmony;
-using Microsoft.Xna.Framework;
+﻿using Harmony;
 using Pathoschild.Stardew.Automate;
 using PFMAutomate.Automate;
-using ProducerFrameworkMod;
-using StardewValley;
+using ProducerFrameworkMod.Controllers;
+using System.Collections.Generic;
 using SObject = StardewValley.Object;
 
 namespace PFMAutomate
