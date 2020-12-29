@@ -1,18 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using ProducerFrameworkMod.ContentPack;
+using ProducerFrameworkMod.Utils;
 using StardewModdingAPI;
 using StardewValley;
 using StardewValley.BellsAndWhistles;
 using StardewValley.Objects;
 using StardewValley.TerrainFeatures;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using Object = StardewValley.Object;
 
-namespace ProducerFrameworkMod
+namespace ProducerFrameworkMod.Controllers
 {
     public class ProducerRuleController
     {
@@ -106,7 +105,7 @@ namespace ProducerFrameworkMod
                     producer.minutesUntilReady.Value = outputConfig.MinutesUntilReady ?? producerRule.MinutesUntilReady;
                     if (producerRule.SubtractTimeOfDay)
                     {
-                        producer.minutesUntilReady.Value = Math.Max(producer.minutesUntilReady.Value - Game1.timeOfDay, 1);
+                        producer.minutesUntilReady.Value = Math.Max(producer.minutesUntilReady.Value - Utility.ConvertTimeToMinutes(Game1.timeOfDay) + 360, 1);
                     }
 
                     if (producerConfig != null)

@@ -449,7 +449,7 @@
     },
     { //Mushroom
         "ProducerName": "Mushroom Box",
-        "MinutesUntilReady": 3000,
+        "MinutesUntilReady": 3200,
         "SubtractTimeOfDay": true,
         "OutputIdentifier": "404",
         "AdditionalOutputs": [
@@ -473,7 +473,7 @@
     },
     { //Bait
         "ProducerName": "Worm Bin",
-        "MinutesUntilReady": 2600,
+        "MinutesUntilReady": 1600,
         "SubtractTimeOfDay": true,
         "OutputIdentifier": "685",
         "OutputStack": 2,
@@ -493,7 +493,7 @@
     },
     { // Honey
         "ProducerName": "Bee House",
-        "MinutesUntilReady": 6720,
+        "MinutesUntilReady": 6400,
         "SubtractTimeOfDay": true,
         "OutputIdentifier": "340",
         "InputPriceBased": true,
