@@ -11,7 +11,7 @@
     <AssemblyName>ProducerFrameworkMod</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-	<EnableHarmony>true</EnableHarmony>
+    <EnableHarmony>true</EnableHarmony>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
     <TargetFrameworkProfile />
@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ContentPack\ManifestData.cs" />
     <Compile Include="Controllers\AnimationController.cs" />
     <Compile Include="Api\IProducerFrameworkModAPI.cs" />
     <Compile Include="Api\ProducerFrameworkModApi.cs" />
