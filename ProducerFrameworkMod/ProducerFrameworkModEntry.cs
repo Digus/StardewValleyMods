@@ -3,7 +3,6 @@ using Harmony;
 using Microsoft.Xna.Framework.Graphics;
 using ProducerFrameworkMod.Api;
 using StardewModdingAPI;
-using StardewModdingAPI.Events;
 using SObject = StardewValley.Object;
 
 namespace ProducerFrameworkMod

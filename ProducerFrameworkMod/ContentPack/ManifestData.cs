@@ -13,7 +13,6 @@ namespace ProducerFrameworkMod.ContentPack
         public string Version { get; set; }
         public string Author { get; set; }
         public string UniqueID { get; set; }
-        public IList<string> UpdateKeys { get; set; } = new List<string>();
     }
 
 }
