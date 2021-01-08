@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using StardewModdingAPI.Events;
 using Object = StardewValley.Object;
 
 namespace ProducerFrameworkMod.Api
@@ -118,6 +119,8 @@ namespace ProducerFrameworkMod.Api
                     outputRuleMap["RequiredWeather"] = outputConfig.RequiredWeather?.Select(w=> w.ToString()).ToList();
                     outputRuleMap["RequiredLocation"] = outputConfig.RequiredLocation;
                     outputRuleMap["RequiredOutdoors"] = outputConfig.RequiredOutdoors;
+                    outputRuleMap["RequiredMail"] = outputConfig.RequiredMail;
+                    outputRuleMap["RequiredEvent"] = outputConfig.RequiredEvent;
                     outputRuleMap["RequiredInputParentIdentifier"] = outputConfig.RequiredInputParentIdentifier;
 
                     ruleMapPerOutput.Add(outputRuleMap);
@@ -151,20 +154,18 @@ namespace ProducerFrameworkMod.Api
         public bool AddContentPack(string directory)
         {
             Regex nameToId = new Regex("[^a-zA-Z0-9_.]");
-            // read initial info
+            ProducerFrameworkModEntry.ModMonitor.Log($"Reading content pack called through the API from {directory}");
             IContentPack temp = ProducerFrameworkModEntry.Helper.ContentPacks.CreateFake(directory);
             ManifestData info = temp.ReadJsonFile<ManifestData>("content-pack.json");
             if (info == null)
             {
-                ProducerFrameworkModEntry.ModMonitor.Log($"\tNo {directory}/content-pack.json!", LogLevel.Warn);
+                ProducerFrameworkModEntry.ModMonitor.Log($"\tNo content-pack.json found in {directory}!", LogLevel.Warn);
                 return false;
             }
 
-            // load content pack
-            string id = info.UniqueID ?? nameToId.Replace(info.Name, "");
+            string id = info.UniqueID ?? nameToId.Replace(info.Author+"."+info.Name, "");
             IContentPack contentPack = ProducerFrameworkModEntry.Helper.ContentPacks.CreateTemporary(directory, id, info.Name, info.Description, info.Author, new SemanticVersion(info.Version));
-            DataLoader.LoadContentPack(contentPack, EventArgs.Empty);
-            return true;
+            return DataLoader.LoadContentPack(contentPack, new SaveLoadedEventArgs());
         }
     }
 }
