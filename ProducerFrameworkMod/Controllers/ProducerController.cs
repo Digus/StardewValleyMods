@@ -157,7 +157,7 @@ namespace ProducerFrameworkMod.Controllers
                                 }
                                 else
                                 {
-                                    ProducerFrameworkModEntry.ModMonitor.Log($"No Output found for '{outputConfig.OutputIdentifier}', producer '{producerRule.ProducerName}' and input '{producerRule.InputIdentifier}'. This rule will be ignored.", LogLevel.Warn);
+                                    ProducerFrameworkModEntry.ModMonitor.Log($"No Output found for '{outputConfig.OutputIdentifier}', producer '{producerRule.ProducerName}' and input '{producerRule.InputIdentifier}'. This rule will be ignored.", producerRule.WarningsLogLevel);
                                     break;
                                 }
                             }
@@ -204,7 +204,7 @@ namespace ProducerFrameworkMod.Controllers
                                     {
                                         ProducerFrameworkModEntry.ModMonitor.Log(
                                             $"No required fuel found for '{fuel.Key}', producer '{producerRule.ProducerName}' and input '{fuel.Key}'. This rule will be ignored.",
-                                            LogLevel.Warn);
+                                            producerRule.WarningsLogLevel);
                                         //This is done to abort the rule.
                                         outputConfig.OutputIndex = -1;
                                         break;
@@ -233,7 +233,7 @@ namespace ProducerFrameworkMod.Controllers
                                 }
                                 else
                                 {
-                                    ProducerFrameworkModEntry.ModMonitor.Log($"No fuel found for '{fuel.Key}', producer '{producerRule.ProducerName}' and input '{producerRule.InputIdentifier}'. This rule will be ignored.", LogLevel.Warn);
+                                    ProducerFrameworkModEntry.ModMonitor.Log($"No fuel found for '{fuel.Key}', producer '{producerRule.ProducerName}' and input '{producerRule.InputIdentifier}'. This rule will be ignored.", producerRule.WarningsLogLevel);
                                     break;
                                 }
                             }
@@ -269,7 +269,7 @@ namespace ProducerFrameworkMod.Controllers
                                 } 
                                 else if (producerRule.OverrideMod.Contains(oldRule.ModUniqueID))
                                 {
-                                    ProducerFrameworkModEntry.ModMonitor.Log($"Mod '{producerRule.ModUniqueID}' if overriding mod '{oldRule.ModUniqueID}' rule for producer '{producerRule.ProducerName}' and input '{producerRule.InputIdentifier}'.", LogLevel.Debug);
+                                    ProducerFrameworkModEntry.ModMonitor.Log($"Mod '{producerRule.ModUniqueID}' is overriding mod '{oldRule.ModUniqueID}' rule for producer '{producerRule.ProducerName}' and input '{producerRule.InputIdentifier}'.", LogLevel.Debug);
                                 }
                                 else
                                 {
