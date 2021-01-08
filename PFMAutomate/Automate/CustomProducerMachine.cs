@@ -37,7 +37,7 @@ namespace PFMAutomate.Automate
             }
             if (ProducerController.GetProducerConfig(_machine.Name) is ProducerConfig producerConfig)
             {
-                if (!producerConfig.CheckWeatherCondition() || !producerConfig.CheckSeasonCondition() || !producerConfig.CheckLocationCondition(Location) || !producerConfig.CheckCurrentTimeCondition())
+                if (!producerConfig.CheckWeatherCondition() || !producerConfig.CheckSeasonCondition(Location) || !producerConfig.CheckLocationCondition(Location) || !producerConfig.CheckCurrentTimeCondition())
                 {
                     return MachineState.Disabled;
                 }
@@ -75,7 +75,7 @@ namespace PFMAutomate.Automate
                         {
                             try
                             {
-                                if (producerConfig.CheckLocationCondition(Location) && producerConfig.CheckSeasonCondition())
+                                if (producerConfig.CheckLocationCondition(Location) && producerConfig.CheckSeasonCondition(Location))
                                 {
                                     ProducerRuleController.ProduceOutput(producerRule, _machine, (i, q) => true, null, Location, producerConfig);
                                 }
@@ -98,7 +98,7 @@ namespace PFMAutomate.Automate
                 {
                     ProducerConfig producerConfig = ProducerController.GetProducerConfig(_machine.Name);
 
-                    if (producerConfig == null || (producerConfig.CheckLocationCondition(Location) && producerConfig.CheckSeasonCondition()))
+                    if (producerConfig == null || (producerConfig.CheckLocationCondition(Location) && producerConfig.CheckSeasonCondition(Location)))
                     {
                         if (input.TryGetIngredient(objectInput.ParentSheetIndex, producerRule.InputStack,
                             out IConsumable inputConsumable))
