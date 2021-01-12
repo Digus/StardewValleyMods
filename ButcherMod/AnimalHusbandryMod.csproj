@@ -140,13 +140,14 @@
     <Compile Include="farmer\FarmerLoader.cs" />
     <Compile Include="farmer\FarmerData.cs" />
     <Compile Include="recipes\TrashBearOverrides.cs" />
-    <Compile Include="tools\ParticipantRibbon.cs" />
-    <Compile Include="tools\FeedingBasket.cs" />
-    <Compile Include="tools\InseminationSyringe.cs" />
-    <Compile Include="tools\MeatCleaver.cs" />
+    <Compile Include="tools\FeedingBasketOverrides.cs" />
+    <Compile Include="tools\InseminationSyringeOverrides.cs" />
+    <Compile Include="tools\MeatCleaverOverrides.cs" />
     <Compile Include="AnimalHusbandryModEntry.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="recipes\MeatFridayChannel.cs" />
+    <Compile Include="tools\ParticipantRibbonOverrides.cs" />
+    <Compile Include="tools\ToolsFactory.cs" />
     <Compile Include="tools\ToolsLoader.cs" />
   </ItemGroup>
   <ItemGroup>

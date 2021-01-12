@@ -4,7 +4,6 @@ using AnimalHusbandryMod.animals;
 using AnimalHusbandryMod.animals.data;
 using AnimalHusbandryMod.common;
 using Microsoft.Xna.Framework;
-using PyTK.CustomElementHandler;
 using StardewModdingAPI;
 using StardewValley;
 using StardewValley.Characters;
@@ -13,91 +12,99 @@ using StardewValley.Tools;
 
 namespace AnimalHusbandryMod.tools
 {
-    public class ParticipantRibbon : MilkPail, ISaveElement
+    public class ParticipantRibbonOverrides
     {
-        private FarmAnimal _animal;
-        private Pet _pet;
+        internal static string ParticipantRibbonKey = "DIGUS.ANIMALHUSBANDRYMOD/ParticipantRibbon";
+
+        internal static readonly Dictionary<string, FarmAnimal> Animals = new Dictionary<string, FarmAnimal>();
+        internal static readonly Dictionary<string, Pet> Pets = new Dictionary<string, Pet>();
 
         public static int InitialParentTileIndex = 520;
         public static int IndexOfMenuItemView = 520;
-
-        public ParticipantRibbon() : base()
+        public static bool getOne(MilkPail __instance, ref Item __result)
         {
-            this.Name = "Participant Ribbon";
-            this.initialParentTileIndex.Value = InitialParentTileIndex;
-            this.indexOfMenuItemView.Value = IndexOfMenuItemView;
-            this.Stackable = false;
-            this.CurrentParentTileIndex = InitialParentTileIndex;
+            if (!IsParticipantRibbon(__instance)) return true;
+
+            __result = (Item)ToolsFactory.GetParticipantRibbon();
+            return false;
         }
 
-        public override Item getOne()
+        public static bool loadDisplayName(MilkPail __instance, ref string __result)
         {
-            return (Item)new ParticipantRibbon();
+            if (!IsParticipantRibbon(__instance)) return true;
+
+            __result = DataLoader.i18n.Get("Tool.ParticipantRibbon.Name");
+            return false;
         }
 
-        protected override string loadDisplayName()
+        public static bool loadDescription(MilkPail __instance, ref string __result)
         {
-            return DataLoader.i18n.Get("Tool.ParticipantRibbon.Name");
+            if (!IsParticipantRibbon(__instance)) return true;
+
+            __result = DataLoader.i18n.Get("Tool.ParticipantRibbon.Description");
+            return false;
         }
 
-        protected override string loadDescription()
+        public static bool canBeTrashed(MilkPail __instance, ref bool __result)
         {
-            return DataLoader.i18n.Get("Tool.ParticipantRibbon.Description");
+            if (!IsParticipantRibbon(__instance)) return true;
+
+            __result = true;
+            return false;
         }
 
-        public override bool canBeTrashed()
+        public static bool beginUsing(MilkPail __instance, GameLocation location, int x, int y, StardewValley.Farmer who, ref bool __result)
         {
-            return true;
-        }
+            if (!IsParticipantRibbon(__instance)) return true;
 
-        public override bool beginUsing(GameLocation location, int x, int y, StardewValley.Farmer who)
-        {
+            string participantRibbonId = __instance.modData[ParticipantRibbonKey];
+
             x = (int)who.GetToolLocation(false).X;
             y = (int)who.GetToolLocation(false).Y;
             Rectangle rectangle = new Rectangle(x - Game1.tileSize / 2, y - Game1.tileSize / 2, Game1.tileSize, Game1.tileSize);
 
             if (Context.IsMainPlayer && !DataLoader.ModConfig.DisableAnimalContest)
             {
-                if (location is Farm)
+                if (location is Farm farm)
                 {
-                    foreach (FarmAnimal farmAnimal in (location as Farm).animals.Values)
+                    foreach (FarmAnimal farmAnimal in farm.animals.Values)
                     {
                         if (farmAnimal.GetBoundingBox().Intersects(rectangle))
                         {
-                            this._animal = farmAnimal;
+                            Animals[participantRibbonId] = farmAnimal;
                             break;
                         }
                     }
-                    if (this._animal == null)
+                    if (!Animals.ContainsKey(participantRibbonId) || Animals[participantRibbonId] == null)
                     {
-                        foreach (Pet pet in location.characters.Where(i => i is Pet))
+                        foreach (Pet localPet in farm.characters.Where(i => i is Pet))
                         {
-                            if (pet.GetBoundingBox().Intersects(rectangle))
+                            if (localPet.GetBoundingBox().Intersects(rectangle))
                             {
-                                this._pet = pet;
+                                Pets[participantRibbonId] = localPet;
                                 break;
                             }
                         }
                     }
                 }
-                else if (location is AnimalHouse)
+                else if (location is AnimalHouse animalHouse)
                 {
-                    foreach (FarmAnimal farmAnimal in (location as AnimalHouse).animals.Values)
+                    foreach (FarmAnimal farmAnimal in animalHouse.animals.Values)
                     {
                         if (farmAnimal.GetBoundingBox().Intersects(rectangle))
                         {
-                            this._animal = farmAnimal;
+                            Animals[participantRibbonId] = farmAnimal;
                             break;
                         }
                     }
                 }
                 else if (location is FarmHouse)
                 {
-                    foreach (Pet pet in location.characters.Where(i => i is Pet))
+                    foreach (Pet localPet in location.characters.Where(i => i is Pet))
                     {
-                        if (pet.GetBoundingBox().Intersects(rectangle))
+                        if (localPet.GetBoundingBox().Intersects(rectangle))
                         {
-                            this._pet = pet;
+                            Pets[participantRibbonId] = localPet;
                             break;
                         }
                     }
@@ -105,19 +112,20 @@ namespace AnimalHusbandryMod.tools
             }
 
             string dialogue = "";
-            if (this._animal != null)
+            Animals.TryGetValue(participantRibbonId, out FarmAnimal animal);
+            if (animal != null)
             {
-                if (this._animal.isBaby())
+                if (animal.isBaby())
                 {
                     dialogue = DataLoader.i18n.Get("Tool.ParticipantRibbon.CantBeBaby");
                 }
-                else if (AnimalContestController.HasParticipated(this._animal))
+                else if (AnimalContestController.HasParticipated(animal))
                 {
-                    dialogue = DataLoader.i18n.Get("Tool.ParticipantRibbon.HasAlreadyParticipatedContest", new { animalName = this._animal.displayName });
+                    dialogue = DataLoader.i18n.Get("Tool.ParticipantRibbon.HasAlreadyParticipatedContest", new { animalName = animal.displayName });
                 }
-                else if (AnimalContestController.IsParticipant(this._animal))
+                else if (AnimalContestController.IsParticipant(animal))
                 {
-                    dialogue = DataLoader.i18n.Get("Tool.ParticipantRibbon.IsAlreadyParticipant", new { animalName = this._animal.displayName});
+                    dialogue = DataLoader.i18n.Get("Tool.ParticipantRibbon.IsAlreadyParticipant", new { animalName = animal.displayName });
                 }
                 else if (AnimalContestController.GetNextContestParticipantId() is long nextContestParticipantId)
                 {
@@ -128,47 +136,48 @@ namespace AnimalHusbandryMod.tools
                 }
                 else
                 {
-                    this._animal.doEmote(8, true);
-                    this._animal.makeSound();
-                    this._animal.pauseTimer = 200;
+                    animal.doEmote(8, true);
+                    animal.makeSound();
+                    animal.pauseTimer = 200;
                 }
             }
-            if (this._pet != null)
+            Pets.TryGetValue(participantRibbonId, out Pet pet);
+            if (pet != null)
             {
                 if (AnimalContestController.IsParticipantPet())
                 {
                     dialogue = DataLoader.i18n.Get("Tool.ParticipantRibbon.IsAlreadyParticipant",
-                        new {animalName = this._pet.displayName});
+                        new { animalName = pet.displayName });
                 }
                 else if (AnimalContestController.GetNextContestParticipantId() is long nextContestParticipantId)
                 {
-                    string participantName = nextContestParticipantId != AnimalData.PetId 
-                        ? AnimalContestController.GetAnimal(nextContestParticipantId).displayName 
+                    string participantName = nextContestParticipantId != AnimalData.PetId
+                        ? AnimalContestController.GetAnimal(nextContestParticipantId).displayName
                         : Game1.player.getPetName();
                     dialogue = DataLoader.i18n.Get("Tool.ParticipantRibbon.AnotherParticipantAlready", new { participantName });
                 }
                 else
                 {
-                    this._pet.doEmote(8, true);
-                    this._pet.playContentSound();
-                    _pet.Halt();
-                    _pet.CurrentBehavior = 0;
-                    _pet.Halt();
-                    _pet.Sprite.setCurrentAnimation(
-                        new List<FarmerSprite.AnimationFrame>() {new FarmerSprite.AnimationFrame(18, 200)});
+                    pet.doEmote(8, true);
+                    pet.playContentSound();
+                    pet.Halt();
+                    pet.CurrentBehavior = 0;
+                    pet.Halt();
+                    pet.Sprite.setCurrentAnimation(
+                        new List<FarmerSprite.AnimationFrame>() { new FarmerSprite.AnimationFrame(18, 200) });
 
                 }
             }
             if (dialogue.Length > 0)
             {
                 DelayedAction.showDialogueAfterDelay(dialogue, 150);
-                this._pet = null;
-                this._animal = null;
+                Pets[participantRibbonId] = pet = null;
+                Animals[participantRibbonId] = animal = null;
             }
 
             who.Halt();
             int currentFrame = who.FarmerSprite.currentFrame;
-            if (this._animal != null || this._pet != null)
+            if (animal != null || pet != null)
             {
                 switch (who.FacingDirection)
                 {
@@ -194,28 +203,38 @@ namespace AnimalHusbandryMod.tools
             who.UsingTool = true;
             who.CanMove = false;
 
-            return true;
+            __result = true;
+            return false;
         }
 
-        public override void DoFunction(GameLocation location, int x, int y, int power, StardewValley.Farmer who)
+        public static bool DoFunction(MilkPail __instance, GameLocation location, int x, int y, int power, StardewValley.Farmer who)
         {
-            this.CurrentParentTileIndex = InitialParentTileIndex;
-            this.indexOfMenuItemView.Value = IndexOfMenuItemView;
+            if (!IsParticipantRibbon(__instance)) return true;
 
-            if (this._animal != null)
+            string participantRibbonId = __instance.modData[ParticipantRibbonKey];
+
+            __instance.CurrentParentTileIndex = InitialParentTileIndex;
+            __instance.indexOfMenuItemView.Value = IndexOfMenuItemView;
+
+            Animals.TryGetValue(participantRibbonId, out FarmAnimal animal);
+            if (animal != null)
             {
-                AnimalContestController.MakeAnimalParticipant(this._animal);
-                Game1.player.removeItemFromInventory(this);
+                AnimalContestController.MakeAnimalParticipant(animal);
+                Game1.player.removeItemFromInventory(__instance);
 
             }
-            else if (this._pet != null)
+            else
             {
-                AnimalContestController.MakePetParticipant();
-                Game1.player.removeItemFromInventory(this);
+                Pets.TryGetValue(participantRibbonId, out Pet pet);
+                if (pet != null)
+                {
+                    AnimalContestController.MakePetParticipant();
+                    Game1.player.removeItemFromInventory(__instance);
+                }
             }
 
-            this._animal = null;
-            this._pet = null;
+            Animals[participantRibbonId] = null;
+            Pets[participantRibbonId] = null;
 
             if (Game1.activeClickableMenu == null)
             {
@@ -227,23 +246,14 @@ namespace AnimalHusbandryMod.tools
             }
             who.UsingTool = false;
             who.canReleaseTool = true;
+
+            return false;
         }
 
-        public object getReplacement()
+        private static bool IsParticipantRibbon(MilkPail tool)
         {
-            return new Object(168, 1);
+            return tool.modData.ContainsKey(ParticipantRibbonKey);
         }
 
-        public Dictionary<string, string> getAdditionalSaveData()
-        {
-            Dictionary<string, string> savedata = new Dictionary<string, string>();
-            savedata.Add("name", Name);
-            return savedata;
-        }
-
-        public void rebuild(Dictionary<string, string> additionalSaveData, object replacement)
-        {
-            this.Name = additionalSaveData["name"];
-        }
     }
 }
