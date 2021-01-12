@@ -189,7 +189,7 @@ namespace AnimalHusbandryMod.animals
                 {
                     this.animalContestIndicator = null;
                     AnimalContestController.RemoveAnimalParticipant(this._farmAnimal);
-                    Game1.player.addItemByMenuIfNecessary(new ParticipantRibbon());
+                    Game1.player.addItemByMenuIfNecessary(ToolsFactory.GetParticipantRibbon());
                 }
             }
             else
@@ -197,7 +197,7 @@ namespace AnimalHusbandryMod.animals
                 if(this.yesButton.containsPoint(x, y) && AnimalContestController.CanChangeParticipant(this._farmAnimal))
                 {
                     AnimalContestController.RemoveAnimalParticipant(this._farmAnimal);
-                    MeatController.ThrowItem(new List<Item>(new Item[]{ new ParticipantRibbon() }), this._farmAnimal);
+                    MeatController.ThrowItem(new List<Item>(new Item[]{ ToolsFactory.GetParticipantRibbon() }), this._farmAnimal);
                 }
             }
 

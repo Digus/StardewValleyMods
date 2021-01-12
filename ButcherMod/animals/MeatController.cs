@@ -17,6 +17,10 @@ namespace AnimalHusbandryMod.animals
     {
         public static bool CanGetMeatFrom(FarmAnimal farmAnimal)
         {
+            if (farmAnimal == null)
+            {
+                return false;
+            }
             if (farmAnimal.type.Value == "Dinosaur" && !DataLoader.ModConfig.DisableMeatFromDinosaur)
             {
                 return true;
@@ -198,7 +202,7 @@ namespace AnimalHusbandryMod.animals
             if (AnimalContestController.CanChangeParticipant(farmAnimal))
             {
                 AnimalContestController.RemoveAnimalParticipant(farmAnimal);
-                itemsToReturn.Add(new ParticipantRibbon());
+                itemsToReturn.Add(ToolsFactory.GetParticipantRibbon());
             }
 
             return itemsToReturn;

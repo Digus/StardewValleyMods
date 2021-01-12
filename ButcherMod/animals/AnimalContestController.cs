@@ -234,12 +234,12 @@ namespace AnimalHusbandryMod.animals
 
         public static bool HasFertilityBonus(FarmAnimal farmAnimal)
         {
-            return HasWon(farmAnimal) && new[]{ "spring" , "summer"}.Contains(GetParticipantDate(farmAnimal).Season);
+            return HasWon(farmAnimal) && new[]{ "spring" , "summer"}.Contains(GetParticipantDate(farmAnimal)?.Season);
         }
 
         public static bool HasProductionBonus(FarmAnimal farmAnimal)
         {
-            return HasWon(farmAnimal) && new[] { "fall", "winter" }.Contains(GetParticipantDate(farmAnimal).Season);
+            return HasWon(farmAnimal) && new[] { "fall", "winter" }.Contains(GetParticipantDate(farmAnimal)?.Season);
         }
     }
 }

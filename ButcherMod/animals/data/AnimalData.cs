@@ -104,6 +104,10 @@ namespace AnimalHusbandryMod.animals.data
                 {
                     treatItem.LikedTreatsId.Add((int)l);
                 }
+                else if (likedTreat is int i)
+                {
+                    treatItem.LikedTreatsId.Add(i);
+                }
             }
         }
     }
