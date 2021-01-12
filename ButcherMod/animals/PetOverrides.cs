@@ -48,7 +48,7 @@ namespace AnimalHusbandryMod.animals
                 }
                 who.FarmerSprite.oldFrame = currentFrame;
                 AnimalContestController.RemovePetParticipant();
-                Game1.player.addItemByMenuIfNecessary(new ParticipantRibbon());
+                Game1.player.addItemByMenuIfNecessary(ToolsFactory.GetParticipantRibbon());
                 return false;
             }
             return true;
