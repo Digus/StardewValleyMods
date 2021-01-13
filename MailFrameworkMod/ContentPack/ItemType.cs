@@ -6,6 +6,9 @@
         Tool,
         BigObject,
         BigCraftable,
-        Ring
+        Ring,
+        Furniture,
+        Weapon,
+        Boots
     }
 }
