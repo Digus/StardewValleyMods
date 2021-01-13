@@ -6,5 +6,6 @@
         public int? Index;
         public int? Stack;
         public string Name;
+        public int UpgradeLevel;
     }
 }
