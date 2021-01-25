@@ -11,7 +11,7 @@ using StardewValley.Tools;
 
 namespace AnimalHusbandryMod.tools
 {
-    public class InseminationSyringeOverrides
+    public class InseminationSyringeOverrides : ToolOverridesBase
     {
         internal static string InseminationSyringeKey = "DIGUS.ANIMALHUSBANDRYMOD/InseminationSyringe";
 
@@ -29,28 +29,25 @@ namespace AnimalHusbandryMod.tools
             return false;
         }
 
-        public static bool loadDisplayName(MilkPail __instance, ref string __result)
+        public static void loadDisplayName(MilkPail __instance, ref string __result)
         {
-            if (!IsInseminationSyringe(__instance)) return true;
+            if (!IsInseminationSyringe(__instance)) return;
 
             __result = DataLoader.i18n.Get("Tool.InseminationSyringe.Name");
-            return false;
         }
 
-        public static bool loadDescription(MilkPail __instance, ref string __result)
+        public static void loadDescription(MilkPail __instance, ref string __result)
         {
-            if (!IsInseminationSyringe(__instance)) return true;
+            if (!IsInseminationSyringe(__instance)) return;
 
             __result = DataLoader.i18n.Get("Tool.InseminationSyringe.Description");
-            return false;
         }
 
-        public static bool canBeTrashed(MilkPail __instance, ref bool __result)
+        public static void canBeTrashed(MilkPail __instance, ref bool __result)
         {
-            if (!IsInseminationSyringe(__instance)) return true;
+            if (!IsInseminationSyringe(__instance)) return;
 
             __result = true;
-            return false;
         }
 
         public static bool beginUsing(MilkPail __instance, GameLocation location, int x, int y, StardewValley.Farmer who, ref bool __result)
@@ -63,7 +60,7 @@ namespace AnimalHusbandryMod.tools
             y = (int)who.GetToolLocation(false).Y;
             Rectangle rectangle = new Rectangle(x - Game1.tileSize / 2, y - Game1.tileSize / 2, Game1.tileSize, Game1.tileSize);
 
-            if (Context.IsMainPlayer && !DataLoader.ModConfig.DisablePregnancy)
+            if (!DataLoader.ModConfig.DisablePregnancy)
             {
                 if (location is Farm)
                 {
@@ -114,12 +111,12 @@ namespace AnimalHusbandryMod.tools
                 {
                     dialogue = DataLoader.i18n.Get("Tool.InseminationSyringe.TooYoung", new { animalName = animal.displayName });
                 }
-                else if (PregnancyController.IsAnimalPregnant(animal.myID.Value))
+                else if (PregnancyController.IsAnimalPregnant(animal))
                 {
-                    int daysUtillBirth = PregnancyController.GetPregnancyItem(animal.myID.Value).DaysUntilBirth;
-                    if (daysUtillBirth > 1)
+                    int daysUntilBirth = animal.GetDaysUntilBirth().Value;
+                    if (daysUntilBirth > 1)
                     {
-                        dialogue = DataLoader.i18n.Get("Tool.InseminationSyringe.AlreadyPregnant", new { animalName = animal.displayName, numberOfDays = daysUtillBirth });
+                        dialogue = DataLoader.i18n.Get("Tool.InseminationSyringe.AlreadyPregnant", new { animalName = animal.displayName, numberOfDays = daysUntilBirth });
                     }
                     else
                     {
@@ -139,23 +136,28 @@ namespace AnimalHusbandryMod.tools
                 else
                 {
                     animal.doEmote(16, true);
-                    if (animal.sound.Value != null)
+                    if (who != null && Game1.player.Equals(who))
                     {
-                        ICue animalSound = Game1.soundBank.GetCue(animal.sound.Value);
-                        animalSound.Play();
+                        if (animal.sound.Value != null)
+                        {
+                            ICue animalSound = Game1.soundBank.GetCue(animal.sound.Value);
+                            animalSound.Play();
+                        }
+
+                        DelayedAction.playSoundAfterDelay("fishingRodBend", 300, location);
+                        DelayedAction.playSoundAfterDelay("fishingRodBend", 1200, location);
                     }
-                    DelayedAction.playSoundAfterDelay("fishingRodBend", 300);
-                    DelayedAction.playSoundAfterDelay("fishingRodBend", 1200);
                     animal.pauseTimer = 1500;
                 }
                 if (dialogue.Length > 0)
                 {
-                    DelayedAction.showDialogueAfterDelay(dialogue, 150);
+                    if (who != null && Game1.player.Equals(who))
+                    {
+                        DelayedAction.showDialogueAfterDelay(dialogue, 150);
+                    }
                     Animals[inseminationSyringeId] = null;
                 }
             }
-
-
 
             who.Halt();
             int currentFrame = who.FarmerSprite.currentFrame;
@@ -181,8 +183,7 @@ namespace AnimalHusbandryMod.tools
 
             string inseminationSyringeId = __instance.modData[InseminationSyringeKey];
 
-            AnimalHusbandryModEntry.ModHelper.Reflection.GetField<StardewValley.Farmer>(__instance, "lastUser").SetValue(who);
-            Game1.recentMultiplayerRandom = new Random((int)(short)Game1.random.Next((int)short.MinValue, 32768));
+            BaseToolDoFunction(__instance ,location, x, y, power, who);
             __instance.CurrentParentTileIndex = InitialParentTileIndex;
             __instance.indexOfMenuItemView.Value = IndexOfMenuItemView;
 
@@ -195,7 +196,7 @@ namespace AnimalHusbandryMod.tools
                 {
                     daysUtillBirth -= (int)Math.Round(daysUtillBirth / 10.0, MidpointRounding.AwayFromZero);
                 }
-                PregnancyController.AddPregnancy(new PregnancyItem(animal.myID.Value, daysUtillBirth, animal.allowReproduction.Value));
+                PregnancyController.AddPregnancy(animal, daysUtillBirth);
                 animal.allowReproduction.Value = false;
                 --__instance.attachments[0].Stack;
                 if (__instance.attachments[0].Stack <= 0)

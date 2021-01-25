@@ -13,7 +13,7 @@ using Object = StardewValley.Object;
 
 namespace AnimalHusbandryMod.animals
 {
-    public class MeatController : AnimalStatusController
+    public class MeatController
     {
         public static bool CanGetMeatFrom(FarmAnimal farmAnimal)
         {
