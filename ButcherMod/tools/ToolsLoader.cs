@@ -206,7 +206,7 @@ namespace AnimalHusbandryMod.tools
 
             bool MeatCleaverCondition(Letter l)
             {
-                return !DataLoader.ModConfig.DisableMeatToolLetter && HasAnimal() && !HasTool(MeatCleaverOverrides.MeatCleaverKey);
+                return !DataLoader.ModConfig.DisableMeatToolLetter && HasAnimal() && (!ItemUtility.HasModdedItem(MeatCleaverOverrides.MeatCleaverKey) || !Game1.player.mailReceived.Contains(l.Id));
             }
 
             List<string> validBuildingsForInsemination = new List<string>(new string[] { "Deluxe Barn", "Big Barn", "Deluxe Coop" });
@@ -222,19 +222,19 @@ namespace AnimalHusbandryMod.tools
                     return false;
                 });
                
-                return Context.IsMainPlayer && hasAnimalInValidBuildings && !HasTool(InseminationSyringeOverrides.InseminationSyringeKey);
+                return hasAnimalInValidBuildings && (!ItemUtility.HasModdedItem(InseminationSyringeOverrides.InseminationSyringeKey) || !Game1.player.mailReceived.Contains(l.Id));
             }
 
             bool FeedingBasketCondition(Letter l)
             {
 
-                return Context.IsMainPlayer && !Game1.player.mailReceived.Contains("feedingBasket") && Game1.player.getFriendshipHeartLevelForNPC("Marnie") >= 2 && (Game1.player.hasPet() || HasAnimal());
+                return !Game1.player.mailReceived.Contains(l.Id) && Game1.player.getFriendshipHeartLevelForNPC("Marnie") >= 2 && (Game1.player.hasPet() || HasAnimal());
             }
 
             bool FeedingBasketRedeliveryCondition(Letter l)
             {
                 
-                return Context.IsMainPlayer && Game1.player.mailReceived.Contains("feedingBasket") && !HasTool(FeedingBasketOverrides.FeedingBasketKey) && Game1.player.getFriendshipHeartLevelForNPC("Marnie") >= 6;
+                return Game1.player.mailReceived.Contains("feedingBasket") && !ItemUtility.HasModdedItem(FeedingBasketOverrides.FeedingBasketKey) && Game1.player.getFriendshipHeartLevelForNPC("Marnie") >= 6;
             }
 
             if (!DataLoader.ModConfig.DisableMeat)
@@ -270,7 +270,7 @@ namespace AnimalHusbandryMod.tools
                         "participantRibbon"
                         , DataLoader.i18n.Get("Tool.ParticipantRibbon.Letter")
                         , new List<Item> { ToolsFactory.GetParticipantRibbon() }
-                        , (l) => SDate.Now().AddDays(1).Equals(AnimalContestController.GetNextContestDate()) && FarmerLoader.FarmerData.AnimalContestData.Count == 0
+                        , (l) => SDate.Now().AddDays(1).Equals(AnimalContestController.GetNextContestDate()) && AnimalContestController.GetContestCount() == 0 && !Game1.player.mailReceived.Contains(l.Id + AnimalContestController.GetNextContestDateKey())
                         , (l) =>
                         {
                             Game1.player.mailReceived.Add(l.Id + AnimalContestController.GetNextContestDateKey());
@@ -287,7 +287,7 @@ namespace AnimalHusbandryMod.tools
                         "participantRibbonRedelivery"
                         , DataLoader.i18n.Get("Tool.ParticipantRibbon.LetterRedelivery")
                         , new List<Item> { ToolsFactory.GetParticipantRibbon() }
-                        , (l) => SDate.Now().AddDays(1).Equals(AnimalContestController.GetNextContestDate()) && FarmerLoader.FarmerData.AnimalContestData.Count > 0
+                        , (l) => SDate.Now().AddDays(1).Equals(AnimalContestController.GetNextContestDate()) && AnimalContestController.GetContestCount() > 0 && !Game1.player.mailReceived.Contains(l.Id + AnimalContestController.GetNextContestDateKey())
                         , (l) =>
                         {
                             Game1.player.mailReceived.Add(l.Id + AnimalContestController.GetNextContestDateKey());
@@ -330,49 +330,6 @@ namespace AnimalHusbandryMod.tools
                     }
                 );
             }
-        }
-
-        private static bool HasTool(string toolKey)
-        {
-            bool hasInInventory = Game1.player.Items.Any(i => ItemUtility.IsModdedItem(i, toolKey));
-            return hasInInventory || Game1.locations.Any((location) =>
-            {
-                if (location.objects.Values.ToList()
-                    .Exists((o) =>
-                    {
-                        if (o is Chest chest)
-                        {
-                            return chest.items.Any(i => ItemUtility.IsModdedItem(i, toolKey));
-                        }
-                        return false;
-                    }))
-                {
-                    return true;
-                }
-                if (location is BuildableGameLocation bgl)
-                {
-                    return bgl.buildings.Any(((b) =>
-                    {
-                        if (b.indoors.Value is GameLocation gl)
-                        {
-                            if (gl.objects.Values.ToList()
-                                .Exists((o) =>
-                                {
-                                    if (o is Chest chest)
-                                    {
-                                        return chest.items.Any(i => ItemUtility.IsModdedItem(i, toolKey));
-                                    }
-                                    return false;
-                                }))
-                            {
-                                return true;
-                            }
-                        }
-                        return false;
-                    }));
-                }
-                return false;
-            });
         }
 
         public void RemoveAllToolsCommand(string n, string[] d)
