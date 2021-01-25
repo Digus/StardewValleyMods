@@ -20,7 +20,7 @@ namespace AnimalHusbandryMod.animals
             }
             if (!__instance.lastPetDay.ContainsKey(who.UniqueMultiplayerID))
                 __instance.lastPetDay.Add(who.UniqueMultiplayerID, -1);
-            if (__instance.lastPetDay[who.UniqueMultiplayerID] == Game1.Date.TotalDays && AnimalContestController.CanChangeParticipantPet())
+            if (__instance.lastPetDay[who.UniqueMultiplayerID] == Game1.Date.TotalDays && AnimalContestController.CanChangeParticipant(__instance))
             {
                 __instance.playContentSound();
                 __instance.Halt();
@@ -47,7 +47,7 @@ namespace AnimalHusbandryMod.animals
                         break;
                 }
                 who.FarmerSprite.oldFrame = currentFrame;
-                AnimalContestController.RemovePetParticipant();
+                AnimalContestController.RemoveAnimalParticipant(__instance);
                 Game1.player.addItemByMenuIfNecessary(ToolsFactory.GetParticipantRibbon());
                 return false;
             }

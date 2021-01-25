@@ -136,5 +136,107 @@ namespace AnimalHusbandryMod.common
         {
             return item != null && item.modData.ContainsKey(key);
         }
+
+        public static bool HasModdedItem(string itemKey)
+        {
+            foreach (Farmer player in Game1.getAllFarmers())
+            {
+                if (player.Items.Any(i => ItemUtility.IsModdedItem(i, itemKey))) return true;
+            }
+            foreach (GameLocation location in (IEnumerable<GameLocation>)Game1.locations)
+            {
+                foreach (KeyValuePair<Vector2, Object> pair in location.objects.Pairs)
+                {
+                    if (pair.Value != null)
+                    {
+                        if (pair.Value.modData.ContainsKey(itemKey)) return true;
+                        if (pair.Value is Chest chest)
+                        {
+                            foreach (Item obj in ((NetList<Item, NetRef<Item>>)chest.items).ToList())
+                            {
+                                if (IsModdedItem(obj, itemKey)) return true;
+                            }
+                        }
+
+                        if (IsModdedItem(pair.Value.heldObject.Value, itemKey))
+                            pair.Value.heldObject.Value = null;
+                    }
+                }
+                foreach (Debris debri in location.debris.ToList())
+                {
+                    if (IsModdedItem(debri.item, itemKey)) return true;
+                }
+                if (location is Farm farm)
+                {
+                    foreach (Building building in farm.buildings)
+                    {
+                        if (building.indoors.Value != null)
+                        {
+                            foreach (KeyValuePair<Vector2, Object> pair in building.indoors.Value.objects.Pairs)
+                            {
+                                if (pair.Value != null)
+                                {
+                                    if (pair.Value.modData.ContainsKey(itemKey)) return true;
+                                    if (pair.Value is Chest)
+                                    {
+                                        foreach (Item obj in ((NetList<Item, NetRef<Item>>)(pair.Value as Chest).items).ToList())
+                                        {
+                                            if (IsModdedItem(obj, itemKey)) return true;
+                                        }
+                                    }
+                                }
+                            }
+                            foreach (Debris debri in building.indoors.Value.debris.ToList())
+                            {
+                                if (IsModdedItem(debri.item, itemKey)) return true;
+                            }
+                            if (building.indoors.Value is DecoratableLocation indoorDecoratableLocation)
+                            {
+                                foreach (Furniture furniture in indoorDecoratableLocation.furniture)
+                                {
+                                    if (IsModdedItem(furniture.heldObject.Value, itemKey)) return true;
+                                }
+                            }
+                        }
+                        else if (building is Mill mill)
+                        {
+                            foreach (Item obj in ((NetList<Item, NetRef<Item>>)mill.output.Value.items).ToList())
+                            {
+                                if (IsModdedItem(obj, itemKey)) return true;
+                            }
+                        }
+                        else if (building is JunimoHut junimoHut)
+                        {
+                            foreach (Item obj in ((NetList<Item, NetRef<Item>>)junimoHut.output.Value.items).ToList())
+                            {
+                                if (IsModdedItem(obj, itemKey)) return true;
+                            }
+                        }
+                    }
+                }
+                else if (location is DecoratableLocation decoratableLocation)
+                {
+                    foreach (Furniture furniture in decoratableLocation.furniture)
+                    {
+                        if (IsModdedItem(furniture.heldObject.Value, itemKey)) return true;
+                    }
+                    if (location is FarmHouse farmHouse)
+                    {
+                        foreach (Item obj in ((NetList<Item, NetRef<Item>>)farmHouse.fridge.Value.items).ToList())
+                        {
+                            if (IsModdedItem(obj, itemKey)) return true;
+                        }
+                    }
+                    else if (location is IslandFarmHouse islandFarmHouse)
+                    {
+                        foreach (Item obj in ((NetList<Item, NetRef<Item>>)islandFarmHouse.fridge.Value.items).ToList())
+                        {
+                            if (IsModdedItem(obj, itemKey)) return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
     }
 }

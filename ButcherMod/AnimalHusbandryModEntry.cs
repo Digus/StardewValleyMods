@@ -159,15 +159,15 @@ namespace AnimalHusbandryMod
                     );
                     harmony.Patch(
                         original: AccessTools.Method(typeof(Axe), "loadDisplayName"),
-                        prefix: new HarmonyMethod(typeof(MeatCleaverOverrides), nameof(MeatCleaverOverrides.loadDisplayName))
+                        postfix: new HarmonyMethod(typeof(MeatCleaverOverrides), nameof(MeatCleaverOverrides.loadDisplayName))
                     );
                     harmony.Patch(
                         original: AccessTools.Method(typeof(Axe), "loadDescription"),
-                        prefix: new HarmonyMethod(typeof(MeatCleaverOverrides), nameof(MeatCleaverOverrides.loadDescription))
+                        postfix: new HarmonyMethod(typeof(MeatCleaverOverrides), nameof(MeatCleaverOverrides.loadDescription))
                     );
                     harmony.Patch(
-                        original: AccessTools.Method(typeof(Axe), nameof(Axe.canBeTrashed)),
-                        prefix: new HarmonyMethod(typeof(MeatCleaverOverrides), nameof(MeatCleaverOverrides.canBeTrashed))
+                        original: AccessTools.Method(typeof(Tool), nameof(Tool.canBeTrashed)),
+                        postfix: new HarmonyMethod(typeof(MeatCleaverOverrides), nameof(MeatCleaverOverrides.canBeTrashed))
                     );
                     harmony.Patch(
                         original: AccessTools.Method(typeof(Axe), nameof(Axe.beginUsing)),
@@ -187,15 +187,15 @@ namespace AnimalHusbandryMod
                     );
                     harmony.Patch(
                         original: AccessTools.Method(typeof(MilkPail), "loadDisplayName"),
-                        prefix: new HarmonyMethod(typeof(InseminationSyringeOverrides), nameof(InseminationSyringeOverrides.loadDisplayName))
+                        postfix: new HarmonyMethod(typeof(InseminationSyringeOverrides), nameof(InseminationSyringeOverrides.loadDisplayName))
                     );
                     harmony.Patch(
                         original: AccessTools.Method(typeof(MilkPail), "loadDescription"),
-                        prefix: new HarmonyMethod(typeof(InseminationSyringeOverrides), nameof(InseminationSyringeOverrides.loadDescription))
+                        postfix: new HarmonyMethod(typeof(InseminationSyringeOverrides), nameof(InseminationSyringeOverrides.loadDescription))
                     );
                     harmony.Patch(
-                        original: AccessTools.Method(typeof(MilkPail), nameof(MilkPail.canBeTrashed)),
-                        prefix: new HarmonyMethod(typeof(InseminationSyringeOverrides), nameof(InseminationSyringeOverrides.canBeTrashed))
+                        original: AccessTools.Method(typeof(Tool), nameof(Tool.canBeTrashed)),
+                        postfix: new HarmonyMethod(typeof(InseminationSyringeOverrides), nameof(InseminationSyringeOverrides.canBeTrashed))
                     );
                     harmony.Patch(
                         original: AccessTools.Method(typeof(MilkPail), nameof(MilkPail.beginUsing)),
@@ -227,15 +227,15 @@ namespace AnimalHusbandryMod
                     );
                     harmony.Patch(
                         original: AccessTools.Method(typeof(MilkPail), "loadDisplayName"),
-                        prefix: new HarmonyMethod(typeof(FeedingBasketOverrides), nameof(FeedingBasketOverrides.loadDisplayName))
+                        postfix: new HarmonyMethod(typeof(FeedingBasketOverrides), nameof(FeedingBasketOverrides.loadDisplayName))
                     );
                     harmony.Patch(
                         original: AccessTools.Method(typeof(MilkPail), "loadDescription"),
-                        prefix: new HarmonyMethod(typeof(FeedingBasketOverrides), nameof(FeedingBasketOverrides.loadDescription))
+                        postfix: new HarmonyMethod(typeof(FeedingBasketOverrides), nameof(FeedingBasketOverrides.loadDescription))
                     );
                     harmony.Patch(
-                        original: AccessTools.Method(typeof(MilkPail), nameof(MilkPail.canBeTrashed)),
-                        prefix: new HarmonyMethod(typeof(FeedingBasketOverrides), nameof(FeedingBasketOverrides.canBeTrashed))
+                        original: AccessTools.Method(typeof(Tool), nameof(Tool.canBeTrashed)),
+                        postfix: new HarmonyMethod(typeof(FeedingBasketOverrides), nameof(FeedingBasketOverrides.canBeTrashed))
                     );
                     harmony.Patch(
                         original: AccessTools.Method(typeof(MilkPail), nameof(MilkPail.beginUsing)),
@@ -267,18 +267,13 @@ namespace AnimalHusbandryMod
 
                 if (!DataLoader.ModConfig.DisableAnimalContest)
                 {
-                    Helper.Events.Multiplayer.ModMessageReceived += (ss, a) =>
-                    {
-                        if (a.Type == "animalContestEvent")
-                        {
-                            EventsLoader.AddEvent(a.ReadAs<CustomEvent>());
-                        }
-                    };
-
+                    harmony.Patch(
+                        original: AccessTools.Method(typeof(Game1), nameof(Game1.shouldTimePass)),
+                        postfix: new HarmonyMethod(typeof(EventsOverrides), nameof(EventsOverrides.shouldTimePass))
+                    );
                     harmony.Patch(
                         original: AccessTools.Method(typeof(Event), "addSpecificTemporarySprite"),
-                        postfix: new HarmonyMethod(typeof(EventsOverrides),
-                            nameof(EventsOverrides.addSpecificTemporarySprite))
+                        postfix: new HarmonyMethod(typeof(EventsOverrides),  nameof(EventsOverrides.addSpecificTemporarySprite))
                     );
                     harmony.Patch(
                         original: AccessTools.Method(typeof(Event), nameof(Event.skipEvent)),
@@ -288,11 +283,6 @@ namespace AnimalHusbandryMod
                     harmony.Patch(
                         original: AccessTools.Method(typeof(Pet), nameof(Pet.checkAction)),
                         prefix: new HarmonyMethod(typeof(PetOverrides), nameof(PetOverrides.checkAction))
-                    );
-
-                    harmony.Patch(
-                        original: AccessTools.Method(typeof(Multiplayer), nameof(Multiplayer.broadcastEvent)),
-                        prefix: new HarmonyMethod(typeof(MultiplayerOverrides), nameof(MultiplayerOverrides.broadcastEvent))
                     );
 
                     harmony.Patch(
@@ -311,15 +301,15 @@ namespace AnimalHusbandryMod
                     );
                     harmony.Patch(
                         original: AccessTools.Method(typeof(MilkPail), "loadDisplayName"),
-                        prefix: new HarmonyMethod(typeof(ParticipantRibbonOverrides), nameof(ParticipantRibbonOverrides.loadDisplayName))
+                        postfix: new HarmonyMethod(typeof(ParticipantRibbonOverrides), nameof(ParticipantRibbonOverrides.loadDisplayName))
                     );
                     harmony.Patch(
                         original: AccessTools.Method(typeof(MilkPail), "loadDescription"),
-                        prefix: new HarmonyMethod(typeof(ParticipantRibbonOverrides), nameof(ParticipantRibbonOverrides.loadDescription))
+                        postfix: new HarmonyMethod(typeof(ParticipantRibbonOverrides), nameof(ParticipantRibbonOverrides.loadDescription))
                     );
                     harmony.Patch(
-                        original: AccessTools.Method(typeof(MilkPail), nameof(MilkPail.canBeTrashed)),
-                        prefix: new HarmonyMethod(typeof(ParticipantRibbonOverrides), nameof(ParticipantRibbonOverrides.canBeTrashed))
+                        original: AccessTools.Method(typeof(Tool), nameof(Tool.canBeTrashed)),
+                        postfix: new HarmonyMethod(typeof(ParticipantRibbonOverrides), nameof(ParticipantRibbonOverrides.canBeTrashed))
                     );
                     harmony.Patch(
                         original: AccessTools.Method(typeof(MilkPail), nameof(MilkPail.beginUsing)),
@@ -333,7 +323,7 @@ namespace AnimalHusbandryMod
             }
         }
 
-        /// <summary>Raised after the player loads a save slot and the world is initialised.</summary>
+        /// <summary>Raised after the player loads a save slot and the world is initialized.</summary>
         /// <param name="sender">The event sender.</param>
         /// <param name="e">The event data.</param>
         private void OnSaveLoaded(object sender, SaveLoadedEventArgs e)
@@ -343,8 +333,11 @@ namespace AnimalHusbandryMod
 
             DataLoader.ToolsLoader.ReplaceOldTools();
             FarmerLoader.LoadData();
+            FarmerLoader.MoveOldPregnancyData();
+            FarmerLoader.MoveOldAnimalStatusData();
             DataLoader.ToolsLoader.LoadMail();
             DataLoader.AnimalData.FillLikedTreatsIds();
+            EventsLoader.EventListener();
         }
 
         /// <summary>Raised after the game begins a new day (including when the player loads a save).</summary>
@@ -385,7 +378,7 @@ namespace AnimalHusbandryMod
 
             EventsLoader.CheckUnseenEvents();
 
-            if (!DataLoader.ModConfig.DisablePregnancy)
+            if (!DataLoader.ModConfig.DisablePregnancy && Context.IsMainPlayer)
             {
                 PregnancyController.UpdatePregnancy();
             }
