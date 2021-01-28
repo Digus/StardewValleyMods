@@ -1,0 +1,9 @@
+{
+    "Delivery.Clint.UpgradeLetter": "네 도구가 준비되었어.^너희 집으로 보내줄게...도구 하나 가지러 여기까지 오는 건 버거로울 테니까.^그럼 몸조심해. ^   -클린트",
+    "Delivery.Clint.UpgradeLetter.Title": "클린트의 도구 배달 서비스",
+    "Shipment.Clint.UpgradeLetter": "음, 안녕...     ^도구를 업그레이드 하고 싶으면 우편으로 내게 업그레이드 할 도구를 보내줘. 비용이랑 재료도 잊지 말고.^한 번에 하나만 작업할 수 있으니까, 여러 개를 한꺼번에 보내려고 하진 말아줘.^   -대장장이 클린트",
+    "Shipment.Clint.UpgradeLetter.Title": "클린트의 도구 업그레이드 서비스",
+    "Shipment.Clint.UpgradeLetter.ToolSent": "{{Tool}}을/를 업그레이드하기 위해 보냈다.",
+    "Shipment.Clint.UpgradeLetter.NoBars": "{{Tool}}을/를 업그레이드하기 위해 필요한 재료가 충분하지 않습니다.",
+    "Shipment.Clint.UpgradeLetter.NoMoney": "{{Tool}}을/를 업그레이드하기 위해 필요한 비용이 충분하지 않습니다."
+}
