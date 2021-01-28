@@ -54,13 +54,12 @@ namespace MailFrameworkMod
             }
         }
 
-
         /// <summary>
         /// Call this method to unload any new letters still on the mailbox.
         /// </summary>
         public static void UnloadMailBox()
         {
-            List<String> tempMailBox = new List<string>();
+            List<string> tempMailBox = new List<string>();
             while (Game1.player.mailbox.Count > 0)
             {
                 tempMailBox.Add(Game1.player.mailbox.First());
@@ -70,12 +69,38 @@ namespace MailFrameworkMod
             {
                 tempMailBox.Remove(CustomMailId);
             }
-            foreach (String mail in tempMailBox)
+            foreach (string mail in tempMailBox)
             {
                 Game1.player.mailbox.Add(mail);
             }
             
             Letters.Value.Clear();
+        }
+
+        /// <summary>
+        /// Call this method to unload letters with the specified id from the mailbox. 
+        /// </summary>
+        /// <param name="id">the letter id</param>
+        public static void UnloadLetterMailbox(string id)
+        {
+            if (Letters.Value.Any(l => l.Id == id))
+            {
+                List<string> tempMailBox = new List<string>();
+                while (Game1.player.mailbox.Count > 0)
+                {
+                    tempMailBox.Add(Game1.player.mailbox.First());
+                    Game1.player.mailbox.RemoveAt(0);
+                }
+                foreach (var l in Letters.Value.Where(l => l.Id == id))
+                {
+                    tempMailBox.Remove(CustomMailId);
+                }
+                foreach (string mail in tempMailBox)
+                {
+                    Game1.player.mailbox.Add(mail);
+                }
+                Letters.Value.RemoveAll(l => l.Id == id);
+            }
         }
 
         /// <summary>
@@ -123,7 +148,18 @@ namespace MailFrameworkMod
                 }
 
                 Game1.activeClickableMenu = activeClickableMenu;
-                ShownLetter.Value.Items?.ForEach(
+                List<Item> attachments = new List<Item>();
+                if (ShownLetter.Value.Items != null)
+                {
+                    attachments.AddRange(ShownLetter.Value.Items);
+                }
+
+                List<Item> dynamicItems = ShownLetter.Value.DynamicItems?.Invoke(ShownLetter.Value);
+                if (dynamicItems != null)
+                {
+                    attachments.AddRange(dynamicItems);
+                }
+                attachments.ForEach(
                     (i) =>
                     {
                         var item = i.getOne();
@@ -269,7 +305,7 @@ namespace MailFrameworkMod
                     MailController.ShowLetter();
                     return false;
                 }
-            }
+            } 
             return true;
         }
 
