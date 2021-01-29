@@ -16,11 +16,25 @@ namespace MailServicesMod
         internal const string ToolUpgradeMailId = "MailServicesMod.ToolUpgrade";
         public static IModHelper Helper;
         public static ITranslationHelper I18N;
+        public static ModConfig ModConfig;
 
         public DataLoader(IModHelper modHelper)
         {
             Helper = modHelper;
             I18N = modHelper.Translation;
+            ModConfig = Helper.ReadConfig<ModConfig>();
+
+            MailDao.SaveLetter(
+                new Letter(
+                    "MailServiceMod.DeliveryQuestsInfo"
+                    , I18N.Get("Shipment.Quest.DeliveryQuestsLetter")
+                    , (l) => !Game1.player.mailReceived.Contains(l.Id) && SDate.Now() >= new SDate(2, "spring", 1)
+                    , (l) => Game1.player.mailReceived.Add(l.Id)
+                )
+                {
+                    Title = I18N.Get("Shipment.Quest.DeliveryQuestsLetter.Title")
+                }
+            );
 
             MailDao.SaveLetter(
                 new Letter(
