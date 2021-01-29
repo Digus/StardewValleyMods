@@ -49,6 +49,11 @@ namespace MailServicesMod
                 original: AccessTools.Method(typeof(GameLocation), nameof(GameLocation.mailbox)),
                 prefix: new HarmonyMethod(typeof(ToolUpgradeOverrides), nameof(ToolUpgradeOverrides.mailbox))
             );
+
+            harmony.Patch(
+                original: AccessTools.Method(typeof(GameLocation), nameof(GameLocation.mailbox)),
+                prefix: new HarmonyMethod(typeof(ItemShipmentQuestOverrides), nameof(ItemShipmentQuestOverrides.mailbox))
+            );
         }
     }
 }
