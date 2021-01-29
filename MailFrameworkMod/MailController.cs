@@ -293,7 +293,7 @@ namespace MailFrameworkMod
 
         public static bool mailbox_prefix(GameLocation __instance)
         {
-            if (Game1.player.mailbox.Count > 0 && Game1.player.ActiveObject == null)
+            if (Game1.player.mailbox.Count > 0)
             {
                 if (Game1.player.mailbox.First<string>() == null)
                 {
