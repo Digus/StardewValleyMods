@@ -90,7 +90,7 @@
     <None Include="manifest.json" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Pathoschild.Stardew.ModBuildConfig" Version="3.1.0" />
+    <PackageReference Include="Pathoschild.Stardew.ModBuildConfig" Version="3.2.2" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
