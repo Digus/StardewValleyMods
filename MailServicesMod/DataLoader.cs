@@ -14,6 +14,7 @@ namespace MailServicesMod
     internal class DataLoader
     {
         internal const string ToolUpgradeMailId = "MailServicesMod.ToolUpgrade";
+        internal const string ItemRecoveryMailId = "MailServicesMod.ItemRecovery";
         public static IModHelper Helper;
         public static ITranslationHelper I18N;
         public static ModConfig ModConfig;
@@ -48,6 +49,40 @@ namespace MailServicesMod
                 }
             );
 
+            MailDao.SaveLetter(
+                new Letter(
+                    "MailServiceMod.MarlonRecoveryReward"
+                    , I18N.Get("Delivery.Marlon.RecoveryRewardLetter")
+                    , (l) => !Game1.player.mailReceived.Contains(l.Id) && Game1.player.hasCompletedAllMonsterSlayerQuests.Value && !GetRecoveryConfig(Game1.player).DisableRecoveryConfigInGameChanges
+                    , (l) =>
+                    {
+                        Game1.player.mailReceived.Add(l.Id);
+                        SaveRecoveryConfig(Game1.player, true, true, true);
+                    }
+                )
+                {
+                    Title = I18N.Get("Delivery.Marlon.RecoveryRewardLetter.Title"),
+                    GroupId = "MailServicesMod.GuildRecovery"
+                }
+            );
+
+            MailDao.SaveLetter(
+                new Letter(
+                    "MailServicesMod.MarlonRecoveryOffer"
+                    , I18N.Get("Delivery.Marlon.RecoveryOfferLetter")
+                    , (l) => !Game1.player.mailReceived.Contains(l.Id) && !Game1.player.mailReceived.Contains("MailServiceMod.MarlonRecoveryReward") && Game1.player.mailReceived.Contains("guildMember") && !DataLoader.GetRecoveryConfig(Game1.player).EnableRecoveryService && !GetRecoveryConfig(Game1.player).DisableRecoveryConfigInGameChanges
+                    , (l) =>
+                    {
+                        Game1.player.mailReceived.Add(l.Id);
+                        GuildRecoveryController.OpenOfferDialog();
+                    }
+                )
+                {
+                    Title = I18N.Get("Delivery.Marlon.RecoveryOfferLetter.Title"),
+                    GroupId = "MailServicesMod.GuildRecovery"
+                }
+            );
+
             Letter upgradeLetter = new Letter(
                 ToolUpgradeMailId
                 , I18N.Get("Delivery.Clint.UpgradeLetter")
@@ -74,10 +109,63 @@ namespace MailServicesMod
                 }
             )
             {
-                Title = I18N.Get("Delivery.Clint.UpgradeLetter.Title")
+                Title = I18N.Get("Delivery.Clint.UpgradeLetter.Title"),
+                DynamicItems = (l) => Game1.player.toolBeingUpgraded.Value != null ? new List<Item> { Game1.player.toolBeingUpgraded.Value } : new List<Item>()
             };
-            upgradeLetter.DynamicItems = (l) => Game1.player.toolBeingUpgraded.Value != null ? new List<Item> {Game1.player.toolBeingUpgraded.Value} : new List<Item>();
             MailDao.SaveLetter(upgradeLetter);
+
+            Letter recoveryLetter = new Letter(
+                ItemRecoveryMailId
+                , I18N.Get("Delivery.Marlon.RecoveryLetter")
+                , (l) => GetRecoveryConfig(Game1.player).EnableRecoveryService && GuildRecoveryController.GetItemsToRecover()?.Count > 0
+                , (l) =>
+                {
+                    if (!Game1.player.mailReceived.Contains(l.Id)) Game1.player.mailReceived.Add(l.Id);
+                    GuildRecoveryController.ItemsRecovered();
+                }
+            )
+            {
+                Title = I18N.Get("Delivery.Marlon.RecoveryLetter.Title"),
+                DynamicItems = (l) => GuildRecoveryController.GetItemsToRecover()
+            };
+            MailDao.SaveLetter(recoveryLetter);
+        }
+
+        public static void SaveRecoveryConfig(Farmer player, bool enableRecoveryService, bool? recoveryAllItems = null, bool? recoveryForFree = null)
+        {
+            RecoveryConfig recoveryConfig = GetRecoveryConfig(player);
+            if (!recoveryConfig.DisableRecoveryConfigInGameChanges)
+            {
+                recoveryConfig.EnableRecoveryService = enableRecoveryService;
+                recoveryConfig.RecoverAllItems = recoveryAllItems ?? recoveryConfig.RecoverAllItems;
+                recoveryConfig.RecoverForFree = recoveryForFree ?? recoveryConfig.RecoverForFree;
+                Helper.WriteConfig<ModConfig>(DataLoader.ModConfig);
+            }
+        }
+
+        public static RecoveryConfig GetRecoveryConfig(Farmer player)
+        {
+            if (ModConfig.DisablePerPlayerConfig)
+            {
+                return ModConfig;
+            }
+            else
+            {
+                if (!ModConfig.PlayerRecoveryConfig.ContainsKey(player.UniqueMultiplayerID))
+                {
+                    ModConfig.PlayerRecoveryConfig[player.UniqueMultiplayerID] = new PlayerRecoveryConfig()
+                    {
+                        PlayerName = player.Name,
+                        DisableRecoveryConfigInGameChanges = ModConfig.DisableRecoveryConfigInGameChanges,
+                        EnableRecoveryService = ModConfig.EnableRecoveryService,
+                        RecoverAllItems = ModConfig.RecoverAllItems,
+                        RecoverForFree = ModConfig.RecoverForFree,
+                        DisableClearLostItemsOnRandomRecovery = ModConfig.DisableClearLostItemsOnRandomRecovery
+                    };
+                    Helper.WriteConfig<ModConfig>(DataLoader.ModConfig);
+                }
+                return ModConfig.PlayerRecoveryConfig[player.UniqueMultiplayerID];
+            }
         }
     }
 }
