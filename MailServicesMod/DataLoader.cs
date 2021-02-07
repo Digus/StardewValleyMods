@@ -29,7 +29,7 @@ namespace MailServicesMod
                 new Letter(
                     "MailServiceMod.DeliveryQuestsInfo"
                     , I18N.Get("Shipment.Quest.DeliveryQuestsLetter")
-                    , (l) => !Game1.player.mailReceived.Contains(l.Id) && SDate.Now() >= new SDate(2, "spring", 1)
+                    , (l) => !DataLoader.ModConfig.DisableQuestService && !Game1.player.mailReceived.Contains(l.Id) && SDate.Now() >= new SDate(2, "spring", 1)
                     , (l) => Game1.player.mailReceived.Add(l.Id)
                 )
                 {
@@ -41,11 +41,24 @@ namespace MailServicesMod
                 new Letter(
                     "MailServiceMod.ToolUpgradeInfo"
                     , I18N.Get("Shipment.Clint.UpgradeLetter")
-                    , (l) => !Game1.player.mailReceived.Contains(l.Id) && SDate.Now() >= new SDate(6, "spring", 1)
+                    , (l) => !DataLoader.ModConfig.DisableToolService && !Game1.player.mailReceived.Contains(l.Id) && SDate.Now() >= new SDate(6, "spring", 1)
                     , (l) => Game1.player.mailReceived.Add(l.Id)
                 )
                 {
                     Title = I18N.Get("Shipment.Clint.UpgradeLetter.Title")
+                }
+            );
+
+            MailDao.SaveLetter(
+                new Letter(
+                    "MailServiceMod.GiftShipmentInfo"
+                    , I18N.Get("Shipment.Wizard.GiftShipmentLetter")
+                    , (l) => !DataLoader.ModConfig.DisableGiftService && !Game1.player.mailReceived.Contains(l.Id) && Game1.player.eventsSeen.Contains(112)
+                    , (l) => Game1.player.mailReceived.Add(l.Id)
+                )
+                {
+                    Title = I18N.Get("Shipment.Wizard.GiftShipmentLetter.Title"),
+                    WhichBG = 2
                 }
             );
 
@@ -86,7 +99,7 @@ namespace MailServicesMod
             Letter upgradeLetter = new Letter(
                 ToolUpgradeMailId
                 , I18N.Get("Delivery.Clint.UpgradeLetter")
-                , (l) => Game1.player.toolBeingUpgraded.Value != null && Game1.player.daysLeftForToolUpgrade.Value <= 0
+                , (l) => !DataLoader.ModConfig.DisableToolService && Game1.player.toolBeingUpgraded.Value != null && Game1.player.daysLeftForToolUpgrade.Value <= 0
                 , (l) =>
                 {
                     if(!Game1.player.mailReceived.Contains(l.Id)) Game1.player.mailReceived.Add(l.Id);

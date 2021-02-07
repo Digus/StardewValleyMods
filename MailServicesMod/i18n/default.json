@@ -22,5 +22,13 @@
     "Delivery.Marlon.RecoveryRewardLetter": "@,^You've become kind of a legend here in the adventure guild.^From now on I'll be providing the all items recovery service for free.^^   -Marlon",
     "Delivery.Marlon.RecoveryRewardLetter.Title": "Marlon Recovery Reward",
     "Delivery.Marlon.RecoveryLetter": "@,^Here's what I found according to the recovery service you chose.^^Be more careful next time!^   -Marlon",
-    "Delivery.Marlon.RecoveryLetter.Title": "Marlon Recovery Service"
+    "Delivery.Marlon.RecoveryLetter.Title": "Marlon Recovery Service",
+    // Gift Shipment
+    "Shipment.Wizard.GiftShipmentLetter": "Have you ever wondered why this land has such a great mail service?^The mayor likes to brag about it but he doesn't even know who does the deliveries so fast.^My arcane studies made me believe that the Junimos are behind it.^If you put an item in your mailbox addressed to someone, it'll be delivered like magic.^Anyway, just wanted to share more knowledge about the Junimos with you.^   -M. Rasmodius, Wizard",
+    "Shipment.Wizard.GiftShipmentLetter.Title": "Wizard About Gift Shipment",
+    "Shipment.Gift.Previous": "@Previous",
+    "Shipment.Gift.Next": "Next>",
+    "Shipment.Gift.None": "No one",
+    "Shipment.Gift.Question": "Send {{Gift}} to...",
+    "Shipment.Gift.GiftSent": "{{Gift}} sent to {{Npc}}"
 }
