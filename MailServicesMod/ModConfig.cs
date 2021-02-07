@@ -8,7 +8,12 @@ namespace MailServicesMod
 {
     public class ModConfig : RecoveryConfig
     {
+        public bool DisableToolService;
+        public bool DisableQuestService;
+        public bool DisableGiftService;
         public bool ShowDialogOnItemDelivery;
+        public int GiftChoicePageSize = 5;
+        public bool EnableJealousyFromMailedGifts;
         public bool DisablePerPlayerConfig;
         public Dictionary<long, PlayerRecoveryConfig> PlayerRecoveryConfig = new Dictionary<long, PlayerRecoveryConfig>();
     }

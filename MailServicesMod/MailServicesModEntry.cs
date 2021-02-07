@@ -64,6 +64,15 @@ namespace MailServicesMod
                 original: AccessTools.Method(typeof(Item), nameof(Item.actionWhenPurchased)),
                 prefix: new HarmonyMethod(typeof(GuildRecoveryOverrides), nameof(GuildRecoveryOverrides.actionWhenPurchased))
             );
+
+            harmony.Patch(
+                original: AccessTools.Method(typeof(GameLocation), nameof(GameLocation.mailbox)),
+                prefix: new HarmonyMethod(typeof(GiftShipmentOverrides), nameof(GiftShipmentOverrides.mailbox))
+            );
+            harmony.Patch(
+                original: AccessTools.Method(typeof(GameLocation), nameof(GameLocation.answerDialogueAction)),
+                prefix: new HarmonyMethod(typeof(GiftShipmentOverrides), nameof(GiftShipmentOverrides.answerDialogueAction))
+            );
         }
 
 

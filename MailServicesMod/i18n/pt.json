@@ -22,5 +22,13 @@
     "Delivery.Marlon.RecoveryRewardLetter": "@,^Você meio que se tornou uma lenda aqui na guilda dos aventureiros.^De agora em diante vou recuperar todos os seus itens perdidos de graça.^^   -Marlon",
     "Delivery.Marlon.RecoveryRewardLetter.Title": "Prêmio de Recuperação do Marlon",
     "Delivery.Marlon.RecoveryLetter": "@,^Aqui está o que encontrei de acordo com o serviço de recuperação escolhido.^^Tenha mais cuidado da próxima vez!^   -Marlon",
-    "Delivery.Marlon.RecoveryLetter.Title": "Serviço de Recuperação do Marlon"
+    "Delivery.Marlon.RecoveryLetter.Title": "Serviço de Recuperação do Marlon",
+    // Gift Shipment
+    "Shipment.Wizard.GiftShipmentLetter": "Já se perguntou porque este lugar tem um serviço de correios tão bom?^O prefeito se orgulha tanto mas nem ao menos sabe quem faz o serviço de forma tão eficiente.^Meus estudos arcanos me fazem acreditar que os Junimos são os responsáveis.^Se você coloca um item na caixa de correio endereçado a alguém, ele é entregue como mágica.^Só queria compartilhar um pouco mais de conhecimento sobre os Junimos com você.^   -M. Rasmodius, Feiticeiro",
+    "Shipment.Wizard.GiftShipmentLetter.Title": "Wizard About Gift Shipment",
+    "Shipment.Gift.Previous": "@Anterior",
+    "Shipment.Gift.Next": "Próximo>",
+    "Shipment.Gift.None": "Ninguém",
+    "Shipment.Gift.Question": "Enviar {{Gift}} para...",
+    "Shipment.Gift.GiftSent": "{{Gift}} enviado(a) para {{Npc}}"
 }
