@@ -92,7 +92,7 @@ namespace MailFrameworkMod
                             Game1.player.addItemByMenuIfNecessary(clickableComponent.item, null);
                             if (Game1.activeClickableMenu != null && Game1.activeClickableMenu != this)
                             {
-                                Game1.activeClickableMenu.exitFunction = new IClickableMenu.onExit(() => Game1.activeClickableMenu = this);
+                                Game1.activeClickableMenu.exitFunction = (IClickableMenu.onExit)Delegate.Combine(Game1.activeClickableMenu.exitFunction, new IClickableMenu.onExit(() => Game1.activeClickableMenu = this));
                             }
                             clickableComponent.item = (Item)null;
                             if (this.itemsToGrab.Count > 1)

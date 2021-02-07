@@ -17,6 +17,8 @@ namespace MailFrameworkMod
 {
     public class DataLoader : IAssetEditor
     {
+        public static Dictionary<Tuple<string,string>, Texture2D> _contentPackAssets = new Dictionary<Tuple<string, string>, Texture2D>();
+
         public bool CanEdit<T>(IAssetInfo asset)
         {
             return asset.AssetNameEquals("Data\\mail");
@@ -319,8 +321,8 @@ namespace MailFrameworkMod
                                     TextColor = mailItem.TextColor,
                                     Title = hasTranslation && mailItem.Title != null ? contentPack.Translation.Get(mailItem.Title) : mailItem.Title,
                                     GroupId = mailItem.GroupId,
-                                    LetterTexture = mailItem.LetterBG != null ? contentPack.LoadAsset<Texture2D>(mailItem.LetterBG) : null,
-                                    UpperRightCloseButtonTexture = mailItem.UpperRightCloseButton != null ? contentPack.LoadAsset<Texture2D>(mailItem.UpperRightCloseButton) : null,
+                                    LetterTexture = mailItem.LetterBG != null ? GetTextureAsset(contentPack, mailItem.LetterBG) : null,
+                                    UpperRightCloseButtonTexture = mailItem.UpperRightCloseButton != null ? GetTextureAsset(contentPack, mailItem.UpperRightCloseButton) : null,
                                 });
                         }
                         else
@@ -338,8 +340,8 @@ namespace MailFrameworkMod
                                     TextColor = mailItem.TextColor,
                                     Title = hasTranslation && mailItem.Title != null ? contentPack.Translation.Get(mailItem.Title) : mailItem.Title,
                                     GroupId = mailItem.GroupId,
-                                    LetterTexture = mailItem.LetterBG != null ? contentPack.LoadAsset<Texture2D>(mailItem.LetterBG) : null,
-                                    UpperRightCloseButtonTexture = mailItem.UpperRightCloseButton != null ? contentPack.LoadAsset<Texture2D>(mailItem.UpperRightCloseButton) : null,
+                                    LetterTexture = mailItem.LetterBG != null ? GetTextureAsset(contentPack, mailItem.LetterBG) : null,
+                                    UpperRightCloseButtonTexture = mailItem.UpperRightCloseButton != null ? GetTextureAsset(contentPack, mailItem.UpperRightCloseButton) : null,
                                 });
                         }
                     }
@@ -349,6 +351,16 @@ namespace MailFrameworkMod
                     MailFrameworkModEntry.ModMonitor.Log($"Ignoring content pack: {contentPack.Manifest.Name} {contentPack.Manifest.Version} from {contentPack.DirectoryPath}\nIt does not have an mail.json file.", LogLevel.Warn);
                 }
             }
+        }
+
+        public static Texture2D GetTextureAsset(IContentPack contentPack, string textureName)
+        {
+            var key = new Tuple<string, string>(contentPack.Manifest.UniqueID, textureName);
+            if (!_contentPackAssets.ContainsKey(key))
+            {
+                _contentPackAssets[key] = contentPack.LoadAsset<Texture2D>(textureName);
+            }
+            return _contentPackAssets[key];
         }
     }
 }
