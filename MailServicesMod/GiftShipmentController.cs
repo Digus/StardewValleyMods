@@ -52,11 +52,12 @@ namespace MailServicesMod
         internal static void GiftToNpc(string npcName)
         {
             NPC npc = Game1.getCharacterFromName(npcName);
+            string giftName = Game1.player.ActiveObject.DisplayName;
             npc.receiveGift(Game1.player.ActiveObject, Game1.player, true, 1, DataLoader.ModConfig.ShowDialogOnItemDelivery);
             Game1.player.reduceActiveItemByOne();
             if (!DataLoader.ModConfig.ShowDialogOnItemDelivery)
             {
-                Game1.drawObjectDialogue(DataLoader.I18N.Get("Shipment.Gift.GiftSent", new { Gift = Game1.player.ActiveObject.DisplayName, Npc = npc.displayName }));
+                Game1.drawObjectDialogue(DataLoader.I18N.Get("Shipment.Gift.GiftSent", new { Gift = giftName, Npc = npc.displayName }));
             }
             if (DataLoader.ModConfig.EnableJealousyFromMailedGifts)
             {
