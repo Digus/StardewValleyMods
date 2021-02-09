@@ -1,7 +1,7 @@
 ﻿{
     "Name": "Mail Services Mod",
     "Author": "Digus",
-    "Version": "1.3.0",
+    "Version": "1.3.1",
     "Description": "Custom mail services.",
     "UniqueID": "Digus.MailServicesMod",
     "EntryDll": "MailServicesMod.dll",
