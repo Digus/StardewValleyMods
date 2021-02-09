@@ -15,6 +15,7 @@ namespace MailServicesMod
         public bool ShowDialogOnItemDelivery;
         public int GiftChoicePageSize = 5;
         public bool EnableJealousyFromMailedGifts;
+        public bool EnableGiftToMaxFriendshipNPC;
         public bool DisablePerPlayerConfig;
         public Dictionary<long, PlayerRecoveryConfig> PlayerRecoveryConfig = new Dictionary<long, PlayerRecoveryConfig>();
     }

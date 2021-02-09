@@ -24,7 +24,7 @@ namespace MailServicesMod
                     && Game1.player.friendshipData[npc.Name].GiftsToday < 1
                     && (Game1.player.friendshipData[npc.Name].GiftsThisWeek < 2 || npc.isBirthday(Game1.currentSeason, Game1.dayOfMonth))
                     && !Game1.player.friendshipData[npc.Name].IsDivorced()
-                    && Game1.player.friendshipData[npc.Name].Points < 2500
+                    && (Game1.player.friendshipData[npc.Name].Points < 2500 || DataLoader.ModConfig.EnableGiftToMaxFriendshipNPC)
                     && !(Game1.player.spouse != null && Game1.player.spouse.Equals(Game1.player.Name))
                     && !(npc is Child))
                 {
