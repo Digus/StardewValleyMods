@@ -41,7 +41,7 @@ namespace MailServicesMod
                 new Letter(
                     "MailServiceMod.ToolUpgradeInfo"
                     , I18N.Get("Shipment.Clint.UpgradeLetter")
-                    , (l) => !DataLoader.ModConfig.DisableToolService && !Game1.player.mailReceived.Contains(l.Id) && SDate.Now() >= new SDate(6, "spring", 1)
+                    , (l) => !DataLoader.ModConfig.DisableToolShipmentService && !Game1.player.mailReceived.Contains(l.Id) && SDate.Now() >= new SDate(6, "spring", 1)
                     , (l) => Game1.player.mailReceived.Add(l.Id)
                 )
                 {
@@ -99,7 +99,7 @@ namespace MailServicesMod
             Letter upgradeLetter = new Letter(
                 ToolUpgradeMailId
                 , I18N.Get("Delivery.Clint.UpgradeLetter")
-                , (l) => !DataLoader.ModConfig.DisableToolService && Game1.player.toolBeingUpgraded.Value != null && Game1.player.daysLeftForToolUpgrade.Value <= 0
+                , (l) => !DataLoader.ModConfig.DisableToolDeliveryService && Game1.player.toolBeingUpgraded.Value != null && Game1.player.daysLeftForToolUpgrade.Value <= 0
                 , (l) =>
                 {
                     if(!Game1.player.mailReceived.Contains(l.Id)) Game1.player.mailReceived.Add(l.Id);

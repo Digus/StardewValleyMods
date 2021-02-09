@@ -24,10 +24,11 @@ namespace MailServicesMod
                     && Game1.player.friendshipData[npc.Name].GiftsToday < 1
                     && (Game1.player.friendshipData[npc.Name].GiftsThisWeek < 2 || npc.isBirthday(Game1.currentSeason, Game1.dayOfMonth))
                     && !Game1.player.friendshipData[npc.Name].IsDivorced()
+                    && (Game1.player.friendshipData[npc.Name].Points < 2500 || DataLoader.ModConfig.EnableGiftToMaxFriendshipNPC)
                     && !(Game1.player.spouse != null && Game1.player.spouse.Equals(Game1.player.Name))
                     && !(npc is Child))
                 {
-                    options.Add(new Response(npc.Name, npc.displayName));
+                    options.Add(new Response(npc.Name, npc.displayName + (npc.isBirthday(Game1.currentSeason, Game1.dayOfMonth) ? " (" + Game1.content.LoadString("Strings\\UI:Profile_Birthday") +  ")" : "")));
                 }
             }
             if (options.Count > 0)
@@ -52,11 +53,12 @@ namespace MailServicesMod
         internal static void GiftToNpc(string npcName)
         {
             NPC npc = Game1.getCharacterFromName(npcName);
+            string giftName = Game1.player.ActiveObject.DisplayName;
             npc.receiveGift(Game1.player.ActiveObject, Game1.player, true, 1, DataLoader.ModConfig.ShowDialogOnItemDelivery);
             Game1.player.reduceActiveItemByOne();
             if (!DataLoader.ModConfig.ShowDialogOnItemDelivery)
             {
-                Game1.drawObjectDialogue(DataLoader.I18N.Get("Shipment.Gift.GiftSent", new { Gift = Game1.player.ActiveObject.DisplayName, Npc = npc.displayName }));
+                Game1.drawObjectDialogue(DataLoader.I18N.Get("Shipment.Gift.GiftSent", new { Gift = giftName, Npc = npc.displayName }));
             }
             if (DataLoader.ModConfig.EnableJealousyFromMailedGifts)
             {
