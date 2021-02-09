@@ -8,7 +8,8 @@ namespace MailServicesMod
 {
     public class ModConfig : RecoveryConfig
     {
-        public bool DisableToolService;
+        public bool DisableToolDeliveryService;
+        public bool DisableToolShipmentService;
         public bool DisableQuestService;
         public bool DisableGiftService;
         public bool ShowDialogOnItemDelivery;
