@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CustomCloner.cs" />
     <Compile Include="DataLoader.cs" />
     <Compile Include="ModConfig.cs" />
     <Compile Include="CustomCrystalariumModEntry.cs" />
@@ -47,6 +48,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="contentPackTemplate\ClonersData.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="contentPackTemplate\manifest.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="i18n\default.json" />
     <None Include="i18n\es.json" />
     <None Include="i18n\pt.json" />
@@ -62,5 +69,6 @@
   <ItemGroup>
     <PackageReference Include="Pathoschild.Stardew.ModBuildConfig" Version="3.2.2" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

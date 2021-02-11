@@ -21,6 +21,9 @@ namespace CustomCrystalariumMod
             ModMonitor = Monitor;
 
             helper.Events.GameLoop.GameLaunched += OnGameLaunched;
+            helper.Events.GameLoop.SaveLoaded += OnSaveLoaded;
+
+            Helper.ConsoleCommands.Add("config_reload_contentpacks_customcrystalariummod", "Reload all content packs for custom crystalarium mod.", DataLoader.LoadContentPacksCommand);
         }
 
 
@@ -45,14 +48,25 @@ namespace CustomCrystalariumMod
                 original: AccessTools.Method(typeof(SObject), nameof(SObject.performObjectDropInAction)),
                 prefix: new HarmonyMethod(typeof(ObjectOverrides), nameof(ObjectOverrides.PerformObjectDropInAction))
             );
+            
+            harmony.Patch(
+                original: AccessTools.Method(typeof(SObject), nameof(SObject.performRemoveAction)),
+                prefix: new HarmonyMethod(typeof(ObjectOverrides), nameof(ObjectOverrides.PerformRemoveAction))
+            );
 
-            if (DataLoader.ModConfig.GetObjectBackOnChange && !DataLoader.ModConfig.GetObjectBackImmediately)
-            {
-                harmony.Patch(
-                    original: AccessTools.Method(typeof(SObject), nameof(SObject.performRemoveAction)),
-                    prefix: new HarmonyMethod(typeof(ObjectOverrides), nameof(ObjectOverrides.PerformRemoveAction))
-                );
-            }
+            harmony.Patch(
+               original: AccessTools.Method(typeof(SObject), nameof(SObject.checkForAction)),
+               prefix: new HarmonyMethod(typeof(ObjectOverrides), nameof(ObjectOverrides.CheckForAction_prefix)),
+               postfix: new HarmonyMethod(typeof(ObjectOverrides), nameof(ObjectOverrides.CheckForAction_postfix))
+           );
+        }
+
+        /// <summary>Raised after the player loads a save slot and the world is initialized.</summary>
+        /// <param name="sender">The event sender.</param>
+        /// <param name="e">The event data.</param>
+        public static void OnSaveLoaded(object sender, SaveLoadedEventArgs e)
+        {
+            DataLoader.LoadContentPacksCommand();
         }
     }
 }
