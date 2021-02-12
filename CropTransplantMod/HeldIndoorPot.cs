@@ -37,7 +37,6 @@ namespace CropTransplantMod
                 Game1.showRedMessage(Game1.content.LoadString("Strings\\StringsFromCSFiles:HoeDirt.cs.13919"));
                 return false;
             }
-
             bool result = base.placementAction(location, x, y, who);
             Vector2 placedPotLocation = new Vector2((float)(x / 64), (float)(y / 64));
             if (location.objects[placedPotLocation] is IndoorPot pot)
@@ -51,11 +50,9 @@ namespace CropTransplantMod
                 else if (this.bush.Value != null)
                 {
                     pot.bush.Value = TransplantOverrides.PrepareBushForPlacement(this.bush.Value, placedPotLocation);
-
                 }
                 TransplantOverrides.CleanHeldIndoorPot();
             }
-
             return result;
         }
 
