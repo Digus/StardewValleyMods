@@ -5,5 +5,6 @@
         public bool DisableLetter;
         public bool GetObjectBackOnChange;
         public bool GetObjectBackImmediately;
+        public bool OverrideContentPackGetObjectProperties;
     }
 }

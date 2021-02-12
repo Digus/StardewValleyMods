@@ -10,7 +10,6 @@ namespace CustomCrystalariumMod
     {
         public static IMonitor ModMonitor;
 
-
         /*********
         ** Public methods
         *********/
@@ -26,7 +25,6 @@ namespace CustomCrystalariumMod
             Helper.ConsoleCommands.Add("config_reload_contentpacks_customcrystalariummod", "Reload all content packs for custom crystalarium mod.", DataLoader.LoadContentPacksCommand);
         }
 
-
         /*********
         ** Private methods
         *********/
@@ -35,7 +33,7 @@ namespace CustomCrystalariumMod
         /// <param name="e">The event data.</param>
         private void OnGameLaunched(object sender, GameLaunchedEventArgs e)
         {
-            new DataLoader(Helper);
+            new DataLoader(Helper, ModManifest);
 
             var harmony = HarmonyInstance.Create("Digus.CustomCrystalariumMod");
 
@@ -55,16 +53,16 @@ namespace CustomCrystalariumMod
             );
 
             harmony.Patch(
-               original: AccessTools.Method(typeof(SObject), nameof(SObject.checkForAction)),
-               prefix: new HarmonyMethod(typeof(ObjectOverrides), nameof(ObjectOverrides.CheckForAction_prefix)),
-               postfix: new HarmonyMethod(typeof(ObjectOverrides), nameof(ObjectOverrides.CheckForAction_postfix))
-           );
+                original: AccessTools.Method(typeof(SObject), nameof(SObject.checkForAction)),
+                prefix: new HarmonyMethod(typeof(ObjectOverrides), nameof(ObjectOverrides.CheckForAction_prefix)),
+                postfix: new HarmonyMethod(typeof(ObjectOverrides), nameof(ObjectOverrides.CheckForAction_postfix))
+            );
         }
 
         /// <summary>Raised after the player loads a save slot and the world is initialized.</summary>
         /// <param name="sender">The event sender.</param>
         /// <param name="e">The event data.</param>
-        public static void OnSaveLoaded(object sender, SaveLoadedEventArgs e)
+        private static void OnSaveLoaded(object sender, SaveLoadedEventArgs e)
         {
             DataLoader.LoadContentPacksCommand();
         }

@@ -94,12 +94,12 @@ namespace CustomCrystalariumMod
                             {
                                 who.currentLocation.playSound("select");
                                 __instance.MinutesUntilReady = minutesUntilReady;
-                                if (__instance.Name.Equals("Crystalarium") ? DataLoader.ModConfig.GetObjectBackImmediately : DataLoader.ClonerData[__instance.Name].GetObjectBackImmediately)
+                                if (__instance.Name.Equals("Crystalarium") || DataLoader.ModConfig.OverrideContentPackGetObjectProperties ? DataLoader.ModConfig.GetObjectBackImmediately : DataLoader.ClonerData[__instance.Name].GetObjectBackImmediately)
                                 {
                                     __instance.MinutesUntilReady = 0;
                                     __instance.minutesElapsed(0, who.currentLocation);
                                 }
-                                else if (currentObject != null && (__instance.Name.Equals("Crystalarium") ? DataLoader.ModConfig.GetObjectBackOnChange : DataLoader.ClonerData[__instance.Name].GetObjectBackOnChange))
+                                else if (currentObject != null && (__instance.Name.Equals("Crystalarium") || DataLoader.ModConfig.OverrideContentPackGetObjectProperties ? DataLoader.ModConfig.GetObjectBackOnChange : DataLoader.ClonerData[__instance.Name].GetObjectBackOnChange))
                                 {
                                     who.addItemByMenuIfNecessary(currentObject.getOne());
                                 }
@@ -110,7 +110,6 @@ namespace CustomCrystalariumMod
                     }
                 }
             }
-
             return true;
         }
 
@@ -130,7 +129,7 @@ namespace CustomCrystalariumMod
             else if (DataLoader.ClonerData.ContainsKey(__instance.Name))
             {
                 CustomCloner cloner = DataLoader.ClonerData[__instance.Name];
-                if (cloner.GetObjectBackOnChange && !cloner.GetObjectBackImmediately)
+                if (DataLoader.ModConfig.OverrideContentPackGetObjectProperties ? DataLoader.ModConfig.GetObjectBackOnChange && !DataLoader.ModConfig.GetObjectBackImmediately : cloner.GetObjectBackOnChange && !cloner.GetObjectBackImmediately)
                 {
                     if (__instance.heldObject.Value != null)
                     {
