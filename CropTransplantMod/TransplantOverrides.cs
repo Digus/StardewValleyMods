@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Harmony;
 using Microsoft.Xna.Framework;
@@ -20,6 +21,8 @@ namespace CropTransplantMod
         internal static Object RegularPotObject = new Object(Vector2.Zero, 62);
         internal static HeldIndoorPot CurrentHeldIndoorPot = null;
         internal static bool ShakeFlag = false;
+
+        internal static List<int> MissingGrassTilesIndexes = new List<int>{152,420,421,422,423};
 
         /// <summary>
         /// Override to lift the pot back when an empty spot on the tool bar is selected.
@@ -257,7 +260,11 @@ namespace CropTransplantMod
         {
             GameLocation location = Game1.player.currentLocation;
             
-            if (location.doesTileHaveProperty((int)tileLocation.X, (int)tileLocation.Y, "Diggable", "Back") == null && !location.doesTileHavePropertyNoNull((int)tileLocation.X, (int)tileLocation.Y, "Type", "Back").Equals("Grass") && !(location is Farm))
+            if (location.doesTileHaveProperty((int)tileLocation.X, (int)tileLocation.Y, "Diggable", "Back") == null 
+                && !location.doesTileHavePropertyNoNull((int)tileLocation.X, (int)tileLocation.Y, "Type", "Back").Equals("Grass") 
+                && (!MissingGrassTilesIndexes.Contains(location.getTileIndexAt((int)tileLocation.X, (int)tileLocation.Y,"Back"))
+                    || !location.map.GetLayer("Back").Tiles[(int)tileLocation.X, (int)tileLocation.Y].TileSheet.ImageSource.EndsWith("outdoorsTileSheet"))
+                && !(location is Farm))
             {
                 spriteBatch.Draw(Game1.mouseCursors, Game1.GlobalToLocal(Game1.viewport, new Vector2(tileLocation.X * 64f, tileLocation.Y * 64f)), new Rectangle?(new Rectangle(669, 1957, 16, 16)), Color.White, 0.0f, Vector2.Zero, 4f, SpriteEffects.None, 1E-08f);
             }
@@ -496,6 +503,7 @@ namespace CropTransplantMod
             {
                 bush.greenhouseBush.Value = false;
             }
+            bush.tilePosition.Value = tileLocation;
             ShakeBush(bush, tileLocation);
             return bush;
         }
