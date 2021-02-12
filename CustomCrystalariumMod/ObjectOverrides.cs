@@ -14,17 +14,17 @@ namespace CustomCrystalariumMod
     {
         public static bool GetMinutesForCrystalarium(ref int whichGem, ref int __result)
         {
-            if (DataLoader.CrystalariumData.ContainsKey(whichGem))
+            if (DataLoader.CrystalariumDataId.ContainsKey(whichGem))
             {
-                __result = DataLoader.CrystalariumData[whichGem];
+                __result = DataLoader.CrystalariumDataId[whichGem];
                 return false;
             }
             else
             {
                 var itemCategory = new Object(whichGem, 1, false).Category;
-                if (DataLoader.CrystalariumData.ContainsKey(itemCategory))
+                if (DataLoader.CrystalariumDataId.ContainsKey(itemCategory))
                 {
-                    __result = DataLoader.CrystalariumData[itemCategory];
+                    __result = DataLoader.CrystalariumDataId[itemCategory];
                     return false;
                 }
             }
@@ -37,34 +37,53 @@ namespace CustomCrystalariumMod
             if (dropInItem is Object object1)
             {
                 if (!(__instance.heldObject.Value != null && !__instance.Name.Equals("Recycling Machine") &&
-                      !__instance.Name.Equals("Crystalarium") ||object1 != null && (bool) (object1.bigCraftable.Value)))
+                      !__instance.Name.Equals("Crystalarium") && !DataLoader.ClonerData.ContainsKey(__instance.Name) || object1 != null && (bool)(object1.bigCraftable.Value)))
                 {
-                    if (__instance.Name.Equals("Crystalarium"))
+                    if (__instance.Name.Equals("Crystalarium") || DataLoader.ClonerData.ContainsKey(__instance.Name))
                     {
-                        if ((__instance.heldObject.Value == null || __instance.heldObject.Value.ParentSheetIndex != object1.ParentSheetIndex) 
+                        if ((__instance.heldObject.Value == null || __instance.heldObject.Value.ParentSheetIndex != object1.ParentSheetIndex)
                              && (__instance.heldObject.Value == null || __instance.MinutesUntilReady > 0))
-                        { 
+                        {
                             int minutesUntilReady = 0;
 
                             Item currentObject = __instance.heldObject.Value;
 
-                            if (DataLoader.CrystalariumData.ContainsKey(object1.ParentSheetIndex))
+                            if (__instance.Name.Equals("Crystalarium"))
                             {
-                                minutesUntilReady = DataLoader.CrystalariumData[object1.ParentSheetIndex];
-                            }
-                            else if (DataLoader.CrystalariumData.ContainsKey(object1.Category))
-                            {
-                                minutesUntilReady = DataLoader.CrystalariumData[object1.Category];
-                            }
-                            else if ((object1.Category == -2 || object1.Category == -12) && object1.ParentSheetIndex != 74)
-                            {
-                                minutesUntilReady = DataLoader.Helper.Reflection.GetMethod(__instance, "getMinutesForCrystalarium").Invoke<int>(object1.ParentSheetIndex);
+                                if (DataLoader.CrystalariumDataId.ContainsKey(object1.ParentSheetIndex))
+                                {
+                                    minutesUntilReady = DataLoader.CrystalariumDataId[object1.ParentSheetIndex];
+                                }
+                                else if (DataLoader.CrystalariumDataId.ContainsKey(object1.Category))
+                                {
+                                    minutesUntilReady = DataLoader.CrystalariumDataId[object1.Category];
+                                }
+                                else if ((object1.Category == -2 || object1.Category == -12) && object1.ParentSheetIndex != 74)
+                                {
+                                    minutesUntilReady = DataLoader.Helper.Reflection.GetMethod(__instance, "getMinutesForCrystalarium").Invoke<int>(object1.ParentSheetIndex);
+                                }
+                                else
+                                {
+                                    return true;
+                                }
                             }
                             else
                             {
-                                return true;
+                                CustomCloner cloner = DataLoader.ClonerData[__instance.Name];
+                                if (cloner.UsePfmForInput) return true;
+                                if (cloner.CloningDataId.ContainsKey(object1.ParentSheetIndex))
+                                {
+                                    minutesUntilReady = cloner.CloningDataId[object1.ParentSheetIndex];
+                                }
+                                else if (cloner.CloningDataId.ContainsKey(object1.Category))
+                                {
+                                    minutesUntilReady = cloner.CloningDataId[object1.Category];
+                                }
+                                else
+                                {
+                                    return true;
+                                }
                             }
-
                             if (__instance.bigCraftable.Value && !probe &&
                                 (object1 != null && __instance.heldObject.Value == null))
                             {
@@ -75,25 +94,22 @@ namespace CustomCrystalariumMod
                             {
                                 who.currentLocation.playSound("select");
                                 __instance.MinutesUntilReady = minutesUntilReady;
-                                if (DataLoader.ModConfig.GetObjectBackImmediately)
+                                if (__instance.Name.Equals("Crystalarium") || DataLoader.ModConfig.OverrideContentPackGetObjectProperties ? DataLoader.ModConfig.GetObjectBackImmediately : DataLoader.ClonerData[__instance.Name].GetObjectBackImmediately)
                                 {
                                     __instance.MinutesUntilReady = 0;
                                     __instance.minutesElapsed(0, who.currentLocation);
                                 }
-                                else if (currentObject != null && DataLoader.ModConfig.GetObjectBackOnChange)
+                                else if (currentObject != null && (__instance.Name.Equals("Crystalarium") || DataLoader.ModConfig.OverrideContentPackGetObjectProperties ? DataLoader.ModConfig.GetObjectBackOnChange : DataLoader.ClonerData[__instance.Name].GetObjectBackOnChange))
                                 {
                                     who.addItemByMenuIfNecessary(currentObject.getOne());
                                 }
                             }
-                            
                             __result = true;
                             return false;
                         }
                     }
-
                 }
             }
-
             return true;
         }
 
@@ -102,14 +118,44 @@ namespace CustomCrystalariumMod
         {
             if (__instance.Name == "Crystalarium")
             {
-                if (__instance.heldObject.Value != null)
+                if (DataLoader.ModConfig.GetObjectBackOnChange && !DataLoader.ModConfig.GetObjectBackImmediately)
                 {
-                    Game1.createItemDebris(__instance.heldObject.Value.getOne(), tileLocation * 64f, (Game1.player.FacingDirection + 2) % 4, (GameLocation) null, -1);
+                    if (__instance.heldObject.Value != null)
+                    {
+                        Game1.createItemDebris(__instance.heldObject.Value.getOne(), tileLocation * 64f, (Game1.player.FacingDirection + 2) % 4, (GameLocation)null, -1);
+                    }
                 }
-                
             }
-
+            else if (DataLoader.ClonerData.ContainsKey(__instance.Name))
+            {
+                CustomCloner cloner = DataLoader.ClonerData[__instance.Name];
+                if (DataLoader.ModConfig.OverrideContentPackGetObjectProperties ? DataLoader.ModConfig.GetObjectBackOnChange && !DataLoader.ModConfig.GetObjectBackImmediately : cloner.GetObjectBackOnChange && !cloner.GetObjectBackImmediately)
+                {
+                    if (__instance.heldObject.Value != null)
+                    {
+                        Game1.createItemDebris(__instance.heldObject.Value.getOne(), tileLocation * 64f, (Game1.player.FacingDirection + 2) % 4, (GameLocation)null, -1);
+                    }
+                }
+            }
             return true;
+        }
+
+        [HarmonyPriority(500)]
+        public static bool CheckForAction_prefix(ref Object __instance, out Object __state)
+        {
+            __state = __instance.heldObject.Value;
+            return true;
+        }
+
+        [HarmonyPriority(500)]
+        public static void CheckForAction_postfix(ref Object __instance, Object __state)
+        {
+            if (DataLoader.ClonerData.ContainsKey(__instance.Name) && __instance.Name != "Crystalarium" && __state != null)
+            {
+                if (DataLoader.ClonerData[__instance.Name].CloningDataId.ContainsKey(__state.ParentSheetIndex))
+                __instance.MinutesUntilReady = DataLoader.ClonerData[__instance.Name].CloningDataId[__state.ParentSheetIndex];
+                __instance.heldObject.Value = (Object)__state.getOne();
+            }
         }
     }
 }
