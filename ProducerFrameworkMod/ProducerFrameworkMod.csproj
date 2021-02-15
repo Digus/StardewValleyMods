@@ -108,6 +108,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="i18n\ja.json" />
+    <None Include="i18n\ko.json" />
     <None Include="i18n\pt.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
