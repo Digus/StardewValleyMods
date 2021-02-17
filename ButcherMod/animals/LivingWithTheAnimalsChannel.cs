@@ -89,7 +89,7 @@ namespace AnimalHusbandryMod.animals
             /*06*/
             /*09*/_episodes.Add(43, new Episode("TV.LivingWithTheAnimals.Episode.RedCabbage", false, false, true));
             /*13*/
-            /*16*/
+            /*16*/_episodes.Add(45, new Episode("TV.LivingWithTheAnimals.Episode.TreatsOstrich", false, false, true));
             /*20*/
             /*23*/
             /*27*/_episodes.Add(48, new Episode("TV.LivingWithTheAnimals.Episode.Amaranth", false, false, true));

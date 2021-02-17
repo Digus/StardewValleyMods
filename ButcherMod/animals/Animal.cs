@@ -23,6 +23,8 @@ namespace AnimalHusbandryMod.animals
         Sheep,
         [Meat(Meat.Mutton)]
         Goat,
+        [Meat(Meat.Ostrich)]
+        Ostrich,
         Dinosaur,
         CustomAnimal
 

@@ -126,6 +126,7 @@ namespace AnimalHusbandryMod.common
                 data[(int)Meat.Duck] = Meat.Duck.GetObjectString();
                 data[(int)Meat.Rabbit] = Meat.Rabbit.GetObjectString();
                 data[(int)Meat.Mutton] = Meat.Mutton.GetObjectString();
+                data[(int)Meat.Ostrich] = Meat.Ostrich.GetObjectString();
 
                 //COOKING
 

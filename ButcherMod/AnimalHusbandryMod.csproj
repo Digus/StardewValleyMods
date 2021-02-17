@@ -65,6 +65,7 @@
   <ItemGroup>
     <Compile Include="animals\Animal.cs" />
     <Compile Include="animals\AnimalContestController.cs" />
+    <Compile Include="animals\data\OstrichItem.cs" />
     <Compile Include="common\AnimalUtility.cs" />
     <Compile Include="animals\data\AnimalContestData.cs" />
     <Compile Include="animals\data\CustomAnimalItem.cs" />
