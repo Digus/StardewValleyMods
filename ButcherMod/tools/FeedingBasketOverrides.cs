@@ -506,12 +506,12 @@ namespace AnimalHusbandryMod.tools
 
             if (__instance.attachments[0] != null)
             {
-                b.Draw(Game1.menuTexture, new Vector2((float)x, (float)y), new Rectangle?(Game1.getSourceRectForStandardTileSheet(Game1.menuTexture, 10, -1, -1)), Color.White, 0.0f, Vector2.Zero, 1f, SpriteEffects.None, 0.86f);
-                __instance.attachments[0].drawInMenu(b, new Vector2((float)x, (float)y), 1f);
+                b.Draw(Game1.menuTexture, new Vector2(x, y), Game1.getSourceRectForStandardTileSheet(Game1.menuTexture, 10), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.86f);
+                __instance.attachments[0].drawInMenu(b, new Vector2(x, y), 1f);
             }
             else
             {
-                b.Draw(Game1.menuTexture, new Vector2((float)x, (float)y), new Rectangle?(Game1.getSourceRectForStandardTileSheet(Game1.menuTexture, AttachmentMenuTile, -1, -1)), Microsoft.Xna.Framework.Color.White, 0.0f, Vector2.Zero, 1f, SpriteEffects.None, 0.86f);
+                b.Draw(Game1.menuTexture, new Vector2(x, y), Game1.getSourceRectForStandardTileSheet(Game1.menuTexture, AttachmentMenuTile, -1, -1), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.86f);
             }
             return false;
         }

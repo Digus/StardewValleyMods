@@ -21,6 +21,7 @@ namespace AnimalHusbandryMod.animals.data
         public GoatItem Goat;
         public PetItem Pet;
         public DinosaurItem Dinosaur;
+        public OstrichItem Ostrich;
         public List<CustomAnimalItem> CustomAnimals;
         [JsonIgnore]
         public ISet<int> SyringeItemsIds;
@@ -36,6 +37,7 @@ namespace AnimalHusbandryMod.animals.data
             Goat = new GoatItem();
             Pet = new PetItem();
             Dinosaur = new DinosaurItem();
+            Ostrich = new OstrichItem();
             CustomAnimals = new List<CustomAnimalItem>();
             SyringeItemsIds = new HashSet<int>();
         }
@@ -64,6 +66,8 @@ namespace AnimalHusbandryMod.animals.data
                     return Sheep;
                 case Animal.Goat:
                     return Goat;
+                case Animal.Ostrich:
+                    return Ostrich;
                 case Animal.Dinosaur:
                     return Dinosaur;
                 case Animal.CustomAnimal:
@@ -83,6 +87,7 @@ namespace AnimalHusbandryMod.animals.data
             AddTreatIdsFromTreatItems(objects, Rabbit);
             AddTreatIdsFromTreatItems(objects, Sheep);
             AddTreatIdsFromTreatItems(objects, Goat);
+            AddTreatIdsFromTreatItems(objects, Ostrich);
             AddTreatIdsFromTreatItems(objects, Dinosaur);
             AddTreatIdsFromTreatItems(objects, Pet);
             CustomAnimals.ForEach(customAnimal => AddTreatIdsFromTreatItems(objects, customAnimal));
