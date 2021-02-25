@@ -32,7 +32,7 @@ namespace CropTransplantMod
 
         public override bool placementAction(GameLocation location, int x, int y, Farmer who = null)
         {
-            if ((this.hoeDirt.Value.crop != null && !DataLoader.ModConfig.EnablePlacementOfCropsOutsideOutOfTheFarm && !location.IsFarm && location.IsOutdoors))
+            if ((this.hoeDirt.Value.crop != null && !DataLoader.ModConfig.EnablePlacementOfCropsOutsideOutOfTheFarm && !location.IsFarm && !Game1.player.currentLocation.CanPlantSeedsHere(this.hoeDirt.Value.crop.netSeedIndex.Value, x / 64, y / 64) && location.IsOutdoors))
             {
                 Game1.showRedMessage(Game1.content.LoadString("Strings\\StringsFromCSFiles:HoeDirt.cs.13919"));
                 return false;
@@ -45,11 +45,12 @@ namespace CropTransplantMod
                 {
                     pot.hoeDirt.Value.crop = this.hoeDirt.Value.crop;
                     pot.hoeDirt.Value.fertilizer.Value = this.hoeDirt.Value.fertilizer.Value;
-                    TransplantOverrides.ShakeCrop(pot.hoeDirt.Value, placedPotLocation);
+                    TransplantController.ShakeCrop(pot.hoeDirt.Value, placedPotLocation);
                 }
                 else if (this.bush.Value != null)
                 {
-                    pot.bush.Value = TransplantOverrides.PrepareBushForPlacement(this.bush.Value, placedPotLocation);
+                    DataLoader.Helper.Reflection.GetField<NetBool>(pot, "bushLoadDirty").GetValue().Value = false;
+                    pot.bush.Value = TransplantController.PrepareBushForPlacement(this.bush.Value, placedPotLocation);
                 }
                 TransplantOverrides.CleanHeldIndoorPot();
             }

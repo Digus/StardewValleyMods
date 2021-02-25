@@ -43,11 +43,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="HeldIndoorPot.cs" />
+    <Compile Include="integrations\GenericModConfigMenuApi.cs" />
     <Compile Include="ModConfig.cs" />
     <Compile Include="CropTransplantModEntry.cs" />
     <Compile Include="DataLoader.cs" />
+    <Compile Include="TransplantController.cs" />
     <Compile Include="TransplantOverrides.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TreeExtension.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="i18n\default.json">
