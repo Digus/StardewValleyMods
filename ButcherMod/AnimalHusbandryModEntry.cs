@@ -327,12 +327,8 @@ namespace AnimalHusbandryMod
                     prefix: new HarmonyMethod(typeof(TvOverrides), nameof(TvOverrides.createQuestionDialogue))
                 );
                 harmony.Patch(
-                    original: AccessTools.Method(typeof(TV), nameof(TV.selectChannel)),
-                    postfix: new HarmonyMethod(typeof(TvOverrides), nameof(TvOverrides.selectChannel))
-                );
-                harmony.Patch(
                     original: AccessTools.Method(typeof(TV), nameof(TV.checkForAction)),
-                    prefix: new HarmonyMethod(typeof(TvOverrides), nameof(TvOverrides.checkForAction))
+                    postfix: new HarmonyMethod(typeof(TvOverrides), nameof(TvOverrides.checkForAction_postfix))
                 );
             }
         }
