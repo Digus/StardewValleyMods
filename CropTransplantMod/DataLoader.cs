@@ -85,15 +85,19 @@ namespace CropTransplantMod
 
                 api.RegisterSimpleOption(manifest, "Place On Any Tile", "You'll be able to place trees on any unoccupied tile type.", () => DataLoader.ModConfig.EnablePlacementOfTreesOnAnyTileType, (bool val) => DataLoader.ModConfig.EnablePlacementOfTreesOnAnyTileType = val);
 
-                api.RegisterSimpleOption(manifest, "Stage 1 Energy Cost", "The cost of energy for lifting a tree stage 1(seed) from the ground. Check the wiki for the stage images.", () => DataLoader.ModConfig.TreeTransplantEnergyCostPerStage[0], (float val) => DataLoader.ModConfig.TreeTransplantEnergyCostPerStage[0] = val);
+                string energyCostDescription = "The cost of energy for lifting a {0} stage {1}({2}) from the ground. Check the wiki for the stage images. The energy cost decreases as you level up the {3} skill. Level 10 will cost 50% less energy than the base cost.";
 
-                api.RegisterSimpleOption(manifest, "Stage 2 Energy Cost", "The cost of energy for lifting a tree stage 2(sprout) from the ground. Check the wiki for the stage images.", () => DataLoader.ModConfig.TreeTransplantEnergyCostPerStage[1], (float val) => DataLoader.ModConfig.TreeTransplantEnergyCostPerStage[1] = val);
+                string treeName = "tree";
+                string treeSkill = "foraging";
+                api.RegisterSimpleOption(manifest, "Stage 1 Energy Cost", string.Format(energyCostDescription, treeName,"1","seed", treeSkill), () => DataLoader.ModConfig.TreeTransplantEnergyCostPerStage[0], (float val) => DataLoader.ModConfig.TreeTransplantEnergyCostPerStage[0] = val);
 
-                api.RegisterSimpleOption(manifest, "Stage 3 Energy Cost", "The cost of energy for lifting a tree stage 3(sapling) from the ground. Check the wiki for the stage images.", () => DataLoader.ModConfig.TreeTransplantEnergyCostPerStage[2], (float val) => DataLoader.ModConfig.TreeTransplantEnergyCostPerStage[2] = val);
+                api.RegisterSimpleOption(manifest, "Stage 2 Energy Cost", string.Format(energyCostDescription, treeName, "2", "sprout", treeSkill), () => DataLoader.ModConfig.TreeTransplantEnergyCostPerStage[1], (float val) => DataLoader.ModConfig.TreeTransplantEnergyCostPerStage[1] = val);
 
-                api.RegisterSimpleOption(manifest, "Stage 4 Energy Cost", "The cost of energy for lifting a tree stage 4(bush) from the ground. Check the wiki for the stage images.", () => DataLoader.ModConfig.TreeTransplantEnergyCostPerStage[3], (float val) => DataLoader.ModConfig.TreeTransplantEnergyCostPerStage[3] = val);
+                api.RegisterSimpleOption(manifest, "Stage 3 Energy Cost", string.Format(energyCostDescription, treeName, "3", "sapling", treeSkill), () => DataLoader.ModConfig.TreeTransplantEnergyCostPerStage[2], (float val) => DataLoader.ModConfig.TreeTransplantEnergyCostPerStage[2] = val);
 
-                api.RegisterSimpleOption(manifest, "Stage 5 Energy Cost", "The cost of energy for lifting a tree stage 5(tree) from the ground. Check the wiki for the stage images.", () => DataLoader.ModConfig.TreeTransplantEnergyCostPerStage[4], (float val) => DataLoader.ModConfig.TreeTransplantEnergyCostPerStage[4] = val);
+                api.RegisterSimpleOption(manifest, "Stage 4 Energy Cost", string.Format(energyCostDescription, treeName, "4", "bush", treeSkill), () => DataLoader.ModConfig.TreeTransplantEnergyCostPerStage[3], (float val) => DataLoader.ModConfig.TreeTransplantEnergyCostPerStage[3] = val);
+
+                api.RegisterSimpleOption(manifest, "Stage 5 Energy Cost", string.Format(energyCostDescription, treeName, "5", "tree", treeSkill), () => DataLoader.ModConfig.TreeTransplantEnergyCostPerStage[4], (float val) => DataLoader.ModConfig.TreeTransplantEnergyCostPerStage[4] = val);
 
                 api.RegisterLabel(manifest, "Fruit Tree Properties:", "Properties for fruit tree transplant.");
 
@@ -107,15 +111,18 @@ namespace CropTransplantMod
 
                 api.RegisterSimpleOption(manifest, "Place Blocked Growth", "You'll be able to place immature fruit trees where they will not mature.", () => DataLoader.ModConfig.EnablePlacementOfFruitTreesBlockedGrowth, (bool val) => DataLoader.ModConfig.EnablePlacementOfFruitTreesBlockedGrowth = val);
 
-                api.RegisterSimpleOption(manifest, "Stage 1 Energy Cost", "The cost of energy for lifting a fruit tree stage 1(sapling) from the ground. Check the wiki for the stage images.", () => DataLoader.ModConfig.FruitTreeTransplantEnergyCostPerStage[0], (float val) => DataLoader.ModConfig.FruitTreeTransplantEnergyCostPerStage[0] = val);
+                string fruitTreeName = "fruit tree";
+                string fruitTreeSkill = "foraging";
 
-                api.RegisterSimpleOption(manifest, "Stage 2 Energy Cost", "The cost of energy for lifting a fruit tree stage 2(small bush) from the ground. Check the wiki for the stage images.", () => DataLoader.ModConfig.FruitTreeTransplantEnergyCostPerStage[1], (float val) => DataLoader.ModConfig.FruitTreeTransplantEnergyCostPerStage[1] = val);
+                api.RegisterSimpleOption(manifest, "Stage 1 Energy Cost", string.Format(energyCostDescription, fruitTreeName, "1", "sapling", fruitTreeSkill), () => DataLoader.ModConfig.FruitTreeTransplantEnergyCostPerStage[0], (float val) => DataLoader.ModConfig.FruitTreeTransplantEnergyCostPerStage[0] = val);
 
-                api.RegisterSimpleOption(manifest, "Stage 3 Energy Cost", "The cost of energy for lifting a fruit tree stage 3(large bush) from the ground. Check the wiki for the stage images.", () => DataLoader.ModConfig.FruitTreeTransplantEnergyCostPerStage[2], (float val) => DataLoader.ModConfig.FruitTreeTransplantEnergyCostPerStage[2] = val);
+                api.RegisterSimpleOption(manifest, "Stage 2 Energy Cost", string.Format(energyCostDescription, fruitTreeName, "2", "small bush", fruitTreeSkill), () => DataLoader.ModConfig.FruitTreeTransplantEnergyCostPerStage[1], (float val) => DataLoader.ModConfig.FruitTreeTransplantEnergyCostPerStage[1] = val);
 
-                api.RegisterSimpleOption(manifest, "Stage 4 Energy Cost", "The cost of energy for lifting a fruit tree stage 4(small tree) from the ground. Check the wiki for the stage images.", () => DataLoader.ModConfig.FruitTreeTransplantEnergyCostPerStage[3], (float val) => DataLoader.ModConfig.FruitTreeTransplantEnergyCostPerStage[3] = val);
+                api.RegisterSimpleOption(manifest, "Stage 3 Energy Cost", string.Format(energyCostDescription, fruitTreeName, "3", "large bush", fruitTreeSkill), () => DataLoader.ModConfig.FruitTreeTransplantEnergyCostPerStage[2], (float val) => DataLoader.ModConfig.FruitTreeTransplantEnergyCostPerStage[2] = val);
 
-                api.RegisterSimpleOption(manifest, "Stage 5 Energy Cost", "The cost of energy for lifting a fruit tree stage 5(tree) from the ground. Check the wiki for the stage images.", () => DataLoader.ModConfig.FruitTreeTransplantEnergyCostPerStage[4], (float val) => DataLoader.ModConfig.FruitTreeTransplantEnergyCostPerStage[4] = val);
+                api.RegisterSimpleOption(manifest, "Stage 4 Energy Cost", string.Format(energyCostDescription, fruitTreeName, "4", "small tree", fruitTreeSkill), () => DataLoader.ModConfig.FruitTreeTransplantEnergyCostPerStage[3], (float val) => DataLoader.ModConfig.FruitTreeTransplantEnergyCostPerStage[3] = val);
+
+                api.RegisterSimpleOption(manifest, "Stage 5 Energy Cost", string.Format(energyCostDescription, fruitTreeName, "5", "tree", fruitTreeSkill), () => DataLoader.ModConfig.FruitTreeTransplantEnergyCostPerStage[4], (float val) => DataLoader.ModConfig.FruitTreeTransplantEnergyCostPerStage[4] = val);
 
                 api.RegisterLabel(manifest, "Tea Bush Properties:", "Properties for tea bush transplant.");
 
