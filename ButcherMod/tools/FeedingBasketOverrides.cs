@@ -11,6 +11,7 @@ using StardewValley;
 using StardewValley.Characters;
 using StardewValley.Locations;
 using StardewValley.Tools;
+using SObject = StardewValley.Object;
 
 namespace AnimalHusbandryMod.tools
 {
@@ -47,7 +48,7 @@ namespace AnimalHusbandryMod.tools
             __result = DataLoader.i18n.Get("Tool.FeedingBasket.Description");
         }
 
-        public static void canBeTrashed(MilkPail __instance, ref bool __result)
+        public static void canBeTrashed(Tool __instance, ref bool __result)
         {
             if (!IsFeedingBasket(__instance)) return;
 
@@ -134,7 +135,7 @@ namespace AnimalHusbandryMod.tools
                 {
                     dialogue = DataLoader.i18n.Get("Tool.FeedingBasket.NotLikeTreat", new { itemName = __instance.attachments[0].DisplayName });
                 }
-                else if (__instance.attachments[0].Category == StardewValley.Object.MilkCategory && !animal.isBaby())
+                else if (__instance.attachments[0].Category == SObject.MilkCategory && !animal.isBaby())
                 {
                     dialogue = DataLoader.i18n.Get("Tool.FeedingBasket.OnlyBabiesCanEatMilk");
                 }
@@ -402,7 +403,7 @@ namespace AnimalHusbandryMod.tools
 
                 TreatsController.FeedAnimalTreat(animal, __instance.attachments[0]);
 
-                if (__instance.attachments[0].Category == StardewValley.Object.MilkCategory)
+                if (__instance.attachments[0].Category == SObject.MilkCategory)
                 {
                     animal.age.Value = Math.Min(animal.ageWhenMature.Value - 1, animal.age.Value + 1);
                 }
@@ -411,7 +412,7 @@ namespace AnimalHusbandryMod.tools
                 if (__instance.attachments[0].Stack <= 0)
                 {
                     Game1.showGlobalMessage(DataLoader.i18n.Get("Tool.FeedingBasket.ItemConsumed", new { itemName = __instance.attachments[0].DisplayName }));
-                    __instance.attachments[0] = (StardewValley.Object)null;
+                    __instance.attachments[0] = null;
                 }
             }
             if (Pets.TryGetValue(feedingBasketId, out Pet pet) && pet != null)
@@ -426,7 +427,7 @@ namespace AnimalHusbandryMod.tools
                 if (__instance.attachments[0].Stack <= 0)
                 {
                     Game1.showGlobalMessage(DataLoader.i18n.Get("Tool.FeedingBasket.ItemConsumed", new { itemName = __instance.attachments[0].DisplayName }));
-                    __instance.attachments[0] = (StardewValley.Object)null;
+                    __instance.attachments[0] = null;
                 }
             }
             Animals[feedingBasketId] = (FarmAnimal)null;
@@ -449,13 +450,13 @@ namespace AnimalHusbandryMod.tools
             return false;
         }
 
-        public static bool canThisBeAttached(MilkPail __instance, StardewValley.Object o, ref bool __result)
+        public static bool canThisBeAttached(MilkPail __instance, SObject o, ref bool __result)
         {
             if (!IsFeedingBasket(__instance)) return true;
 
             if (o == null
-                || o.Category == StardewValley.Object.VegetableCategory
-                || o.Category == StardewValley.Object.FruitsCategory
+                || o.Category == SObject.VegetableCategory
+                || o.Category == SObject.FruitsCategory
                 || TreatsController.IsLikedTreat(o.ParentSheetIndex)
                 || TreatsController.IsLikedTreat(o.Category)
             )
@@ -467,36 +468,38 @@ namespace AnimalHusbandryMod.tools
             return false;
         }
 
-        public static bool attach(MilkPail __instance, StardewValley.Object o, ref StardewValley.Object __result)
+        public static bool attach(MilkPail __instance, SObject o, ref SObject __result)
         {
             if (!IsFeedingBasket(__instance)) return true;
 
             if (o != null)
             {
-                StardewValley.Object @object = __instance.attachments[0];
-                if (@object != null && @object.canStackWith((Item)o))
+                var tmp = __instance.attachments[0];
+                if (tmp != null && tmp.canStackWith(o))
                 {
-                    @object.Stack = o.addToStack(@object);
-                    if (@object.Stack <= 0)
-                        @object = (StardewValley.Object)null;
+                    tmp.Stack = o.addToStack(tmp);
+                    if (tmp.Stack <= 0)
+                    {
+                        tmp = null;
+                    }
                 }
                 __instance.attachments[0] = o;
                 Game1.playSound("button1");
-                __result = @object;
+                __result = tmp;
                 return false;
             }
             else
             {
                 if (__instance.attachments[0] != null)
                 {
-                    StardewValley.Object attachment = __instance.attachments[0];
-                    __instance.attachments[0] = (StardewValley.Object)null;
+                    var attachment = __instance.attachments[0];
+                    __instance.attachments[0] = null;
                     Game1.playSound("dwop");
                     __result = attachment;
                     return false;
                 }
             }
-            __result = (StardewValley.Object)null;
+            __result = null;
             return false;
         }
 
@@ -516,7 +519,7 @@ namespace AnimalHusbandryMod.tools
             return false;
         }
 
-        private static bool IsFeedingBasket(MilkPail tool)
+        private static bool IsFeedingBasket(Tool tool)
         {
             return tool.modData.ContainsKey(FeedingBasketKey);
         }
