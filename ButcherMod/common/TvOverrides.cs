@@ -1,4 +1,5 @@
-﻿using Harmony;
+﻿using System;
+using Harmony;
 using Microsoft.Xna.Framework;
 using StardewValley;
 using StardewValley.Objects;
@@ -23,7 +24,10 @@ namespace AnimalHusbandryMod.common
             return true;
         }
 
-        public static void selectChannel(TV __instance, Farmer who, string answer)
+        /// <summary>
+        /// Changed from a patch to a private method to avoid conflict with PyTK
+        /// </summary>
+        private static void selectChannel(TV __instance, Farmer who, string answer)
         {
             Channel channel = TvController.GetChannel(answer);
             if (channel != null)
@@ -37,11 +41,9 @@ namespace AnimalHusbandryMod.common
             }
         }
 
-        /// <summary>Patch needed for compatibility with PyTK</summary>
-        /// <returns>always true</returns>
-        public static bool checkForAction()
+        public static void checkForAction_postfix(TV __instance)
         {
-            return true;
+            Game1.currentLocation.afterQuestion = (GameLocation.afterQuestionBehavior) Delegate.Combine(Game1.currentLocation.afterQuestion, new GameLocation.afterQuestionBehavior( (Farmer who, string which) => selectChannel(__instance, who,which)));
         }
     }
 }
