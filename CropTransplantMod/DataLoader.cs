@@ -71,7 +71,7 @@ namespace CropTransplantMod
                 
                 api.RegisterSimpleOption(manifest, "Soil Under Trees", "A soil tile will be shown under trees when planted on stone floor, wood and other 'not plantable' soil. Some tiles aren't correct labeled by the game, so the soil tile may appears on places you would think it's not needed.", () => DataLoader.ModConfig.EnableSoilTileUnderTrees, (bool val) => DataLoader.ModConfig.EnableSoilTileUnderTrees = val);
 
-                api.RegisterSimpleOption(manifest, "Unlimited Range", "Let you grab a plant into the held garden pot and place it again on the floor from/to any suitable tile.", () => DataLoader.ModConfig.EnableUnlimitedRangeToTransplant, (bool val) => DataLoader.ModConfig.EnableUnlimitedRangeToTransplant = val);
+                api.RegisterSimpleOption(manifest, "Unlimited Range", "Let you grab a plant into the held garden pot and place it again on the floor from/to any suitable tile on the screen. No need to get near it.", () => DataLoader.ModConfig.EnableUnlimitedRangeToTransplant, (bool val) => DataLoader.ModConfig.EnableUnlimitedRangeToTransplant = val);
 
                 api.RegisterLabel(manifest, "Crop Properties:", "Properties for crops transplant.");
 
