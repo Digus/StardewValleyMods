@@ -41,7 +41,7 @@ namespace CropTransplantMod
                 Vector2 key = key = Game1.currentCursorTile;
                 if (!Game1.currentLocation.Objects.ContainsKey(key) ||
                     !(Game1.currentLocation.Objects[key] is IndoorPot)
-                    || !Utility.tileWithinRadiusOfPlayer((int)key.X, (int)key.Y, 1, Game1.player))
+                    || (!Utility.tileWithinRadiusOfPlayer((int)key.X, (int)key.Y, 1, Game1.player) && !DataLoader.ModConfig.EnableUnlimitedRangeToTransplant))
                 {
                     key = Game1.player.GetToolLocation(false) / 64f;
                     key.X = (float)(int)key.X;
@@ -111,8 +111,9 @@ namespace CropTransplantMod
             {
                 if (
                     (Game1.eventUp || f.bathingClothes.Value || f.onBridge.Value)
-                    || !Utility.withinRadiusOfPlayer(x, y, 1, f)
-                    && (!Utility.withinRadiusOfPlayer(x, y, 2, f) || !Game1.isAnyGamePadButtonBeingPressed() || Game1.mouseCursorTransparency != 0f)
+                    || (!Utility.withinRadiusOfPlayer(x, y, 1, f)
+                        && (!Utility.withinRadiusOfPlayer(x, y, 2, f) || !Game1.isAnyGamePadButtonBeingPressed() || Game1.mouseCursorTransparency != 0f) 
+                        && !DataLoader.ModConfig.EnableUnlimitedRangeToTransplant)
                 ) return true;
 
                 Vector2 tileLocation = new Vector2((float)(x / 64), (float)(y / 64));
@@ -131,14 +132,14 @@ namespace CropTransplantMod
                 {
                     int tileLocationX = (int)tileLocation.X;
                     int tileLocationY = (int)tileLocation.Y;
-                    if (heldPot.tree != null)
+                    if (heldPot.Tree != null)
                     {
                         if(!location.terrainFeatures.ContainsKey(tileLocation) && !location.objects.ContainsKey(tileLocation)
-                           && (heldPot.tree.isPassable() || !TransplantController.IntersectWithFarmer(location, x, y))
+                           && (heldPot.Tree.isPassable() || !TransplantController.IntersectWithFarmer(location, x, y))
                            && location.doesTileHaveProperty(tileLocationX, tileLocationY, "Water", "Back") == null
-                           && !location.isTileOccupiedForPlacement(tileLocation, new Object(heldPot.tree.GetSeedSaplingIndex(),1)))
+                           && !location.isTileOccupiedForPlacement(tileLocation, new Object(heldPot.Tree.GetSeedSaplingIndex(),1)))
                         {
-                            if (heldPot.tree is Tree tree)
+                            if (heldPot.Tree is Tree tree)
                             {
                                 if (TransplantController.IsTreeNoSpawnTile(location,tileLocationX,tileLocationY)
                                     || (!location.isTileLocationOpen(new Location(x, y)))
@@ -151,7 +152,7 @@ namespace CropTransplantMod
                                 __result = true;
                                 return false;
                             }
-                            else if (heldPot.tree is FruitTree fruitTree)
+                            else if (heldPot.Tree is FruitTree fruitTree)
                             {
                                 if (
                                     (!TransplantController.IsNextToOtherTrees(location,x,y) || DataLoader.ModConfig.EnablePlacementOfFruitTreesNextToAnotherTree)
@@ -203,6 +204,21 @@ namespace CropTransplantMod
                             return false;
                         }
                     }
+                    if (DataLoader.ModConfig.EnableUnlimitedRangeToTransplant && (heldPot.bush.Value != null || heldPot.hoeDirt.Value.crop != null))
+                    {
+                        if (heldPot.canBePlacedHere(location, tileLocation))
+                        {
+                            foreach (Farmer farmer in location.farmers)
+                            {
+                                if (farmer.GetBoundingBox().Intersects(new Microsoft.Xna.Framework.Rectangle((int)tileLocation.X * 64, (int)tileLocation.Y * 64, 64, 64)))
+                                {
+                                    return false;
+                                }
+                            }
+                            __result = true;
+                            return false;
+                        }
+                    }
                 }
             }
             return true;
@@ -229,7 +245,7 @@ namespace CropTransplantMod
                 return false;
             } else if (who.CurrentTool == null && activeObject == null && Game1.currentLocation.Objects.ContainsKey(index) && Game1.currentLocation.Objects[index] is IndoorPot pot)
             {
-                Game1.mouseCursorTransparency = !Utility.tileWithinRadiusOfPlayer((int)index.X, (int)index.Y, 1, who) ? 0.5f : 1f;
+                Game1.mouseCursorTransparency = !Utility.tileWithinRadiusOfPlayer((int)index.X, (int)index.Y, 1, who) && !DataLoader.ModConfig.EnableUnlimitedRangeToTransplant ? 0.5f : 1f;
                 Game1.mouseCursor = 2;
                 __result = false;
                 return false;
@@ -303,7 +319,7 @@ namespace CropTransplantMod
         [HarmonyPriority(800)]
         public static bool TryToPlaceItem(ref GameLocation location, Item item, int x, int y)
         {
-            if (Utility.withinRadiusOfPlayer(x, y, 1, Game1.player) && item is Object object1 && TransplantController.IsGardenPot(object1))
+            if ((Utility.withinRadiusOfPlayer(x, y, 1, Game1.player) || DataLoader.ModConfig.EnableUnlimitedRangeToTransplant) && item is Object object1 && TransplantController.IsGardenPot(object1))
             {
                 Vector2 tileLocation = new Vector2((float) (x / 64), (float) (y / 64));
                 if (!location.objects.ContainsKey(tileLocation))
@@ -367,14 +383,14 @@ namespace CropTransplantMod
                     else
                     {
                         if (Game1.player.ActiveObject is HeldIndoorPot heldPot 
-                            && (heldPot.tree != null || heldPot.bush.Value != null)
+                            && (heldPot.Tree != null || heldPot.bush.Value != null)
                             && !location.terrainFeatures.ContainsKey(tileLocation)
-                            && ((heldPot.tree != null && heldPot.tree.isPassable()) || !TransplantController.IntersectWithFarmer(location, x, y))
+                            && ((heldPot.Tree != null && heldPot.Tree.isPassable()) || !TransplantController.IntersectWithFarmer(location, x, y))
                             && location.doesTileHaveProperty(tileLocationX, tileLocationY, "Water", "Back") == null
-                            && !location.isTileOccupiedForPlacement(tileLocation, heldPot.tree!= null ? new Object(heldPot.tree.GetSeedSaplingIndex(), 1):null))
+                            && !location.isTileOccupiedForPlacement(tileLocation, heldPot.Tree!= null ? new Object(heldPot.Tree.GetSeedSaplingIndex(), 1):null))
                         {
                             TerrainFeature terrainFeature;
-                            if (heldPot.tree is Tree tree)
+                            if (heldPot.Tree is Tree tree)
                             {
                                 if (TransplantController.IsTreeNoSpawnTile(location,tileLocationX,tileLocationY)
                                     || !location.isTileLocationOpen(new Location(x, y))
@@ -389,7 +405,7 @@ namespace CropTransplantMod
                                 TransplantController.ShakeTree(tree, tileLocation);
                                 terrainFeature = tree;
                             }
-                            else if (heldPot.tree is FruitTree fruitTree)
+                            else if (heldPot.Tree is FruitTree fruitTree)
                             {
                                 if (!DataLoader.ModConfig.EnablePlacementOfFruitTreesNextToAnotherTree && TransplantController.IsNextToOtherTrees(location, x, y))
                                 {
@@ -467,13 +483,13 @@ namespace CropTransplantMod
                                     GameLocation oldGameLocation = terrainFeature.currentLocation;
                                     if (terrainFeature is Tree tree)
                                     {
-                                        CurrentHeldIndoorPot.tree = tree;
+                                        CurrentHeldIndoorPot.Tree = tree;
                                         TransplantController.ShakeTree(tree, tileLocation);
                                         transplantEnergyCost = DataLoader.ModConfig.TreeTransplantEnergyCostPerStage[Math.Min(4, tree.growthStage.Value >=4 ? tree.growthStage.Value-1 : tree.growthStage.Value)];
                                     }
                                     else if (terrainFeature is FruitTree fruitTree)
                                     {
-                                        CurrentHeldIndoorPot.tree = fruitTree;
+                                        CurrentHeldIndoorPot.Tree = fruitTree;
                                         TransplantController.ShakeTree(fruitTree, tileLocation);
                                         transplantEnergyCost = DataLoader.ModConfig.FruitTreeTransplantEnergyCostPerStage[Math.Min(4, fruitTree.growthStage.Value)];
                                     }
@@ -531,7 +547,7 @@ namespace CropTransplantMod
                         TransplantController.ShakeCrop(potHoeDirt);
                     }
                 }
-                else if (heldPot.tree is Tree tree)
+                else if (heldPot.Tree is Tree tree)
                 {
                     tree.tickUpdate(Game1.currentGameTime, Game1.player.getTileLocation(), Game1.currentLocation);
                     if (Game1.player.isMoving() && !Game1.eventUp)
@@ -539,7 +555,7 @@ namespace CropTransplantMod
                         TransplantController.ShakeTree(tree);
                     }
                 }
-                else if (heldPot.tree is FruitTree fruitTree)
+                else if (heldPot.Tree is FruitTree fruitTree)
                 {
                     fruitTree.tickUpdate(Game1.currentGameTime, Game1.player.getTileLocation(), Game1.currentLocation);
                     if (Game1.player.isMoving() && !Game1.eventUp)
@@ -563,7 +579,7 @@ namespace CropTransplantMod
                     var f = Game1.player;
                     Multiplayer multiplayer = DataLoader.Helper.Reflection.GetField<Multiplayer>(typeof(Game1), "multiplayer").GetValue();
                     if (inventoryHeldPot.hoeDirt.Value.crop?.currentPhase.Value < 1 
-                        || (inventoryHeldPot.tree as Tree)?.growthStage.Value < 1 )
+                        || (inventoryHeldPot.Tree as Tree)?.growthStage.Value < 1 )
                     {
                         multiplayer.broadcastSprites(Game1.player.currentLocation, new TemporaryAnimatedSprite[1]
                         {

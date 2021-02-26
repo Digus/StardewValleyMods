@@ -10,12 +10,25 @@ using StardewValley;
 using StardewValley.Objects;
 using StardewValley.TerrainFeatures;
 using Object = StardewValley.Object;
+using STree = StardewValley.TerrainFeatures.Tree;
 
 namespace CropTransplantMod
 {
     public class HeldIndoorPot : IndoorPot
     {
-        public TerrainFeature tree = null;
+        private readonly NetRef<TerrainFeature> _tree = new NetRef<TerrainFeature>();
+
+        public TerrainFeature Tree
+        {
+            get => _tree.Value;
+            set => _tree.Value = value;
+        }
+
+        protected override void initNetFields()
+        {
+            base.initNetFields();
+            base.NetFields.AddFields(this._tree);
+        }
 
         public HeldIndoorPot():base()
         {
@@ -27,12 +40,12 @@ namespace CropTransplantMod
 
         public bool IsHoldingSomething()
         {
-            return this.hoeDirt.Value.crop != null || this.tree != null || this.bush.Value != null;
+            return this.hoeDirt.Value.crop != null || this.Tree != null || this.bush.Value != null;
         }
 
         public override bool placementAction(GameLocation location, int x, int y, Farmer who = null)
         {
-            if ((this.hoeDirt.Value.crop != null && !DataLoader.ModConfig.EnablePlacementOfCropsOutsideOutOfTheFarm && !location.IsFarm && !Game1.player.currentLocation.CanPlantSeedsHere(this.hoeDirt.Value.crop.netSeedIndex.Value, x / 64, y / 64) && location.IsOutdoors))
+            if ((this.hoeDirt.Value.crop != null && !DataLoader.ModConfig.EnablePlacementOfCropsOutsideOutOfTheFarm && !location.IsFarm && !location.CanPlantSeedsHere(this.hoeDirt.Value.crop.netSeedIndex.Value, x / 64, y / 64) && location.IsOutdoors))
             {
                 Game1.showRedMessage(Game1.content.LoadString("Strings\\StringsFromCSFiles:HoeDirt.cs.13919"));
                 return false;
@@ -88,13 +101,13 @@ namespace CropTransplantMod
                 spriteBatch.Draw(Game1.mouseCursors, new Vector2((float)((double)objectPosition.X + 4.0), (float)(objectPosition.Y + 52)), new Rectangle?(new Rectangle(173 + num / 2 * 16, 466 + num % 2 * 16, 13, 13)), Color.White, 0.0f, Vector2.Zero, 4f, SpriteEffects.None, Math.Max(0.0f, (float)(f.getStandingY() + 2) / 10000f)+0.0001f);
             }
 
-            if (this.tree is Tree tree)
+            if (this.Tree is Tree tree)
             {
-                drawTree(tree, spriteBatch, objectPosition);
+                drawTree(tree, spriteBatch, objectPosition, f);
             }
-            else if (this.tree is FruitTree fruitTreetree)
+            else if (this.Tree is FruitTree fruitTreetree)
             {
-                drawFruitTree(fruitTreetree, spriteBatch, objectPosition);
+                drawFruitTree(fruitTreetree, spriteBatch, objectPosition, f);
             }
 
             if (this.hoeDirt.Value.crop != null)
@@ -109,7 +122,7 @@ namespace CropTransplantMod
 
             if (this.bush.Value != null)
             {
-                drawTeaBush(this.bush.Value, spriteBatch, objectPosition);
+                drawTeaBush(this.bush.Value, spriteBatch, objectPosition, f);
             }
         }
 
@@ -149,7 +162,7 @@ namespace CropTransplantMod
             //Empty to avoid drawing the HoeDirty out of place.
         }
 
-        public void drawTree(Tree treeToDraw, SpriteBatch spriteBatch, Vector2 tileLocation)
+        public void drawTree(Tree treeToDraw, SpriteBatch spriteBatch, Vector2 tileLocation, Farmer f)
         {
             Microsoft.Xna.Framework.Rectangle boundingBox;
             Texture2D texture = DataLoader.Helper.Reflection.GetField<Lazy<Texture2D>>(treeToDraw, "texture").GetValue().Value;
@@ -179,13 +192,13 @@ namespace CropTransplantMod
                 Vector2 origin = new Vector2(8f, treeToDraw.growthStage.Value >= 3 ? 32f : 16f);
                 double num1 = 4.0;
                 int num2 = treeToDraw.flipped.Value ? 1 : 0;
-                spriteBatch1.Draw(texture, tileLocation + new Vector2(32,96), sourceRectangle, white, (float)shakeRotation, origin, (float)num1, (SpriteEffects)num2, Math.Max(0.0f, (float)(Game1.player.getStandingY() + 2) / 10000f) + 0.0002f);
+                spriteBatch1.Draw(texture, tileLocation + new Vector2(32,96), sourceRectangle, white, (float)shakeRotation, origin, (float)num1, (SpriteEffects)num2, Math.Max(0.0f, (float)(f.getStandingY() + 2) / 10000f) + 0.0002f);
             }
             else
             {
                 if (!treeToDraw.stump.Value)
                 {
-                    spriteBatch.Draw(Game1.mouseCursors, tileLocation + new Vector2(-51, 150), new Microsoft.Xna.Framework.Rectangle?(Tree.shadowSourceRect), Color.White * (1.570796f - Math.Abs(shakeRotation)), 0.0f, Vector2.Zero, 4f, treeToDraw.flipped.Value ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 1E-06f);
+                    spriteBatch.Draw(Game1.mouseCursors, tileLocation + new Vector2(-51, 150), new Microsoft.Xna.Framework.Rectangle?(STree.shadowSourceRect), Color.White * (1.570796f - Math.Abs(shakeRotation)), 0.0f, Vector2.Zero, 4f, treeToDraw.flipped.Value ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 1E-06f);
                     SpriteBatch spriteBatch1 = spriteBatch;
                     Microsoft.Xna.Framework.Rectangle? sourceRectangle = new Microsoft.Xna.Framework.Rectangle?(treeToDraw.treeTopSourceRect);
                     Color color = Color.White;
@@ -193,20 +206,20 @@ namespace CropTransplantMod
                     double num1 = 4.0;
                     int num2 = treeToDraw.flipped.Value ? 1 : 0;
                     boundingBox = this.getBoundingBox(tileLocation);
-                    double num3 = Math.Max(0.0f, (float)(Game1.player.getStandingY() + 2) / 10000f) + 0.0003f;
+                    double num3 = Math.Max(0.0f, (float)(f.getStandingY() + 2) / 10000f) + 0.0003f;
                     spriteBatch1.Draw(texture, tileLocation + new Vector2(32, 96), sourceRectangle, color, (float)shakeRotation, origin, (float)num1, (SpriteEffects)num2, (float)num3);
                 }
                 if (treeToDraw.health.Value > -99.0)
                 {
                     SpriteBatch spriteBatch1 = spriteBatch;
-                    Microsoft.Xna.Framework.Rectangle? sourceRectangle = new Microsoft.Xna.Framework.Rectangle?(Tree.stumpSourceRect);
+                    Microsoft.Xna.Framework.Rectangle? sourceRectangle = new Microsoft.Xna.Framework.Rectangle?(STree.stumpSourceRect);
                     Color color = Color.White;
                     double num1 = 0.0;
                     Vector2 zero = Vector2.Zero;
                     double num2 = 4.0;
                     int num3 = treeToDraw.flipped.Value ? 1 : 0;
                     boundingBox = this.getBoundingBox(tileLocation);
-                    double num4 = Math.Max(0.0f, (float)(Game1.player.getStandingY() + 2) / 10000f) + 0.0002f;
+                    double num4 = Math.Max(0.0f, (float)(f.getStandingY() + 2) / 10000f) + 0.0002f;
                     spriteBatch1.Draw(texture, tileLocation + new Vector2(0, -32), sourceRectangle, color, (float)num1, zero, (float)num2, (SpriteEffects)num3, (float)num4);
                 }
                 if (treeToDraw.stump.Value && treeToDraw.health.Value < 4.0 && treeToDraw.health.Value > -99.0)
@@ -219,7 +232,7 @@ namespace CropTransplantMod
                     double num2 = 4.0;
                     int num3 = treeToDraw.flipped.Value ? 1 : 0;
                     boundingBox = this.getBoundingBox(tileLocation);
-                    double num4 = Math.Max(0.0f, (float)(Game1.player.getStandingY() + 2) / 10000f) + 0.0004f;
+                    double num4 = Math.Max(0.0f, (float)(f.getStandingY() + 2) / 10000f) + 0.0004f;
                     spriteBatch1.Draw(texture, tileLocation + new Vector2(0, 32), sourceRectangle, color, (float)num1, zero, (float)num2, (SpriteEffects)num3, (float)num4);
                 }
             }
@@ -234,12 +247,12 @@ namespace CropTransplantMod
                 double num1 = 4.0;
                 int num2 = 0;
                 boundingBox = this.getBoundingBox(tileLocation);
-                double num3 = Math.Max(0.0f, (float)(Game1.player.getStandingY() + 2) / 10000f) + 0.0005f;
+                double num3 = Math.Max(0.0f, (float)(f.getStandingY() + 2) / 10000f) + 0.0005f;
                 spriteBatch1.Draw(texture, local, sourceRectangle, white, (float)rotation, zero, (float)num1, (SpriteEffects)num2, (float)num3);
             }
         }
 
-        public void drawFruitTree(FruitTree treeToDraw, SpriteBatch spriteBatch, Vector2 tileLocation)
+        public void drawFruitTree(FruitTree treeToDraw, SpriteBatch spriteBatch, Vector2 tileLocation, Farmer f)
         {
             List<Leaf> leaves = DataLoader.Helper.Reflection.GetField<List<Leaf>>(treeToDraw, "leaves").GetValue();
             float shakeRotation = DataLoader.Helper.Reflection.GetField<float>(treeToDraw, "shakeRotation").GetValue();
@@ -272,14 +285,14 @@ namespace CropTransplantMod
                 double num1 = 4.0;
                 int num2 = treeToDraw.flipped.Value  ? 1 : 0;
                 boundingBox = this.getBoundingBox(tileLocation);
-                double num3 = Math.Max(0.0f, (float) (Game1.player.getStandingY() + 2) / 10000f) + 0.0002f;
+                double num3 = Math.Max(0.0f, (float) (f.getStandingY() + 2) / 10000f) + 0.0002f;
                 spriteBatch1.Draw(texture, tileLocation + new Vector2(32, 96), sourceRectangle, white, (float)shakeRotation, origin, (float)num1, (SpriteEffects)num2, (float)num3);
             }
             else
             {
                 if (!treeToDraw.stump.Value)
                 {
-                    spriteBatch.Draw(Game1.mouseCursors, tileLocation + new Vector2(-51, 150), new Rectangle?(Tree.shadowSourceRect), Color.White * (1.570796f - Math.Abs(shakeRotation)), 0.0f, Vector2.Zero, 4f, treeToDraw.flipped.Value ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 1E-06f);
+                    spriteBatch.Draw(Game1.mouseCursors, tileLocation + new Vector2(-51, 150), new Rectangle?(STree.shadowSourceRect), Color.White * (1.570796f - Math.Abs(shakeRotation)), 0.0f, Vector2.Zero, 4f, treeToDraw.flipped.Value ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 1E-06f);
                     SpriteBatch spriteBatch1 = spriteBatch;
                     Texture2D texture = FruitTree.texture;
                     Rectangle? sourceRectangle = new Rectangle?(new Rectangle((12 + (treeToDraw.GreenHouseTree ? 1 : Utility.getSeasonNumber(Game1.currentSeason)) * 3) * 16, treeToDraw.treeType.Value * 5 * 16, 48, 64));
@@ -288,7 +301,7 @@ namespace CropTransplantMod
                     double num1 = 4.0;
                     int num2 = treeToDraw.flipped.Value  ? 1 : 0;
                     boundingBox = this.getBoundingBox(tileLocation);
-                    double num3 = Math.Max(0.0f, (float)(Game1.player.getStandingY() + 2) / 10000f) + 0.0003f;
+                    double num3 = Math.Max(0.0f, (float)(f.getStandingY() + 2) / 10000f) + 0.0003f;
                     spriteBatch1.Draw(texture, tileLocation + new Vector2(32, 96), sourceRectangle, color, (float)shakeRotation, origin, (float)num1, (SpriteEffects)num2, (float)num3);
                 }
                 if (treeToDraw.health.Value > -99.0)
@@ -303,7 +316,7 @@ namespace CropTransplantMod
                     int num3 = treeToDraw.flipped.Value  ? 1 : 0;
                     double num4;
                     boundingBox = this.getBoundingBox(tileLocation);
-                    num4 = Math.Max(0.0f, (float)(Game1.player.getStandingY() + 2) / 10000f) + 0.0002f;
+                    num4 = Math.Max(0.0f, (float)(f.getStandingY() + 2) / 10000f) + 0.0002f;
                     spriteBatch1.Draw(texture, tileLocation + new Vector2(32, 96), sourceRectangle, color, (float)num1, origin, (float)num2, (SpriteEffects)num3, (float)num4);
                 }
             }
@@ -319,12 +332,12 @@ namespace CropTransplantMod
                 double num1 = 4.0;
                 int num2 = 0;
                 boundingBox = this.getBoundingBox(tileLocation);
-                double num3 = Math.Max(0.0f, (float)(Game1.player.getStandingY() + 2) / 10000f) + 0.0004f;
+                double num3 = Math.Max(0.0f, (float)(f.getStandingY() + 2) / 10000f) + 0.0004f;
                 spriteBatch1.Draw(texture, local, sourceRectangle, white, (float)rotation, zero, (float)num1, (SpriteEffects)num2, (float)num3);
             }
         }
 
-        public void drawTeaBush(Bush bushToDraw, SpriteBatch spriteBatch, Vector2 tileLocation)
+        public void drawTeaBush(Bush bushToDraw, SpriteBatch spriteBatch, Vector2 tileLocation, Farmer f)
         {
             float shakeRotation = DataLoader.Helper.Reflection.GetField<float>(bushToDraw, "shakeRotation").GetValue();
             Rectangle sourceRect = DataLoader.Helper.Reflection.GetField<NetRectangle>(bushToDraw, "sourceRect").GetValue().Value;
@@ -332,7 +345,7 @@ namespace CropTransplantMod
 
             Color color = Color.White * 1f;
             SpriteEffects spriteEffects = bushToDraw.flipped.Value ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
-            float layerDepth = Math.Max(0.0f, (float)(Game1.player.getStandingY() + 2) / 10000f) + 0.0002f;
+            float layerDepth = Math.Max(0.0f, (float)(f.getStandingY() + 2) / 10000f) + 0.0002f;
             spriteBatch.Draw(Bush.texture.Value, plantLocation, sourceRect, color, shakeRotation, new Vector2(8f, 32f), 4f, spriteEffects, layerDepth);
         }
     }

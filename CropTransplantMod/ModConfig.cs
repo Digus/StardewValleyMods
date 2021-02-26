@@ -5,6 +5,7 @@ namespace CropTransplantMod
     public class ModConfig
     {
         public bool GetGardenPotEarlier;
+        public bool EnableUnlimitedRangeToTransplant;
         public float CropTransplantEnergyCost = 4;
         public bool EnablePlacementOfCropsOutsideOutOfTheFarm;
         public bool EnablePlacementOfFruitTreesOutOfTheFarm;

@@ -69,7 +69,9 @@ namespace CropTransplantMod
 
                 api.RegisterSimpleOption(manifest, "Get Garden Pot Earlier", "Evelyn will send you a Garden Pot once you reach 2 hearts level of friendship with her. You will not learn the recipe though, for that you should get the greenhouse as normal.", () => DataLoader.ModConfig.GetGardenPotEarlier, (bool val) => DataLoader.ModConfig.GetGardenPotEarlier = val);
                 
-                api.RegisterSimpleOption(manifest, "Soil Under Trees", "A soil tile will be shown under trees when planted on stone floor, wood and other 'not plantable' soil. Some tiles aren't correct labeled by the game, so the soil tile may appears on places you would think it's not needed", () => DataLoader.ModConfig.EnableSoilTileUnderTrees, (bool val) => DataLoader.ModConfig.EnableSoilTileUnderTrees = val);
+                api.RegisterSimpleOption(manifest, "Soil Under Trees", "A soil tile will be shown under trees when planted on stone floor, wood and other 'not plantable' soil. Some tiles aren't correct labeled by the game, so the soil tile may appears on places you would think it's not needed.", () => DataLoader.ModConfig.EnableSoilTileUnderTrees, (bool val) => DataLoader.ModConfig.EnableSoilTileUnderTrees = val);
+
+                api.RegisterSimpleOption(manifest, "Unlimited Range", "Let you grab a plant into the held garden pot and place it again on the floor from/to any suitable tile.", () => DataLoader.ModConfig.EnableUnlimitedRangeToTransplant, (bool val) => DataLoader.ModConfig.EnableUnlimitedRangeToTransplant = val);
 
                 api.RegisterLabel(manifest, "Crop Properties:", "Properties for crops transplant.");
 
@@ -81,7 +83,7 @@ namespace CropTransplantMod
 
                 api.RegisterClampedOption(manifest, "Max Stage", "The max stage a tree can be lifted. 0 to disable the lifting of any tree. 5 will enable all stages.", () => DataLoader.ModConfig.TreeTransplantMaxStage, (int val) => DataLoader.ModConfig.TreeTransplantMaxStage = val, 0, 5);
 
-                api.RegisterSimpleOption(manifest, "Place On Any Tile", "﻿You'll be able to place trees on any unoccupied tile type.", () => DataLoader.ModConfig.EnablePlacementOfTreesOnAnyTileType, (bool val) => DataLoader.ModConfig.EnablePlacementOfTreesOnAnyTileType = val);
+                api.RegisterSimpleOption(manifest, "Place On Any Tile", "You'll be able to place trees on any unoccupied tile type.", () => DataLoader.ModConfig.EnablePlacementOfTreesOnAnyTileType, (bool val) => DataLoader.ModConfig.EnablePlacementOfTreesOnAnyTileType = val);
 
                 api.RegisterSimpleOption(manifest, "Stage 1 Energy Cost", "The cost of energy for lifting a tree stage 1(seed) from the ground. Check the wiki for the stage images.", () => DataLoader.ModConfig.TreeTransplantEnergyCostPerStage[0], (float val) => DataLoader.ModConfig.TreeTransplantEnergyCostPerStage[0] = val);
 
