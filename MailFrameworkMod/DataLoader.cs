@@ -19,6 +19,9 @@ namespace MailFrameworkMod
     {
         public static Dictionary<Tuple<string,string>, Texture2D> _contentPackAssets = new Dictionary<Tuple<string, string>, Texture2D>();
 
+        private static readonly List<string> NoUpgradeLevelTools = new List<string>() {"Scythe", "Shears", "Milk Pail", "Fishing Rod", "Golden Scythe", "Pan", "Return Scepter" };
+        private static readonly List<int> SlingshotIndexes = new List<int>() {32, 33, 34};
+
         public bool CanEdit<T>(IAssetInfo asset)
         {
             return asset.AssetNameEquals("Data\\mail");
@@ -29,7 +32,7 @@ namespace MailFrameworkMod
             var data = asset.AsDictionary<string, string>().Data;
             foreach (Letter letter in MailDao.GetSavedLetters())
             {
-                if (letter.Title != null)
+                if (letter.Title != null && !letter.AutoOpen)
                 {
                     data[letter.Id] = letter.Text + "[#]" + letter.Title;
                 }
@@ -116,6 +119,7 @@ namespace MailFrameworkMod
                             List<Item> attachments = new List<Item>();
                             mailItem.Attachments.ForEach(i =>
                             {
+                                if (i == null) return;
                                 switch (i.Type)
                                 {
                                     case ItemType.Object:
@@ -188,8 +192,26 @@ namespace MailFrameworkMod
                                             case "Scythe":
                                                 tool = new MeleeWeapon(47);
                                                 break;
+                                            case "Golden Scythe":
+                                                tool = new MeleeWeapon(53);
+                                                break;
                                             case "Pickaxe":
                                                 tool = new Pickaxe();
+                                                break;
+                                            case "Milk Pail":
+                                                tool = new MilkPail();
+                                                break;
+                                            case "Shears":
+                                                tool = new Shears();
+                                                break;
+                                            case "Fishing Rod":
+                                                tool = new FishingRod(i.UpgradeLevel);
+                                                break;
+                                            case "Pan":
+                                                tool = new Pan();
+                                                break;
+                                            case "Return Scepter":
+                                                tool = new Wand();
                                                 break;
                                             default:
                                                 MailFrameworkModEntry.ModMonitor.Log($"Tool with name {i.Name} not found for letter {mailItem.Id}.",LogLevel.Warn);
@@ -197,7 +219,7 @@ namespace MailFrameworkMod
                                         }
                                         if (tool != null)
                                         {
-                                            if (i.Name != "Scythe")
+                                            if (!NoUpgradeLevelTools.Contains(i.Name))
                                             {
                                                 tool.UpgradeLevel = i.UpgradeLevel;
                                             }
@@ -275,7 +297,8 @@ namespace MailFrameworkMod
 
                                         if (i.Index.HasValue)
                                         {
-                                            attachments.Add(new MeleeWeapon(i.Index.Value));
+                                            int index = i.Index.Value;
+                                            attachments.Add(SlingshotIndexes.Contains(index) ? (Item)new Slingshot(index) : (Item)new MeleeWeapon(index));
                                         }
                                         else
                                         {
@@ -306,6 +329,9 @@ namespace MailFrameworkMod
                                             MailFrameworkModEntry.ModMonitor.Log($"An index value is required to attach a boots for letter {mailItem.Id}.", LogLevel.Warn);
                                         }
                                         break;
+                                    default:
+                                        MailFrameworkModEntry.ModMonitor.Log($"Invalid attachment type '{i.Type}' found in letter {mailItem.Id}.", LogLevel.Warn);
+                                        break;
                                 }
                             });
                             MailDao.SaveLetter(
@@ -323,6 +349,7 @@ namespace MailFrameworkMod
                                     GroupId = mailItem.GroupId,
                                     LetterTexture = mailItem.LetterBG != null ? GetTextureAsset(contentPack, mailItem.LetterBG) : null,
                                     UpperRightCloseButtonTexture = mailItem.UpperRightCloseButton != null ? GetTextureAsset(contentPack, mailItem.UpperRightCloseButton) : null,
+                                    AutoOpen = mailItem.AutoOpen,
                                 });
                         }
                         else
@@ -342,6 +369,7 @@ namespace MailFrameworkMod
                                     GroupId = mailItem.GroupId,
                                     LetterTexture = mailItem.LetterBG != null ? GetTextureAsset(contentPack, mailItem.LetterBG) : null,
                                     UpperRightCloseButtonTexture = mailItem.UpperRightCloseButton != null ? GetTextureAsset(contentPack, mailItem.UpperRightCloseButton) : null,
+                                    AutoOpen = mailItem.AutoOpen,
                                 });
                         }
                     }
