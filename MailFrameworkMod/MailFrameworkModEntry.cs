@@ -47,11 +47,6 @@ namespace MailFrameworkMod
         {
             Helper.Content.AssetEditors.Add(new DataLoader());
             var harmony = HarmonyInstance.Create("Digus.MailFrameworkMod");
-
-            harmony.Patch(
-                original: AccessTools.Method(typeof(LetterViewerMenu), "getTextColor"), 
-                prefix: new HarmonyMethod(typeof(LetterViewerMenuExtended), nameof(LetterViewerMenuExtended.GetTextColor))
-            );
             
             harmony.Patch(
                 original: AccessTools.Method(typeof(GameLocation), nameof(GameLocation.mailbox)),
