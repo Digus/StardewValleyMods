@@ -1,0 +1,13 @@
+﻿[
+    {
+        "Name": "Arcane table",
+        "GetObjectBackImmediately": true,
+        "CloningData": {
+            "684": 600,
+            "766": 120,
+            "767": 360,
+            "768": 960,
+            "769": 1200
+        }
+    }
+]
