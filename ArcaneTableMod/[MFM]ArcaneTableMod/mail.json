@@ -1,0 +1,13 @@
+[
+    {
+        "Id": "ArcaneTableMod.Recipe",
+        "Title": "recipe.letter.title",
+        "GroupId": "Digus.ArcaneTable",
+        "Text": "recipe.letter",
+        "Recipe": "Arcane table",
+        "WhichBG": 2,
+        "TextColor": 7,
+        "FriendshipConditions": [{ "NpcName": "Wizard", "FriendshipLevel": 6 }],
+        "StatsConditions": [{ "StatsName": "MonstersKilled", "Amount": 500 }]
+    }
+]
