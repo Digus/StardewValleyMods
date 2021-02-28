@@ -103,6 +103,7 @@ namespace CustomCrystalariumMod
                                 {
                                     who.addItemByMenuIfNecessary(currentObject.getOne());
                                 }
+                                __instance.initializeLightSource(__instance.TileLocation, false);
                             }
                             __result = true;
                             return false;
@@ -148,13 +149,24 @@ namespace CustomCrystalariumMod
         }
 
         [HarmonyPriority(500)]
-        public static void CheckForAction_postfix(ref Object __instance, Object __state)
+        public static void CheckForAction_postfix(ref Object __instance, Object __state, bool justCheckingForActivity)
         {
-            if (DataLoader.ClonerData.ContainsKey(__instance.Name) && __instance.Name != "Crystalarium" && __state != null)
+            if (DataLoader.ClonerData.ContainsKey(__instance.Name) && __instance.Name != "Crystalarium" && __state != null && !justCheckingForActivity)
             {
                 if (DataLoader.ClonerData[__instance.Name].CloningDataId.ContainsKey(__state.ParentSheetIndex))
-                __instance.MinutesUntilReady = DataLoader.ClonerData[__instance.Name].CloningDataId[__state.ParentSheetIndex];
-                __instance.heldObject.Value = (Object)__state.getOne();
+                {
+                    __instance.MinutesUntilReady = DataLoader.ClonerData[__instance.Name].CloningDataId[__state.ParentSheetIndex];
+                }
+                else if (DataLoader.ClonerData[__instance.Name].CloningDataId.ContainsKey(__state.Category))
+                {
+                    __instance.MinutesUntilReady = DataLoader.ClonerData[__instance.Name].CloningDataId[__state.Category];
+                }
+                if (__instance.MinutesUntilReady != 0)
+                {
+                    __instance.heldObject.Value = (Object)__state.getOne();
+                    __instance.initializeLightSource(__instance.TileLocation, false);
+                }
+
             }
         }
     }
