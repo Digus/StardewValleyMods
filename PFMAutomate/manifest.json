@@ -1,7 +1,7 @@
 ﻿{
   "Name": "PFMAutomate",
   "Author": "Digus",
-  "Version": "1.4.0",
+  "Version": "1.4.1",
   "Description": "Integrate Producer Framework Mod to Automate",
   "UniqueID": "Digus.PFMAutomate",
   "EntryDll": "PFMAutomate.dll",
