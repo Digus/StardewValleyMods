@@ -46,12 +46,16 @@ namespace PFMAutomate
                 postfix: new HarmonyMethod(typeof(AutomateOverrides), nameof(AutomateOverrides.GetFor))
             );
 
-            Assembly ccrmAutomateAssembly = AppDomain.CurrentDomain.GetAssemblies().First(a => a.FullName.StartsWith("CCRMAutomate,"));
-            MethodInfo ccrmAutomateMethodInfo = AccessTools.GetDeclaredMethods(ccrmAutomateAssembly.GetType("CCRMAutomate.Automate.CustomCrystalariumAutomationFactory")).Find(m => m.GetParameters().Any(p => p.ParameterType == typeof(SObject)));
-            harmony.Patch(
-                original: ccrmAutomateMethodInfo,
-                postfix: new HarmonyMethod(typeof(CCRMAutomateOverrides), nameof(CCRMAutomateOverrides.GetFor))
-            );
+            Assembly ccrmAutomateAssembly = AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(a => a.FullName.StartsWith("CCRMAutomate,"));
+            if (ccrmAutomateAssembly != null)
+            {
+                MethodInfo ccrmAutomateMethodInfo = AccessTools.GetDeclaredMethods(ccrmAutomateAssembly.GetType("CCRMAutomate.Automate.CustomCrystalariumAutomationFactory")).Find(m => m.GetParameters().Any(p => p.ParameterType == typeof(SObject)));
+                harmony.Patch(
+                    original: ccrmAutomateMethodInfo,
+                    postfix: new HarmonyMethod(typeof(CCRMAutomateOverrides), nameof(CCRMAutomateOverrides.GetFor))
+                );
+            }
+            
         }
     }
 }
