@@ -37,9 +37,9 @@ namespace CustomCrystalariumMod
             if (dropInItem is Object object1)
             {
                 if (!(__instance.heldObject.Value != null && !__instance.Name.Equals("Recycling Machine") &&
-                      !__instance.Name.Equals("Crystalarium") && !DataLoader.ClonerData.ContainsKey(__instance.Name) || object1 != null && (bool)(object1.bigCraftable.Value)))
+                      !__instance.Name.Equals("Crystalarium") && !ClonerController.HasCloner(__instance.Name) || object1 != null && (bool)(object1.bigCraftable.Value)))
                 {
-                    if (__instance.Name.Equals("Crystalarium") || DataLoader.ClonerData.ContainsKey(__instance.Name))
+                    if (__instance.Name.Equals("Crystalarium") || ClonerController.HasCloner(__instance.Name))
                     {
                         if ((__instance.heldObject.Value == null || __instance.heldObject.Value.ParentSheetIndex != object1.ParentSheetIndex)
                              && (__instance.heldObject.Value == null || __instance.MinutesUntilReady > 0))
@@ -67,17 +67,13 @@ namespace CustomCrystalariumMod
                                     return true;
                                 }
                             }
-                            else
+                            else if (ClonerController.GetCloner(__instance.Name) is CustomCloner cloner)
                             {
-                                CustomCloner cloner = DataLoader.ClonerData[__instance.Name];
                                 if (cloner.UsePfmForInput) return true;
-                                if (cloner.CloningDataId.ContainsKey(object1.ParentSheetIndex))
+                                var clonerMinutes = ClonerController.GetMinutesUntilReady(cloner, object1);
+                                if (clonerMinutes.HasValue)
                                 {
-                                    minutesUntilReady = cloner.CloningDataId[object1.ParentSheetIndex];
-                                }
-                                else if (cloner.CloningDataId.ContainsKey(object1.Category))
-                                {
-                                    minutesUntilReady = cloner.CloningDataId[object1.Category];
+                                    minutesUntilReady = clonerMinutes.Value;
                                 }
                                 else
                                 {
@@ -94,12 +90,12 @@ namespace CustomCrystalariumMod
                             {
                                 who.currentLocation.playSound("select");
                                 __instance.MinutesUntilReady = minutesUntilReady;
-                                if (__instance.Name.Equals("Crystalarium") || DataLoader.ModConfig.OverrideContentPackGetObjectProperties ? DataLoader.ModConfig.GetObjectBackImmediately : DataLoader.ClonerData[__instance.Name].GetObjectBackImmediately)
+                                if (__instance.Name.Equals("Crystalarium") || DataLoader.ModConfig.OverrideContentPackGetObjectProperties ? DataLoader.ModConfig.GetObjectBackImmediately : ClonerController.GetCloner(__instance.Name).GetObjectBackImmediately)
                                 {
                                     __instance.MinutesUntilReady = 0;
                                     __instance.minutesElapsed(0, who.currentLocation);
                                 }
-                                else if (currentObject != null && (__instance.Name.Equals("Crystalarium") || DataLoader.ModConfig.OverrideContentPackGetObjectProperties ? DataLoader.ModConfig.GetObjectBackOnChange : DataLoader.ClonerData[__instance.Name].GetObjectBackOnChange))
+                                else if (currentObject != null && (__instance.Name.Equals("Crystalarium") || DataLoader.ModConfig.OverrideContentPackGetObjectProperties ? DataLoader.ModConfig.GetObjectBackOnChange : ClonerController.GetCloner(__instance.Name).GetObjectBackOnChange))
                                 {
                                     who.addItemByMenuIfNecessary(currentObject.getOne());
                                 }
@@ -127,9 +123,8 @@ namespace CustomCrystalariumMod
                     }
                 }
             }
-            else if (DataLoader.ClonerData.ContainsKey(__instance.Name))
+            else if (ClonerController.GetCloner(__instance.Name) is CustomCloner cloner)
             {
-                CustomCloner cloner = DataLoader.ClonerData[__instance.Name];
                 if (DataLoader.ModConfig.OverrideContentPackGetObjectProperties ? DataLoader.ModConfig.GetObjectBackOnChange && !DataLoader.ModConfig.GetObjectBackImmediately : cloner.GetObjectBackOnChange && !cloner.GetObjectBackImmediately)
                 {
                     if (__instance.heldObject.Value != null)
@@ -151,22 +146,14 @@ namespace CustomCrystalariumMod
         [HarmonyPriority(500)]
         public static void CheckForAction_postfix(ref Object __instance, Object __state, bool justCheckingForActivity)
         {
-            if (DataLoader.ClonerData.ContainsKey(__instance.Name) && __instance.Name != "Crystalarium" && __state != null && !justCheckingForActivity)
+            if (ClonerController.GetCloner(__instance.Name) is CustomCloner cloner && __instance.Name != "Crystalarium" && __state != null && !justCheckingForActivity)
             {
-                if (DataLoader.ClonerData[__instance.Name].CloningDataId.ContainsKey(__state.ParentSheetIndex))
-                {
-                    __instance.MinutesUntilReady = DataLoader.ClonerData[__instance.Name].CloningDataId[__state.ParentSheetIndex];
-                }
-                else if (DataLoader.ClonerData[__instance.Name].CloningDataId.ContainsKey(__state.Category))
-                {
-                    __instance.MinutesUntilReady = DataLoader.ClonerData[__instance.Name].CloningDataId[__state.Category];
-                }
+                __instance.MinutesUntilReady = ClonerController.GetMinutesUntilReady(cloner, __state) ?? __instance.MinutesUntilReady;
                 if (__instance.MinutesUntilReady != 0)
                 {
                     __instance.heldObject.Value = (Object)__state.getOne();
                     __instance.initializeLightSource(__instance.TileLocation, false);
                 }
-
             }
         }
     }
