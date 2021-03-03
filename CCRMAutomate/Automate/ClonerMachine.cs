@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.Eventing.Reader;
-using System.Linq;
-using CustomCrystalariumMod;
+﻿using CustomCrystalariumMod;
 using Microsoft.Xna.Framework;
 using Pathoschild.Stardew.Automate;
-using StardewModdingAPI;
 using StardewValley;
-using StardewValley.BellsAndWhistles;
 using SObject = StardewValley.Object;
 
 namespace CCRMAutomate.Automate

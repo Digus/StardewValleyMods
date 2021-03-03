@@ -1,13 +1,7 @@
-﻿using System;
-using System.Linq;
-using System.Reflection;
-using CCRMAutomate.Automate;
-using Harmony;
-using Microsoft.Xna.Framework.Input;
+﻿using CCRMAutomate.Automate;
 using Pathoschild.Stardew.Automate;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
-using Object = StardewValley.Object;
 
 namespace CCRMAutomate
 {
