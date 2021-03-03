@@ -61,7 +61,7 @@ namespace PFMAutomate.Automate
             return new TrackedItem(_machine.heldObject.Value, onEmpty: Reset);
         }
 
-        internal void Reset(Item item)
+        public void Reset(Item item)
         {
             ProducerRuleController.ClearProduction(_machine, Location);
             if (ProducerController.GetProducerConfig(_machine.Name) is ProducerConfig producerConfig)

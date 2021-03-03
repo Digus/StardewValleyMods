@@ -56,9 +56,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AutomateOverrides.cs" />
+    <Compile Include="Automate\CustomClonerMachine.cs" />
     <Compile Include="Automate\CustomProducerMachine.cs" />
     <Compile Include="Automate\ProducerFrameworkAutomationFactory.cs" />
     <Compile Include="Automate\VanillaProducerMachine.cs" />
+    <Compile Include="CCRMAutomateOverrides.cs" />
     <Compile Include="PFMAutomateModEntry.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
