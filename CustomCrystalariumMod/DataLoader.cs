@@ -18,7 +18,6 @@ namespace CustomCrystalariumMod
         public static ITranslationHelper I18N;
         public static ModConfig ModConfig;
         internal static Dictionary<int,int> CrystalariumDataId = new Dictionary<int, int>();
-        internal static Dictionary<string, CustomCloner> ClonerData =  new Dictionary<string, CustomCloner>();
 
         public const string ClonersDataJson = "ClonersData.json";
         public const string CrystalariumDataJson = "data\\CrystalariumData.json";
@@ -92,11 +91,11 @@ namespace CustomCrystalariumMod
                         else
                         {
                             cloner.ModUniqueID = contentPack.Manifest.UniqueID;
-                            if (ClonerData.ContainsKey(cloner.Name))
+                            if (ClonerController.GetCloner(cloner.Name) is CustomCloner currentCloner)
                             {
-                                if (ClonerData[cloner.Name].ModUniqueID != cloner.ModUniqueID)
+                                if (currentCloner.ModUniqueID != cloner.ModUniqueID)
                                 {
-                                    CustomCrystalariumModEntry.ModMonitor.Log($"Both mods '{ClonerData[cloner.Name].ModUniqueID}' and '{cloner.ModUniqueID}' have data for  '{cloner.Name}'. You should report the problem to these mod's authors. Data from mod '{ClonerData[cloner.Name].ModUniqueID}' will be used.", LogLevel.Warn);
+                                    CustomCrystalariumModEntry.ModMonitor.Log($"Both mods '{currentCloner.ModUniqueID}' and '{cloner.ModUniqueID}' have data for  '{cloner.Name}'. You should report the problem to these mod's authors. Data from mod '{currentCloner.ModUniqueID}' will be used.", LogLevel.Warn);
                                     continue;
                                 }
                             }
@@ -105,7 +104,7 @@ namespace CustomCrystalariumMod
                                 int? id = GetId(d.Key, objects);
                                 if (id.HasValue) cloner.CloningDataId[id.Value] = d.Value;
                             });
-                            ClonerData[cloner.Name] = cloner;
+                            ClonerController.SetCloner(cloner);
                         }
                     }
                 }

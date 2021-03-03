@@ -14,6 +14,6 @@ namespace CustomCrystalariumMod
         public bool GetObjectBackImmediately;
         public bool UsePfmForInput;
         public Dictionary<object, int> CloningData;
-        internal Dictionary<int, int> CloningDataId = new Dictionary<int, int>();
+        public Dictionary<int, int> CloningDataId = new Dictionary<int, int>();
     }
 }
