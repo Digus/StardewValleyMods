@@ -176,6 +176,8 @@ namespace MailServicesMod
                         DisableClearLostItemsOnRandomRecovery = ModConfig.DisableClearLostItemsOnRandomRecovery
                     };
                     Helper.WriteConfig<ModConfig>(DataLoader.ModConfig);
+                    ConfigMenuController.DeleteConfigMenu(MailServicesModEntry.Manifest);
+                    ConfigMenuController.CreateConfigMenu(MailServicesModEntry.Manifest);
                 }
                 return ModConfig.PlayerRecoveryConfig[player.UniqueMultiplayerID];
             }
