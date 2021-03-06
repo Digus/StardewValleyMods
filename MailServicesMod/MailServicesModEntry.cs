@@ -15,6 +15,7 @@ namespace MailServicesMod
     {
         public static IModHelper ModHelper;
         public static IMonitor ModMonitor;
+        public static IManifest Manifest;
 
         /// <summary>
         /// The mod entry point, called after the mod is first loaded.
@@ -25,6 +26,7 @@ namespace MailServicesMod
         {
             ModHelper = helper;
             ModMonitor = Monitor;
+            Manifest = ModManifest;
 
             helper.Events.GameLoop.GameLaunched += OnGameLaunched;
             helper.Events.GameLoop.SaveLoaded += OnSaveLoaded;
@@ -36,6 +38,9 @@ namespace MailServicesMod
         private void OnGameLaunched(object sender, GameLaunchedEventArgs e)
         {
             new DataLoader(ModHelper);
+
+            ConfigMenuController.CreateConfigMenu(ModManifest);
+
             var harmony = HarmonyInstance.Create("Digus.MailServiceMod");
 
             harmony.Patch(
