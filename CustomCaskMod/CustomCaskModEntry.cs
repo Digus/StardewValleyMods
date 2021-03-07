@@ -75,7 +75,7 @@ namespace CustomCaskMod
         /// <param name="e">The event data.</param>
         public static void OnSaveLoaded(object sender, SaveLoadedEventArgs e)
         {
-            DataLoader.FillCaskDataIds();
+            DataLoader.LoadContentPacksCommand();
         }
     }
 }

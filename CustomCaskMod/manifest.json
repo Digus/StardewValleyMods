@@ -1,7 +1,7 @@
 ﻿{
     "Name": "Custom Cask Mod",
     "Author": "Digus",
-    "Version": "1.3.0-beta1",
+    "Version": "1.3.0",
     "Description": "Adds ways to customize the casks.",
     "UniqueID": "DIGUS.CustomCaskMod",
     "EntryDll": "CustomCaskMod.dll",
