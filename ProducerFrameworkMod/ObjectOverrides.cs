@@ -283,18 +283,49 @@ namespace ProducerFrameworkMod
         {
             if (ProducerController.GetProducerConfig(producer.Name) is ProducerConfig producerConfig)
             {
-                if (producerConfig.ProducingAnimation is Animation producingAnimation && producer.minutesUntilReady > 0 && producingAnimation.RelativeFrameIndex.Any()
-                    && producerConfig.CheckSeasonCondition(Game1.currentLocation) && producerConfig.CheckWeatherCondition() && producerConfig.CheckCurrentTimeCondition())
+                if (producerConfig.ProducingAnimation is Animation producingAnimation && producer.minutesUntilReady > 0 && producerConfig.CheckSeasonCondition(Game1.currentLocation) && producerConfig.CheckWeatherCondition() && producerConfig.CheckCurrentTimeCondition())
                 {
-                    int frame = producingAnimation.RelativeFrameIndex[((Game1.ticks + GetLocationSeed(producer.TileLocation)) % (producingAnimation.RelativeFrameIndex.Count * producingAnimation.FrameInterval)) / producingAnimation.FrameInterval];
-                    spriteBatch.Draw(texture, destinationRectangle, new Rectangle?(Object.getSourceRectForBigCraftable(producer.ParentSheetIndex + frame)), color, rotation, origin, effects, layerDepth);
-                    return;
+                    List<int> animationList;
+                    if (producingAnimation.AdditionalAnimationsId.ContainsKey(producer.heldObject.Value.ParentSheetIndex)) 
+                    {
+                        animationList = producingAnimation.AdditionalAnimationsId[producer.heldObject.Value.ParentSheetIndex];
+                    } 
+                    else if (producingAnimation.AdditionalAnimationsId.ContainsKey(producer.heldObject.Value.Category))
+                    {
+                        animationList = producingAnimation.AdditionalAnimationsId[producer.heldObject.Value.Category];
+                    } 
+                    else
+                    {
+                        animationList = producingAnimation.RelativeFrameIndex;
+                    }
+                    if (animationList.Any())
+                    {
+                        int frame = animationList[((Game1.ticks + GetLocationSeed(producer.TileLocation)) % (animationList.Count * producingAnimation.FrameInterval)) / producingAnimation.FrameInterval];
+                        spriteBatch.Draw(texture, destinationRectangle, new Rectangle?(Object.getSourceRectForBigCraftable(producer.ParentSheetIndex + frame)), color, rotation, origin, effects, layerDepth);
+                        return;
+                    }
                 }
-                else if (producerConfig.ReadyAnimation is Animation readyAnimation && producer.readyForHarvest.Value && readyAnimation.RelativeFrameIndex.Any())
+                else if (producerConfig.ReadyAnimation is Animation readyAnimation && producer.readyForHarvest.Value)
                 {
-                    int frame = readyAnimation.RelativeFrameIndex[((Game1.ticks + GetLocationSeed(producer.TileLocation)) % (readyAnimation.RelativeFrameIndex.Count * readyAnimation.FrameInterval)) / readyAnimation.FrameInterval];
-                    spriteBatch.Draw(texture, destinationRectangle, new Rectangle?(Object.getSourceRectForBigCraftable(producer.ParentSheetIndex + frame)), color, rotation, origin, effects, layerDepth);
-                    return;
+                    List<int> animationList;
+                    if (readyAnimation.AdditionalAnimationsId.ContainsKey(producer.heldObject.Value.ParentSheetIndex))
+                    {
+                        animationList = readyAnimation.AdditionalAnimationsId[producer.heldObject.Value.ParentSheetIndex];
+                    }
+                    else if (readyAnimation.AdditionalAnimationsId.ContainsKey(producer.heldObject.Value.Category))
+                    {
+                        animationList = readyAnimation.AdditionalAnimationsId[producer.heldObject.Value.Category];
+                    }
+                    else
+                    {
+                        animationList = readyAnimation.RelativeFrameIndex;
+                    }
+                    if (animationList.Any())
+                    {
+                        int frame = animationList[((Game1.ticks + GetLocationSeed(producer.TileLocation)) % (animationList.Count * readyAnimation.FrameInterval)) / readyAnimation.FrameInterval];
+                        spriteBatch.Draw(texture, destinationRectangle, new Rectangle?(Object.getSourceRectForBigCraftable(producer.ParentSheetIndex + frame)), color, rotation, origin, effects, layerDepth);
+                        return;
+                    }
                 }
             }
             spriteBatch.Draw(texture,destinationRectangle,sourceRectangle,color,rotation,origin,effects,layerDepth);

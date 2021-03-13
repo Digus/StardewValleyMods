@@ -288,6 +288,7 @@ namespace ProducerFrameworkMod.Controllers
         /// <param name="modUniqueId">The mod unique id.</param>
         public static void AddProducersConfig(List<ProducerConfig> producersConfig, string modUniqueId =  null)
         {
+            Dictionary<int, string> objects = DataLoader.Helper.Content.Load<Dictionary<int, string>>("Data\\ObjectInformation", ContentSource.GameContent);
             producersConfig.ForEach(producerConfig =>
             {
                 producerConfig.ModUniqueID = modUniqueId;
@@ -312,7 +313,6 @@ namespace ProducerFrameworkMod.Controllers
                     {
                         producerConfig.LightSource.Color = new Color(lightSource.ColorRed, lightSource.ColorGreen, lightSource.ColorBlue, lightSource.ColorAlpha);
                     }
-
                     if (ConfigRepository.ContainsKey(producerConfig.ProducerName))
                     {
                         ProducerConfig oldConfig = ConfigRepository[producerConfig.ProducerName];
@@ -334,6 +334,49 @@ namespace ProducerFrameworkMod.Controllers
                             }
                         }
                     }
+
+                    if (producerConfig.ProducingAnimation != null)
+                    {
+                        foreach (var animation in producerConfig.ProducingAnimation.AdditionalAnimations)
+                        {
+                            if (!Int32.TryParse(animation.Key, out int outputIndex))
+                            {
+                                KeyValuePair<int, string> pair = objects.FirstOrDefault(o => ObjectUtils.IsObjectStringFromObjectName(o.Value, animation.Key));
+                                if (pair.Value != null)
+                                {
+                                    outputIndex = pair.Key;
+                                }
+                                else
+                                {
+                                    ProducerFrameworkModEntry.ModMonitor.Log($"No object found for '{animation.Key}', producer '{producerConfig.ProducerName}'. This animation will be ignored.", LogLevel.Debug);
+                                    break;
+                                }
+                            }
+                            producerConfig.ProducingAnimation.AdditionalAnimationsId[outputIndex] = animation.Value;
+                        }
+                    }
+
+                    if (producerConfig.ReadyAnimation != null)
+                    {
+                        foreach (var animation in producerConfig.ReadyAnimation.AdditionalAnimations)
+                        {
+                            if (!Int32.TryParse(animation.Key, out int outputIndex))
+                            {
+                                KeyValuePair<int, string> pair = objects.FirstOrDefault(o => ObjectUtils.IsObjectStringFromObjectName(o.Value, animation.Key));
+                                if (pair.Value != null)
+                                {
+                                    outputIndex = pair.Key;
+                                }
+                                else
+                                {
+                                    ProducerFrameworkModEntry.ModMonitor.Log($"No object found for '{animation.Key}', producer '{producerConfig.ProducerName}'. This animation will be ignored.", LogLevel.Debug);
+                                    break;
+                                }
+                            }
+                            producerConfig.ReadyAnimation.AdditionalAnimationsId[outputIndex] = animation.Value;
+                        }
+                    }
+
                     ConfigRepository[producerConfig.ProducerName] = producerConfig;
                 }
             });
