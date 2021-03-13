@@ -46,6 +46,7 @@ namespace ProducerFrameworkMod.ContentPack
         public string OutputGenericParentNameTranslationKey;
         public Object.PreserveType? PreserveType;
         public bool KeepInputParentIndex;
+        public bool ReplaceWithInputParentIndex;
         public bool InputPriceBased;
         public int OutputPriceIncrement = 0;
         public double OutputPriceMultiplier = 1;

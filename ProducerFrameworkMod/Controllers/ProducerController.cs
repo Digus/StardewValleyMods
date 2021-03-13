@@ -62,6 +62,10 @@ namespace ProducerFrameworkMod.Controllers
         /// <param name="modUniqueId">The mod unique id.</param>
         public static void AddProducerItems(List<ProducerRule> producerRules, ITranslationHelper i18n = null, string modUniqueId = null)
         {
+            if (i18n != null)
+            {
+                ObjectTranslationExtension.TranslationHelpers[modUniqueId] = i18n;
+            }
             Dictionary<int, string> objects = DataLoader.Helper.Content.Load<Dictionary<int, string>>("Data\\ObjectInformation", ContentSource.GameContent);
             foreach (var producerRule in producerRules)
             {
@@ -124,6 +128,7 @@ namespace ProducerFrameworkMod.Controllers
                         {
                             producerRule.OutputConfigs.Add(new OutputConfig()
                             {
+                                ModUniqueID = producerRule.ModUniqueID,
                                 OutputIdentifier = producerRule.OutputIdentifier,
                                 OutputName = producerRule.OutputName,
                                 OutputTranslationKey = producerRule.OutputTranslationKey,
@@ -131,6 +136,7 @@ namespace ProducerFrameworkMod.Controllers
                                 OutputGenericParentNameTranslationKey = producerRule.OutputGenericParentNameTranslationKey,
                                 PreserveType = producerRule.PreserveType,
                                 KeepInputParentIndex = producerRule.KeepInputParentIndex,
+                                ReplaceWithInputParentIndex = producerRule.ReplaceWithInputParentIndex,
                                 InputPriceBased = producerRule.InputPriceBased,
                                 OutputPriceIncrement = producerRule.OutputPriceIncrement,
                                 OutputPriceMultiplier = producerRule.OutputPriceMultiplier,
@@ -148,6 +154,7 @@ namespace ProducerFrameworkMod.Controllers
 
                         foreach (OutputConfig outputConfig in producerRule.OutputConfigs)
                         {
+                            outputConfig.ModUniqueID = producerRule.ModUniqueID;
                             if (!Int32.TryParse(outputConfig.OutputIdentifier, out int outputIndex))
                             {
                                 KeyValuePair<int, string> pair = objects.FirstOrDefault(o => ObjectUtils.IsObjectStringFromObjectName(o.Value, outputConfig.OutputIdentifier));
@@ -163,32 +170,6 @@ namespace ProducerFrameworkMod.Controllers
                             }
                             outputConfig.OutputIndex = outputIndex;
 
-                            if (outputConfig.OutputName != null)
-                            {
-                                string customName = outputConfig.OutputName;
-                                string genericParentName = outputConfig.OutputGenericParentName??"";
-                                if (i18n != null)
-                                {
-                                    if (outputConfig.OutputTranslationKey != null)
-                                    {
-                                        string translation = i18n.Get(outputConfig.OutputTranslationKey);
-                                        if (!translation.Contains("(no translation:"))
-                                        {
-                                            customName = translation;
-                                        }
-                                    }
-                                    if (outputConfig.OutputGenericParentNameTranslationKey != null)
-                                    {
-                                        string translation = i18n.Get(outputConfig.OutputGenericParentNameTranslationKey);
-                                        if (!translation.Contains("(no translation:"))
-                                        {
-                                            genericParentName = translation;
-                                        }
-                                    }
-                                }
-                                NameUtils.AddCustomName(outputConfig.OutputIndex, customName);
-                                NameUtils.AddGenericParentName(outputConfig.OutputIndex, genericParentName);
-                            }
 
                             foreach (var fuel in outputConfig.RequiredFuel)
                             {
