@@ -386,7 +386,7 @@ namespace ProducerFrameworkMod
 
             if (ProducerController.GetProducerConfig(__instance.Name) is ProducerConfig producerConfig)
             {
-                if (producerConfig.NoInputStartMode != null || producerConfig.IncrementStatsOnOutput.Count > 0)
+                if (producerConfig.NoInputStartMode != null || producerConfig.IncrementStatsOnOutput.Count > 0 || producerConfig.IncrementStatsLabelOnOutput.Count > 0)
                 {
                     if (who.isMoving())
                     {

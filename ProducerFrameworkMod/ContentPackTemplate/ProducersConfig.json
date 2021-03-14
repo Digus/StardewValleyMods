@@ -1,6 +1,7 @@
 ﻿[
 	{
 		"ProducerName": "ProducerName", //Name of the producer
+        "AdditionalProducerNames": [ "ProducerName2", "ProducerName3" ], //Additional names of the producer. The config will be completely copied to the producer names in the list.
 		"AlternateFrameProducing": true, //If the producer should use the alternate frame when producing.
 		"AlternateFrameWhenReady": true, //If the producer should use the alternate frame and ready for harvest.
 		"DisableBouncingAnimationWhileWorking": false, // If the producer bouncing animation while working should be disabled.
@@ -8,6 +9,10 @@
 		"IncrementStatsOnOutput": { //Pairs of "stats:object" that identify what should be incremented.
 			"GoatCheeseMade": "Goat Cheese", //First value is the stats to be incremented, second value is which output should be produced for the stat to be incremented. The identifier can be the index, name, category or context tag of the output. Will increment the stats by the amount of the stack.
 			"CheeseMade": null //If the identifier is null, any output will match.
+		},
+		"IncrementStatsLabelOnOutput": { //Pairs of "statsLabel:object" that identify what should be incremented. You can add your own custom stats label. MFM also support stats label for conditions. Default is null.
+			"timesEnchanted": "Magic Bait", //First value is the stats label to be incremented, second value is which output should be produced for the stat to be incremented. The identifier can be the index, name, category or context tag of the output. Will increment the stats label by the amount of the stack.
+			"modId.myItemProduced": null //If the identifier is null, any output will match.
 		},
 		"MultipleStatsIncrement": true, //If all stats that match should be incremented. If false, just the first match will be increased. Default is false.
 		"LightSource": { // Defines the light source the producer should use when working. Default is null.
@@ -46,5 +51,6 @@
 ]
 /* Additional Notes
  * Possible stats: [SeedsSown|ItemsShipped|ItemsCooked|ItemsCrafted|ChickenEggsLayed|DuckEggsLayed|CowMilkProduced|GoatMilkProduced|RabbitWoolProduced|SheepWoolProduced|CheeseMade|GoatCheeseMade|TrufflesFound|StoneGathered|RocksCrushed|DirtHoed|GiftsGiven|TimesUnconscious|AverageBedtime|TimesFished|FishCaught|BouldersCracked|StumpsChopped|StepsTaken|MonstersKilled|DiamondsFound|PrismaticShardsFound|OtherPreciousGemsFound|CaveCarrotsFound|CopperFound|IronFound|CoalFound|CoinsFound|GoldFound|IridiumFound|BarsSmelted|BeveragesMade|PreservesMade|PiecesOfTrashRecycled|MysticStonesCrushed|DaysPlayed|WeedsEliminated|SticksChopped|NotesFound|QuestsCompleted|StarLevelCropsShipped|CropsShipped|ItemsForaged|SlimesKilled|GeodesCracked|GoodFriends|IndividualMoneyEarned]
+ * Vanilla stats label: [exMemoriesWiped|childrenTurnedToDoves|trashCansChecked|boatRidesToIsland|beachFarmSpawns|hardModeMonstersKilled|timesEnchanted]
  * Note that not all stats are correctly counted by the game.
  */

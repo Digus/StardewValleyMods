@@ -5,6 +5,7 @@ using StardewModdingAPI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Force.DeepCloner;
 using Object = StardewValley.Object;
 
 namespace ProducerFrameworkMod.Controllers
@@ -71,24 +72,9 @@ namespace ProducerFrameworkMod.Controllers
             {
                 try {
                     producerRule.ModUniqueID = modUniqueId;
-                    if (String.IsNullOrEmpty(producerRule.ProducerName))
+                    if (!ValidateRuleProducerName(producerRule.ProducerName))
                     {
-                        ProducerFrameworkModEntry.ModMonitor.Log($"The ProducerName property can't be null or empty. This rule will be ignored.", LogLevel.Warn);
-                    }
-                    else if (UnsupportedMachines.Contains(producerRule.ProducerName) || producerRule.ProducerName.Contains("arecrow"))
-                    {
-                        if (producerRule.ProducerName == "Crystalarium")
-                        {
-                            ProducerFrameworkModEntry.ModMonitor.Log($"Producer Framework Mod doesn't support Crystalariums. Use Custom Cristalarium Mod instead.", LogLevel.Warn);
-                        }
-                        else if (producerRule.ProducerName == "Cask")
-                        {
-                            ProducerFrameworkModEntry.ModMonitor.Log($"Producer Framework Mod doesn't support Casks. Use Custom Cask Mod instead.", LogLevel.Warn);
-                        }
-                        else
-                        {
-                            ProducerFrameworkModEntry.ModMonitor.Log($"Producer Framework Mod doesn't support {producerRule.ProducerName}. This rule will be ignored.", LogLevel.Warn);
-                        }
+                        //Do nothing, already logged.
                     }
                     else if (string.IsNullOrEmpty(producerRule.InputIdentifier) && (GetProducerConfig(producerRule.ProducerName)?.NoInputStartMode == null))
                     {
@@ -236,30 +222,7 @@ namespace ProducerFrameworkMod.Controllers
                                 ProducerFrameworkModEntry.ModMonitor.Log($"Color '{producerRule.PlacingAnimationColorName}' isn't valid. Check XNA Color Chart for valid names. It'll use the default color '{producerRule.PlacingAnimationColor}'.");
                             }
                         }
-
-                        Tuple<string, object> ruleKey = new Tuple<string, object>(producerRule.ProducerName, producerRule.InputKey);
-                        if (RulesRepository.ContainsKey(ruleKey))
-                        {
-                            ProducerRule oldRule = RulesRepository[ruleKey];
-                            if (oldRule.ModUniqueID != producerRule.ModUniqueID)
-                            {
-                                if (oldRule.OverrideMod.Contains(producerRule.ModUniqueID) && producerRule.OverrideMod.Contains(oldRule.ModUniqueID))
-                                {
-                                    ProducerFrameworkModEntry.ModMonitor.Log($"Both mod '{oldRule.ModUniqueID}' and '{producerRule.ModUniqueID}' are saying they should override the rule for producer '{producerRule.ProducerName}' and input '{producerRule.InputIdentifier}'. You should report the problem to these mod's authors. Rule from mod '{oldRule.ModUniqueID}' will be used.", LogLevel.Warn);
-                                    continue;
-                                } 
-                                else if (producerRule.OverrideMod.Contains(oldRule.ModUniqueID))
-                                {
-                                    ProducerFrameworkModEntry.ModMonitor.Log($"Mod '{producerRule.ModUniqueID}' is overriding mod '{oldRule.ModUniqueID}' rule for producer '{producerRule.ProducerName}' and input '{producerRule.InputIdentifier}'.", LogLevel.Debug);
-                                }
-                                else
-                                {
-                                    ProducerFrameworkModEntry.ModMonitor.Log($"Mod '{producerRule.ModUniqueID}' can't override mod '{oldRule.ModUniqueID}' rule for producer '{producerRule.ProducerName}' and input '{producerRule.InputIdentifier}'. This rule will be ignored.", LogLevel.Debug);
-                                    continue;
-                                }
-                            }
-                        }
-                        RulesRepository[ruleKey] = producerRule;
+                        AddRuleToRepository(producerRule);
                     }
                 }
                 catch (Exception e)
@@ -267,7 +230,87 @@ namespace ProducerFrameworkMod.Controllers
                     ProducerFrameworkModEntry.ModMonitor.Log($"Unexpected error for rule from '{producerRule?.ModUniqueID}', producer '{producerRule?.ProducerName}' and input '{producerRule?.InputIdentifier}'. This rule will be ignored.", LogLevel.Error);
                     ProducerFrameworkModEntry.ModMonitor.Log(e.Message + "\n" + e.StackTrace);
                 }
+                foreach (var n in producerRule.AdditionalProducerNames)
+                {
+                    ProducerRule newProducerRule = null;
+                    try {
+                        newProducerRule = producerRule.DeepClone();
+                        newProducerRule.ProducerName = n;
+                        newProducerRule.AdditionalProducerNames.Clear();
+                        if (ValidateRuleProducerName(newProducerRule.ProducerName))
+                        {
+                            AddRuleToRepository(newProducerRule);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        ProducerFrameworkModEntry.ModMonitor.Log($"Unexpected error for rule from '{newProducerRule?.ModUniqueID}', producer '{newProducerRule?.ProducerName}' and input '{newProducerRule?.InputIdentifier}'. This rule will be ignored.", LogLevel.Error);
+                        ProducerFrameworkModEntry.ModMonitor.Log(e.Message + "\n" + e.StackTrace);
+                    }
+                }   
+                producerRule.AdditionalProducerNames.Clear();
             }
+        }
+
+        private static bool ValidateRuleProducerName(string producerName)
+        {
+            if (String.IsNullOrEmpty(producerName))
+            {
+                ProducerFrameworkModEntry.ModMonitor.Log($"The ProducerName property can't be null or empty. This rule will be ignored.", LogLevel.Warn);
+                return false;
+            }
+            else if (UnsupportedMachines.Contains(producerName) || producerName.Contains("arecrow"))
+            {
+                if (producerName == "Crystalarium")
+                {
+                    ProducerFrameworkModEntry.ModMonitor.Log($"Producer Framework Mod doesn't support Crystalariums. Use Custom Cristalarium Mod instead.",
+                        LogLevel.Warn);
+                }
+                else if (producerName == "Cask")
+                {
+                    ProducerFrameworkModEntry.ModMonitor.Log($"Producer Framework Mod doesn't support Casks. Use Custom Cask Mod instead.", LogLevel.Warn);
+                }
+                else
+                {
+                    ProducerFrameworkModEntry.ModMonitor.Log($"Producer Framework Mod doesn't support {producerName}. This rule will be ignored.", LogLevel.Warn);
+                }
+                return false;
+            }
+            return true;
+        }
+
+        private static void AddRuleToRepository(ProducerRule producerRule)
+        {
+            Tuple<string, object> ruleKey = new Tuple<string, object>(producerRule.ProducerName, producerRule.InputKey);
+            if (RulesRepository.ContainsKey(ruleKey))
+            {
+                ProducerRule oldRule = RulesRepository[ruleKey];
+                if (oldRule.ModUniqueID != producerRule.ModUniqueID)
+                {
+                    if (oldRule.OverrideMod.Contains(producerRule.ModUniqueID) &&
+                        producerRule.OverrideMod.Contains(oldRule.ModUniqueID))
+                    {
+                        ProducerFrameworkModEntry.ModMonitor.Log(
+                            $"Both mod '{oldRule.ModUniqueID}' and '{producerRule.ModUniqueID}' are saying they should override the rule for producer '{producerRule.ProducerName}' and input '{producerRule.InputIdentifier}'. You should report the problem to these mod's authors. Rule from mod '{oldRule.ModUniqueID}' will be used.",
+                            LogLevel.Warn);
+                        return;
+                    }
+                    else if (producerRule.OverrideMod.Contains(oldRule.ModUniqueID))
+                    {
+                        ProducerFrameworkModEntry.ModMonitor.Log(
+                            $"Mod '{producerRule.ModUniqueID}' is overriding mod '{oldRule.ModUniqueID}' rule for producer '{producerRule.ProducerName}' and input '{producerRule.InputIdentifier}'.",
+                            LogLevel.Debug);
+                    }
+                    else
+                    {
+                        ProducerFrameworkModEntry.ModMonitor.Log(
+                            $"Mod '{producerRule.ModUniqueID}' can't override mod '{oldRule.ModUniqueID}' rule for producer '{producerRule.ProducerName}' and input '{producerRule.InputIdentifier}'. This rule will be ignored.",
+                            LogLevel.Debug);
+                        return;
+                    }
+                }
+            }
+            RulesRepository[ruleKey] = producerRule;
         }
 
         /// <summary>
@@ -292,47 +335,15 @@ namespace ProducerFrameworkMod.Controllers
             producersConfig.ForEach(producerConfig =>
             {
                 producerConfig.ModUniqueID = modUniqueId;
-                if (UnsupportedMachines.Contains(producerConfig.ProducerName) || producerConfig.ProducerName.Contains("arecrow"))
+                if (!ValidateConfigProducerName(producerConfig.ProducerName))
                 {
-                    if (producerConfig.ProducerName == "Crystalarium")
-                    {
-                        ProducerFrameworkModEntry.ModMonitor.Log($"Producer Framework Mod doesn't support Crystalariums. Use Custom Cristalarium Mod instead.", LogLevel.Warn);
-                    }
-                    else if (producerConfig.ProducerName == "Cask")
-                    {
-                        ProducerFrameworkModEntry.ModMonitor.Log($"Producer Framework Mod doesn't support Casks. Use Custom Cask Mod instead.", LogLevel.Warn);
-                    }
-                    else
-                    {
-                        ProducerFrameworkModEntry.ModMonitor.Log($"Producer Framework Mod doesn't support {producerConfig.ProducerName}. This config will be ignored.", LogLevel.Warn);
-                    }
+                    //Do nothing, already logged.
                 }
                 else
                 {
                     if (producerConfig?.LightSource is LightSourceConfig lightSource)
                     {
                         producerConfig.LightSource.Color = new Color(lightSource.ColorRed, lightSource.ColorGreen, lightSource.ColorBlue, lightSource.ColorAlpha);
-                    }
-                    if (ConfigRepository.ContainsKey(producerConfig.ProducerName))
-                    {
-                        ProducerConfig oldConfig = ConfigRepository[producerConfig.ProducerName];
-                        if (oldConfig.ModUniqueID != null && oldConfig.ModUniqueID != producerConfig.ModUniqueID)
-                        {
-                            if (oldConfig.OverrideMod.Contains(producerConfig.ModUniqueID) && producerConfig.OverrideMod.Contains(oldConfig.ModUniqueID))
-                            {
-                                ProducerFrameworkModEntry.ModMonitor.Log($"Both mod '{oldConfig.ModUniqueID}' and '{producerConfig.ModUniqueID}' are saying they should override the config for producer '{producerConfig.ProducerName}'. You should report the problem to these mod's authors. Config from mod '{oldConfig.ModUniqueID}' will be used.", LogLevel.Warn);
-                                return;
-                            }
-                            else if (producerConfig.OverrideMod.Contains(oldConfig.ModUniqueID))
-                            {
-                                ProducerFrameworkModEntry.ModMonitor.Log($"Mod '{producerConfig.ModUniqueID}' is overriding mod '{oldConfig.ModUniqueID}' config for producer '{producerConfig.ProducerName}'.", LogLevel.Debug);
-                            }
-                            else
-                            {
-                                ProducerFrameworkModEntry.ModMonitor.Log($"Mod '{producerConfig.ModUniqueID}' can't override mod '{oldConfig.ModUniqueID}' config for producer '{producerConfig.ProducerName}'. This rule will be ignored.", LogLevel.Debug);
-                                return;
-                            }
-                        }
                     }
 
                     if (producerConfig.ProducingAnimation != null)
@@ -376,10 +387,83 @@ namespace ProducerFrameworkMod.Controllers
                             producerConfig.ReadyAnimation.AdditionalAnimationsId[outputIndex] = animation.Value;
                         }
                     }
+                    AddConfigToRepository(producerConfig);
 
-                    ConfigRepository[producerConfig.ProducerName] = producerConfig;
+                    foreach (var n in producerConfig.AdditionalProducerNames)
+                    {
+                        ProducerConfig newProducerConfig = null;
+                        
+                        newProducerConfig = producerConfig.DeepClone();
+                        newProducerConfig.ProducerName = n;
+                        newProducerConfig.AdditionalProducerNames.Clear();
+                        if (ValidateConfigProducerName(newProducerConfig.ProducerName))
+                        {
+                            AddConfigToRepository(newProducerConfig);
+                        }
+                    }
+                    producerConfig.AdditionalProducerNames.Clear();
                 }
             });
+        }
+
+        private static bool ValidateConfigProducerName(string producerName)
+        {
+            if (String.IsNullOrEmpty(producerName))
+            {
+                ProducerFrameworkModEntry.ModMonitor.Log($"The ProducerName property can't be null or empty. This rule will be ignored.", LogLevel.Warn);
+                return false;
+            }
+            else if (UnsupportedMachines.Contains(producerName) || producerName.Contains("arecrow"))
+            {
+                if (producerName == "Crystalarium")
+                {
+                    ProducerFrameworkModEntry.ModMonitor.Log($"Producer Framework Mod doesn't support Crystalariums. Use Custom Cristalarium Mod instead.", LogLevel.Warn);
+                }
+                else if (producerName == "Cask")
+                {
+                    ProducerFrameworkModEntry.ModMonitor.Log($"Producer Framework Mod doesn't support Casks. Use Custom Cask Mod instead.", LogLevel.Warn);
+                }
+                else
+                {
+                    ProducerFrameworkModEntry.ModMonitor.Log($"Producer Framework Mod doesn't support {producerName}. This config will be ignored.", LogLevel.Warn);
+                }
+
+                return false;
+            }
+            return true;
+        }
+
+        private static void AddConfigToRepository(ProducerConfig producerConfig)
+        {
+            if (ConfigRepository.ContainsKey(producerConfig.ProducerName))
+            {
+                ProducerConfig oldConfig = ConfigRepository[producerConfig.ProducerName];
+                if (oldConfig.ModUniqueID != null && oldConfig.ModUniqueID != producerConfig.ModUniqueID)
+                {
+                    if (oldConfig.OverrideMod.Contains(producerConfig.ModUniqueID) &&
+                        producerConfig.OverrideMod.Contains(oldConfig.ModUniqueID))
+                    {
+                        ProducerFrameworkModEntry.ModMonitor.Log(
+                            $"Both mod '{oldConfig.ModUniqueID}' and '{producerConfig.ModUniqueID}' are saying they should override the config for producer '{producerConfig.ProducerName}'. You should report the problem to these mod's authors. Config from mod '{oldConfig.ModUniqueID}' will be used.",
+                            LogLevel.Warn);
+                        return;
+                    }
+                    else if (producerConfig.OverrideMod.Contains(oldConfig.ModUniqueID))
+                    {
+                        ProducerFrameworkModEntry.ModMonitor.Log(
+                            $"Mod '{producerConfig.ModUniqueID}' is overriding mod '{oldConfig.ModUniqueID}' config for producer '{producerConfig.ProducerName}'.",
+                            LogLevel.Debug);
+                    }
+                    else
+                    {
+                        ProducerFrameworkModEntry.ModMonitor.Log(
+                            $"Mod '{producerConfig.ModUniqueID}' can't override mod '{oldConfig.ModUniqueID}' config for producer '{producerConfig.ProducerName}'. This rule will be ignored.",
+                            LogLevel.Debug);
+                        return;
+                    }
+                }
+            }
+            ConfigRepository[producerConfig.ProducerName] = producerConfig;
         }
 
         /// <summary>
@@ -413,7 +497,6 @@ namespace ProducerFrameworkMod.Controllers
                     RulesRepository.TryGetValue(new Tuple<string, object>(producerName, input.Category), out value);
                 }
             }
-
             return value;
         }
 
