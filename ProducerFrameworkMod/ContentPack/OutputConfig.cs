@@ -9,6 +9,7 @@ namespace ProducerFrameworkMod.ContentPack
 {
     public class OutputConfig
     {
+        public string ModUniqueID;
         public double OutputProbability = 0;
         public string OutputIdentifier;
         public int? MinutesUntilReady;
@@ -18,6 +19,7 @@ namespace ProducerFrameworkMod.ContentPack
         public string OutputGenericParentNameTranslationKey;
         public Object.PreserveType? PreserveType;
         public bool KeepInputParentIndex;
+        public bool ReplaceWithInputParentIndex;
         public bool InputPriceBased;
         public int OutputPriceIncrement = 0;
         public double OutputPriceMultiplier = 1;
@@ -43,6 +45,11 @@ namespace ProducerFrameworkMod.ContentPack
         //Generated Properties
         public int OutputIndex = -1;
         public List<Tuple<int, int>> FuelList = new List<Tuple<int, int>>();
+
+        public OutputConfig Clone()
+        {
+            return (OutputConfig) this.MemberwiseClone();
+        }
     }
 
     public class StackConfig
