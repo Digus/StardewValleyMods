@@ -13,5 +13,6 @@ namespace MailFrameworkMod.ContentPack
         Artifacts,
         Minerals,
         Cooking,
+        Crafting,
     }
 }
