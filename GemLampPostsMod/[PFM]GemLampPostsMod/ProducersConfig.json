@@ -1,0 +1,17 @@
+[
+    {
+        "ProducerName": "Gem Lamp-post",
+        "AdditionalProducerNames": [ "Iron Gem Lamp-post", "Wood Gem Lamp-post" ],
+        "DisableBouncingAnimationWhileWorking": true,
+        "LightSource": {
+            "TextureIndex": 4,
+            "Radius": 2,
+            "OffsetX": 0,
+            "OffsetY": 32,
+            "ColorType": "ObjectColor"
+        },
+        "IncrementStatsLabelOnOutput": {
+            "GemLampPostsMod.gemDustProduced": null
+        }
+    }
+]

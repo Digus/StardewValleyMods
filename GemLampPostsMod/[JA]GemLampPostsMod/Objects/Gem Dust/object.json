@@ -1,0 +1,45 @@
+{
+    "Name": "Gem Dust",
+    "Description": "Dust from a gem that was drained from its energy.",
+    "Category": "Junk",
+    "Edibility": -300,
+    "Price": 10,
+    "IsColored": true,
+    "Recipe": null,
+    "GiftTastes":
+    {
+        "Love": [ "Dwarf" ],
+        "Like": [ "Wizard", "Emily", "Clint"],
+        "Neutral": [ "Penny", "Demetrius", "Robin", "Maru", "Abigail", "Sebastian" ],
+        "Dislike": [ "Leah", "Linus", "Pierre", "Elliott", "Harvey", "Sam", "Haley", "Caroline", "Evelyn", "Jas", "Jodi", "Kent", "Lewis", "Marnie", "Sandy", "Alex", "Shane", "Gus", "Krobus", "Pam", "Vincent", "Willy", "George" ]
+    },
+    "NameLocalization":
+    {
+        //"es": "",
+        //"ko": "",
+        //"de": "",
+         // "fr": "",
+         // "hu": "",
+         // "it": "",
+         // "ja": "",
+        "pt": "Pó de gema"
+         // "ru": "",
+         // "tr": "",
+        //"zh": "",
+    },
+    "DescriptionLocalization":
+    {
+        //"es": "",
+        //"ko": "",
+        //"de": "",
+         // "fr": "",
+         // "hu": "",
+         // "it": "",
+         // "ja": "",
+        "pt": "Pó de uma gema que foi drenada de sua energia."
+         // "ru": "",
+         // "tr": "",
+        //"zh": "",
+    },
+    "ContextTags": []
+}
