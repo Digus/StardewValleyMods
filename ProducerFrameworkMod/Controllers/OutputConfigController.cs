@@ -58,25 +58,37 @@ namespace ProducerFrameworkMod.Controllers
             List<OutputConfig> outputConfigs = filteredOutputConfigs.FindAll(o => o.OutputProbability > 0);
             Double chance = random.NextDouble();
             Double probabilities = 0;
+            OutputConfig result = null;
             foreach (OutputConfig outputConfig in outputConfigs)
             {
                 probabilities += outputConfig.OutputProbability;
                 if (chance - probabilities < 0)
                 {
-                    return outputConfig;
+                    result = outputConfig;
+                    break;
                 }
             }
-            outputConfigs = filteredOutputConfigs.FindAll(o => o.OutputProbability <= 0);
-            double increment = (1 - probabilities) / outputConfigs.Count;
-            foreach (OutputConfig outputConfig in outputConfigs)
+            if (result == null)
             {
-                probabilities += increment;
-                if (chance - probabilities < 0)
+                outputConfigs = filteredOutputConfigs.FindAll(o => o.OutputProbability <= 0);
+                double increment = (1 - probabilities) / outputConfigs.Count;
+                foreach (OutputConfig outputConfig in outputConfigs)
                 {
-                    return outputConfig;
+                    probabilities += increment;
+                    if (chance - probabilities < 0)
+                    {
+                        result = outputConfig;
+                        break;
+                    }
                 }
             }
-            return filteredOutputConfigs.FirstOrDefault();
+            result = result ?? filteredOutputConfigs.FirstOrDefault();
+            if (result != null && result.ReplaceWithInputParentIndex && input != null && input.preservedParentSheetIndex.Value > 0)
+            {
+                result = result.Clone();
+                result.OutputIndex = input.preservedParentSheetIndex.Value;
+            }
+            return result;
         }
 
         private static List<OutputConfig> FilterOutputConfig(List<OutputConfig> outputConfigs, Predicate<OutputConfig> filterPredicate, string messageSuffix, Object inputForName =  null)
@@ -250,6 +262,10 @@ namespace ProducerFrameworkMod.Controllers
             {
                 output.preservedParentSheetIndex.Value = input == null ? -1 : outputConfig.KeepInputParentIndex && input.preservedParentSheetIndex.Value != 0 ? input.preservedParentSheetIndex.Value : input.ParentSheetIndex;
             }
+
+            output.AddCustomName(outputConfig);
+            output.AddGenericParentName(outputConfig);
+            output.AddContentPackUniqueID(outputConfig);
 
             //Called just to load the display name.
             string loadingDisplayName = output.DisplayName;
