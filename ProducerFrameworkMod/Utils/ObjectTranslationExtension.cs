@@ -16,12 +16,12 @@ namespace ProducerFrameworkMod.Utils
 
         internal static void AddCustomName(this SObject obj, OutputConfig outputConfig)
         {
-            obj.modData[OutputTranslationKey] = outputConfig.OutputTranslationKey;
+            obj.modData[OutputTranslationKey] = outputConfig.OutputTranslationKey ?? obj.Name;
         }
 
         internal static void AddGenericParentName(this SObject obj, OutputConfig outputConfig)
         {
-            obj.modData[OutputGenericParentNameTranslationKey] = outputConfig.OutputGenericParentNameTranslationKey;
+            obj.modData[OutputGenericParentNameTranslationKey] = outputConfig.OutputGenericParentNameTranslationKey ?? outputConfig.OutputGenericParentName;
         }
 
         internal static void AddContentPackUniqueID(this SObject obj, OutputConfig outputConfig)
@@ -34,10 +34,7 @@ namespace ProducerFrameworkMod.Utils
             if (obj.GetKey(OutputTranslationKey) is string key && GetKey(obj, ContentPackUniqueID) is string id)
             {
                 string translation = TranslationHelpers[id].Get(key);
-                if (!translation.Contains("(no translation:"))
-                {
-                    return translation;
-                }
+                return !translation.Contains("(no translation:") ? translation : key;
             }
             return null;
         }
@@ -47,10 +44,7 @@ namespace ProducerFrameworkMod.Utils
             if (obj.GetKey(OutputGenericParentNameTranslationKey) is string key && GetKey(obj, ContentPackUniqueID) is string id)
             {
                 string translation = TranslationHelpers[id].Get(key);
-                if (!translation.Contains("(no translation:"))
-                {
-                    return translation;
-                }
+                return !translation.Contains("(no translation:") ? translation : key;
             }
             return null;
         }
