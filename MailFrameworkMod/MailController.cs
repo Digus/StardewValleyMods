@@ -215,7 +215,7 @@ namespace MailFrameworkMod
                                 MailFrameworkModEntry.ModMonitor.Log($"The recipe '{recipe}' does not have a internationalized name. The default name will be used.", LogLevel.Warn);
                             }
                         }
-                        else
+                        else if (strArray[strArray.Length - 1] != "null")
                         {
                             learnedRecipe = strArray[strArray.Length - 1];
                         }
