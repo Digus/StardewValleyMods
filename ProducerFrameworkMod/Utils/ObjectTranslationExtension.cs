@@ -16,7 +16,7 @@ namespace ProducerFrameworkMod.Utils
 
         internal static void AddCustomName(this SObject obj, OutputConfig outputConfig)
         {
-            obj.modData[OutputTranslationKey] = outputConfig.OutputTranslationKey ?? obj.Name;
+            obj.modData[OutputTranslationKey] = outputConfig.OutputTranslationKey ?? outputConfig.OutputName;
         }
 
         internal static void AddGenericParentName(this SObject obj, OutputConfig outputConfig)
