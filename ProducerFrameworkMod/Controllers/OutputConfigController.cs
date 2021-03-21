@@ -263,9 +263,12 @@ namespace ProducerFrameworkMod.Controllers
                 output.preservedParentSheetIndex.Value = input == null ? -1 : outputConfig.KeepInputParentIndex && input.preservedParentSheetIndex.Value != 0 ? input.preservedParentSheetIndex.Value : input.ParentSheetIndex;
             }
 
-            output.AddCustomName(outputConfig);
-            output.AddGenericParentName(outputConfig);
-            output.AddContentPackUniqueID(outputConfig);
+            if (outputName != null)
+            {
+                output.AddCustomName(outputConfig);
+                output.AddGenericParentName(outputConfig);
+                output.AddContentPackUniqueID(outputConfig);
+            }
 
             //Called just to load the display name.
             string loadingDisplayName = output.DisplayName;
