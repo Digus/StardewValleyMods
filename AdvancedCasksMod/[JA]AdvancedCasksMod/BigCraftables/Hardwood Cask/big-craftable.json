@@ -1,0 +1,40 @@
+{
+    "Name": "Hardwood Cask",
+    "Description": "Use in the cellar to age products like wine and cheese. Faster than the regular cask.",
+    "Price": 50,
+    "Recipe": {
+        "ResultCount": 1,
+        "Ingredients": [
+            { "Object": 709, "Count": 20 },
+            { "Object": 382, "Count": 1 },
+            { "Object": 335, "Count": 1 }
+        ],
+        "CanPurchase": false
+    },
+    "NameLocalization": {
+        // "es": "",
+        // "ko": "",
+        // "de": "",
+        // "fr": "",
+        // "hu": "",
+        // "it": "",
+        // "ja": "",
+        "pt": "Barril de madeira de lei"
+        // "ru": "",
+        // "tr": "",
+        // "zh": "",
+    },
+    "DescriptionLocalization": {
+        // "es": "",
+        // "ko": "",
+        // "de": "",
+        // "fr": "",
+        // "hu": "",
+        // "it": "",
+        // "ja": "",
+        "pt": "Utilizado na adega para envelhecer produtos como queijo e vinho. Mais rápido que o de madeira comum."
+        // "ru": "",
+        // "tr": "",
+        // "zh": "",
+    }
+}
