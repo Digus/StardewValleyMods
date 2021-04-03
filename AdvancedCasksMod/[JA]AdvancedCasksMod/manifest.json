@@ -1,0 +1,12 @@
+﻿{
+    "Name": "[JA]Advanced Casks Mod",
+    "Author": "Digus",
+    "Version": "1.0.0",
+    "Description": "Adds Advanced Casks to the game.",
+    "UniqueID": "Digus.AdvancedCasksMod",
+    "MinimumApiVersion": "3.9.0",
+    "UpdateKeys": [ "Nexus:8413" ],
+    "ContentPackFor": {
+        "UniqueID": "spacechase0.JsonAssets"
+    }
+}
