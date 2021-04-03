@@ -1,0 +1,42 @@
+{
+    "Name": "Radioactive Cask",
+    "Description": "Used anywhere to age products like wine and cheese. Faster than any cask.",
+    "Price": 0,
+    "Recipe": {
+        "ResultCount": 1,
+        "Ingredients": [
+            { "Object": 709, "Count": 20 },
+            { "Object": 337, "Count": 2 },
+            { "Object": 910, "Count": 1 }
+        ],
+        "CanPurchase": true,
+        "PurchaseFrom": "QiGemShop",
+        "PurchasePrice": 50
+    },
+    "NameLocalization": {
+        // "es": "",
+        // "ko": "",
+        // "de": "",
+        // "fr": "",
+        // "hu": "",
+        // "it": "",
+        // "ja": "",
+        "pt": "Barril atômico"
+        // "ru": "",
+        // "tr": "",
+        // "zh": "",
+    },
+    "DescriptionLocalization": {
+        // "es": "",
+        // "ko": "",
+        // "de": "",
+        // "fr": "",
+        // "hu": "",
+        // "it": "",
+        // "ja": "",
+        "pt": "Utilizado em qualquer lugar para envelhecer produtos como queijo e vinho. Mais rápido que qualquer barril."
+        // "ru": "",
+        // "tr": "",
+        // "zh": "",
+    }
+}
