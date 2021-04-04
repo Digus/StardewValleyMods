@@ -1,4 +1,4 @@
-{
+﻿{
     "Name": "Gem Lamp-post",
     "Description": "Lamp-post powered by gems energy.",
     "Price": 100,
@@ -19,7 +19,7 @@
     },
     "NameLocalization": {
         // "es": "",
-        // "ko": "",
+        "ko": "보석 가로등",
         // "de": "",
         // "fr": "",
         // "hu": "",
@@ -32,7 +32,7 @@
     },
     "DescriptionLocalization": {
         // "es": "",
-        // "ko": "",
+        "ko": "보석의 에너지로 작동되는 가로등.",
         // "de": "",
         // "fr": "",
         // "hu": "",
