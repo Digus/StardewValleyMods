@@ -282,9 +282,8 @@ namespace ProducerFrameworkMod.Controllers
         private static void AddRuleToRepository(ProducerRule producerRule)
         {
             Tuple<string, object> ruleKey = new Tuple<string, object>(producerRule.ProducerName, producerRule.InputKey);
-            if (RulesRepository.ContainsKey(ruleKey))
+            if (RulesRepository.TryGetValue(ruleKey, out var oldRule))
             {
-                ProducerRule oldRule = RulesRepository[ruleKey];
                 if (oldRule.ModUniqueID != producerRule.ModUniqueID)
                 {
                     if (oldRule.OverrideMod.Contains(producerRule.ModUniqueID) &&
@@ -475,28 +474,34 @@ namespace ProducerFrameworkMod.Controllers
         public static ProducerRule GetProducerItem(string producerName, Object input)
         {
             ProducerRule value;
-            if (input == null)
-            {
+            if (input == null) {
                 RulesRepository.TryGetValue(new Tuple<string, object>(producerName, null), out value);
+                return value;
             }
-            else
+
+            if (RulesRepository.TryGetValue(new Tuple<string, object>(producerName, input.Name), out value))
             {
-                RulesRepository.TryGetValue(new Tuple<string, object>(producerName, input.ParentSheetIndex), out value);
-                if (value == null)
+                return value;
+            }
+
+            if (RulesRepository.TryGetValue(new Tuple<string, object>(producerName, input.ParentSheetIndex), out value))
+            {
+                return value;
+            }
+
+            foreach (string tag in input.GetContextTagList())
+            {
+                if (RulesRepository.TryGetValue(new Tuple<string, object>(producerName, tag), out value))
                 {
-                    foreach (string tag in input.GetContextTagList())
-                    {
-                        if (RulesRepository.TryGetValue(new Tuple<string, object>(producerName, tag), out value))
-                        {
-                            break;
-                        }
-                    }
-                }
-                if (value == null)
-                {
-                    RulesRepository.TryGetValue(new Tuple<string, object>(producerName, input.Category), out value);
+                    return value;
                 }
             }
+
+            if (RulesRepository.TryGetValue(new Tuple<string, object>(producerName, input.Category), out value))
+            {
+                return value;
+            }
+            
             return value;
         }
 

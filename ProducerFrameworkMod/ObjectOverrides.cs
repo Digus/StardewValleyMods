@@ -28,7 +28,7 @@ namespace ProducerFrameworkMod
             bool failLocationCondition = false;
             bool failSeasonCondition = false;
 
-            if (__instance.heldObject.Value != null && !__instance.name.Equals("Crystalarium") || input.bigCraftable.Value)
+            if (__instance.heldObject.Value != null && !__instance.name.Equals("Crystalarium"))
             {
                 return true;
             }
