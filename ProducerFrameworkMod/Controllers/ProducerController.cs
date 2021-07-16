@@ -474,7 +474,8 @@ namespace ProducerFrameworkMod.Controllers
         public static ProducerRule GetProducerItem(string producerName, Object input)
         {
             ProducerRule value;
-            if (input == null && RulesRepository.TryGetValue(new Tuple<string, object>(producerName, null), out value)) {
+            if (input == null) {
+                RulesRepository.TryGetValue(new Tuple<string, object>(producerName, null), out value);
                 return value;
             }
 
