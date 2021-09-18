@@ -1,5 +1,5 @@
 ﻿using System;
-using Harmony;
+using HarmonyLib;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley;
@@ -12,6 +12,8 @@ namespace MailFrameworkMod
     {
         public static IModHelper ModHelper;
         public static IMonitor ModMonitor;
+
+        public static IDynamicGameAssetsApi dgaAPI;
 
         /*********
         ** Public methods
@@ -45,8 +47,9 @@ namespace MailFrameworkMod
         /// <param name="e">The event data.</param>
         private void OnGameLaunched(object sender, GameLaunchedEventArgs e)
         {
+            dgaAPI = Helper.ModRegistry.GetApi<IDynamicGameAssetsApi>("spacechase0.DynamicGameAssets");
             Helper.Content.AssetEditors.Add(new DataLoader());
-            var harmony = HarmonyInstance.Create("Digus.MailFrameworkMod");
+            var harmony = new Harmony("Digus.MailFrameworkMod");
             
             harmony.Patch(
                 original: AccessTools.Method(typeof(GameLocation), nameof(GameLocation.mailbox)),
