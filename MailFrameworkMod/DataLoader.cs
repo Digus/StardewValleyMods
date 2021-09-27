@@ -330,6 +330,25 @@ namespace MailFrameworkMod
                                             MailFrameworkModEntry.ModMonitor.Log($"An index value is required to attach a boots for letter {mailItem.Id}.", LogLevel.Warn);
                                         }
                                         break;
+                                    case ItemType.DGA:
+                                        object dgaObject = MailFrameworkModEntry.dgaAPI.SpawnDGAItem(i.Name);
+                                        if(dgaObject is StardewValley.Item dgaItem)
+                                        {
+                                            if(dgaItem is StardewValley.Object)
+                                            {
+                                                dgaItem.Stack = i.Stack ?? 1;
+                                            }
+                                            else
+                                            {
+                                                dgaItem.Stack = 1;
+                                            }
+                                            attachments.Add(dgaItem);
+                                        }
+                                        else
+                                        {
+                                            MailFrameworkModEntry.ModMonitor.Log($"No DGA item found with the name {i.Name} for letter {mailItem.Id}.", LogLevel.Warn);
+                                        }
+                                        break;
                                     default:
                                         MailFrameworkModEntry.ModMonitor.Log($"Invalid attachment type '{i.Type}' found in letter {mailItem.Id}.", LogLevel.Warn);
                                         break;
