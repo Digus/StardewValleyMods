@@ -6,9 +6,9 @@
 		"Text": "Dear @^This is my custom mail.", // Text of the letter. You can use @ to put the players name and ^ for line breaks. You can also use the base game commands to add money, items and stuff. If an translation file is provide, you should put a translation key here.
 		"Attachments": [ // List of attachments. Remove the property to not attach items to the mail.
 			{
-				"Type": "Object", // [Object|BigCraftable|Tool|Ring|Furniture|Weapon|Boots] Required. The type of item that will be attached. If not provided the item will be ignored.
-				"Name": "Cave Carrot", // Used to find the item index. That's required if using custom objects like Json Assets ones. If not provided, the index will be used. Default is null.
-				"Index": 78, // The index of an item. If no name is provided or an item for the name is not found, the index is used. Otherwise, the attachment is ignored.
+				"Type": "Object", // [Object|BigCraftable|Tool|Ring|Furniture|Weapon|Boots|DGA] Required. The type of item that will be attached. If not provided the item will be ignored.
+				"Name": "Cave Carrot", // Used to find the item index. That's required if using custom objects like Json Assets ones. Should be the full DGA ID is using DGA. If not provided, the index will be used. Default is null.
+				"Index": 78, // The index of an item. If no name is provided or an item for the name is not found, the index is used. Otherwise, the attachment is ignored. Ignored if the type is DGA.
 				"Stack": 1 // The stack value of the item to be delivered. Used only for Objects and BigCraftable. Default is 1;
 			},
 			{
@@ -18,7 +18,7 @@
 			},
 			{
 				"Type": "DGA", //DGA item
-				"Name": "spacechase0.DynamicGameAssets.Example/Mysterious Circle", // use the full DGA ID. Required.
+				"Name": "spacechase0.DynamicGameAssets.Example/My Custom Item", // use the full DGA ID. Required.
 				"Stack" : 10 // The stack value of the item to be delivered. Used only for Objects and BigCraftable. Default is 1;
 			}
 		],
