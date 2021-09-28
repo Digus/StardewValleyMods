@@ -1,5 +1,6 @@
 ﻿using System;
-using Harmony;
+using HarmonyLib;
+using MailFrameworkMod.integrations;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley;
@@ -46,7 +47,7 @@ namespace MailFrameworkMod
         private void OnGameLaunched(object sender, GameLaunchedEventArgs e)
         {
             Helper.Content.AssetEditors.Add(new DataLoader());
-            var harmony = HarmonyInstance.Create("Digus.MailFrameworkMod");
+            var harmony = new Harmony("Digus.MailFrameworkMod");
             
             harmony.Patch(
                 original: AccessTools.Method(typeof(GameLocation), nameof(GameLocation.mailbox)),
