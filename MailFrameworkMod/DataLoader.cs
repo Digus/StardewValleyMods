@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MailFrameworkMod.ContentPack;
+using MailFrameworkMod.integrations;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
@@ -49,6 +50,7 @@ namespace MailFrameworkMod
 
         public static void LoadContentPacks(object sender, EventArgs e)
         {
+            var dgaApi = MailFrameworkModEntry.ModHelper.ModRegistry.GetApi<IDynamicGameAssetsApi>("spacechase0.DynamicGameAssets");
             foreach (IContentPack contentPack in MailFrameworkModEntry.ModHelper.ContentPacks.GetOwned())
             {
                 if (File.Exists(Path.Combine(contentPack.DirectoryPath, "mail.json")))
@@ -328,6 +330,41 @@ namespace MailFrameworkMod
                                         else
                                         {
                                             MailFrameworkModEntry.ModMonitor.Log($"An index value is required to attach a boots for letter {mailItem.Id}.", LogLevel.Warn);
+                                        }
+                                        break;
+                                    case ItemType.DGA:
+                                        if (dgaApi != null)
+                                        {
+                                            try
+                                            {
+                                                object dgaObject = dgaApi.SpawnDGAItem(i.Name);
+                                                if (dgaObject is StardewValley.Item dgaItem)
+                                                {
+                                                    if (dgaItem is StardewValley.Object)
+                                                    {
+                                                        dgaItem.Stack = i.Stack ?? 1;
+                                                    }
+                                                    else
+                                                    {
+                                                        dgaItem.Stack = 1;
+                                                    }
+
+                                                    attachments.Add(dgaItem);
+                                                }
+                                                else
+                                                {
+                                                    MailFrameworkModEntry.ModMonitor.Log($"No DGA item found with the ID {i.Name} for letter {mailItem.Id}.", LogLevel.Warn);
+                                                }
+                                            }
+                                            catch (Exception ex)
+                                            {
+                                                MailFrameworkModEntry.ModMonitor.Log($"Error trying to create item with the DGA ID {i.Name} for letter {mailItem.Id}.", LogLevel.Warn);
+                                                MailFrameworkModEntry.ModMonitor.Log(ex.Message, LogLevel.Trace);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            MailFrameworkModEntry.ModMonitor.Log($"No DGA API found, so item with the ID {i.Name} for letter {mailItem.Id} will be ignored.", LogLevel.Warn);
                                         }
                                         break;
                                     default:
