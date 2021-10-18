@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using ProducerFrameworkMod.integrations;
 using StardewModdingAPI.Events;
 
 namespace ProducerFrameworkMod
@@ -15,10 +16,12 @@ namespace ProducerFrameworkMod
         public const string ProducersConfigJson = "ProducersConfig.json";
         public const string ContentPackConfigJson = "Config.json";
         public static IModHelper Helper;
+        public static IDynamicGameAssetsApi DgaApi;
 
         public DataLoader(IModHelper helper)
         {
             Helper = helper;
+            DgaApi = DataLoader.Helper.ModRegistry.GetApi<IDynamicGameAssetsApi>("spacechase0.DynamicGameAssets") ?? new EmptyDynamicGameAssetsApi();
         }
 
         public static void LoadContentPacks(object sender, EventArgs e)

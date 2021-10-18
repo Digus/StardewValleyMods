@@ -44,7 +44,7 @@ namespace ProducerFrameworkMod.ContentPack
 
         //Generated Properties
         public int OutputIndex = -1;
-        public List<Tuple<int, int>> FuelList = new List<Tuple<int, int>>();
+        public List<Tuple<int, int, string>> FuelList = new List<Tuple<int, int, string>>();
 
         public OutputConfig Clone()
         {

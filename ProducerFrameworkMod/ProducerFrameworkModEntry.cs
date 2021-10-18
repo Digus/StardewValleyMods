@@ -1,5 +1,7 @@
 ﻿using System;
-using Harmony;
+using System.Linq;
+using System.Reflection;
+using HarmonyLib;
 using Microsoft.Xna.Framework.Graphics;
 using ProducerFrameworkMod.Api;
 using StardewModdingAPI;
@@ -32,11 +34,30 @@ namespace ProducerFrameworkMod
         {
             new DataLoader(Helper);
 
-            var harmony = HarmonyInstance.Create("Digus.ProducerFrameworkMod");
+            var harmony = new Harmony("Digus.ProducerFrameworkMod");
+
+            Assembly dgaAssembly = AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(a => a.FullName.StartsWith("DynamicGameAssets,"));
+            if (dgaAssembly != null)
+            {
+                MethodInfo dgaLoadDisplayNameMethodInfo = AccessTools
+                    .GetDeclaredMethods(
+                        dgaAssembly.GetType("DynamicGameAssets.Game.CustomObject")).Find(m =>
+                        m.Name == "loadDisplayName");
+                harmony.Patch(
+                    original: dgaLoadDisplayNameMethodInfo,
+                    prefix: new HarmonyMethod(typeof(ObjectOverrides), nameof(ObjectOverrides.LoadDisplayName))
+                    {
+                        priority = Priority.First
+                    }
+                );
+            }
 
             harmony.Patch(
                 original: AccessTools.Method(typeof(SObject), nameof(SObject.performObjectDropInAction)),
                 prefix: new HarmonyMethod(typeof(ObjectOverrides), nameof(ObjectOverrides.PerformObjectDropInAction))
+                {
+                    priority = Priority.First
+                }
             );
             harmony.Patch(
                 original: AccessTools.Method(typeof(SObject), "loadDisplayName"),

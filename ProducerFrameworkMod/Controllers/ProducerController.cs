@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Force.DeepCloner;
+using ProducerFrameworkMod.integrations;
 using Object = StardewValley.Object;
 
 namespace ProducerFrameworkMod.Controllers
@@ -148,14 +149,17 @@ namespace ProducerFrameworkMod.Controllers
                                 {
                                     outputIndex = pair.Key;
                                 }
-                                else
+                                else if (DataLoader.DgaApi.SpawnDGAItem(outputConfig.OutputIdentifier) is Object output)
+                                {
+                                    outputIndex = output.ParentSheetIndex;
+                                }
+                                if (outputIndex <= 0)
                                 {
                                     ProducerFrameworkModEntry.ModMonitor.Log($"No Output found for '{outputConfig.OutputIdentifier}', producer '{producerRule.ProducerName}' and input '{producerRule.InputIdentifier}'. This rule will be ignored.", producerRule.WarningsLogLevel);
                                     break;
                                 }
                             }
                             outputConfig.OutputIndex = outputIndex;
-
 
                             foreach (var fuel in outputConfig.RequiredFuel)
                             {
@@ -167,6 +171,10 @@ namespace ProducerFrameworkMod.Controllers
                                     {
                                         fuelIndex = pair.Key;
                                     }
+                                    else if (DataLoader.DgaApi.GetDGAFakeIndex(fuel.Key) is int foundFuelIndex)
+                                    {
+                                        fuelIndex = foundFuelIndex;
+                                    }
                                     else
                                     {
                                         ProducerFrameworkModEntry.ModMonitor.Log(
@@ -177,7 +185,7 @@ namespace ProducerFrameworkMod.Controllers
                                         break;
                                     }
                                 }
-                                outputConfig.FuelList.Add(new Tuple<int, int>(fuelIndex, fuel.Value));
+                                outputConfig.FuelList.Add(new Tuple<int, int, string>(fuelIndex, fuel.Value, fuel.Key));
                             }
                         }
                         if (producerRule.OutputConfigs.Any(p => p.OutputIndex < 0))
@@ -198,13 +206,17 @@ namespace ProducerFrameworkMod.Controllers
                                 {
                                     fuelIndex = pair.Key;
                                 }
+                                else if (DataLoader.DgaApi.GetDGAFakeIndex(fuel.Key) is int foundFuelIndex)
+                                {
+                                    fuelIndex = foundFuelIndex;
+                                }
                                 else
                                 {
                                     ProducerFrameworkModEntry.ModMonitor.Log($"No fuel found for '{fuel.Key}', producer '{producerRule.ProducerName}' and input '{producerRule.InputIdentifier}'. This rule will be ignored.", producerRule.WarningsLogLevel);
                                     break;
                                 }
                             }
-                            producerRule.FuelList.Add(new Tuple<int, int>(fuelIndex, fuel.Value));
+                            producerRule.FuelList.Add(new Tuple<int, int, string>(fuelIndex, fuel.Value, fuel.Key));
                         }
                         if (producerRule.AdditionalFuel.Count != producerRule.FuelList.Count)
                         {
@@ -346,47 +358,8 @@ namespace ProducerFrameworkMod.Controllers
                         producerConfig.LightSource.Color = new Color(lightSource.ColorRed, lightSource.ColorGreen, lightSource.ColorBlue, lightSource.ColorAlpha);
                     }
 
-                    if (producerConfig.ProducingAnimation != null)
-                    {
-                        foreach (var animation in producerConfig.ProducingAnimation.AdditionalAnimations)
-                        {
-                            if (!Int32.TryParse(animation.Key, out int outputIndex))
-                            {
-                                KeyValuePair<int, string> pair = objects.FirstOrDefault(o => ObjectUtils.IsObjectStringFromObjectName(o.Value, animation.Key));
-                                if (pair.Value != null)
-                                {
-                                    outputIndex = pair.Key;
-                                }
-                                else
-                                {
-                                    ProducerFrameworkModEntry.ModMonitor.Log($"No object found for '{animation.Key}', producer '{producerConfig.ProducerName}'. This animation will be ignored.", LogLevel.Debug);
-                                    break;
-                                }
-                            }
-                            producerConfig.ProducingAnimation.AdditionalAnimationsId[outputIndex] = animation.Value;
-                        }
-                    }
-
-                    if (producerConfig.ReadyAnimation != null)
-                    {
-                        foreach (var animation in producerConfig.ReadyAnimation.AdditionalAnimations)
-                        {
-                            if (!Int32.TryParse(animation.Key, out int outputIndex))
-                            {
-                                KeyValuePair<int, string> pair = objects.FirstOrDefault(o => ObjectUtils.IsObjectStringFromObjectName(o.Value, animation.Key));
-                                if (pair.Value != null)
-                                {
-                                    outputIndex = pair.Key;
-                                }
-                                else
-                                {
-                                    ProducerFrameworkModEntry.ModMonitor.Log($"No object found for '{animation.Key}', producer '{producerConfig.ProducerName}'. This animation will be ignored.", LogLevel.Debug);
-                                    break;
-                                }
-                            }
-                            producerConfig.ReadyAnimation.AdditionalAnimationsId[outputIndex] = animation.Value;
-                        }
-                    }
+                    FillAnimationsId(producerConfig.ProducingAnimation, objects, producerConfig);
+                    FillAnimationsId(producerConfig.ReadyAnimation, objects, producerConfig);
                     AddConfigToRepository(producerConfig);
 
                     foreach (var n in producerConfig.AdditionalProducerNames)
@@ -404,6 +377,35 @@ namespace ProducerFrameworkMod.Controllers
                     producerConfig.AdditionalProducerNames.Clear();
                 }
             });
+        }
+
+        private static void FillAnimationsId(Animation animationConfig, Dictionary<int, string> objects, ProducerConfig producerConfig)
+        {
+            if (animationConfig != null)
+            {
+                foreach (var animation in animationConfig.AdditionalAnimations)
+                {
+                    if (!Int32.TryParse(animation.Key, out int outputIndex))
+                    {
+                        KeyValuePair<int, string> pair = objects.FirstOrDefault(o => ObjectUtils.IsObjectStringFromObjectName(o.Value, animation.Key));
+                        if (pair.Value != null)
+                        {
+                            outputIndex = pair.Key;
+                        }
+                        else if (DataLoader.DgaApi.GetDGAFakeIndex(animation.Key) is int fakeIndex)
+                        {
+                            outputIndex = fakeIndex;
+                        }
+                        else
+                        {
+                            ProducerFrameworkModEntry.ModMonitor.Log($"No object found for '{animation.Key}', producer '{producerConfig.ProducerName}'. This animation will be ignored.", LogLevel.Debug);
+                            continue;
+                        }
+                    }
+
+                    animationConfig.AdditionalAnimationsId[outputIndex] = animation.Value;
+                }
+            }
         }
 
         private static bool ValidateConfigProducerName(string producerName)
@@ -482,6 +484,10 @@ namespace ProducerFrameworkMod.Controllers
             else
             {
                 RulesRepository.TryGetValue(new Tuple<string, object>(producerName, input.ParentSheetIndex), out value);
+                if (value == null && DataLoader.DgaApi.GetDGAItemId(input) is string dgaFullId)
+                {
+                    RulesRepository.TryGetValue(new Tuple<string, object>(producerName, dgaFullId), out value);
+                }
                 if (value == null)
                 {
                     foreach (string tag in input.GetContextTagList())

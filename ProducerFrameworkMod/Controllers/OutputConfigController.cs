@@ -39,9 +39,18 @@ namespace ProducerFrameworkMod.Controllers
             if (input != null)
             {
                 Object parent = null;
+                string dgaFullId = null;
                 if (input.preservedParentSheetIndex.Value > 0)
                 {
-                    parent = new Object(input.preservedParentSheetIndex.Value, 1);
+                    if (DataLoader.DgaApi.GetDGAItemId(input.preservedParentSheetIndex.Value) is string id)
+                    {
+                        dgaFullId = id;
+                        parent = DataLoader.DgaApi.SpawnDGAItem(dgaFullId) as Object;
+                    }
+                    else
+                    {
+                        parent = new Object(input.preservedParentSheetIndex.Value, 1);
+                    }
                 }
                 filteredOutputConfigs = FilterOutputConfig(
                     filteredOutputConfigs
@@ -50,6 +59,7 @@ namespace ProducerFrameworkMod.Controllers
                                q => q == input.preservedParentSheetIndex.Value.ToString() 
                                     || q == parent?.Name
                                     || q == parent?.Category.ToString()
+                                    || q == dgaFullId
                                     || parent?.HasContextTag(q) == true)
                     , "InputParent",input);
             }
@@ -132,21 +142,27 @@ namespace ProducerFrameworkMod.Controllers
             {
                 output = new Torch(Vector2.Zero, outputConfig.OutputStack, outputConfig.OutputIndex);
             }
+            else if (outputConfig.OutputIndex == DgaUtils.DgaIndex && DataLoader.DgaApi != null)
+            {
+                try
+                {
+                    Color? color = null;
+                    if (outputConfig.OutputColorConfig is ColoredObjectConfig coloredObjectConfig)
+                    {
+                        color = GetColor(input, coloredObjectConfig);
+                    }
+                    output = (Object) DataLoader.DgaApi.SpawnDGAItem(outputConfig.OutputIdentifier, color);
+                }
+                catch (Exception)
+                {
+                    ProducerFrameworkModEntry.ModMonitor.Log($"Error creating DGA item {outputConfig.OutputIdentifier}.");
+                    //Creating 'error item' to avoid further errors.
+                    output = new Object(Vector2.Zero, outputConfig.OutputIndex, null, false, true, false, false);
+                }
+            }
             else if (outputConfig.OutputColorConfig is ColoredObjectConfig coloredObjectConfig)
             {
-                switch (coloredObjectConfig.Type)
-                {
-                    case ColorType.ObjectColor when input is ColoredObject coloredObject:
-                        output = new ColoredObject(outputConfig.OutputIndex, outputConfig.OutputStack, coloredObject.color.Value);
-                        break;
-                    case ColorType.ObjectDyeColor when TailoringMenu.GetDyeColor(input) is Color color:
-                        output = new ColoredObject(outputConfig.OutputIndex, outputConfig.OutputStack, color);
-                        break;
-                    case ColorType.DefinedColor:
-                    default:
-                        output = new ColoredObject(outputConfig.OutputIndex, outputConfig.OutputStack, new Color(coloredObjectConfig.Red, coloredObjectConfig.Green, coloredObjectConfig.Blue));
-                        break;
-                }
+                output = new ColoredObject(outputConfig.OutputIndex, outputConfig.OutputStack, GetColor(input,coloredObjectConfig));
             }
             else
             {
@@ -167,6 +183,20 @@ namespace ProducerFrameworkMod.Controllers
             output.Stack = GetOutputStack(outputConfig, input, random);
 
             return output;
+        }
+
+        private static Color GetColor(Object input, ColoredObjectConfig coloredObjectConfig)
+        {
+            switch (coloredObjectConfig.Type)
+            {
+                case ColorType.ObjectColor when input is ColoredObject coloredObject:
+                    return coloredObject.color.Value;
+                case ColorType.ObjectDyeColor when TailoringMenu.GetDyeColor(input) is Color c:
+                    return c;
+                case ColorType.DefinedColor:
+                default:
+                    return new Color(coloredObjectConfig.Red, coloredObjectConfig.Green, coloredObjectConfig.Blue);
+            }
         }
 
         /// <summary>
@@ -221,14 +251,28 @@ namespace ProducerFrameworkMod.Controllers
                     {
                         inputName = outputConfig.OutputGenericParentName;
                     }
-                    else if (input?.preservedParentSheetIndex.Value > 0 && Game1.objectInformation.ContainsKey(input.preservedParentSheetIndex.Value))
+                    else if (input?.preservedParentSheetIndex.Value > 0)
                     {
-                        inputName = ObjectUtils.GetObjectParameter(Game1.objectInformation[input.preservedParentSheetIndex.Value], (int)ObjectParameter.Name);
+                        if (Game1.objectInformation.ContainsKey(input.preservedParentSheetIndex.Value))
+                        {
+                            inputName = ObjectUtils.GetObjectParameter(Game1.objectInformation[input.preservedParentSheetIndex.Value], (int)ObjectParameter.Name);
+                        }
+                        else if (DataLoader.DgaApi.GetDGAFakeObjectInformation(input.preservedParentSheetIndex.Value) is string objInfo)
+                        {
+                            inputName = ObjectUtils.GetObjectParameter(objInfo, (int)ObjectParameter.Name);
+                        }
                     }
                 }
-                else if (input?.preservedParentSheetIndex.Value > 0 && Game1.objectInformation.ContainsKey(input.ParentSheetIndex))
+                else if (input?.preservedParentSheetIndex.Value > 0)
                 {
-                    inputName = ObjectUtils.GetObjectParameter(Game1.objectInformation[input.ParentSheetIndex], (int)ObjectParameter.Name);
+                    if (DgaUtils.GetOriginalDgaItem(input, out Object obj))
+                    {
+                        inputName = obj.Name;
+                    }
+                    else if (Game1.objectInformation.ContainsKey(input.ParentSheetIndex))
+                    {
+                        inputName = ObjectUtils.GetObjectParameter(Game1.objectInformation[input.ParentSheetIndex], (int)ObjectParameter.Name);
+                    }
                 }
                 outputName = ObjectUtils.GetPreserveName(outputConfig.PreserveType.Value, inputName);
                 output.preserve.Value = outputConfig.PreserveType;
@@ -249,14 +293,28 @@ namespace ProducerFrameworkMod.Controllers
                     {
                         inputName = outputConfig.OutputGenericParentName;
                     }
-                    else if (input?.preservedParentSheetIndex.Value > 0 && Game1.objectInformation.ContainsKey(input.preservedParentSheetIndex.Value))
+                    else if (input?.preservedParentSheetIndex.Value > 0)
                     {
-                        inputName = ObjectUtils.GetObjectParameter(Game1.objectInformation[input.preservedParentSheetIndex.Value], (int) ObjectParameter.Name);
+                        if (Game1.objectInformation.ContainsKey(input.preservedParentSheetIndex.Value))
+                        {
+                            inputName = ObjectUtils.GetObjectParameter(Game1.objectInformation[input.preservedParentSheetIndex.Value], (int)ObjectParameter.Name);
+                        }
+                        else if (DataLoader.DgaApi.GetDGAFakeObjectInformation(input.preservedParentSheetIndex.Value) is string objInfo)
+                        {
+                            inputName = ObjectUtils.GetObjectParameter(objInfo, (int)ObjectParameter.Name);
+                        }
                     }
                 }
-                else if (input?.preservedParentSheetIndex.Value > 0 && Game1.objectInformation.ContainsKey(input.ParentSheetIndex))
+                else if (input?.preservedParentSheetIndex.Value > 0)
                 {
-                    inputName = ObjectUtils.GetObjectParameter(Game1.objectInformation[input.ParentSheetIndex], (int)ObjectParameter.Name);
+                    if (DgaUtils.GetOriginalDgaItem(input, out Object obj))
+                    {
+                        inputName = obj.Name;
+                    }
+                    else if (Game1.objectInformation.ContainsKey(input.ParentSheetIndex))
+                    {
+                        inputName = ObjectUtils.GetObjectParameter(Game1.objectInformation[input.ParentSheetIndex], (int)ObjectParameter.Name);
+                    }
                 }
 
                 outputName = outputConfig.OutputName
@@ -276,7 +334,7 @@ namespace ProducerFrameworkMod.Controllers
 
             if (inputUsed)
             {
-                output.preservedParentSheetIndex.Value = input == null ? -1 : outputConfig.KeepInputParentIndex && input.preservedParentSheetIndex.Value != 0 ? input.preservedParentSheetIndex.Value : input.ParentSheetIndex;
+                output.preservedParentSheetIndex.Value = input == null ? -1 : outputConfig.KeepInputParentIndex && input.preservedParentSheetIndex.Value != 0 ? input.preservedParentSheetIndex.Value : input.ParentSheetIndex != DgaUtils.DgaIndex ? input.ParentSheetIndex : DataLoader.DgaApi.GetDGAFakeIndex(input) ?? -1;
             }
 
             if (outputName != null)

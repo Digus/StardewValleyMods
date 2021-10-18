@@ -26,6 +26,7 @@ namespace ProducerFrameworkMod.Controllers
             return producerRule.ExcludeIdentifiers != null && (producerRule.ExcludeIdentifiers.Contains(input.ParentSheetIndex.ToString())
                                                                || producerRule.ExcludeIdentifiers.Contains(input.Name)
                                                                || producerRule.ExcludeIdentifiers.Contains(input.Category.ToString())
+                                                               || (input.ParentSheetIndex == DgaUtils.DgaIndex && producerRule.ExcludeIdentifiers.Contains(DataLoader.DgaApi.GetDGAItemId(input)))
                                                                || producerRule.ExcludeIdentifiers.Intersect(input.GetContextTags()).Any());
         }
 
@@ -60,7 +61,7 @@ namespace ProducerFrameworkMod.Controllers
         /// <param name="who">The farmer to check</param>
         public static void ValidateIfAnyFuelStackLessThanRequired(ProducerRule producerRule, Farmer who, bool probe)
         {
-            foreach (Tuple<int, int> fuel in producerRule.FuelList)
+            foreach (Tuple<int, int, string> fuel in producerRule.FuelList)
             {
                 if (!who.hasItemInInventory(fuel.Item1, fuel.Item2))
                 {
@@ -69,7 +70,19 @@ namespace ProducerFrameworkMod.Controllers
                         if (fuel.Item1 >= 0)
                         {
                             Dictionary<int, string> objects = DataLoader.Helper.Content.Load<Dictionary<int, string>>("Data\\ObjectInformation",ContentSource.GameContent);
-                            var objectName = Lexicon.makePlural(ObjectUtils.GetObjectParameter(objects[fuel.Item1], (int) ObjectParameter.DisplayName), fuel.Item2 == 1);
+                            string objectName;
+                            if (objects.ContainsKey(fuel.Item1))
+                            {
+                                objectName = Lexicon.makePlural(ObjectUtils.GetObjectParameter(objects[fuel.Item1], (int)ObjectParameter.DisplayName), fuel.Item2 == 1);
+                            }
+                            else if (DataLoader.DgaApi.SpawnDGAItem(fuel.Item3) is Object dgaObj)
+                            {
+                                objectName = Lexicon.makePlural(dgaObj.DisplayName, fuel.Item2 == 1);
+                            }
+                            else
+                            {
+                                objectName = fuel.Item3;
+                            }
                             throw new RestrictionException(DataLoader.Helper.Translation.Get("Message.Requirement.Amount", new {amount = fuel.Item2, objectName}));
                         }
                         else
@@ -100,7 +113,7 @@ namespace ProducerFrameworkMod.Controllers
             OutputConfig outputConfig = OutputConfigController.ChooseOutput(producerRule.OutputConfigs, random, fuelSearch, location, input);
             if (outputConfig != null)
             {
-                Object output = producerRule.LookForInputWhenReady == null ? OutputConfigController.CreateOutput(outputConfig, input, random) : new Object(outputConfig.OutputIndex,1);
+                Object output = producerRule.LookForInputWhenReady == null ? OutputConfigController.CreateOutput(outputConfig, input, random) : new Object(outputConfig.OutputIndex,1){Name = outputConfig.OutputIdentifier};
 
                 producer.heldObject.Value = output;
                 if (!probe)
@@ -182,8 +195,7 @@ namespace ProducerFrameworkMod.Controllers
             {
                 if (producerRule.LookForInputWhenReady is InputSearchConfig inputSearchConfig)
                 {
-                    if (producerRule.OutputConfigs.Find(o => o.OutputIndex == producer.heldObject.Value.ParentSheetIndex) is
-                        OutputConfig outputConfig)
+                    if (producerRule.OutputConfigs.Find(o => o.OutputIndex == producer.heldObject.Value.ParentSheetIndex && (o.OutputIndex != DgaUtils.DgaIndex || o.OutputIdentifier == producer.heldObject.Value.Name)) is OutputConfig outputConfig)
                     {
                         Object input = ProducerRuleController.SearchInput(location, producer.tileLocation,
                             inputSearchConfig);
@@ -226,7 +238,7 @@ namespace ProducerFrameworkMod.Controllers
                         {
                             found = true;
                         }
-                        else
+                        else if (crop.indexOfHarvest.Value != DgaUtils.DgaIndex)
                         {
                             Object obj = new Object(crop.indexOfHarvest.Value, 1, false, -1, 0);
                             if (inputSearchConfig.InputIdentifier.Any(i => i == obj.Name || i == obj.Category.ToString()))
@@ -273,6 +285,13 @@ namespace ProducerFrameworkMod.Controllers
                     if (inputSearchConfig.InputIdentifier.Contains(heldObject.ParentSheetIndex.ToString()))
                     {
                         found = true;
+                    }
+                    else if (heldObject.ParentSheetIndex == DgaUtils.DgaIndex)
+                    {
+                        if (DataLoader.DgaApi.GetDGAItemId(heldObject) is string fullId && inputSearchConfig.InputIdentifier.Any(i => i == fullId))
+                        {
+                            found = true;
+                        }
                     }
                     else
                     {

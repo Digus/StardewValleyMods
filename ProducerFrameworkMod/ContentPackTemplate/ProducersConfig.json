@@ -7,11 +7,11 @@
 		"DisableBouncingAnimationWhileWorking": false, // If the producer bouncing animation while working should be disabled.
 		"NoInputStartMode": "Placement", // [Placement|DayUpdate] //If the machine has a value for this property, it can only have one ProducerRule without a InputIdentifier. If Placement, the machine will start on placement, and will restart every time the produced object is taken out. If DayUpdate, the machine will start at the begin of the day. Default is null.
 		"IncrementStatsOnOutput": { //Pairs of "stats:object" that identify what should be incremented.
-			"GoatCheeseMade": "Goat Cheese", //First value is the stats to be incremented, second value is which output should be produced for the stat to be incremented. The identifier can be the index, name, category or context tag of the output. Will increment the stats by the amount of the stack.
+			"GoatCheeseMade": "Goat Cheese", //First value is the stats to be incremented, second value is which output should be produced for the stat to be incremented. The identifier can be the index, name, category, context tag or DGA full ID of the output. Will increment the stats by the amount of the stack.
 			"CheeseMade": null //If the identifier is null, any output will match.
 		},
 		"IncrementStatsLabelOnOutput": { //Pairs of "statsLabel:object" that identify what should be incremented. You can add your own custom stats label. MFM also support stats label for conditions. Default is null.
-			"timesEnchanted": "Magic Bait", //First value is the stats label to be incremented, second value is which output should be produced for the stat to be incremented. The identifier can be the index, name, category or context tag of the output. Will increment the stats label by the amount of the stack.
+			"timesEnchanted": "Magic Bait", //First value is the stats label to be incremented, second value is which output should be produced for the stat to be incremented. The identifier can be the index, name, category or context tag or DGA full ID of the output. Will increment the stats label by the amount of the stack.
 			"modId.myItemProduced": null //If the identifier is null, any output will match.
 		},
 		"MultipleStatsIncrement": true, //If all stats that match should be incremented. If false, just the first match will be increased. Default is false.
@@ -40,7 +40,7 @@
 		"ProducingAnimation": { // Set a configuration for animating the producing state of the machine. Default is null.
 			"RelativeFrameIndex": [ 2, 3, 4, 5, 6, 7 ], //Index and order of the frames that should be used for the animation. Index start at zero, the base frame and index of the non producing state. Extra frames are content from that frame. Extra frames can be added with Json Assets or Content Patcher.
 			"FrameInterval": 10, // Amount of game ticks between frames. Default is 10
-			"AdditionalAnimations": { //Animation that should be played depending on the object inside the machine. Pair of output identifier and list of frames. Identifier can be Name, Index or Category. Default is null.
+			"AdditionalAnimations": { //Animation that should be played depending on the object inside the machine. Pair of output identifier and list of frames. Identifier can be Name, Index, Category or DGA full ID. Default is null.
 				"Salmon": [ 8, 9, 10 ],
 				"131": [ 8, 11, 12 ],
 				"-4": [ 8, 13, 14 ]

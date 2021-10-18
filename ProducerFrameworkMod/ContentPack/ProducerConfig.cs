@@ -153,6 +153,7 @@ namespace ProducerFrameworkMod.ContentPack
                     || keyValuePair.Value == output.Name
                     || keyValuePair.Value == output.ParentSheetIndex.ToString()
                     || keyValuePair.Value == output.Category.ToString()
+                    || keyValuePair.Value == DataLoader.DgaApi.GetDGAItemId(output)
                     || output.HasContextTag(keyValuePair.Value))
                 {
                     StatsController.IncrementStardewStats(keyValuePair.Key, output.Stack);
@@ -168,6 +169,7 @@ namespace ProducerFrameworkMod.ContentPack
                     || keyValuePair.Value == output.Name
                     || keyValuePair.Value == output.ParentSheetIndex.ToString()
                     || keyValuePair.Value == output.Category.ToString()
+                    || keyValuePair.Value == DataLoader.DgaApi.GetDGAItemId(output)
                     || output.HasContextTag(keyValuePair.Value))
                 {
                     StatsController.IncrementStardewStats(keyValuePair.Key, output.Stack);

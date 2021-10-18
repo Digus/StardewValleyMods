@@ -1,4 +1,4 @@
-﻿using Harmony;
+﻿using HarmonyLib;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ProducerFrameworkMod.ContentPack;
@@ -122,7 +122,7 @@ namespace ProducerFrameworkMod
             {
                 for (int index1 = 0; index1 < farmer.items.Count; ++index1)
                 {
-                    if (farmer.items[index1] != null && farmer.items[index1] is Object object1 && (object1.ParentSheetIndex == index || object1.Category == index))
+                    if (farmer.items[index1] != null && farmer.items[index1] is Object object1 && (object1.ParentSheetIndex == index || object1.Category == index || (DgaUtils.GetObjectDgaFakeIndex(object1) == index)))
                     {
                         if (farmer.items[index1].Stack > stack)
                         {
@@ -283,7 +283,7 @@ namespace ProducerFrameworkMod
         {
             if (ProducerController.GetProducerConfig(producer.Name) is ProducerConfig producerConfig)
             {
-                if (producerConfig.ProducingAnimation is Animation producingAnimation && producer.minutesUntilReady > 0 && producerConfig.CheckSeasonCondition(Game1.currentLocation) && producerConfig.CheckWeatherCondition() && producerConfig.CheckCurrentTimeCondition())
+                if (producerConfig.ProducingAnimation is Animation producingAnimation && producer.minutesUntilReady > 0 && producer.heldObject.Value != null && producerConfig.CheckSeasonCondition(Game1.currentLocation) && producerConfig.CheckWeatherCondition() && producerConfig.CheckCurrentTimeCondition())
                 {
                     List<int> animationList;
                     if (producingAnimation.AdditionalAnimationsId.ContainsKey(producer.heldObject.Value.ParentSheetIndex)) 
@@ -293,7 +293,11 @@ namespace ProducerFrameworkMod
                     else if (producingAnimation.AdditionalAnimationsId.ContainsKey(producer.heldObject.Value.Category))
                     {
                         animationList = producingAnimation.AdditionalAnimationsId[producer.heldObject.Value.Category];
-                    } 
+                    }
+                    else if (DgaUtils.GetObjectDgaFakeIndex(producer.heldObject.Value) is int dgaFakeIndex && producingAnimation.AdditionalAnimationsId.ContainsKey(dgaFakeIndex))
+                    {
+                        animationList = producingAnimation.AdditionalAnimationsId[dgaFakeIndex];
+                    }
                     else
                     {
                         animationList = producingAnimation.RelativeFrameIndex;
@@ -305,7 +309,7 @@ namespace ProducerFrameworkMod
                         return;
                     }
                 }
-                else if (producerConfig.ReadyAnimation is Animation readyAnimation && producer.readyForHarvest.Value)
+                else if (producerConfig.ReadyAnimation is Animation readyAnimation && producer.readyForHarvest.Value && producer.heldObject.Value != null)
                 {
                     List<int> animationList;
                     if (readyAnimation.AdditionalAnimationsId.ContainsKey(producer.heldObject.Value.ParentSheetIndex))
@@ -315,6 +319,10 @@ namespace ProducerFrameworkMod
                     else if (readyAnimation.AdditionalAnimationsId.ContainsKey(producer.heldObject.Value.Category))
                     {
                         animationList = readyAnimation.AdditionalAnimationsId[producer.heldObject.Value.Category];
+                    }
+                    else if (DgaUtils.GetObjectDgaFakeIndex(producer.heldObject.Value) is int dgaFakeIndex && readyAnimation.AdditionalAnimationsId.ContainsKey(dgaFakeIndex))
+                    {
+                        animationList = readyAnimation.AdditionalAnimationsId[dgaFakeIndex];
                     }
                     else
                     {
@@ -482,8 +490,15 @@ namespace ProducerFrameworkMod
             {
                 IDictionary<int, string> objects = Game1.objectInformation;
                 string translation = customName;
-                
-                if (objects.TryGetValue(__instance.ParentSheetIndex, out var instanceData) && ObjectUtils.GetObjectParameter(instanceData, (int)ObjectParameter.Name) != __instance.Name)
+
+                if (DgaUtils.GetOriginalDgaItem(__instance, out Object obj))
+                {
+                    if (translation.Contains("{outputName}"))
+                    {
+                        translation = translation.Replace("{outputName}", obj.DisplayName);
+                    }
+                } 
+                else if (objects.TryGetValue(__instance.ParentSheetIndex, out var instanceData) && ObjectUtils.GetObjectParameter(instanceData, (int)ObjectParameter.Name) != __instance.Name)
                 {
                     if (translation.Contains("{outputName}"))
                     {
@@ -505,6 +520,10 @@ namespace ProducerFrameworkMod
                     else if (objects.TryGetValue(__instance.preservedParentSheetIndex.Value, out var preservedData))
                     {
                         translation = translation.Replace("{inputName}", ObjectUtils.GetObjectParameter(preservedData,(int)ObjectParameter.DisplayName));
+                    }
+                    else if (DataLoader.DgaApi.GetDGAFakeObjectInformation(__instance.preservedParentSheetIndex.Value) is string inputInfo)
+                    {
+                        translation = translation.Replace("{inputName}", ObjectUtils.GetObjectParameter(inputInfo, (int)ObjectParameter.DisplayName));
                     }
                     else
                     {

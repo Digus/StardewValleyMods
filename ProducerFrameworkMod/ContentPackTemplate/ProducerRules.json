@@ -2,10 +2,10 @@
 	{ // All lines that have a default value can be removed and that value will be used.
 		"ProducerName": "ProducerName", //Name of the producer. Required.
 		"AdditionalProducerNames": [ "ProducerName2", "ProducerName3" ], //Additional names of the producer. The rule will be completely copied to the producer names in the list.
-		"InputIdentifier": "fruit_tree_item", //The identifier of the input. Can be the Index of the object, the category of the object if it's a negative value. Can be the name of the object, or a context_tag of the object. Can be null only if there is a NoInputStartMode for the producer. Default is null.
+		"InputIdentifier": "fruit_tree_item", //The identifier of the input. Can be the Index if a positive value, the category if it's a negative value, the name, the DGA full ID or a context_tag of the object. Can be null only if there is a NoInputStartMode for the producer. Default is null.
 		"InputStack": 2, //The required stack of the input. Default value is 1.
 		"ExcludeIdentifiers": [ "Peach" ], //List of identifiers to exclude from the rule. Follow the same rules for InputIdentifier. Default value is null.
-		"FuelIdentifier": "Coal", //The identifier of the Fuel. Fuel is the extra item used when producing. Can be the Index, the Name or the category of the object. Default is null.
+		"FuelIdentifier": "Coal", //The identifier of the Fuel. Fuel is the extra item used when producing. Can be the Index, the Name, the DGA full ID or the category of the object. Default is null.
 		"FuelStack": 4, //The required stack of the Fuel. Only used if fuel is not null. Default is 1.
 		"AdditionalFuel": {
 			"-6": 2,
@@ -14,8 +14,8 @@
 		}, //Additional fuel if needed. You don't need to set a Fuel to use AdditionalFuel. The format is a pair of identifier and stack amount, following the same rules of the other fuel property. Default is null.
 		"MinutesUntilReady": 120, //The amount of minutes it takes to produce. Stardew days have 1600 minutes. 1200 minutes from 6 am to 2am and 400 minutes from 2am to 6am. Should be divisible by 10. Required.
 		"SubtractTimeOfDay": true, //If MinutesUntilReady should be subtracted by the current time of day. It always add 360 to the formula, since the day start at 6 am. So if you set MinutesUntilReady to 1600, it will always produce at 6 am of the next day. Never set to true if MinutesUntilReady is smaller than 1600.
-		"OutputIdentifier": "Beer", //The identifier of the output. Can be the Index or the Name of the object. Required.
-		"OutputName": "{farmerName}'s {inputName} {outputName} from {farmName}", //The Name of the object. This will replace the basic output name. It accepts 4 tags that are dynamically replaced. Default is null.
+		"OutputIdentifier": "Beer", //The identifier of the output. Can be the Index, the DGA full ID or the Name of the object. Required.
+		"OutputName": "{farmerName}'s {inputName} {outputName} from {farmName}", //The Name of the object. This will replace the basic output name. For DGA items requires PFMDynamicGameAssets. It accepts 4 tags that are dynamically replaced. Default is null.
 		"OutputTranslationKey": "MyMod.MyOutput", //The translation key. This is the key in the i18n file where the mod will look for the format of the OutputName in other languages. The value of this key follows the same rules of the OutputName property above. Default is null.
 		"OutputGenericParentName": "Wild", //The generic parent name is for when there is no parent name for the object that needs a parent, like Wild for Honey. Default is blank.
 		"OutputGenericParentNameTranslationKey": "MyMod.MyOutput", //The translation key. This is the key in the i18n file where the mod will look for the OutputGenericParentName in other languages. Default is null.
@@ -64,7 +64,7 @@
 				"RequiredMail": [ "BackpackTip" ], // Required one of the mails to have been received by the player for the output to be possible. Default is no required mail.
 				"RequiredEvent": [ 611439 ], // Required one of events to have been seen by the player for the output to be possible. Default is no required event.
 				"RequiredOutdoors": true, // [true|false|null] If true, the output can only be produced outdoors. If false, the output can only be produced indoors. If the line is removed or the value is null, it there is no restriction.
-				"RequiredInputParentIdentifier": [ "22", "-80" ] // Required input parent for the output to be possible. Parent is the item that originated the input.(ex. Salmon Roe has Salmon as parent) The identifier is compared with the input parent on this order: Index, Name, Category, Context_Tag.
+				"RequiredInputParentIdentifier": [ "22", "-80" ] // Required input parent for the output to be possible. Parent is the item that originated the input.(ex. Salmon Roe has Salmon as parent) The identifier is compared with the input parent on this order: Index, Name, Category, DGA full ID or Context_Tag.
 				// All other properties that refer to the output can be used in the AdditionalOutputs. Remember to use commas to separate properties.
 			}
 		],
@@ -79,7 +79,7 @@
 		"OverrideMod": [ "IdOfTheMod.ToOverride" ], //If defined, this rule can override rules with the same producer/input combination from the mods in the list. Otherwise the first one to be loaded will be used.
 		"LookForInputWhenReady": { // Set this config if you want to look for a specific object when ready. If the rule has an input, it will consume the input on placement, check restrictions to choose the output, but won't apply name, price, quality and similar modifications based on that input. The found object when ready will be used for these modifications instead.
 			"Range": 5, //Max range the input will be looked for. A negative number will be considered no limit (will stop at 150 to avoid crash). Default is -1.
-			"InputIdentifier": [ "Orange", "-80" ], //Identifier of the input. Can be the index, name or category.
+			"InputIdentifier": [ "Orange", "-80" ], //Identifier of the input. Can be the index, name, DGA full ID or category. DGA full ID only work to find held objects on Big Craftables. Can't find DGA crops or FruitTree.
 			"Crop": true, //If should look up for crops. The identifier will be compared with the harvest object. Default is false.
 			"ExcludeForageCrops": true, //If it should ignore Forage crops. Default is false.
 			"GardenPot": true, //If it should look for crops inside garden pots. Default is false.

@@ -36,7 +36,7 @@ namespace ProducerFrameworkMod.ContentPack
 
         // Generated attributes
         public object InputKey;
-        public List<Tuple<int,int>> FuelList = new List<Tuple<int, int>>();
+        public List<Tuple<int,int,string>> FuelList = new List<Tuple<int, int, string>>();
         internal Color PlacingAnimationColor = Color.White;
         public List<OutputConfig> OutputConfigs = new List<OutputConfig>();
 
