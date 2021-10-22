@@ -10,6 +10,7 @@ namespace MailFrameworkMod.ContentPack
         public string Text;
         public string Recipe;
         public List<Attachment> Attachments;
+        public List<string> AdditionalMailReceived;
         public string LetterBG;
         public int WhichBG;
         public int? TextColor;
@@ -23,6 +24,8 @@ namespace MailFrameworkMod.ContentPack
         public List<SkillCondition> SkillConditions;
         public List<StatsCondition> StatsConditions;
         public List<CollectionCondition> CollectionConditions;
+        public string ExpandedPrecondition;
+        public string[] ExpandedPreconditions;
         public double? RandomChance;
         public List<string> Buildings;
         public bool RequireAllBuildings;
