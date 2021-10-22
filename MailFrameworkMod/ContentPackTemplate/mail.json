@@ -23,7 +23,8 @@
 			}
 		],
 		"Recipe": "Recipe Name", // Remove the line if you don't want to attach a recipe to the mail. It will only work if you have no other attachments to the mail. For DGA recipes only use the ID part (leave away the ModID)
-		"LetterBG": "CustomLetterBG.png", // Name of the file in your content pack that has the custom letter background to use. It should follow the same structure of the game LetterBG file . WhichBG will be relative to this file for this letter. If null or removed the mod will use the game LetterBG.
+		"AdditionalMailReceived":  ["MyMod.AnotherMailId", "VANILLA_FLAG"], // Use this to add additional text to the MailReceived list. Can be useful to add vanilla flags or other MFM letter ids.
+        "LetterBG": "CustomLetterBG.png", // Name of the file in your content pack that has the custom letter background to use. It should follow the same structure of the game LetterBG file . WhichBG will be relative to this file for this letter. If null or removed the mod will use the game LetterBG.
         "WhichBG": 0, //The id of the letter background. 0 = classic, 1 = notepad, 2 = pyramids
 		"TextColor": -1, //Remove this line to use the default color. -1 = Dark Red, 0 = Black, 1 = Sky Blue, 2 = Red, 3 = Blue Violet, 4 = White, 5 = Orange Red, 6 = Lime Green, 7 = Cyan, 8 = Darkest Gray
 		"UpperRightCloseButton": "CustomCloseButton.png", // Name of the file in your content pack that has the custom close button to use. It should be 12 x 12 . If null or removed it will use the default button.
@@ -64,7 +65,9 @@
 				"Amount": 10 // The amount the object in the collection should be equal or greater for the condition to be valid.
 			}
 		],
-		"RandomChance": 0.25, // The mod will check if a random number from 0 to 1 is bellow the given number. The same save, on the same day for the same letter will always have the same result to avoid cheating.
+		"ExpandedPrecondition": "d Mon Fri/HasItem Pink Cake/!JojaMartComplete/!w rainy", //Needs the Expanded Preconditions Utility mod. Sees that mod documentation to see how this works. If the mod is not loaded, the letter will not be delivered.
+        "ExpandedPreconditions": [ "!z spring/t 600 1000", "f Linus 1000/w rainy/z spring", "f Linus 2500" ], //Needs the Expanded Preconditions Utility mod. Sees that mod documentation to see how this works. If the mod is not loaded, the letter will not be delivered.
+        "RandomChance": 0.25, // The mod will check if a random number from 0 to 1 is bellow the given number. The same save, on the same day for the same letter will always have the same result to avoid cheating.
 		"Buildings": ["Coop","Big Coop", "Deluxe Coop"], // Require one of the buildings to be currently constructed in the farm.
 		"RequireAllBuildings":  false, // If true, require that all the buildings in the "Buildings" list to be currently constructed in the farm. Default is false.
 		"MailReceived": ["jojaVault","ccVault"], // Require one of the mails to have been received. The game list also contain others thing that are not mail, like community center flags.
