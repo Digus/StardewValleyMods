@@ -32,7 +32,7 @@ namespace MailFrameworkMod
             Helper = helper;
             DgaApi = MailFrameworkModEntry.ModHelper.ModRegistry.GetApi<IDynamicGameAssetsApi>("spacechase0.DynamicGameAssets");
             ConditionsCheckerApi = Helper.ModRegistry.GetApi<IConditionsChecker>("Cherry.ExpandedPreconditionsUtility");
-            ConditionsCheckerApi.Initialize(false, MailFrameworkModEntry.Manifest.UniqueID);
+            ConditionsCheckerApi?.Initialize(false, MailFrameworkModEntry.Manifest.UniqueID);
         }
 
         public bool CanEdit<T>(IAssetInfo asset)
