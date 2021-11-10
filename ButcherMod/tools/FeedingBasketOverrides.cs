@@ -48,7 +48,7 @@ namespace AnimalHusbandryMod.tools
             __result = DataLoader.i18n.Get("Tool.FeedingBasket.Description");
         }
 
-        public static void canBeTrashed(Tool __instance, ref bool __result)
+        public static void canBeTrashed(Item __instance, ref bool __result)
         {
             if (!IsFeedingBasket(__instance)) return;
 
@@ -131,7 +131,7 @@ namespace AnimalHusbandryMod.tools
                 {
                     dialogue = DataLoader.i18n.Get("Tool.FeedingBasket.NotLikeTreat", new { itemName = __instance.attachments[0].DisplayName });
                 }
-                else if (!TreatsController.IsLikedTreat(animal, __instance.attachments[0].ParentSheetIndex) && !TreatsController.IsLikedTreat(animal, __instance.attachments[0].Category))
+                else if (!TreatsController.IsLikedTreat(animal, __instance.attachments[0]))
                 {
                     dialogue = DataLoader.i18n.Get("Tool.FeedingBasket.NotLikeTreat", new { itemName = __instance.attachments[0].DisplayName });
                 }
@@ -185,7 +185,7 @@ namespace AnimalHusbandryMod.tools
                     }
                     Pets[feedingBasketId] = pet = null;
                 }
-                else if (!TreatsController.IsLikedTreat(pet, __instance.attachments[0].ParentSheetIndex) && !TreatsController.IsLikedTreat(pet, __instance.attachments[0].Category))
+                else if (!TreatsController.IsLikedTreat(pet, __instance.attachments[0]))
                 {
                     dialogue = DataLoader.i18n.Get("Tool.FeedingBasket.NotLikeTreat", new { itemName = __instance.attachments[0].DisplayName });
                 }
@@ -450,15 +450,14 @@ namespace AnimalHusbandryMod.tools
             return false;
         }
 
-        public static bool canThisBeAttached(MilkPail __instance, SObject o, ref bool __result)
+        public static bool canThisBeAttached(Tool __instance, SObject o, ref bool __result)
         {
             if (!IsFeedingBasket(__instance)) return true;
 
             if (o == null
                 || o.Category == SObject.VegetableCategory
                 || o.Category == SObject.FruitsCategory
-                || TreatsController.IsLikedTreat(o.ParentSheetIndex)
-                || TreatsController.IsLikedTreat(o.Category)
+                || TreatsController.IsLikedTreat(o)
             )
             {
                 __result = true;
@@ -468,7 +467,7 @@ namespace AnimalHusbandryMod.tools
             return false;
         }
 
-        public static bool attach(MilkPail __instance, SObject o, ref SObject __result)
+        public static bool attach(Tool __instance, SObject o, ref SObject __result)
         {
             if (!IsFeedingBasket(__instance)) return true;
 
@@ -503,23 +502,25 @@ namespace AnimalHusbandryMod.tools
             return false;
         }
 
-        public static bool drawAttachments(MilkPail __instance, SpriteBatch b, int x, int y)
+        public static bool drawAttachments(Tool __instance, SpriteBatch b, int x, int y)
         {
             if (!IsFeedingBasket(__instance)) return true;
 
+            y += (__instance.enchantments.Any() ? 8 : 4);
+
             if (__instance.attachments[0] != null)
             {
-                b.Draw(Game1.menuTexture, new Vector2(x, y), Game1.getSourceRectForStandardTileSheet(Game1.menuTexture, 10), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.86f);
+                b.Draw(Game1.menuTexture, new Vector2(x, y), new Rectangle?(Game1.getSourceRectForStandardTileSheet(Game1.menuTexture, 10)), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.86f);
                 __instance.attachments[0].drawInMenu(b, new Vector2(x, y), 1f);
             }
             else
             {
-                b.Draw(Game1.menuTexture, new Vector2(x, y), Game1.getSourceRectForStandardTileSheet(Game1.menuTexture, AttachmentMenuTile, -1, -1), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.86f);
+                b.Draw(Game1.menuTexture, new Vector2(x, y), new Rectangle?(Game1.getSourceRectForStandardTileSheet(Game1.menuTexture, AttachmentMenuTile, -1, -1)), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.86f);
             }
             return false;
         }
 
-        private static bool IsFeedingBasket(Tool tool)
+        private static bool IsFeedingBasket(Item tool)
         {
             return tool.modData.ContainsKey(FeedingBasketKey);
         }
