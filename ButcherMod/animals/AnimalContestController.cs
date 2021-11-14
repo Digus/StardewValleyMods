@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using AnimalHusbandryMod.animals.data;
 using AnimalHusbandryMod.common;
 using AnimalHusbandryMod.farmer;
-using Harmony;
+using HarmonyLib;
 using StardewModdingAPI;
 using StardewModdingAPI.Utilities;
 using StardewValley;
