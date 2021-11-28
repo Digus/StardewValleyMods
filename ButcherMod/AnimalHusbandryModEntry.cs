@@ -56,7 +56,7 @@ namespace AnimalHusbandryMod
             if (this.Helper.ModRegistry.IsLoaded("DIGUS.BUTCHER"))
             {
                 Monitor.Log("Animal Husbandry Mod can't run along side its older version, ButcherMod. " +
-                    "You need to copy the 'data' directory from the ButcherMod directory, into the AnimalHusbandryMod directory, then delete the ButcherMod directory. " +
+                    "You need to copy the 'data' directory from the ButcherMod directory into the AnimalHusbandryMod directory, then delete the ButcherMod directory. " +
                     "Animal Husbandry Mod won't load until this is done.", LogLevel.Error);
                 _isEnabled = false;
             }
