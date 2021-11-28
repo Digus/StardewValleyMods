@@ -4,6 +4,7 @@
 		<RootNamespace>AnimalHusbandryMod</RootNamespace>
 		<Version>1.0.0</Version>
 		<TargetFramework>net5</TargetFramework>
+		<EnableHarmony>true</EnableHarmony>
 	</PropertyGroup>
 
 	<ItemGroup>
