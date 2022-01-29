@@ -1,5 +1,5 @@
 ﻿using System;
-using Harmony;
+using HarmonyLib;
 using Microsoft.Xna.Framework.Graphics;
 using ProducerFrameworkMod.Api;
 using StardewModdingAPI;
@@ -32,7 +32,7 @@ namespace ProducerFrameworkMod
         {
             new DataLoader(Helper);
 
-            var harmony = HarmonyInstance.Create("Digus.ProducerFrameworkMod");
+            var harmony = new Harmony("Digus.ProducerFrameworkMod");
 
             harmony.Patch(
                 original: AccessTools.Method(typeof(SObject), nameof(SObject.performObjectDropInAction)),
