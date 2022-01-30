@@ -24,5 +24,6 @@ namespace AnimalHusbandryMod
         public bool DisableMeatToolLetter;
         public bool DisableMeatInBlundle;
         public bool ForceDrawAttachmentOnAnyOS;
+        public bool DisableTvChannels;
     }
 }
