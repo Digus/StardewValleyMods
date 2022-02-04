@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AnimalHusbandryMod.animals.data;
 using AnimalHusbandryMod.common;
 
 namespace AnimalHusbandryMod.animals
@@ -21,7 +22,7 @@ namespace AnimalHusbandryMod.animals
 
         public static Animal? GetAnimalFromType(string type)
         {
-            if (DataLoader.AnimalData.CustomAnimals.Exists(a => type.Contains(a.Name)))
+            if (!AnimalData.BaseGameAnimals.Contains(type) && DataLoader.AnimalData.CustomAnimals.Exists(a => type.Contains(a.Name)))
             {
                 return Animal.CustomAnimal;
             }
