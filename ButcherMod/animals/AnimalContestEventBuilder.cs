@@ -450,6 +450,8 @@ namespace AnimalHusbandryMod.animals
             
             FarmerLoader.FarmerData.AnimalContestData.Add(animalContestInfo);
 
+            AnimalHusbandryModEntry.monitor.Log("Adding Animal Contest Event:\n" + script, LogLevel.Trace);
+
             return new CustomEvent(key,script);
         }
 
