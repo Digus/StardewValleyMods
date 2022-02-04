@@ -20,7 +20,6 @@ namespace AnimalHusbandryMod.common
     public class DataLoader : IAssetEditor, IAssetLoader
     {
         private static readonly string[] MeatDishes = { "652", "653", "654", "655", "656", "657", "658", "659", "660", "661", "662", "663", "664", "665", "666" };
-        private static readonly string[] BaseGameAnimals = new string[] { "White Chicken", "Brown Chicken", "Blue Chicken", "Void Chicken", "Duck", "Rabbit", "Dinosaur", "White Cow", "Brown Cow", "Goat", "Pig", "Hog", "Sheep" };
 
         public static IModHelper Helper;
         public static ModConfig ModConfig;
@@ -324,7 +323,7 @@ namespace AnimalHusbandryMod.common
             
             foreach (KeyValuePair<string, string> farmAnimal in data)
             {
-                if (!BaseGameAnimals.Contains(farmAnimal.Key))
+                if (!AnimalData.BaseGameAnimals.Contains(farmAnimal.Key))
                 {
                     if (!DataLoader.AnimalData.CustomAnimals.Exists(a => farmAnimal.Key.Contains(a.Name)))
                     {
