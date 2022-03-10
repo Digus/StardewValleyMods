@@ -95,8 +95,8 @@ namespace AnimalHusbandryMod.common
             TvController.AddChannel(new LivingWithTheAnimalsChannel());
 
             // load the pregnancy item config
-            PregnancyData = Helper.Data.ReadJsonFile<PregnancyData>("data\\pregnancyitems.json") ?? new PregnancyData();
-            Helper.Data.WriteJsonFile("data\\pregnancyitems.json", PregnancyData);
+            PregnancyData = Helper.Data.ReadJsonFile<PregnancyData>("data\\pregnancydata.json") ?? new PregnancyData();
+            Helper.Data.WriteJsonFile("data\\pregnancydata.json", PregnancyData);
 
             // add editors (must happen *after* data is initialised above, since SMAPI may reload affected assets immediately)
             var editors = Helper.Content.AssetEditors;
