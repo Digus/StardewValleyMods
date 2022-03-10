@@ -135,6 +135,11 @@ namespace AnimalHusbandryMod.tools
                 {
                     var data = DataLoader.Helper.Content.Load<Dictionary<int, string>>(@"Data\ObjectInformation.xnb", ContentSource.GameContent);
                     string produceName = data[animal.defaultProduceIndex.Value].Split('/')[4];
+                    string customProduceName = DataLoader.PregnancyData.GetPregnancyItemName(animal);
+                    if (customProduceName != "")
+                    {
+                        produceName = customProduceName;
+                    }
                     dialogue = DataLoader.i18n.Get("Tool.InseminationSyringe.CorrectItem", new { itemName = produceName });
                 }
                 else if (PregnancyController.CheckBuildingLimit(animal))

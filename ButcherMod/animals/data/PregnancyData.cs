@@ -31,5 +31,15 @@ namespace AnimalHusbandryMod.animals.data
             }
             return PreganancyItems.ContainsKey(animal.displayType) && PreganancyItems[animal.displayType].Equals(o.Name);
         }
+
+        public string GetPregnancyItemName(FarmAnimal animal)
+        {
+            if (PreganancyItems.ContainsKey(animal.displayType))
+            {
+                return PreganancyItems[animal.displayType];
+            }
+            AnimalHusbandryModEntry.monitor.Log($"Dont know anything about {animal.displayType}");
+            return "";
+        }
     }
 }
