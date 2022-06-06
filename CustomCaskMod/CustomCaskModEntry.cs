@@ -1,5 +1,5 @@
 ﻿using System;
-using Harmony;
+using HarmonyLib;
 using Microsoft.Xna.Framework;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
@@ -42,19 +42,19 @@ namespace CustomCaskMod
         {
             new DataLoader(Helper, ModManifest);
 
-            var harmony = HarmonyInstance.Create("Digus.CustomCaskMod");
+            var harmony = new Harmony("Digus.CustomCaskMod");
 
             harmony.Patch(
                 original: AccessTools.Method(typeof(Cask), nameof(Cask.IsValidCaskLocation)),
-                prefix: new HarmonyMethod(typeof(CaskOverrides), nameof(CaskOverrides.IsValidCaskLocation))
+                prefix: new HarmonyMethod(typeof(CaskOverrides), nameof(CaskOverrides.IsValidCaskLocation)) { priority = Priority.VeryHigh }
             );
             harmony.Patch(
                 original: AccessTools.Method(typeof(Cask), nameof(Cask.GetAgingMultiplierForItem)),
-                prefix: new HarmonyMethod(typeof(CaskOverrides), nameof(CaskOverrides.GetAgingMultiplierForItem))
+                prefix: new HarmonyMethod(typeof(CaskOverrides), nameof(CaskOverrides.GetAgingMultiplierForItem)){ priority = Priority.VeryHigh}
             );
             harmony.Patch(
                 original: AccessTools.Method(typeof(Cask), nameof(Cask.checkForMaturity)),
-                prefix: new HarmonyMethod(typeof(CaskOverrides), nameof(CaskOverrides.checkForMaturity))
+                prefix: new HarmonyMethod(typeof(CaskOverrides), nameof(CaskOverrides.checkForMaturity)) { priority = Priority.VeryHigh }
             );
             harmony.Patch(
                 original: AccessTools.Method(typeof(SObject), nameof(SObject.placementAction)),
