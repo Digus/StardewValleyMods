@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Emit;
-using Harmony;
+using HarmonyLib;
 using Microsoft.Xna.Framework;
 using StardewValley;
 using StardewValley.Objects;
@@ -12,7 +12,6 @@ namespace CustomCaskMod
 {
     internal class CaskOverrides
     {
-        [HarmonyPriority(700)]
         public static bool GetAgingMultiplierForItem(ref Cask __instance, Item item, ref float __result)
         {
             __result = 0f;
@@ -48,7 +47,6 @@ namespace CustomCaskMod
             return false;
         }
 
-        [HarmonyPriority(700)]
         public static bool IsValidCaskLocation(ref Cask __instance, ref bool __result)
         {
             if ((IsVanillaCask(__instance) && DataLoader.ModConfig.EnableCasksAnywhere)
@@ -63,7 +61,6 @@ namespace CustomCaskMod
             }
         }
 
-        [HarmonyPriority(700)]
         public static bool checkForMaturity(ref Cask __instance)
         {
             if ((IsVanillaCask(__instance) && DataLoader.ModConfig.EnableMoreThanOneQualityIncrementPerDay)
