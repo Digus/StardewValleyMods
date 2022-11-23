@@ -1,4 +1,4 @@
-﻿using Harmony;
+﻿using HarmonyLib;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley;
@@ -41,9 +41,9 @@ namespace EverlastingBaitsAndUnbreakableTacklesMod
         /// <param name="e">The event data.</param>
         private void OnGameLaunched(object sender, GameLaunchedEventArgs e)
         {
-            DataLoader = new DataLoader(Helper);
+            DataLoader = new DataLoader(Helper, ModManifest);
 
-            var harmony = HarmonyInstance.Create("Digus.InfiniteBaitAndLureMod");
+            var harmony = new Harmony("Digus.InfiniteBaitAndLureMod");
 
             harmony.Patch(
                 original: AccessTools.Method(typeof(FishingRod), "doDoneFishing"),
@@ -52,12 +52,12 @@ namespace EverlastingBaitsAndUnbreakableTacklesMod
 
             harmony.Patch(
                 original: AccessTools.Method(typeof(CraftingRecipe), nameof(CraftingRecipe.createItem)),
-                prefix: new HarmonyMethod(typeof(GameOverrides), nameof(GameOverrides.CreateItem))
+                prefix: new HarmonyMethod(typeof(GameOverrides), nameof(GameOverrides.CreateItem)) { priority = Priority.First }
             );
 
             harmony.Patch(
                 original: AccessTools.Method(typeof(CraftingPage), "clickCraftingRecipe"),
-                prefix: new HarmonyMethod(typeof(GameOverrides), nameof(GameOverrides.ClickCraftingRecipe))
+                postfix: new HarmonyMethod(typeof(GameOverrides), nameof(GameOverrides.ClickCraftingRecipe))
             );
             
             harmony.Patch(
