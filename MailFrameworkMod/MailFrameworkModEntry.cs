@@ -15,6 +15,8 @@ namespace MailFrameworkMod
         public static IMonitor ModMonitor;
         public static IManifest Manifest;
 
+        internal static DataLoader DataLoader;
+
         /*********
         ** Public methods
         *********/
@@ -37,6 +39,7 @@ namespace MailFrameworkMod
 
             helper.ConsoleCommands.Add("player_addreceivedmail", "Adds a mail as received.\n\nUsage: player_addreceivedmail <value>\n- value: name of the mail.", Commands.AddsReceivedMail);
             helper.ConsoleCommands.Add("player_removereceivedmail", "Remove a mail from the list of received mail.\n\nUsage: player_removereceivedmail <value>\n- value: name of the mail.", Commands.RemoveReceivedMail);
+            helper.ConsoleCommands.Add("player_debug_updatemailbox", "Updates de player mailbox. Use it for debug propose only.", Commands.DebugUpdateMailbox);
         }
 
 
@@ -48,7 +51,7 @@ namespace MailFrameworkMod
         /// <param name="e">The event data.</param>
         private void OnGameLaunched(object sender, GameLaunchedEventArgs e)
         {
-            Helper.Content.AssetEditors.Add(new DataLoader(Helper));
+            DataLoader = new DataLoader(Helper);
             var harmony = new Harmony("Digus.MailFrameworkMod");
             
             harmony.Patch(
@@ -84,7 +87,7 @@ namespace MailFrameworkMod
         {
             if (MailDao.HasRepositoryChanged())
             {
-                Helper.Content.InvalidateCache("Data\\mail");
+                Helper.GameContent.InvalidateCache(DataLoader.MailAssetName);
             }
             MailController.UpdateMailBox();
 

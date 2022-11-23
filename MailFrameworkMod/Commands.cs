@@ -38,7 +38,7 @@ namespace MailFrameworkMod
             }
             else
             {
-                ModMonitor.Log("No player add mail as received.", LogLevel.Info);
+                ModMonitor.Log("No player to add mail as received.", LogLevel.Info);
             }
         }
 
@@ -68,7 +68,19 @@ namespace MailFrameworkMod
             }
             else
             {
-                ModMonitor.Log("No player remove mail as received.", LogLevel.Info);
+                ModMonitor.Log("No player to remove mail as received.", LogLevel.Info);
+            }
+        }
+
+        public static void DebugUpdateMailbox(string command, string[] args)
+        {
+            if (Context.IsWorldReady)
+            {
+                MailController.UpdateMailBox();
+            }
+            else
+            {
+                ModMonitor.Log("No player to check mail.", LogLevel.Info);
             }
         }
     }
