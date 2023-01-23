@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Harmony;
 using Microsoft.Xna.Framework;
 using Netcode;
 using StardewValley;
@@ -31,7 +30,6 @@ namespace CustomCrystalariumMod
             return true;
         }
 
-        [HarmonyPriority(500)]
         public static bool PerformObjectDropInAction(ref Object __instance, ref Item dropInItem, ref bool probe, ref Farmer who, ref bool __result)
         {
             if (dropInItem is Object object1)
@@ -41,8 +39,7 @@ namespace CustomCrystalariumMod
                 {
                     if (__instance.Name.Equals("Crystalarium") || ClonerController.HasCloner(__instance.Name))
                     {
-                        if ((__instance.heldObject.Value == null || __instance.heldObject.Value.ParentSheetIndex != object1.ParentSheetIndex)
-                             && (__instance.heldObject.Value == null || __instance.MinutesUntilReady > 0))
+                        if (__instance.heldObject.Value == null || (__instance.heldObject.Value.ParentSheetIndex != object1.ParentSheetIndex && __instance.MinutesUntilReady > 0))
                         {
                             int minutesUntilReady = 0;
 
@@ -66,6 +63,12 @@ namespace CustomCrystalariumMod
                                 {
                                     return true;
                                 }
+                                if (DataLoader.ModConfig.BlockChange && currentObject != null)
+                                {
+                                    ShowBlockChangeDialog();
+                                    __result = false;
+                                    return false;
+                                }
                             }
                             else if (ClonerController.GetCloner(__instance.Name) is CustomCloner cloner)
                             {
@@ -78,6 +81,12 @@ namespace CustomCrystalariumMod
                                 else
                                 {
                                     return true;
+                                }
+                                if ((DataLoader.ModConfig.OverrideContentPackGetObjectProperties ? DataLoader.ModConfig.BlockChange : cloner.BlockChange) && currentObject != null)
+                                {
+                                    ShowBlockChangeDialog();
+                                    __result = false;
+                                    return false;
                                 }
                             }
                             if (__instance.bigCraftable.Value && !probe &&
@@ -110,7 +119,6 @@ namespace CustomCrystalariumMod
             return true;
         }
 
-        [HarmonyPriority(500)]
         public static bool PerformRemoveAction(ref Object __instance, ref Vector2 tileLocation)
         {
             if (__instance.Name == "Crystalarium")
@@ -136,14 +144,12 @@ namespace CustomCrystalariumMod
             return true;
         }
 
-        [HarmonyPriority(500)]
         public static bool CheckForAction_prefix(ref Object __instance, out Object __state)
         {
             __state = __instance.heldObject.Value;
             return true;
         }
 
-        [HarmonyPriority(500)]
         public static void CheckForAction_postfix(ref Object __instance, Object __state, bool justCheckingForActivity)
         {
             if (ClonerController.GetCloner(__instance.Name) is CustomCloner cloner && __instance.Name != "Crystalarium" && __state != null && !justCheckingForActivity)
@@ -155,6 +161,12 @@ namespace CustomCrystalariumMod
                     __instance.initializeLightSource(__instance.TileLocation, false);
                 }
             }
+        }
+
+        private static void ShowBlockChangeDialog()
+        {
+            string dialogue = DataLoader.I18N.Get("CustomCrystalarium.Dialogue.BlockChange");
+            Game1.showRedMessage(dialogue);
         }
     }
 }
