@@ -67,7 +67,7 @@ namespace MailServicesMod
                             {
                                 int price = cost[0] + DataLoader.ModConfig.ToolShipmentServiceFee;
                                 int barIndex = cost[2];
-                                const int barCount = 5;
+                                int barCount = cost.Length >= 4 ? cost[3] : 5;
                                 if (Game1.player.Money >= price)
                                 {
                                     if (Game1.player.hasItemInInventory(barIndex, barCount))
