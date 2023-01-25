@@ -53,11 +53,11 @@ namespace MailServicesMod
 
         internal static void GiftToNpc(string npcName)
         {
-            NPC npc = Game1.getCharacterFromName(npcName);
+            NPC npc = NpcUtility.getCharacterFromName(npcName);
             Farmer who = Game1.player;
             string giftName = who.ActiveObject.DisplayName;
             npc.receiveGift(who.ActiveObject, who, true, 1, DataLoader.ModConfig.ShowDialogOnItemDelivery);
-            ShopMenu.chargePlayer(who, 0, DataLoader.ModConfig.GiftServiceFee);
+            ShopMenu.chargePlayer(who, 0, (int)Math.Round(who.ActiveObject.Price * (DataLoader.ModConfig.GiftServicePercentFee / 100d), MidpointRounding.AwayFromZero) + DataLoader.ModConfig.GiftServiceFee);
             who.reduceActiveItemByOne();
             who.completeQuest(25);
             if (!DataLoader.ModConfig.ShowDialogOnItemDelivery)
@@ -75,7 +75,7 @@ namespace MailServicesMod
                     && !npc.isBirthday(Game1.currentSeason, Game1.dayOfMonth) 
                     && who.friendshipData[npc.Name].IsDating())
                 {
-                    NPC spouse = Game1.getCharacterFromName(who.spouse);
+                    NPC spouse = NpcUtility.getCharacterFromName(who.spouse);
                     who.changeFriendship(-30, spouse);
                     spouse.CurrentDialogue.Clear();
                     spouse.CurrentDialogue.Push(new Dialogue(Game1.content.LoadString("Strings\\StringsFromCSFiles:NPC.cs.3985", npc.displayName), spouse));

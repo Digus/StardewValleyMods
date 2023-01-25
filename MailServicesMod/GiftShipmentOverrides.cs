@@ -33,6 +33,7 @@ namespace MailServicesMod
             {
                 MailServicesModEntry.ModMonitor.Log("Error trying to send gift to a villager.", LogLevel.Error);
                 MailServicesModEntry.ModMonitor.Log($"The error message above: {e.Message}", LogLevel.Trace);
+                MailServicesModEntry.ModMonitor.Log(e.StackTrace, LogLevel.Trace);
             }
             return true;
         }
@@ -63,6 +64,7 @@ namespace MailServicesMod
             {
                 MailServicesModEntry.ModMonitor.Log("Error trying to answer your gift choice.", LogLevel.Error);
                 MailServicesModEntry.ModMonitor.Log($"The error message above: {e.Message}", LogLevel.Trace);
+                MailServicesModEntry.ModMonitor.Log(e.StackTrace, LogLevel.Trace);
             }
         }
     }
