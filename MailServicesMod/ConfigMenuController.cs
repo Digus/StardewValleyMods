@@ -40,6 +40,7 @@ namespace MailServicesMod
                 api.RegisterSimpleOption(manifest, "Ask to Upgrade Tool", "When placing the tool in the mailbox you will have to confirm if you want to upgrade it.", () => modConfig.EnableAskToUpgradeTool, (bool val) => modConfig.EnableAskToUpgradeTool = val);
 
                 api.RegisterLabel(manifest, "Gift Service:", "Properties related to the gift service.");
+                api.RegisterSimpleOption(manifest, "Minimum Friendship Points", "Friendship points needed to send gifts to a NPC. 250 friendship points equal 1 heart level.", () => modConfig.MinimumFriendshipPointsToSendGift, (int val) => modConfig.MinimumFriendshipPointsToSendGift = val);
                 api.RegisterSimpleOption(manifest, "NPC Page Size", "Number of villagers shown per page on gift shipment.", () => modConfig.GiftChoicePageSize, (int val) => modConfig.GiftChoicePageSize = val);
                 api.RegisterSimpleOption(manifest, "Jealousy", "Make it possible for your spouse to be jealous of gifts sent by mail like of gifts given in person.", () => modConfig.EnableJealousyFromMailedGifts, (bool val) => modConfig.EnableJealousyFromMailedGifts = val);
                 api.RegisterSimpleOption(manifest, "Max Friendship", "Make it possible to send gifts to friends with maxed friendship.", () => modConfig.EnableGiftToNpcWithMaxFriendship, (bool val) => modConfig.EnableGiftToNpcWithMaxFriendship = val);

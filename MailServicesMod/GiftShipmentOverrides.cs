@@ -16,7 +16,7 @@ namespace MailServicesMod
         {
             try
             {
-                if (!DataLoader.ModConfig.DisableGiftService && Game1.player.mailbox.Count == 0 && Game1.player.ActiveObject != null && Game1.player.ActiveObject.canBeGivenAsGift())
+                if (!DataLoader.ModConfig.DisableGiftService && Game1.player.mailbox.Count == 0 && Game1.player.ActiveObject != null && Game1.player.ActiveObject.canBeGivenAsGift() && !Game1.player.ActiveObject.questItem.Value)
                 {
                     if (Game1.player.Money >= DataLoader.ModConfig.GiftServiceFee)
                     {

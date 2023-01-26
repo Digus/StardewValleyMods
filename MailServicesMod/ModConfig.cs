@@ -15,6 +15,7 @@ namespace MailServicesMod
         public bool DisableQuestService;
         public int QuestServiceFee;
         public bool DisableGiftService;
+        public int MinimumFriendshipPointsToSendGift;
         public int GiftServiceFee;
         public int GiftServicePercentFee;
         public int GiftChoicePageSize = 5;
