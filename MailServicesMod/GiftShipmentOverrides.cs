@@ -58,7 +58,7 @@ namespace MailServicesMod
                     {
                         GiftShipmentController.GiftToNpc(npcName);
                     }
-                }                
+                }
             }
             catch (Exception e)
             {
