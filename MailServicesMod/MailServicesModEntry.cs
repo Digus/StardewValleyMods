@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Harmony;
+using HarmonyLib;
 using MailFrameworkMod;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
@@ -41,7 +41,7 @@ namespace MailServicesMod
 
             ConfigMenuController.CreateConfigMenu(ModManifest);
 
-            var harmony = HarmonyInstance.Create("Digus.MailServiceMod");
+            var harmony = new Harmony("Digus.MailServiceMod");
 
             harmony.Patch(
                 original: AccessTools.Method(typeof(GameLocation), nameof(GameLocation.blacksmith)),
@@ -54,6 +54,10 @@ namespace MailServicesMod
             harmony.Patch(
                 original: AccessTools.Method(typeof(GameLocation), nameof(GameLocation.mailbox)),
                 prefix: new HarmonyMethod(typeof(ToolUpgradeOverrides), nameof(ToolUpgradeOverrides.mailbox))
+            );
+            harmony.Patch(
+                original: AccessTools.Method(typeof(GameLocation), nameof(GameLocation.answerDialogueAction)),
+                prefix: new HarmonyMethod(typeof(ToolUpgradeOverrides), nameof(ToolUpgradeOverrides.answerDialogueAction))
             );
 
             harmony.Patch(
