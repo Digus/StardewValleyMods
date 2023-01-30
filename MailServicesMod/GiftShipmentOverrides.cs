@@ -16,7 +16,7 @@ namespace MailServicesMod
         {
             try
             {
-                if (!DataLoader.ModConfig.DisableGiftService && Game1.player.mailbox.Count == 0 && Game1.player.ActiveObject != null && Game1.player.ActiveObject.canBeGivenAsGift())
+                if (!DataLoader.ModConfig.DisableGiftService && Game1.player.mailbox.Count == 0 && Game1.player.ActiveObject != null && Game1.player.ActiveObject.canBeGivenAsGift() && !Game1.player.ActiveObject.questItem.Value)
                 {
                     if (Game1.player.Money >= DataLoader.ModConfig.GiftServiceFee)
                     {
@@ -33,6 +33,7 @@ namespace MailServicesMod
             {
                 MailServicesModEntry.ModMonitor.Log("Error trying to send gift to a villager.", LogLevel.Error);
                 MailServicesModEntry.ModMonitor.Log($"The error message above: {e.Message}", LogLevel.Trace);
+                MailServicesModEntry.ModMonitor.Log(e.StackTrace, LogLevel.Trace);
             }
             return true;
         }
@@ -57,12 +58,13 @@ namespace MailServicesMod
                     {
                         GiftShipmentController.GiftToNpc(npcName);
                     }
-                }                
+                }
             }
             catch (Exception e)
             {
                 MailServicesModEntry.ModMonitor.Log("Error trying to answer your gift choice.", LogLevel.Error);
                 MailServicesModEntry.ModMonitor.Log($"The error message above: {e.Message}", LogLevel.Trace);
+                MailServicesModEntry.ModMonitor.Log(e.StackTrace, LogLevel.Trace);
             }
         }
     }
