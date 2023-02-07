@@ -1,5 +1,6 @@
 ﻿using System;
 using HarmonyLib;
+using MailFrameworkMod.Api;
 using MailFrameworkMod.integrations;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
@@ -101,6 +102,15 @@ namespace MailFrameworkMod
         private void OnSaving(object sender, EventArgs e)
         {
             MailController.UnloadMailBox();
+        }
+
+        /// <summary>
+        /// Return the Mail Framework Mod API
+        /// </summary>
+        /// <returns>Mail Framework Mod API</returns>
+        public override object GetApi()
+        {
+            return new MailFrameworkModApi();
         }
     }
 }
