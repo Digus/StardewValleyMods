@@ -1,5 +1,5 @@
 ﻿using System;
-using Harmony;
+using HarmonyLib;
 using Microsoft.Xna.Framework.Input;
 using Netcode;
 using StardewModdingAPI;
@@ -21,9 +21,8 @@ namespace BorderlessWoodFloorMod
         private void OnGameLaunched(object sender, GameLaunchedEventArgs e)
         {
             DataLoader dataLoader = new DataLoader(ModHelper);
-            Helper.Content.AssetEditors.Add((IAssetEditor) dataLoader);
 
-            var harmony = HarmonyInstance.Create("Digus.CustomFlooringMod");
+            var harmony = new Harmony("Digus.CustomFlooringMod");
             harmony.Patch(
                 original: AccessTools.Method(typeof(Flooring), nameof(Flooring.loadSprite)),
                 postfix: new HarmonyMethod(typeof(BorderlessWoodFloorModEntry), nameof(BorderlessWoodFloorModEntry.loadSprite))
