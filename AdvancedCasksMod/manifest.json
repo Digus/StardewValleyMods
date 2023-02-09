@@ -5,5 +5,6 @@
     "Description": "Fake manifest. Delete if found.",
     "UniqueID": "Digus.AdvancedCasksMod",
     "MinimumApiVersion": "3.18",
-    "UpdateKeys": [ "Nexus:8413" ]
+    "UpdateKeys": [ "Nexus:8413" ],
+    "EntryDll": "AdvancedCasksMod.dll"
 }
