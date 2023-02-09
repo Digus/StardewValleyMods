@@ -38,6 +38,10 @@ namespace CustomCaskMod
             {
                 return customAger.AgingDataId[ageable.Category];
             }
+            else if (customAger.EnableAgeEveryObject)
+            {
+                return customAger.DefaultAgingRate;
+            }
             return null;
         }
 
