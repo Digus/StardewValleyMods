@@ -143,7 +143,7 @@ namespace CustomCrystalariumMod
 
         public static bool PerformToolAction(ref Object __instance, Tool t, GameLocation location)
         {
-            if (__instance.isTemporarilyInvisible)
+            if (__instance.isTemporarilyInvisible || t == null)
             {
                 return true;
             }
