@@ -56,7 +56,7 @@ namespace AnimalHusbandryMod
             if (this.Helper.ModRegistry.IsLoaded("DIGUS.BUTCHER"))
             {
                 Monitor.Log("Animal Husbandry Mod can't run along side its older version, ButcherMod. " +
-                    "You need to copy the 'data' directory from the ButcherMod directory, into the AnimalHusbandryMod directory, then delete the ButcherMod directory. " +
+                    "You need to copy the 'data' directory from the ButcherMod directory into the AnimalHusbandryMod directory, then delete the ButcherMod directory. " +
                     "Animal Husbandry Mod won't load until this is done.", LogLevel.Error);
                 _isEnabled = false;
             }
@@ -92,18 +92,18 @@ namespace AnimalHusbandryMod
 
                 if (!DataLoader.ModConfig.DisableTreats)
                 {
-                    ModHelper.ConsoleCommands.Add("player_addfeedingbasket", "Add Feeding Basket to inventory.", (n, d) => Game1.player.addItemToInventory(ToolsFactory.GetFeedingBasket()));
+                    ModHelper.ConsoleCommands.Add("player_addfeedingbasket", "Adds Feeding Basket to inventory.", (n, d) => Game1.player.addItemToInventory(ToolsFactory.GetFeedingBasket()));
                 }
 
                 if (!DataLoader.ModConfig.DisableAnimalContest)
                 {
-                    ModHelper.ConsoleCommands.Add("player_addparticipantribbon", "Add Participant Ribbon to inventory.", (n, d) => Game1.player.addItemToInventory(ToolsFactory.GetParticipantRibbon()));
+                    ModHelper.ConsoleCommands.Add("player_addparticipantribbon", "Adds Participant Ribbon to inventory.", (n, d) => Game1.player.addItemToInventory(ToolsFactory.GetParticipantRibbon()));
                 }
 
-                ModHelper.ConsoleCommands.Add("config_create_customanimaltemplates", "Add custom animal templates in the data\\animal.json file for every loaded custom animal.", DataLoader.AddCustomAnimalsTemplateCommand);
-                ModHelper.ConsoleCommands.Add("config_reload_contentpacks_animalhusbandrymod", "Reload all content packs for animal husbandry mod.",DataLoader.LoadContentPacksCommand);
-                ModHelper.ConsoleCommands.Add("world_removealltools_animalhusbandrymod", "Remove all custom tools added by the animal husbandry mod.",DataLoader.ToolsLoader.RemoveAllToolsCommand);
-                ModHelper.ConsoleCommands.Add("world_makepetvisible", "Force the pet to become visible, in case your pet doesn't reaper after the animal contest.", (n, d) => Game1.player.getPet().IsInvisible = false);
+                ModHelper.ConsoleCommands.Add("config_create_customanimaltemplates", "Adds custom animal templates in the data\\animal.json file for every loaded custom animal.", DataLoader.AddCustomAnimalsTemplateCommand);
+                ModHelper.ConsoleCommands.Add("config_reload_contentpacks_animalhusbandrymod", "Reloads all content packs for Animal Husbandry mod.",DataLoader.LoadContentPacksCommand);
+                ModHelper.ConsoleCommands.Add("world_removealltools_animalhusbandrymod", "Removes all custom tools added by the Animal Husbandry mod.",DataLoader.ToolsLoader.RemoveAllToolsCommand);
+                ModHelper.ConsoleCommands.Add("world_makepetvisible", "Forces the pet to become visible, in case your pet doesn't reappear after the animal contest.", (n, d) => Game1.player.getPet().IsInvisible = false);
 
                 if (DataLoader.ModConfig.AddMeatCleaverToInventoryKey != null || DataLoader.ModConfig.AddInseminationSyringeToInventoryKey != null || DataLoader.ModConfig.AddFeedingBasketToInventoryKey != null)
                 {
