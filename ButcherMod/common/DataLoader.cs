@@ -30,6 +30,7 @@ namespace AnimalHusbandryMod.common
         public static AnimalData AnimalData;
         public static AnimalBuildingData AnimalBuildingData;
         public static AnimalContestData AnimalContestData;
+        public static PregnancyData PregnancyData;
 
         public static String LooseSpritesName;
         public static Texture2D LooseSprites;
@@ -92,6 +93,10 @@ namespace AnimalHusbandryMod.common
 
             // load Livin' With The Animals channel
             TvController.AddChannel(new LivingWithTheAnimalsChannel());
+
+            // load the pregnancy item config
+            PregnancyData = Helper.Data.ReadJsonFile<PregnancyData>("data\\pregnancydata.json") ?? new PregnancyData();
+            Helper.Data.WriteJsonFile("data\\pregnancydata.json", PregnancyData);
 
             // add editors (must happen *after* data is initialised above, since SMAPI may reload affected assets immediately)
             var editors = Helper.Content.AssetEditors;

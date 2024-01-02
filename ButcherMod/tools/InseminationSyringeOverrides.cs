@@ -111,6 +111,10 @@ namespace AnimalHusbandryMod.tools
                 {
                     dialogue = DataLoader.i18n.Get("Tool.InseminationSyringe.EggAnimal", new { animalName = animal.displayName });
                 }
+                else if (animal.displayName.Contains("Male") || animal.displayType.Contains("Male"))
+                {
+                    dialogue = DataLoader.i18n.Get("Tool.InseminationSyringe.CantBeInseminated", new { animalName = animal.displayName });
+                }
                 else if (!((ImpregnatableAnimalItem)DataLoader.AnimalData.GetAnimalItem(animal)).MinimumDaysUtillBirth.HasValue)
                 {
                     dialogue = DataLoader.i18n.Get("Tool.InseminationSyringe.CantBeInseminated", new { animalName = animal.displayName });
@@ -134,7 +138,16 @@ namespace AnimalHusbandryMod.tools
                 else if (!CheckCorrectProduct(animal, __instance.attachments[0]))
                 {
                     var data = DataLoader.Helper.Content.Load<Dictionary<int, string>>(@"Data\ObjectInformation.xnb", ContentSource.GameContent);
-                    string produceName = data[animal.defaultProduceIndex.Value].Split('/')[4];
+                    string produceName = "the correct item";
+                    if (animal.defaultProduceIndex.Value > 0)
+                    {
+                        produceName = data[animal.defaultProduceIndex.Value].Split('/')[4];
+                    }
+                    string customProduceName = DataLoader.PregnancyData.GetPregnancyItemName(animal);
+                    if (customProduceName != "")
+                    {
+                        produceName = customProduceName;
+                    }
                     dialogue = DataLoader.i18n.Get("Tool.InseminationSyringe.CorrectItem", new { itemName = produceName });
                 }
                 else if (PregnancyController.CheckBuildingLimit(animal))
@@ -235,7 +248,7 @@ namespace AnimalHusbandryMod.tools
         {
             if (!IsInseminationSyringe(__instance)) return true;
 
-            __result = o == null || DataLoader.AnimalData.SyringeItemsIds.Contains(o.ParentSheetIndex);
+            __result = o == null || DataLoader.AnimalData.SyringeItemsIds.Contains(o.ParentSheetIndex) || DataLoader.PregnancyData.PreganancyItems.ContainsValue(o.Name);
             return false;
         }
 
@@ -299,9 +312,20 @@ namespace AnimalHusbandryMod.tools
 
         private static bool CheckCorrectProduct(FarmAnimal animal, SObject o)
         {
-            return animal.defaultProduceIndex.Value == o.ParentSheetIndex
-                   || (((ImpregnatableAnimalItem)DataLoader.AnimalData.GetAnimalItem(animal)).CanUseDeluxeItemForPregnancy
-                       && animal.deluxeProduceIndex.Value == o.ParentSheetIndex);
+            if (DataLoader.PregnancyData.PreganancyItems.ContainsKey(animal.displayType))
+            {
+                return DataLoader.PregnancyData.MatchingPregnancyItem(animal, o);
+            }
+            else if (animal.defaultProduceIndex.Value == o.ParentSheetIndex)
+            {
+                return true;
+            }
+            else if (((ImpregnatableAnimalItem)DataLoader.AnimalData.GetAnimalItem(animal)).CanUseDeluxeItemForPregnancy
+                     && animal.deluxeProduceIndex.Value == o.ParentSheetIndex)
+            {
+                return true;
+            }
+            return false;
         }
 
         public static bool IsEggAnimal(FarmAnimal animal)
