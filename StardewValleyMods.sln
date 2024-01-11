@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29613.14
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.34031.279
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnimalHusbandryMod", "ButcherMod\AnimalHusbandryMod.csproj", "{FA6A5BA1-8983-4982-B746-ADF42EC01795}"
 EndProject
@@ -15,7 +15,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomCrystalariumMod", "Cu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CropTransplantMod", "CropTransplantMod\CropTransplantMod.csproj", "{0BD2ED3E-EB53-4003-93E7-C46B9E95AC9F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomCaskMod", "CustomCaskMod\CustomCaskMod.csproj", "{D2C9ABB7-DE0B-4803-BAB0-22D9173317A4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CustomCaskMod", "CustomCaskMod\CustomCaskMod.csproj", "{D2C9ABB7-DE0B-4803-BAB0-22D9173317A4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomKissingMod", "CustomKissingMod\CustomKissingMod.csproj", "{1EE145B0-C855-4D47-83B6-F05E4371C1E0}"
 EndProject
