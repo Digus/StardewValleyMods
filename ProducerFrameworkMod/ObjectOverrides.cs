@@ -13,6 +13,7 @@ using System.Reflection.Emit;
 using System.Text.RegularExpressions;
 using StardewValley.ItemTypeDefinitions;
 using Object = StardewValley.Object;
+#pragma warning disable IDE1006
 
 namespace ProducerFrameworkMod
 {
@@ -22,9 +23,8 @@ namespace ProducerFrameworkMod
         [HarmonyPriority(Priority.First)]
         internal static bool PerformObjectDropInAction(Object __instance, Item dropInItem, bool probe, Farmer who, ref bool __result)
         {
-            if (__instance.isTemporarilyInvisible || !(dropInItem is Object))
+            if (__instance.isTemporarilyInvisible || dropInItem is not Object input)
                 return false;
-            Object input = (Object) dropInItem;
 
             bool failLocationCondition = false;
             bool failSeasonCondition = false;
@@ -226,9 +226,9 @@ namespace ProducerFrameworkMod
             }
         }
 
-        public static IEnumerable<CodeInstruction> draw_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
+        public static IEnumerable<CodeInstruction> draw_Transpiler(IEnumerable<CodeInstruction> instructions)
         {
-            LinkedList<CodeInstruction> newInstructions = new LinkedList<CodeInstruction>(instructions);
+            LinkedList<CodeInstruction> newInstructions = new(instructions);
             CodeInstruction codeInstruction = newInstructions.FirstOrDefault(c => c.opcode == OpCodes.Callvirt && c.operand?.ToString() == "Microsoft.Xna.Framework.Vector2 getScale()");
             LinkedListNode<CodeInstruction> linkedListNode = newInstructions.Find(codeInstruction);
             if (linkedListNode != null && codeInstruction != null)
@@ -523,7 +523,7 @@ namespace ProducerFrameworkMod
                     string farmerName = Game1.getAllFarmers().FirstOrDefault(f => __instance.Name.Contains(f.Name))?.Name ?? Game1.player.Name;
                     translation = translation.Replace("{farmerName}", farmerName);
                 }
-                Regex regex = new Regex("[ ]{2,}", RegexOptions.None);
+                Regex regex = new("[ ]{2,}", RegexOptions.None);
 
                 __result = regex.Replace(translation, " ");
                 return false;

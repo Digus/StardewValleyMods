@@ -20,22 +20,16 @@ namespace ProducerFrameworkMod.Utils
 
         internal static string GetPreserveName(Object.PreserveType preserveType, string preserveParentName)
         {
-            switch (preserveType)
+            return preserveType switch
             {
-                case Object.PreserveType.Wine:
-                    return $"{preserveParentName} Wine";
-                case Object.PreserveType.Jelly:
-                    return $"{preserveParentName} Jelly";
-                case Object.PreserveType.Pickle:
-                    return $"Pickled {preserveParentName}";
-                case Object.PreserveType.Juice:
-                    return $"{preserveParentName} Juice";
-                case Object.PreserveType.Roe:
-                    return $"{preserveParentName} Roe";
-                case Object.PreserveType.AgedRoe:
-                    return $"Aged {preserveParentName}";
-            }
-            return null;
+                Object.PreserveType.Wine => $"{preserveParentName} Wine",
+                Object.PreserveType.Jelly => $"{preserveParentName} Jelly",
+                Object.PreserveType.Pickle => $"Pickled {preserveParentName}",
+                Object.PreserveType.Juice => $"{preserveParentName} Juice",
+                Object.PreserveType.Roe => $"{preserveParentName} Roe",
+                Object.PreserveType.AgedRoe => $"Aged {preserveParentName}",
+                _ => null
+            };
         }
 
         internal static string GetCategoryName(int categoryIndex)

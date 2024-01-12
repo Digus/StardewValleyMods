@@ -16,14 +16,14 @@ namespace ProducerFrameworkMod.Controllers
 {
     public class ProducerController
     {
-        public static readonly List<string> UnsupportedMachines = new List<string>()
+        public static readonly List<string> UnsupportedMachines = new()
             { "(BC)21", "(BC)163", "(BC)101", "(BC)156", "(BC)275", "(BC)130", "(BC)62", "(BC)209"
                 , "(BC)208", "(BC)105", "(BC)264", "(BC)94", "(BC)127", "(BC)56", "(BC)71", "(BC)159", "(BC)141"
                 , "(BC)8", "(BC)167", "(BC)110", "(BC)113", "(BC)126", "(BC)136", "(BC)137", "(BC)138", "(BC)139", "(BC)140" //arecrow
             };
 
-        private static readonly Dictionary<Tuple<string, object>, ProducerRule> RulesRepository = new Dictionary<Tuple<string, object>, ProducerRule>();
-        private static readonly Dictionary<string, ProducerConfig> ConfigRepository = new Dictionary<string, ProducerConfig>()
+        private static readonly Dictionary<Tuple<string, object>, ProducerRule> RulesRepository = new();
+        private static readonly Dictionary<string, ProducerConfig> ConfigRepository = new()
         {
             {
                 "(BC)13", new ProducerConfig("Furnace",true){ProducerQualifiedItemId = "(BC)13"}
@@ -236,7 +236,7 @@ namespace ProducerFrameworkMod.Controllers
 
         private static void AddRuleToRepository(ProducerRule producerRule)
         {
-            Tuple<string, object> ruleKey = new Tuple<string, object>(producerRule.ProducerQualifiedItemId, producerRule.InputKey);
+            Tuple<string, object> ruleKey = new (producerRule.ProducerQualifiedItemId, producerRule.InputKey);
             if (RulesRepository.TryGetValue(ruleKey, out var oldRule))
             {
                 if (oldRule.ModUniqueID != producerRule.ModUniqueID)

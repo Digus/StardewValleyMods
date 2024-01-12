@@ -28,7 +28,7 @@ namespace ProducerFrameworkMod.Controllers
         public static OutputConfig ChooseOutput(List<OutputConfig> producerRuleOutputConfig, Random random, Func<string,int,bool> fuelSearch, GameLocation location, Object input = null)
         {
             List<OutputConfig> filteredOutputConfigs = FilterOutputConfig(producerRuleOutputConfig, o => o.RequiredInputQuality.Count == 0 || o.RequiredInputQuality.Any(q => q == input?.Quality), "Quality");
-            filteredOutputConfigs = FilterOutputConfig(filteredOutputConfigs, o => !o.RequiredInputStack.HasValue || input.stack >= o.RequiredInputStack.Value, "InputStack");
+            filteredOutputConfigs = FilterOutputConfig(filteredOutputConfigs, o => !o.RequiredInputStack.HasValue || input?.Stack >= o.RequiredInputStack.Value, "InputStack");
             filteredOutputConfigs = FilterOutputConfig(filteredOutputConfigs, o => o.FuelList.All(f => fuelSearch(f.Item1, f.Item2)), "Fuel");
             filteredOutputConfigs = FilterOutputConfig(filteredOutputConfigs, o => o.RequiredSeason.Count == 0 || o.RequiredSeason.Any(q => q == location.GetSeasonKey()), "Season");
             filteredOutputConfigs = FilterOutputConfig(filteredOutputConfigs, o => o.RequiredWeather.Count == 0 || o.RequiredWeather.Any(q => q == GameUtils.GetCurrentWeather()), "Weather");
@@ -41,7 +41,7 @@ namespace ProducerFrameworkMod.Controllers
                 Item parent = null;
                 if (input.preservedParentSheetIndex.Value != null)
                 {
-                    parent = ItemRegistry.Create(input.preservedParentSheetIndex);
+                    parent = ItemRegistry.Create(input.preservedParentSheetIndex.Value);
                 }
                 filteredOutputConfigs = FilterOutputConfig(
                     filteredOutputConfigs
@@ -82,7 +82,7 @@ namespace ProducerFrameworkMod.Controllers
                     }
                 }
             }
-            result = result ?? filteredOutputConfigs.FirstOrDefault();
+            result ??= filteredOutputConfigs.FirstOrDefault();
             if (result != null && result.ReplaceWithInputParentIndex && input != null && input.preservedParentSheetIndex.Value != null)
             {
                 result = result.Clone();
@@ -211,7 +211,7 @@ namespace ProducerFrameworkMod.Controllers
         {
             string outputName = null;
             bool inputUsed = false;
-            who = who ?? Game1.player;
+            who ??= Game1.player;
             if (outputConfig.PreserveType.HasValue)
             {
                 string inputName = input?.Name ?? outputConfig.OutputGenericParentName ?? "";
@@ -234,7 +234,7 @@ namespace ProducerFrameworkMod.Controllers
                 output.preserve.Value = outputConfig.PreserveType;
                 inputUsed = true;
             }
-            else if (output.parentSheetIndex == 340)
+            else if (output.ItemId == "340")
             {
                 outputName = $"{input?.Name ?? "Wild"} Honey";
                 inputUsed = true;
@@ -251,7 +251,7 @@ namespace ProducerFrameworkMod.Controllers
                     }
                     else if (input?.preservedParentSheetIndex.Value != null && ItemRegistry.Exists(input.preservedParentSheetIndex.Value))
                     {
-                        inputName = inputName = ItemRegistry.GetData(input.preservedParentSheetIndex.Value).DisplayName;
+                        inputName = ItemRegistry.GetData(input.preservedParentSheetIndex.Value).DisplayName;
                     }
                 }
                 else if (input?.preservedParentSheetIndex.Value != null && ItemRegistry.Exists(input.ItemId))
@@ -270,7 +270,7 @@ namespace ProducerFrameworkMod.Controllers
 
             if (outputName != null)
             {
-                Regex regex = new Regex("[ ]{2,}", RegexOptions.None);
+                Regex regex = new("[ ]{2,}", RegexOptions.None);
                 output.Name = regex.Replace(outputName, " ").Trim();
             }
 
@@ -287,7 +287,7 @@ namespace ProducerFrameworkMod.Controllers
             }
 
             //Called just to load the display name.
-            string loadingDisplayName = output.DisplayName;
+            _ = output.DisplayName;
         }
 
     }
