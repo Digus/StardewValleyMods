@@ -21,7 +21,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomKissingMod", "CustomK
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BorderlessWoodFloorMod", "BorderlessWoodFloorMod\BorderlessWoodFloorMod.csproj", "{4A7E728A-7163-4A98-8EAC-4F09A55DDB28}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProducerFrameworkMod", "ProducerFrameworkMod\ProducerFrameworkMod.csproj", "{387C097A-0DD6-46A6-B7D0-27E2B19D4DD1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProducerFrameworkMod", "ProducerFrameworkMod\ProducerFrameworkMod.csproj", "{387C097A-0DD6-46A6-B7D0-27E2B19D4DD1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "[PFM]CustomProducerMod", "CustomProducerMod\[PFM]CustomProducerMod.csproj", "{E4157816-C5BA-4C97-AF85-1DD6002EADB0}"
 EndProject

@@ -6,7 +6,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using StardewModdingAPI.Events;
+using StardewValley;
 using Object = StardewValley.Object;
+using Microsoft.Xna.Framework.Input;
 
 namespace ProducerFrameworkMod.Api
 {
@@ -20,14 +22,17 @@ namespace ProducerFrameworkMod.Api
 
         public List<Dictionary<string, object>> GetRecipes(string producerName)
         {
-            List<ProducerRule> producerRules = ProducerController.GetProducerRules(producerName);
-            return GetRecipes(producerRules);
+            var key = Game1.bigCraftableData.FirstOrDefault(b => b.Value.Name.Equals(producerName)).Key;
+            var producerRules = key != null
+                ? ProducerController.GetProducerRules(ItemRegistry.type_bigCraftable + key)
+                : null;
+            return producerRules != null ? GetRecipes(producerRules) : null;
         }
 
         private static List<Dictionary<string, object>> GetRecipes(List<ProducerRule> producerRules)
         {
             Dictionary<string, int> machineCache = new Dictionary<string, int>();
-            Dictionary<int, string> bigObjects = ProducerFrameworkModEntry.Helper.Content.Load<Dictionary<int, string>>("Data\\BigCraftablesInformation", ContentSource.GameContent);
+            var bigObjects = StardewValley.DataLoader.BigCraftables(Game1.content);
             List<Dictionary<string, object>> returnValue = new List<Dictionary<string, object>>();
             foreach (ProducerRule producerRule in producerRules)
             {
@@ -42,12 +47,11 @@ namespace ProducerFrameworkMod.Api
                 }
                 else
                 {
-                    bigObjects.FirstOrDefault(o => o.Value.StartsWith(producerRule.ProducerName + "/"));
-                    KeyValuePair<int, string> pair = bigObjects.FirstOrDefault(o => o.Value.StartsWith(producerRule.ProducerName + "/"));
+                    var pair = bigObjects.FirstOrDefault(o => o.Value.Name.StartsWith(producerRule.ProducerName));
                     if (pair.Value != null)
                     {
                         ruleMap["MachineID"] = pair.Key;
-                        machineCache[producerRule.ProducerName] = pair.Key;
+                        machineCache[producerRule.ProducerName] = pair.Value.SpriteIndex;
                     }
                     else
                     {
@@ -78,7 +82,7 @@ namespace ProducerFrameworkMod.Api
                 foreach (OutputConfig outputConfig in producerRule.OutputConfigs)
                 {
                     Dictionary<string, object> outputRuleMap = new Dictionary<string, object>(ruleMap);
-                    outputRuleMap["Output"] = outputConfig.OutputIndex;
+                    outputRuleMap["Output"] = outputConfig.OutputItemId;
 
                     List<Dictionary<string, object>> fuel = new List<Dictionary<string, object>>();
 
@@ -163,12 +167,13 @@ namespace ProducerFrameworkMod.Api
 
         public List<ProducerRule> GetProducerRules(string producerName)
         {
-            return ProducerController.GetProducerRules(producerName);
+            var key = Game1.bigCraftableData.FirstOrDefault(b => b.Value.Name.Equals(producerName)).Key;
+            return key != null ? ProducerController.GetProducerRules(ItemRegistry.type_bigCraftable + key) : null;
         }
 
         public List<ProducerRule> GetProducerRules(Object producerObject)
         {
-            return GetProducerRules(producerObject.Name);
+            return GetProducerRules(producerObject.QualifiedItemId);
         }
 
         public bool AddContentPack(string directory)
