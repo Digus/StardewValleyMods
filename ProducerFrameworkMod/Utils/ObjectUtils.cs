@@ -28,6 +28,7 @@ namespace ProducerFrameworkMod.Utils
                 Object.PreserveType.Juice => $"{preserveParentName} Juice",
                 Object.PreserveType.Roe => $"{preserveParentName} Roe",
                 Object.PreserveType.AgedRoe => $"Aged {preserveParentName}",
+                Object.PreserveType.Honey => $"{preserveParentName ?? "Wild"} Honey",
                 _ => null
             };
         }

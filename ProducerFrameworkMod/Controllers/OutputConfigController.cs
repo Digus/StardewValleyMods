@@ -237,6 +237,7 @@ namespace ProducerFrameworkMod.Controllers
             else if (output.ItemId == "340")
             {
                 outputName = $"{input?.Name ?? "Wild"} Honey";
+                output.preserve.Value = Object.PreserveType.Honey;
                 inputUsed = true;
             }
             else if (outputConfig.OutputName != null)
