@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using StardewValley;
+using StardewValley.Tools;
 
 namespace AnimalHusbandryMod.tools
 {
@@ -12,6 +13,16 @@ namespace AnimalHusbandryMod.tools
             var functionPointer = baseMethod.MethodHandle.GetFunctionPointer();
             var function = (Action<GameLocation, int, int, int, StardewValley.Farmer>)Activator.CreateInstance(typeof(Action<GameLocation, int, int, int, StardewValley.Farmer>), instance, functionPointer);
             function(location, x, y, power, who);
+        }
+
+        internal static bool addItemByMenuIfNecessary(Farmer __instance, Item item)
+        {
+            if (item is GenericTool)
+            {
+                __instance.addItemToInventory(item);
+                return false;
+            }
+            return true;
         }
     }
 }

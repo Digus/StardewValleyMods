@@ -1,5 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using StardewModdingAPI;
+﻿using StardewModdingAPI;
 
 namespace AnimalHusbandryMod.integrations
 {
