@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework;
 using StardewModdingAPI.Utilities;
 using StardewValley;
 using StardewValley.Objects;
+using DataLoader = AnimalHusbandryMod.common.DataLoader;
 
 namespace AnimalHusbandryMod.animals
 {

@@ -6,11 +6,10 @@ using System.Threading.Tasks;
 
 namespace MailFrameworkMod.ContentPack
 {
-    public class CollectionCondition
+    public class SpecialDateCondition
     {
-        public Collection Collection;
-        public string Name;
-        public string Index;
-        public int Amount;
+        public SpecialDate SpecialDate;
+        public int YearsSince;
+        public int WhichChild = 1;
     }
 }

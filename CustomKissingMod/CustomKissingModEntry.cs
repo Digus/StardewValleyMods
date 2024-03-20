@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using CustomKissingMod.Api;
-using Harmony;
+using HarmonyLib;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley;
@@ -28,7 +28,7 @@ namespace CustomKissingMod
 
             try
             {
-                var harmony = HarmonyInstance.Create("Digus.CustomKissingMod");
+                var harmony = new Harmony("Digus.CustomKissingMod");
                 harmony.Patch(
                     original: AccessTools.Method(typeof(NPC), nameof(NPC.checkAction)),
                     postfix: new HarmonyMethod(typeof(NPCOverrides), nameof(NPCOverrides.checkAction))
