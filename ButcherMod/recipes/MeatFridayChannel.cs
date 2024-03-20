@@ -11,6 +11,7 @@ using StardewModdingAPI.Utilities;
 using StardewValley;
 using StardewValley.Objects;
 using AnimalHusbandryMod.cooking;
+using DataLoader = AnimalHusbandryMod.common.DataLoader;
 
 namespace AnimalHusbandryMod.recipes
 {

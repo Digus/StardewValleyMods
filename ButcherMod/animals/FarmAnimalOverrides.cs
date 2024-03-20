@@ -7,6 +7,9 @@ using HarmonyLib;
 using Microsoft.Xna.Framework;
 using Netcode;
 using StardewValley;
+using StardewValley.GameData.FarmAnimals;
+using DataLoader = AnimalHusbandryMod.common.DataLoader;
+using SObject = StardewValley.Object;
 
 namespace AnimalHusbandryMod.animals
 {
@@ -14,24 +17,23 @@ namespace AnimalHusbandryMod.animals
     {
         public static void dayUpdate(FarmAnimal __instance)
         {
-            if (__instance.harvestType.Value == FarmAnimal.layHarvestType
+            if (__instance.GetHarvestType() == FarmAnimalHarvestType.DropOvernight
                 && __instance.daysSinceLastLay.Value == 0
                 && AnimalContestController.HasFertilityBonus(__instance)
                 && !DataLoader.ModConfig.DisableContestBonus)
             {
                 GameLocation homeIndoors = __instance.home.indoors.Value;
-                if (homeIndoors.Objects.ContainsKey(__instance.getTileLocation()))
+                if (homeIndoors.Objects.ContainsKey(__instance.Position))
                 {
-                    StardewValley.Object originalLayedObject = homeIndoors.Objects[__instance.getTileLocation()];
+                    StardewValley.Object originalLayedObject = homeIndoors.Objects[__instance.Position];
                     if (originalLayedObject.Category == StardewValley.Object.EggCategory)
                     {
                         __instance.setRandomPosition(homeIndoors);
-                        if (!homeIndoors.Objects.ContainsKey(__instance.getTileLocation()))
+                        if (!homeIndoors.Objects.ContainsKey(__instance.Position))
                         {
-                            homeIndoors.Objects.Add(__instance.getTileLocation(), new StardewValley.Object(Vector2.Zero, originalLayedObject.ParentSheetIndex, (string)null, false, true, false, true)
-                            {
-                                Quality = originalLayedObject.Quality
-                            });
+                            Item newObject = originalLayedObject.getOne();
+                            newObject.Quality = originalLayedObject.Quality;
+                            homeIndoors.Objects.Add(__instance.Position, (SObject) newObject);
                         }
                     }
                 }

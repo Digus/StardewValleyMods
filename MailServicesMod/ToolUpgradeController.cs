@@ -3,7 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
 using StardewValley;
+using StardewValley.GameData.Shops;
+using StardewValley.GameData.Tools;
+using StardewValley.Internal;
 using StardewValley.Menus;
 
 namespace MailServicesMod
@@ -16,7 +20,7 @@ namespace MailServicesMod
 
         internal static void OpenUpgradeDialog()
         {
-            List<Response> options = new List<Response>
+            List<Response> options = new()
             {
                 new Response(UpgradeResponseKeyYes, DataLoader.I18N.Get("Shipment.Clint.UpgradeLetter.Yes")),
                 new Response(UpgradeResponseKeyNo, DataLoader.I18N.Get("Shipment.Clint.UpgradeLetter.No"))
@@ -29,22 +33,23 @@ namespace MailServicesMod
         {
             if (Game1.player.CurrentTool is Tool tool)
             {
-                Dictionary<ISalable, int[]> blacksmithUpgradeStock = Utility.getBlacksmithUpgradeStock(Game1.player);
-                int[] cost = blacksmithUpgradeStock
+                var stock = ShopBuilder.GetShopStock("ClintUpgrade");
+                ItemStockInformation? toolUpgradeData = stock
                     .Where(s => s.Key.GetType() == tool.GetType())
                     .Select(s => s.Value)
                     .FirstOrDefault();
-                if (cost != null)
+
+                if (toolUpgradeData.HasValue)
                 {
-                    int price = (int)Math.Round(cost[0] * (1 + DataLoader.ModConfig.ToolShipmentServicePercentFee / 100d), MidpointRounding.AwayFromZero) + DataLoader.ModConfig.ToolShipmentServiceFee;
-                    int barIndex = cost[2];
-                    int barCount = cost.Length >= 4 ? cost[3] : 5;
+                    int price = (int)Math.Round(toolUpgradeData.Value.Price * (1 + DataLoader.ModConfig.ToolShipmentServicePercentFee / 100d), MidpointRounding.AwayFromZero) + DataLoader.ModConfig.ToolShipmentServiceFee;
+                    string barIndex = toolUpgradeData.Value.TradeItem;
+                    int barCount = toolUpgradeData.Value.TradeItemCount??1;
                     if (Game1.player.Money >= price)
                     {
-                        if (Game1.player.hasItemInInventory(barIndex, barCount))
+                        if (Game1.player.Items.ContainsId(barIndex, barCount))
                         {
                             ShopMenu.chargePlayer(Game1.player, 0, price);
-                            Game1.player.removeItemsFromInventory(barIndex, barCount);
+                            Game1.player.Items.ReduceId(barIndex, barCount);
 
                             Game1.drawObjectDialogue(DataLoader.I18N.Get("Shipment.Clint.UpgradeLetter.ToolSent", new { Tool = tool.DisplayName }));
 

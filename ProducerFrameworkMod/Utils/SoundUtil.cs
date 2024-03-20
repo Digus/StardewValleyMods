@@ -3,6 +3,7 @@ using StardewValley;
 using StardewValley.Network;
 using System;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 
 namespace ProducerFrameworkMod.Utils
 {
@@ -14,7 +15,7 @@ namespace ProducerFrameworkMod.Utils
             {
                 try
                 {
-                    currentLocation.playSound(s, NetAudio.SoundContext.Default);
+                    currentLocation.playSound(s);
                 }
                 catch (Exception)
                 {
@@ -29,7 +30,7 @@ namespace ProducerFrameworkMod.Utils
             {
                 foreach (KeyValuePair<string, int> pair in dictionary)
                 {
-                    DelayedAction.playSoundAfterDelay(pair.Key, pair.Value, (GameLocation)null, -1);
+                    DelayedAction.playSoundAfterDelay(pair.Key, pair.Value, (GameLocation)null, (Vector2?) null, -1);
                 }
             }
         }

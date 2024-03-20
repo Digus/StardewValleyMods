@@ -13,6 +13,7 @@ using AnimalHusbandryMod.tools;
 using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
 using StardewModdingAPI.Utilities;
+using DataLoader = AnimalHusbandryMod.common.DataLoader;
 
 namespace AnimalHusbandryMod.animals
 {
@@ -229,11 +230,11 @@ namespace AnimalHusbandryMod.animals
                 {
                     (this._farmAnimal.home.indoors.Value as AnimalHouse)?.animalsThatLiveHere.Remove(this._farmAnimal.myID.Value);
                     this._farmAnimal.health.Value = -1;
-                    int num1 = this._farmAnimal.frontBackSourceRect.Width / 2;
+                    int num1 = this._farmAnimal.Sprite.SourceRect.Width / 2;
                     for (int index = 0; index < num1; ++index)
                     {
                         int num2 = Game1.random.Next(25, 200);
-                        Game1.currentLocation.temporarySprites.Add(new TemporaryAnimatedSprite(5, this._farmAnimal.position + new Vector2((float)Game1.random.Next(-Game1.tileSize / 2, this._farmAnimal.frontBackSourceRect.Width * 3), (float)Game1.random.Next(-Game1.tileSize / 2, this._farmAnimal.frontBackSourceRect.Height * 3)), new Color((int)byte.MaxValue - num2, (int)byte.MaxValue, (int)byte.MaxValue - num2), 8, false, Game1.random.NextDouble() < 0.5 ? 50f : (float)Game1.random.Next(30, 200), 0, Game1.tileSize, -1f, Game1.tileSize, Game1.random.NextDouble() < 0.5 ? 0 : Game1.random.Next(0, 600))
+                        Game1.currentLocation.temporarySprites.Add(new TemporaryAnimatedSprite(5, this._farmAnimal.Position + new Vector2((float)Game1.random.Next(-Game1.tileSize / 2, this._farmAnimal.Sprite.SourceRect.Width * 3), (float)Game1.random.Next(-Game1.tileSize / 2, this._farmAnimal.Sprite.SourceRect.Height * 3)), new Color((int)byte.MaxValue - num2, (int)byte.MaxValue, (int)byte.MaxValue - num2), 8, false, Game1.random.NextDouble() < 0.5 ? 50f : (float)Game1.random.Next(30, 200), 0, Game1.tileSize, -1f, Game1.tileSize, Game1.random.NextDouble() < 0.5 ? 0 : Game1.random.Next(0, 600))
                         {
                             scale = (float)Game1.random.Next(2, 5) * 0.25f,
                             alpha = (float)Game1.random.Next(2, 5) * 0.25f,
@@ -312,7 +313,7 @@ namespace AnimalHusbandryMod.animals
                     && PregnancyController.IsAnimalPregnant(this._farmAnimal)
                     && PregnancyController.CheckBuildingLimit(this._farmAnimal))
                 {
-                    buildingAt.color.Value = Color.Red * 0.8f;
+                    buildingAt.color = Color.Red * 0.8f;
                 }
             }
             else
@@ -383,7 +384,7 @@ namespace AnimalHusbandryMod.animals
                             SDate date = this._farmAnimal.GetDayParticipatedContest();
                             if (date != null)
                             {
-                                _hoverText.SetValue(DataLoader.i18n.Get(messageKey, new { contestDate = Utility.getDateStringFor(date.Day, Utility.getSeasonNumber(date.Season), date.Year) }));
+                                _hoverText.SetValue(DataLoader.i18n.Get(messageKey, new { contestDate = date.ToLocaleString()}));
                             }
                         }
                     }
@@ -405,18 +406,15 @@ namespace AnimalHusbandryMod.animals
             if (!movingAnimal && !Game1.globalFade)
             {
                 b.Draw(Game1.fadeToBlackRect, Game1.graphics.GraphicsDevice.Viewport.Bounds, Color.Black * 0.75f);
-                Game1.drawDialogueBox(this.xPositionOnScreen, this.yPositionOnScreen + 128, AnimalQueryMenu.width, AnimalQueryMenu.height - 128, false, true, (string)null, false);
-                if ((int)this._farmAnimal.harvestType.Value != 2)
-                    this._textBox.Draw(b);
-                int num1 = (this._farmAnimal.age.Value + 1) / 28 + 1;
-                string text1;
-                if (num1 > 1)
-                    text1 = Game1.content.LoadString("Strings\\UI:AnimalQuery_AgeN", (object)num1);
-                else
-                    text1 = Game1.content.LoadString("Strings\\UI:AnimalQuery_Age1");
-                if (this._farmAnimal.age.Value < (int)this._farmAnimal.ageWhenMature.Value)
-                    text1 += Game1.content.LoadString("Strings\\UI:AnimalQuery_AgeBaby");
-                Utility.drawTextWithShadow(b, text1, Game1.smallFont, new Vector2((float)(this.xPositionOnScreen + IClickableMenu.spaceToClearSideBorder + Game1.tileSize / 2), (float)(this.yPositionOnScreen + IClickableMenu.spaceToClearTopBorder + Game1.tileSize / 4 + Game1.tileSize * 2)), Game1.textColor, 1f, -1f, -1, -1, 1f, 3);
+                Game1.drawDialogueBox(base.xPositionOnScreen, base.yPositionOnScreen + 128, AnimalQueryMenu.width, AnimalQueryMenu.height - 128, speaker: false, drawOnlyBox: true);
+                this._textBox.Draw(b);
+                int age = (this._farmAnimal.GetDaysOwned() + 1) / 28 + 1;
+                string ageText = ((age <= 1) ? Game1.content.LoadString("Strings\\UI:AnimalQuery_Age1") : Game1.content.LoadString("Strings\\UI:AnimalQuery_AgeN", age));
+                if (this._farmAnimal.isBaby())
+                {
+                    ageText += Game1.content.LoadString("Strings\\UI:AnimalQuery_AgeBaby");
+                }
+                Utility.drawTextWithShadow(b, ageText, Game1.smallFont, new Vector2(base.xPositionOnScreen + IClickableMenu.spaceToClearSideBorder + 32, base.yPositionOnScreen + IClickableMenu.spaceToClearTopBorder + 16 + 128), Game1.textColor);
                 int num2 = 0;
                 if (this._parentName != null)
                 {
@@ -451,8 +449,14 @@ namespace AnimalHusbandryMod.animals
                     this.yesButton.draw(b);
                     this.noButton.draw(b);
                 }
-                else if (!string.IsNullOrEmpty(hoverText))
-                    IClickableMenu.drawHoverText(b, hoverText, Game1.smallFont, 0, 0, -1, (string)null, -1, (string[])null, (Item)null, 0, -1, -1, -1, -1, 1f, (CraftingRecipe)null);
+                else
+                {
+                    string text = hoverText;
+                    if (text != null && text.Length > 0)
+                    {
+                        IClickableMenu.drawHoverText(b, hoverText, Game1.smallFont);
+                    }
+                }
             }
             else if (!Game1.globalFade)
             {

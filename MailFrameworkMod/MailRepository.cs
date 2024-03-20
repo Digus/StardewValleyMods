@@ -8,7 +8,7 @@ using StardewValley;
 
 namespace MailFrameworkMod
 {
-    public class MailDao
+    public class MailRepository
     {
         private static readonly List<Letter> Letters =  new List<Letter>();
         private static readonly List<string> RemovedLetterIds = new List<string>();
@@ -27,7 +27,7 @@ namespace MailFrameworkMod
             }
             else
             {
-                if (Game1.objectInformation == null)
+                if (Game1.objectData == null)
                     throw new NotImplementedException("Can't add a letter before the game is launched.");
 
                 if (Letters.Exists((l) => l.Id == letter.Id))

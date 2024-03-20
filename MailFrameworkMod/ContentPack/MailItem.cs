@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 
 namespace MailFrameworkMod.ContentPack
 {
@@ -14,6 +15,8 @@ namespace MailFrameworkMod.ContentPack
         public string LetterBG;
         public int WhichBG;
         public int? TextColor;
+        public string CustomTextColorName;
+        internal Color? CustomTextColor;
         public string UpperRightCloseButton;
         public bool Repeatable;
         public string Date;
@@ -28,6 +31,7 @@ namespace MailFrameworkMod.ContentPack
         public List<SkillCondition> SkillConditions;
         public List<StatsCondition> StatsConditions;
         public List<CollectionCondition> CollectionConditions;
+        public SpecialDateCondition SpecialDateCondition;
         public string ExpandedPrecondition;
         public string[] ExpandedPreconditions;
         public double? RandomChance;
@@ -36,12 +40,14 @@ namespace MailFrameworkMod.ContentPack
         public List<string> MailReceived;
         public bool RequireAllMailReceived;
         public List<string> MailNotReceived;
-        public List<int> EventsSeen;
+        public List<string> EventsSeen;
         public bool RequireAllEventsSeen;
-        public List<int> EventsNotSeen;
+        public List<string> EventsNotSeen;
         public List<string> RecipeKnown;
         public bool RequireAllRecipeKnown;
         public List<string> RecipeNotKnown;
+        public List<string> HasMods;
+        public bool RequireAllMods;
         public bool AutoOpen;
     }
 }
