@@ -377,13 +377,13 @@ namespace MailFrameworkMod
                             {
                                 letterViewerMenu.letterTexture = letter.LetterTexture;
                             }
-                            if (ShownLetter.Value.CustomTextColor.HasValue)
+                            if (letter.CustomTextColor.HasValue)
                             {
-                                letterViewerMenu.customTextColor = ShownLetter.Value.CustomTextColor;
+                                letterViewerMenu.customTextColor = letter.CustomTextColor;
                             }
-                            else if (ShownLetter.Value.TextColor.HasValue)
+                            else if (letter.TextColor.HasValue)
                             {
-                                letterViewerMenu.customTextColor = SpriteText.getColorFromIndex(ShownLetter.Value.TextColor.Value);
+                                letterViewerMenu.customTextColor = SpriteText.getColorFromIndex(letter.TextColor.Value);
                             }
                             if (letter.UpperRightCloseButtonTexture != null &&
                                 letterViewerMenu.upperRightCloseButton != null)
