@@ -34,16 +34,15 @@ namespace MailServicesMod
             if (Game1.player.CurrentTool is Tool tool)
             {
                 var stock = ShopBuilder.GetShopStock("ClintUpgrade");
-                ItemStockInformation? toolUpgradeData = stock
-                    .Where(s => s.Key.GetType() == tool.GetType())
-                    .Select(s => s.Value)
+                var toolStockData = stock
+                    .Where(s => ((Tool)s.Key).GetToolData().ConventionalUpgradeFrom == tool.QualifiedItemId)
                     .FirstOrDefault();
 
-                if (toolUpgradeData.HasValue)
+                if (!default(KeyValuePair<ISalable, ItemStockInformation>).Equals(toolStockData))
                 {
-                    int price = (int)Math.Round(toolUpgradeData.Value.Price * (1 + DataLoader.ModConfig.ToolShipmentServicePercentFee / 100d), MidpointRounding.AwayFromZero) + DataLoader.ModConfig.ToolShipmentServiceFee;
-                    string barIndex = toolUpgradeData.Value.TradeItem;
-                    int barCount = toolUpgradeData.Value.TradeItemCount??1;
+                    int price = (int)Math.Round(toolStockData.Value.Price * (1 + DataLoader.ModConfig.ToolShipmentServicePercentFee / 100d), MidpointRounding.AwayFromZero) + DataLoader.ModConfig.ToolShipmentServiceFee;
+                    string barIndex = toolStockData.Value.TradeItem;
+                    int barCount = toolStockData.Value.TradeItemCount??1;
                     if (Game1.player.Money >= price)
                     {
                         if (Game1.player.Items.ContainsId(barIndex, barCount))
@@ -53,9 +52,10 @@ namespace MailServicesMod
 
                             Game1.drawObjectDialogue(DataLoader.I18N.Get("Shipment.Clint.UpgradeLetter.ToolSent", new { Tool = tool.DisplayName }));
 
-                            tool.UpgradeLevel++;
+                            Tool newTool = ItemRegistry.Create<Tool>(toolStockData.Key.QualifiedItemId);
+                            newTool.UpgradeFrom(tool);
                             Game1.player.removeItemFromInventory(tool);
-                            Game1.player.toolBeingUpgraded.Value = tool;
+                            Game1.player.toolBeingUpgraded.Value = newTool;
                             Game1.player.daysLeftForToolUpgrade.Value = 2;
                             Game1.playSound("parry");
                         }
