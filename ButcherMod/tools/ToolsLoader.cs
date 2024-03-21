@@ -73,38 +73,50 @@ namespace AnimalHusbandryMod.tools
                 {
                     ClassName = "GenericTool",
                     Name = "MeatCleaver",
+                    DisplayName = DataLoader.i18n.Get("Tool.MeatCleaver.Name" + MeatCleaverOverrides.Suffix),
+                    Description = DataLoader.i18n.Get("Tool.MeatCleaver.Description" + MeatCleaverOverrides.Suffix),
                     Texture = _toolsSpriteName,
                     MenuSpriteIndex = 26,
-                    SpriteIndex = 0
+                    SpriteIndex = 0,
+                    ModData = new Dictionary<string, string> { { MeatCleaverOverrides.MeatCleaverKey, Game1.random.Next().ToString() } }
                 };
 
                 ToolData InseminationSyringeData = new ToolData()
                 {
                     ClassName = "GenericTool",
                     Name = "InseminationSyringe",
+                    DisplayName = DataLoader.i18n.Get("Tool.InseminationSyringe.Name"),
+                    Description = DataLoader.i18n.Get("Tool.InseminationSyringe.Description"),
                     Texture = _toolsSpriteName,
                     MenuSpriteIndex = 14,
                     SpriteIndex = 14,
-                    AttachmentSlots = 1
+                    AttachmentSlots = 1,
+                    ModData = new Dictionary<string, string> { { InseminationSyringeOverrides.InseminationSyringeKey, Game1.random.Next().ToString() } }
                 };
 
                 ToolData FeedingBasketData = new ToolData()
                 {
                     ClassName = "GenericTool",
                     Name = "FeedingBasket",
+                    DisplayName = DataLoader.i18n.Get("Tool.FeedingBasket.Name"),
+                    Description = DataLoader.i18n.Get("Tool.FeedingBasket.Description"),
                     Texture = _toolsSpriteName,
                     MenuSpriteIndex = 15,
                     SpriteIndex = 15,
-                    AttachmentSlots = 1
+                    AttachmentSlots = 1,
+                    ModData = new Dictionary<string, string> { { FeedingBasketOverrides.FeedingBasketKey, Game1.random.Next().ToString() } }
                 };
 
                 ToolData ParticipantRibbonData = new ToolData()
                 {
                     ClassName = "GenericTool",
                     Name = "ParticipantRibbon",
+                    DisplayName = DataLoader.i18n.Get("Tool.ParticipantRibbon.Name"),
+                    Description = DataLoader.i18n.Get("Tool.ParticipantRibbon.Description"),
                     Texture = _toolsSpriteName,
                     MenuSpriteIndex = 16,
-                    SpriteIndex = 16
+                    SpriteIndex = 16,
+                    ModData = new Dictionary<string, string> { { ParticipantRibbonOverrides.ParticipantRibbonKey, Game1.random.Next().ToString() } }
                 };
 
                 args.Edit(asset => {
