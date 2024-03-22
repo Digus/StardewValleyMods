@@ -261,14 +261,14 @@ namespace CustomCaskMod
             }
             if (Int32.TryParse(identifier.ToString(), out int id))
             {
-                return id >= 0 ? ItemRegistry.Create(ItemRegistry.type_object + identifier).QualifiedItemId : identifier.ToString();
+                return id >= 0 ? ItemRegistry.QualifyItemId(id.ToString()) : identifier.ToString();
             }
             else
             {
                 var pair = objects.FirstOrDefault(o => o.Value.Name.Equals(identifier));
                 if (pair.Value != null)
                 {
-                    return pair.Key;
+                    return ItemRegistry.QualifyItemId(pair.Key);
                 }
             }
             return null;
@@ -288,7 +288,7 @@ namespace CustomCaskMod
                     new MachineItemOutput
                     {
                         CustomData = new Dictionary<string, string> { { "AgingMultiplier", agingRate.ToString() } },
-                        OutputMethod = "StardewValley.Objects.Cask.OutputCask"
+                        OutputMethod = "StardewValley.Objects.Cask, Stardew Valley: OutputCask"
                     }
                 }
             };
@@ -311,7 +311,7 @@ namespace CustomCaskMod
                     new MachineItemOutput
                     {
                         CustomData = new Dictionary<string, string> { { "AgingMultiplier", agingMultiplier.ToString() } },
-                        OutputMethod = "StardewValley.Objects.Cask.OutputCask"
+                        OutputMethod = "StardewValley.Objects.Cask, Stardew Valley: OutputCask"
                     }
                 }
             };
@@ -335,7 +335,7 @@ namespace CustomCaskMod
                     new MachineItemOutput
                     {
                         CustomData = new Dictionary<string, string> { { "AgingMultiplier", agingMultiplier.ToString() } },
-                        OutputMethod = "StardewValley.Objects.Cask.OutputCask"
+                        OutputMethod = "StardewValley.Objects.Cask, Stardew Valley: OutputCask"
                     }
                 }
             };
