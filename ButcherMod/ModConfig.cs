@@ -22,6 +22,7 @@ namespace AnimalHusbandryMod
         public double PercentualAjustOnFriendshipInscreaseFromProfessions = 0.25;
         public bool DisableContestBonus;
         public bool DisableMeatToolLetter;
+        public bool DisableMeatButton;
         public bool DisableMeatInBlundle;
         public bool ForceDrawAttachmentOnAnyOS;
         public bool DisableTvChannels;
