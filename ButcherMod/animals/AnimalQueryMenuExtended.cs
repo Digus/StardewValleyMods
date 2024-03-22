@@ -134,7 +134,7 @@ namespace AnimalHusbandryMod.animals
                 }
             }
 
-            if (!DataLoader.ModConfig.DisableMeat && MeatController.CanGetMeatFrom(farmAnimal))
+            if (!DataLoader.ModConfig.DisableMeat && MeatController.CanGetMeatFrom(farmAnimal) && !DataLoader.ModConfig.DisableMeatButton)
             {
                 if (!this._farmAnimal.isBaby())
                 {

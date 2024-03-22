@@ -439,6 +439,8 @@ namespace AnimalHusbandryMod.common
 
                 api.RegisterSimpleOption(manifest, "Disable Meat Tool Letter", "Disable the sending of the meat cleaver or the meat wand. Meat will only be able to be obtained through the meat button.", () => DataLoader.ModConfig.DisableMeatToolLetter, (bool val) => DataLoader.ModConfig.DisableMeatToolLetter = val);
 
+                api.RegisterSimpleOption(manifest, "Disable Meat Button", "Disable the meat button showing in the animal query menu. Meat will only be able to be obtained using the tools.", () => DataLoader.ModConfig.DisableMeatButton, (bool val) => DataLoader.ModConfig.DisableMeatButton = val);
+
                 api.RegisterSimpleOption(manifest, "Add Meat Tool Key", "Set a keyboard key to directly add the Meat Cleaver/Want to your inventory.", () => DataLoader.ModConfig.AddMeatCleaverToInventoryKey ?? SButton.None, (SButton val) => DataLoader.ModConfig.AddMeatCleaverToInventoryKey = val == SButton.None ? (SButton?)null : val);
 
                 api.RegisterLabel(manifest, "Pregnancy Properties:", "Properties to configure the insemination feature.");
