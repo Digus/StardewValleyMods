@@ -112,7 +112,7 @@ namespace AnimalHusbandryMod.common
 
         public void Edit(object sender, AssetRequestedEventArgs args)
         {
-            if (args.Name.IsEquivalentTo("Data/Objects"))
+            if (args.NameWithoutLocale.IsEquivalentTo("Data/Objects"))
             {
                 args.Edit(asset =>
                 {
@@ -149,7 +149,7 @@ namespace AnimalHusbandryMod.common
                 });
                 
             }
-            else if (args.Name.IsEquivalentTo("Data/Bundles"))
+            else if (args.NameWithoutLocale.IsEquivalentTo("Data/Bundles"))
             {
                 args.Edit(asset =>
                 {
@@ -166,7 +166,7 @@ namespace AnimalHusbandryMod.common
                     data["Pantry/4"] = value;
                 });
             }
-            else if (args.Name.IsEquivalentTo("Data/NPCGiftTastes"))
+            else if (args.NameWithoutLocale.IsEquivalentTo("Data/NPCGiftTastes"))
             {
                 args.Edit(asset =>
                 {
@@ -227,7 +227,7 @@ namespace AnimalHusbandryMod.common
                     AddNpcGiftTaste(data, "Vincent", Taste.Love, "659");
                 });
             }
-            else if (args.Name.IsEquivalentTo("Data/FarmAnimals"))
+            else if (args.NameWithoutLocale.IsEquivalentTo("Data/FarmAnimals"))
             {
                 args.Edit(asset =>
                 {
