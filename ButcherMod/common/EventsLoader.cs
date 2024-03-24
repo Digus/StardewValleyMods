@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AnimalHusbandryMod.animals;
 using AnimalHusbandryMod.animals.events;
 using AnimalHusbandryMod.farmer;
+using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewModdingAPI.Utilities;
@@ -23,7 +24,7 @@ namespace AnimalHusbandryMod.common
 
         public void Edit(object sender, AssetRequestedEventArgs args)
         {
-            if (args.Name.IsEquivalentTo("Data/Events/Town"))
+            if (args.NameWithoutLocale.IsEquivalentTo("Data/Events/Town"))
             {
                 args.Edit(asset =>
                 {

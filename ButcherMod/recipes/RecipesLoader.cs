@@ -24,7 +24,7 @@ namespace AnimalHusbandryMod.recipes
 
         public void Edit(object sender, AssetRequestedEventArgs args)
         {
-            if (args.Name.IsEquivalentTo("Data/CookingRecipes"))
+            if (args.NameWithoutLocale.IsEquivalentTo("Data/CookingRecipes"))
             {
                 args.Edit(asset =>
                 {
