@@ -43,8 +43,8 @@ namespace AnimalHusbandryMod
             helper.Events.GameLoop.SaveLoaded += OnSaveLoaded;
             helper.Events.GameLoop.DayStarted += OnDayStarted;
             helper.Events.GameLoop.Saving += OnSaving;
+            helper.Events.Content.LocaleChanged += OnLocaleChanged;
         }
-
 
         /*********
         ** Private methods
@@ -460,6 +460,16 @@ namespace AnimalHusbandryMod
                 
             if (e.Button == DataLoader.ModConfig.AddFeedingBasketToInventoryKey)
                 Game1.player.addItemToInventory(ToolsFactory.GetFeedingBasket());
+        }
+
+        /// <summary>Raised after the game language changes</summary>
+        /// <param name="sender">The event sender.</param>
+        /// <param name="e">The event data.</param>
+        /// <exception cref="NotImplementedException"></exception>
+        private void OnLocaleChanged(object sender, LocaleChangedEventArgs e)
+        {
+            TvController.ReloadEpisodes();
+            DataLoader.Helper.GameContent.InvalidateCache("Data/Objects");
         }
     }
 }
