@@ -81,7 +81,8 @@ namespace AnimalHusbandryMod.animals
             else if (animal == Animal.CustomAnimal)
             {
                 MeatAnimalItem meatAnimalItem = (MeatAnimalItem) animalItem;
-                debrisType = farmAnimal.GetAnimalData().CustomFields["meatIndex"];
+                if (farmAnimal.GetAnimalData().CustomFields == null || !farmAnimal.GetAnimalData().CustomFields.TryGetValue("meatIndex", out string meatIndex)) return itemsToReturn;
+                debrisType = meatIndex;
 
                 var objects = Game1.objectData;
                 meatPrice = objects[debrisType].Price;
