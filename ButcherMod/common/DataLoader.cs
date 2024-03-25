@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using AnimalHusbandryMod.animals;
 using AnimalHusbandryMod.animals.data;
 using AnimalHusbandryMod.cooking;
@@ -320,16 +321,18 @@ namespace AnimalHusbandryMod.common
                         CustomAnimalItem customAnimalItem = new CustomAnimalItem(farmAnimal.Key);
                         DataLoader.AnimalData.CustomAnimals.Add(customAnimalItem);
                         animalDataChanged = true;                        
-                        string meatIndex = farmAnimal.Value.CustomFields["meatIndex"];
-                        if (Game1.objectData.TryGetValue(meatIndex,out ObjectData meatItem))
+                        if (farmAnimal.Value.CustomFields != null && farmAnimal.Value.CustomFields.TryGetValue("meatIndex", out string meatIndex))
                         {
-                            int meatPrice = Convert.ToInt32(meatItem.Price);
-                            if (meatPrice > 0)
+                            if (Game1.objectData.TryGetValue(meatIndex, out ObjectData meatItem))
                             {
-                                int animalPrice = farmAnimal.Value.SellPrice;
-                                customAnimalItem.MinimalNumberOfMeat = Math.Max(1, (int)Math.Round((animalPrice * 0.3) / meatPrice, MidpointRounding.AwayFromZero));
-                                customAnimalItem.MaximumNumberOfMeat = Math.Max(1, (int)Math.Round((animalPrice * 1.3) / meatPrice, MidpointRounding.AwayFromZero));
+                                int meatPrice = Convert.ToInt32(meatItem.Price);
+                                if (meatPrice > 0)
+                                {
+                                    int animalPrice = farmAnimal.Value.SellPrice;
+                                    customAnimalItem.MinimalNumberOfMeat = Math.Max(1, (int)Math.Round((animalPrice * 0.3) / meatPrice, MidpointRounding.AwayFromZero));
+                                    customAnimalItem.MaximumNumberOfMeat = Math.Max(1, (int)Math.Round((animalPrice * 1.3) / meatPrice, MidpointRounding.AwayFromZero));
 
+                                }
                             }
                         }
                     }
