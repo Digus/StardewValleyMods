@@ -108,6 +108,7 @@ namespace AnimalHusbandryMod.common
 
             DataLoader.Helper.GameContent.InvalidateCache("Data/Objects");
             DataLoader.Helper.GameContent.InvalidateCache("Data/FarmAnimals");
+            DataLoader.Helper.GameContent.InvalidateCache("Data/CookingRecipes");
             CreateConfigMenu(manifest);
         }
 
@@ -232,7 +233,7 @@ namespace AnimalHusbandryMod.common
             {
                 args.Edit(asset =>
                 {
-                    AddCustomAnimalsTemplate((Dictionary<string, string>)(isLoadingFarmAnimals ? asset.Data : null));
+                    AddCustomAnimalsTemplate((IDictionary<string, FarmAnimalData>)(isLoadingFarmAnimals ? asset.Data : null));
                 });
             }
         }
@@ -305,13 +306,14 @@ namespace AnimalHusbandryMod.common
             AddCustomAnimalsTemplate();
         }
 
-        public void AddCustomAnimalsTemplate(Dictionary<string, string> data =  null)
+        public void AddCustomAnimalsTemplate(IDictionary<string, FarmAnimalData> data =  null)
         {
             isLoadingFarmAnimals = true;
             bool animalDataChanged = false;
+            data = data ?? Game1.farmAnimalData;
             HashSet<string> syringeItemsIds = new HashSet<string>();
             
-            foreach (KeyValuePair<string, FarmAnimalData> farmAnimal in Game1.farmAnimalData)
+            foreach (KeyValuePair<string, FarmAnimalData> farmAnimal in data)
             {
                 if (!AnimalData.BaseGameAnimals.Contains(farmAnimal.Key))
                 {
@@ -418,7 +420,7 @@ namespace AnimalHusbandryMod.common
             GenericModConfigMenuApi api = Helper.ModRegistry.GetApi<GenericModConfigMenuApi>("spacechase0.GenericModConfigMenu");
             if (api != null)
             {
-                api.RegisterModConfig(manifest, () => DataLoader.ModConfig = new ModConfig(), () => Helper.WriteConfig(DataLoader.ModConfig));
+                api.Register(manifest, () => DataLoader.ModConfig = new ModConfig(), () => Helper.WriteConfig(DataLoader.ModConfig));
 
                 api.RegisterLabel(manifest, "Main Features:", "Properties to disable the mod main features.");
 
