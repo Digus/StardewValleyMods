@@ -125,6 +125,7 @@ namespace ProducerFrameworkMod.Controllers
                         producer.MinutesUntilReady = Math.Max(producer.MinutesUntilReady - Utility.ConvertTimeToMinutes(Game1.timeOfDay) + 360, 1);
                     }
 
+                    producer.lastOutputRuleId.Value = null;
                     if (producerConfig != null)
                     {
                         producer.showNextIndex.Value = producerConfig.AlternateFrameProducing;
