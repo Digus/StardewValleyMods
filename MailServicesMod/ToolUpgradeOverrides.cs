@@ -36,7 +36,7 @@ namespace MailServicesMod
         {
             try
             {
-                itemsToAdd.RemoveAll(i => i is GenericTool);
+                itemsToAdd.RemoveAll(i => i is GenericTool g && g.ItemId.EndsWith("TrashCan"));
                 if (itemsToAdd.Count == 0)
                 {
                     itemsToAdd = null;
