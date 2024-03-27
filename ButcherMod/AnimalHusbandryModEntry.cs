@@ -83,7 +83,6 @@ namespace AnimalHusbandryMod
                     else
                     {
                         ModHelper.ConsoleCommands.Add("player_addmeatcleaver", "Add Meat Cleaver to inventory.", (n, d) => Game1.player.addItemToInventoryBool(ToolsFactory.GetMeatCleaver()));
-                        ModHelper.ConsoleCommands.Add("player_addmeatcleaver2", "Add Meat Cleaver to inventory using addItemByMenuIfNecessary.", (n, d) => Game1.player.addItemByMenuIfNecessary(ToolsFactory.GetMeatCleaver()));
                     }
                 }
 
@@ -377,12 +376,6 @@ namespace AnimalHusbandryMod
                 harmony.Patch(
                     original: AccessTools.Method(typeof(TV), nameof(TV.checkForAction)),
                     postfix: new HarmonyMethod(typeof(TvOverrides), nameof(TvOverrides.checkForAction_postfix))
-                );
-
-                //Temporary fix while addItemByMenuIfNecessary does not support GenericTools
-                harmony.Patch(
-                    original: AccessTools.Method(typeof(Farmer), nameof(Farmer.addItemByMenuIfNecessary)),
-                    prefix: new HarmonyMethod(typeof(ToolOverridesBase), nameof(ToolOverridesBase.addItemByMenuIfNecessary))
                 );
             }
         }
