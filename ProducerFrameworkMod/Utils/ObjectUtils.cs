@@ -1,5 +1,6 @@
 ﻿using System;
 using StardewValley;
+using StardewValley.BellsAndWhistles;
 using Object = StardewValley.Object;
 
 namespace ProducerFrameworkMod.Utils
@@ -29,6 +30,10 @@ namespace ProducerFrameworkMod.Utils
                 Object.PreserveType.Roe => $"{preserveParentName} Roe",
                 Object.PreserveType.AgedRoe => $"Aged {preserveParentName}",
                 Object.PreserveType.Honey => $"{preserveParentName ?? "Wild"} Honey",
+                Object.PreserveType.DriedFruit => Lexicon.makePlural($"Dried {preserveParentName}"),
+                Object.PreserveType.DriedMushroom => Lexicon.makePlural($"Dried {preserveParentName}"),
+                Object.PreserveType.SmokedFish => "Smoked {preserveParentName}",
+                Object.PreserveType.Bait => $"{preserveParentName}  Bait",
                 _ => null
             };
         }

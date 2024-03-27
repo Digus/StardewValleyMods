@@ -139,7 +139,7 @@ namespace ProducerFrameworkMod.Controllers
                     case ColorType.ObjectColor when input is ColoredObject coloredObject:
                         output = new ColoredObject(outputConfig.OutputItemId, outputConfig.OutputStack, coloredObject.color.Value);
                         break;
-                    case ColorType.ObjectDyeColor when TailoringMenu.GetDyeColor(input) is Color color:
+                    case ColorType.ObjectDyeColor when TailoringMenu.GetDyeColor(input) is { } color:
                         output = new ColoredObject(outputConfig.OutputItemId, outputConfig.OutputStack, color);
                         break;
                     case ColorType.DefinedColor:
@@ -155,11 +155,11 @@ namespace ProducerFrameworkMod.Controllers
 
             if (outputConfig.InputPriceBased)
             {
-                output.Price = (int)(outputConfig.OutputPriceIncrement + (input?.Price??0) * outputConfig.OutputPriceMultiplier);
+                output.Price = (int)((input?.Price??0) * outputConfig.OutputPriceMultiplier) + outputConfig.OutputPriceIncrement;
             }
             else
             {
-                output.Price = (int)(outputConfig.OutputPriceIncrement + (output?.Price??0) * outputConfig.OutputPriceMultiplier);
+                output.Price = (int)((output?.Price??0) * outputConfig.OutputPriceMultiplier) + outputConfig.OutputPriceIncrement;
             }
 
             output.Quality = outputConfig.KeepInputQuality ? input?.Quality??0 : outputConfig.OutputQuality;
