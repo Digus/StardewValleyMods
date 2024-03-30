@@ -257,7 +257,7 @@ namespace AnimalHusbandryMod.tools
 
         private static bool IsMeatCleaver(Item tool)
         {
-            return tool.modData.ContainsKey(MeatCleaverKey);
+            return tool?.modData?.ContainsKey(MeatCleaverKey) ?? false;
         }
     }
 }

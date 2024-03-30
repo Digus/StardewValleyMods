@@ -73,8 +73,6 @@ namespace AnimalHusbandryMod.tools
             x = (int)who.GetToolLocation(false).X;
             y = (int)who.GetToolLocation(false).Y;
             Rectangle rectangle = new Rectangle(x - Game1.tileSize / 2, y - Game1.tileSize / 2, Game1.tileSize, Game1.tileSize);
-            //// Added this because for some wierd reason the current value appears subtracted by 5 the first time the tool is used.
-            //__instance.CurrentParentTileIndex = InitialParentTileIndex;
 
             if (!DataLoader.ModConfig.DisableTreats)
             {
@@ -524,16 +522,16 @@ namespace AnimalHusbandryMod.tools
 
         public static bool drawTool(Farmer f, int currentToolIndex)
         {
-            Tool correntTool = f.CurrentTool;
-            if (!IsFeedingBasket(correntTool)) return true;
-            correntTool.draw(Game1.spriteBatch);
+            Tool currentTool = f.CurrentTool;
+            if (!IsFeedingBasket(currentTool)) return true;
+            currentTool.draw(Game1.spriteBatch);
             return false;
         }
 
         public static bool endUsing(GameLocation location, Farmer who)
         {
-            Tool correntTool = who.CurrentTool;
-            if (!IsFeedingBasket(correntTool)) return true;
+            Tool currentTool = who.CurrentTool;
+            if (!IsFeedingBasket(currentTool)) return true;
 
             who.stopJittering();
             who.canReleaseTool = false;
@@ -547,7 +545,7 @@ namespace AnimalHusbandryMod.tools
 
         private static bool IsFeedingBasket(Item tool)
         {
-            return tool.modData.ContainsKey(FeedingBasketKey);
+            return tool?.modData?.ContainsKey(FeedingBasketKey) ?? false;
         }
     }
 }
