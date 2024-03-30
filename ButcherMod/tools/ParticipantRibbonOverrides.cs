@@ -282,7 +282,7 @@ namespace AnimalHusbandryMod.tools
 
         private static bool IsParticipantRibbon(Item tool)
         {
-            return tool.modData.ContainsKey(ParticipantRibbonKey);
+            return tool?.modData?.ContainsKey(ParticipantRibbonKey) ?? false;
         }
 
     }
