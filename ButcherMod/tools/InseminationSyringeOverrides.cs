@@ -319,7 +319,7 @@ namespace AnimalHusbandryMod.tools
 
         private static bool IsInseminationSyringe(Item tool)
         {
-            return tool.modData.ContainsKey(InseminationSyringeKey);
+            return tool?.modData?.ContainsKey(InseminationSyringeKey) ?? false;
         }
 
         private static bool CheckCorrectProduct(FarmAnimal animal, SObject o)
