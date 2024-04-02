@@ -12,6 +12,7 @@ namespace ProducerFrameworkMod.ContentPack
         public bool AlternateFrameProducing;
         public bool AlternateFrameWhenReady;
         public bool DisableBouncingAnimationWhileWorking;
+        public bool AllowFairyDust = true;
         public NoInputStartMode? NoInputStartMode;
         public Dictionary<StardewStats, string> IncrementStatsOnOutput;
         public Dictionary<string, string> IncrementStatsLabelOnOutput;
