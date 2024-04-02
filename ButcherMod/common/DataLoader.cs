@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
 using System.Reflection.Metadata.Ecma335;
@@ -310,8 +311,9 @@ namespace AnimalHusbandryMod.common
         {
             isLoadingFarmAnimals = true;
             bool animalDataChanged = false;
-            data = data ?? Game1.farmAnimalData;
-            HashSet<string> syringeItemsIds = new HashSet<string>();
+            data ??= Game1.farmAnimalData;
+            data ??= ImmutableDictionary<string, FarmAnimalData>.Empty;
+            HashSet<string> syringeItemsIds = new();
             
             foreach (KeyValuePair<string, FarmAnimalData> farmAnimal in data)
             {
