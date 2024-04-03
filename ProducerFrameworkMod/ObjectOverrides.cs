@@ -305,7 +305,7 @@ namespace ProducerFrameworkMod
                     if (animationList.Any())
                     {
                         int frame = animationList[((Game1.ticks + GetLocationSeed(producer.TileLocation)) % (animationList.Count * producingAnimation.FrameInterval)) / producingAnimation.FrameInterval];
-                        spriteBatch.Draw(texture, destinationRectangle, new Rectangle?(Object.getSourceRectForBigCraftable(producer.ParentSheetIndex + frame)), color, rotation, origin, effects, layerDepth);
+                        spriteBatch.Draw(texture, destinationRectangle, new Rectangle?(Object.getSourceRectForBigCraftable(texture,producer.ParentSheetIndex + frame)), color, rotation, origin, effects, layerDepth);
                         return;
                     }
                 }
@@ -327,7 +327,7 @@ namespace ProducerFrameworkMod
                     if (animationList.Any())
                     {
                         int frame = animationList[((Game1.ticks + GetLocationSeed(producer.TileLocation)) % (animationList.Count * readyAnimation.FrameInterval)) / readyAnimation.FrameInterval];
-                        spriteBatch.Draw(texture, destinationRectangle, new Rectangle?(Object.getSourceRectForBigCraftable(producer.ParentSheetIndex + frame)), color, rotation, origin, effects, layerDepth);
+                        spriteBatch.Draw(texture, destinationRectangle, new Rectangle?(Object.getSourceRectForBigCraftable(texture,producer.ParentSheetIndex + frame)), color, rotation, origin, effects, layerDepth);
                         return;
                     }
                 }
