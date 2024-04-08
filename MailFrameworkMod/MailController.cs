@@ -263,7 +263,7 @@ namespace MailFrameworkMod
                 learnedRecipe = new CraftingRecipe(recipe, isCookingRecipe: true).DisplayName;
                 cookingOrCraftingText =  Game1.content.LoadString("Strings\\UI:LearnedRecipe_cooking");
             }
-            else if (craftingData.ContainsKey(recipe))
+            else if (craftingData.ContainsKey(recipe) || craftingData.Where(r => ItemRegistry.GetData(r.Value.Split("/")[2].Split(" ")[0])?.InternalName == recipe).Any(r=>{recipe = r.Key; return true;}))
             {
                 if (!Game1.player.craftingRecipes.ContainsKey(recipe))
                 {
