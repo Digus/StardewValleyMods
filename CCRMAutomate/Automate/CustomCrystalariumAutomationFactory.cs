@@ -13,7 +13,7 @@ namespace CCRMAutomate.Automate
     {
         public IAutomatable GetFor(SObject obj, GameLocation location, in Vector2 tile)
         {
-            if (ClonerController.HasCloner(obj.Name))
+            if (ClonerController.HasCloner(obj.QualifiedItemId))
             {
                 return new ClonerMachine(obj,location,tile);
             }
@@ -25,7 +25,7 @@ namespace CCRMAutomate.Automate
             return null;
         }
 
-        public IAutomatable GetFor(Building building, BuildableGameLocation location, in Vector2 tile)
+        public IAutomatable GetFor(Building building, GameLocation location, in Vector2 tile)
         {
             return null;
         }

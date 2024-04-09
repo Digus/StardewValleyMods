@@ -35,7 +35,7 @@ namespace PFMAutomate.Automate
         public MachineState GetState()
         {
             var machineState = this.PfmMachine.GetState();
-            return machineState == MachineState.Empty ? MachineState.Disabled : machineState;
+            return machineState == MachineState.Empty ? ClonerMachine.GetState() : machineState;
         }
 
         public ITrackedStack GetOutput()
@@ -48,7 +48,7 @@ namespace PFMAutomate.Automate
 
         public bool SetInput(IStorage input)
         {
-            return false;
+            return this.PfmMachine.SetInput(input) || this.ClonerMachine.SetInput(input);
         }
     }
 }
