@@ -122,10 +122,11 @@ namespace MailFrameworkMod
                     })) continue;
 
                     bool Condition(Letter l) =>
-                        (!Game1.player.mailReceived.Contains(l.Id) || mailItem.Repeatable || mailItem.Recipe != null)
+                        (!Game1.player.mailReceived.Contains(l.Id) || mailItem.Repeatable || (mailItem.Recipe != null && mailItem.Attachments?.Count == 0))
                         && (mailItem.Recipe == null || !(Game1.player.cookingRecipes.ContainsKey(mailItem.Recipe) 
                                                     || Game1.player.craftingRecipes.ContainsKey(mailItem.Recipe)
-                                                    || Game1.player.craftingRecipes.ContainsKey(CraftingRecipe.craftingRecipes.Where(r => ItemRegistry.GetData(r.Value.Split("/")[2].Split(" ")[0])?.InternalName == mailItem.Recipe).Select(r=>r.Key).FirstOrDefault()??"")))
+                                                    || Game1.player.cookingRecipes.ContainsKey(CraftingRecipe.cookingRecipes.Where(r => ItemRegistry.GetData(r.Value.Split("/")[2].Split(" ")[0])?.InternalName == mailItem.Recipe).Select(r=>r.Key).FirstOrDefault()??"")
+                                                    || Game1.player.craftingRecipes.ContainsKey(CraftingRecipe.craftingRecipes.Where(r => ItemRegistry.GetData(r.Value.Split("/")[2].Split(" ")[0])?.InternalName == mailItem.Recipe).Select(r => r.Key).FirstOrDefault() ?? "")))
                         && (mailItem.Date == null || SDate.Now() >= new SDate(Convert.ToInt32(mailItem.Date.Split(' ')[0]),
                                 mailItem.Date.Split(' ')[1], Convert.ToInt32(mailItem.Date.Split(' ')[2].Replace("Y", ""))))
                         && (mailItem.Days == null || mailItem.Days.Contains(SDate.Now().Day))
