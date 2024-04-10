@@ -253,7 +253,7 @@ namespace MailFrameworkMod
             Dictionary<string, string> craftingData = StardewValley.DataLoader.CraftingRecipes(Game1.content);
             learnedRecipe = null;
             cookingOrCraftingText = null;
-            if (cookingData.ContainsKey(recipe))
+            if (cookingData.ContainsKey(recipe) || cookingData.Where(r => ItemRegistry.GetData(r.Value.Split("/")[2].Split(" ")[0])?.InternalName == recipe).Any(r => { recipe = r.Key; return true; }))
             {
                 if (!Game1.player.cookingRecipes.ContainsKey(recipe))
                 {
