@@ -566,7 +566,10 @@ namespace ProducerFrameworkMod
                 }
                 __result = true;
             }
-            __result = false;
+            else
+            {
+                __result = false;
+            }
             return false;
         }
     }

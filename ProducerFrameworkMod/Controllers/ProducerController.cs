@@ -462,7 +462,7 @@ namespace ProducerFrameworkMod.Controllers
             {
                 itemId = ItemRegistry.QualifyItemId(identifier);
             }
-            else if (!Int32.TryParse(identifier, out int fuelIndex))
+            else if (!Int32.TryParse(identifier, out int index))
             {
                 var pair = Game1.objectData.FirstOrDefault(o => o.Value.Name.Equals(identifier));
                 if (pair.Value != null)
@@ -472,10 +472,10 @@ namespace ProducerFrameworkMod.Controllers
             }
             else
             {
-                if (fuelIndex < 0)
-                    itemId = nullOnNegative ? null : fuelIndex.ToString();
+                if (index < 0)
+                    itemId = nullOnNegative ? null : index.ToString();
                 else
-                    itemId = ItemRegistry.type_object + fuelIndex;
+                    itemId = ItemRegistry.type_object + index;
             }
 
             return itemId;

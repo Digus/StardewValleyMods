@@ -118,7 +118,7 @@ namespace ProducerFrameworkMod.Controllers
                     if (!noSoundAndAnimation)
                     {
                         SoundUtil.PlaySound(producerRule.Sounds, location);
-                        SoundUtil.PlayDelayedSound(producerRule.DelayedSounds, location);
+                        SoundUtil.PlayDelayedSound(producerRule.DelayedSounds, location, producer.TileLocation);
                     }
 
                     producer.MinutesUntilReady = outputConfig.MinutesUntilReady ?? producerRule.MinutesUntilReady;
