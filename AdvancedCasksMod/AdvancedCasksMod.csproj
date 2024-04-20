@@ -53,6 +53,9 @@
     <None Update="[MFM]AdvancedCasksMod\i18n\pt.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="[MFM]AdvancedCasksMod\i18n\ru.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="[MFM]AdvancedCasksMod\i18n\tr.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
