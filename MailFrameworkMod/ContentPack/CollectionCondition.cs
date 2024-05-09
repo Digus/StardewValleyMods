@@ -11,6 +11,7 @@ namespace MailFrameworkMod.ContentPack
         public Collection Collection;
         public string Name;
         public string Index;
+        public HashSet<string> Ids;
         public int Amount;
     }
 }
