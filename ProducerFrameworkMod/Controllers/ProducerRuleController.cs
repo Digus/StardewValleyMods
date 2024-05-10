@@ -170,6 +170,7 @@ namespace ProducerFrameworkMod.Controllers
             producer.readyForHarvest.Value = false;
             producer.showNextIndex.Value = false;
             producer.MinutesUntilReady = -1;
+            producer.ResetParentSheetIndex();
 
             if (ProducerController.GetProducerConfig(producer.QualifiedItemId) is ProducerConfig producerConfig && producerConfig.LightSource?.AlwaysOn == true)
             {
