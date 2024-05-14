@@ -480,6 +480,10 @@ namespace ProducerFrameworkMod
                         {
                             if (producerConfig.NoInputStartMode == NoInputStartMode.DayUpdate || (producerConfig.NoInputStartMode == NoInputStartMode.Placement))
                             {
+                                if (__instance.GetMachineData().ClearContentsOvernightCondition == "TRUE")
+                                {
+                                    ProducerRuleController.ClearProduction(__instance, location);
+                                }
                                 if (__instance.heldObject.Value == null)
                                 {
                                     try

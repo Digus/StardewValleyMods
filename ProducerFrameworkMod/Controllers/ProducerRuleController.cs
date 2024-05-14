@@ -132,6 +132,10 @@ namespace ProducerFrameworkMod.Controllers
                     {
                         producer.showNextIndex.Value = producerConfig.AlternateFrameProducing;
                     }
+                    else if (producer.GetMachineData() is { ShowNextIndexWhileWorking: true })
+                    {
+                        producer.showNextIndex.Value = true;
+                    }
 
                     if (producerRule.PlacingAnimation.HasValue && !noSoundAndAnimation)
                     {
