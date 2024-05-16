@@ -392,6 +392,7 @@ namespace AnimalHusbandryMod
             FarmerLoader.MoveOldPregnancyData();
             FarmerLoader.MoveOldAnimalStatusData();
             DataLoader.ToolsLoader.LoadMail();
+            DataLoader.RecipeLoader.LoadMails();
             DataLoader.AnimalData.FillLikedTreatsIds();
             EventsLoader.EventListener();
         }
