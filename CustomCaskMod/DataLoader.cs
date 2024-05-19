@@ -252,7 +252,7 @@ namespace CustomCaskMod
 
         private static string GetId(object identifier)
         {
-            if (ItemRegistry.IsQualifiedItemId(identifier.ToString()))
+            if (ItemRegistry.IsQualifiedItemId(identifier.ToString()) && ItemRegistry.Exists(identifier.ToString()))
             {
                 return identifier.ToString();
             }
