@@ -4,7 +4,7 @@
         "Title": "hardwood.recipe.letter.title",
         "GroupId": "Digus.AdvancedCasks",
         "Text": "hardwood.recipe.letter",
-        "Recipe": "Hardwood Cask",
+        "Recipe": "Digus.AdvancedCaskMod_HardwoodCask",
         "FriendshipConditions": [{ "NpcName": "Robin", "FriendshipLevel": 9 }],
         "RecipeKnown": [ "Cask" ]
     }
