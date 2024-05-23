@@ -1,7 +1,7 @@
 {
     "Name": "[CP]Advanced Cask Mod",
     "Author": "Digus",
-    "Version": "2.0.0",
+    "Version": "2.0.1",
     "Description": "Adds advanced casks to the game.",
     "UniqueID": "Digus.AdvancedCasksMod",
     "MinimumApiVersion": "4.0.0",

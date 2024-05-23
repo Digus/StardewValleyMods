@@ -37,7 +37,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CCRMAutomate", "CCRMAutomat
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GemLampPostsMod", "GemLampPostsMod\GemLampPostsMod.csproj", "{979CECE2-32AB-439C-AC4A-AA8F7F4B38E4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdvancedCasksMod", "AdvancedCasksMod\AdvancedCasksMod.csproj", "{D23D5ED0-109B-4F84-8BAF-26278CC7F7E9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdvancedCasksMod", "AdvancedCasksMod\AdvancedCasksMod.csproj", "{D23D5ED0-109B-4F84-8BAF-26278CC7F7E9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
