@@ -1,6 +1,7 @@
 ﻿[
     {
         "Name": "Hardwood Cask",
+        "QualifiedItemId": "(BC)Digus.AdvancedCasksMod_HardwoodCask",
         "EnableAgingAnywhere": false,
         "EnableMoreThanOneQualityIncrementPerDay": false,
         "AgingData": {
@@ -16,6 +17,7 @@
     },
     {
         "Name": "Radioactive Cask",
+        "QualifiedItemId": "(BC)Digus.AdvancedCasksMod_RadioactiveCask",
         "EnableAgingAnywhere": true,
         "EnableMoreThanOneQualityIncrementPerDay": false,
         "AgingData": {
