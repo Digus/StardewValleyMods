@@ -46,8 +46,7 @@ namespace AnimalHusbandryMod.tools
             MenuTilesSprites = helper.GameContent.Load<Texture2D>(MenuTilesSpriteName);
             _customLetterBG = helper.GameContent.Load<Texture2D>(_customLetterBGName);
             DataLoader.ToolsSprites = DataLoader.Helper.GameContent.Load<Texture2D>(_toolsSpriteName);
-            DataLoader.Helper.GameContent.InvalidateCache("Data/Tools");
-            this.LoadMail();
+            
         }
 
         public void Edit(object sender, AssetRequestedEventArgs args)

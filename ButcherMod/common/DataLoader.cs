@@ -56,24 +56,12 @@ namespace AnimalHusbandryMod.common
             i18n = Helper.Translation;
             DgaApi = DataLoader.Helper.ModRegistry.GetApi<IDynamicGameAssetsApi>("spacechase0.DynamicGameAssets");
 
-            LooseSpritesName = Helper.ModContent.GetInternalAssetName("common/LooseSprites.png").Name;
-            //LooseSpritesName = Helper.Content.GetActualAssetKey("common/LooseSprites.png", ContentSource.ModFolder);            
+            LooseSpritesName = Helper.ModContent.GetInternalAssetName("common/LooseSprites.png").Name;         
             LooseSprites = Helper.ModContent.Load<Texture2D>("common/LooseSprites.png");
 
             ToolsLoader = new ToolsLoader(Helper);               
-
-            // load recipes
-            if (!ModConfig.DisableMeat)
-            {
-                RecipeLoader = new RecipesLoader();
-                RecipeLoader.LoadMails();
-            }
-
-            //load treats mail
-            if (!ModConfig.DisableTreats)
-            {
-                LoadTreatsMail();
-            }
+            
+            RecipeLoader = new RecipesLoader();
 
             // load animal data
             AnimalBuildingData = DataLoader.Helper.Data.ReadJsonFile<AnimalBuildingData>("data\\animalBuilding.json") ?? new AnimalBuildingData();
@@ -96,20 +84,27 @@ namespace AnimalHusbandryMod.common
 
             // add editors (must happen *after* data is initialised above, since SMAPI may reload affected assets immediately)
             Helper.Events.Content.AssetRequested += this.Edit;
-            if (!ModConfig.DisableAnimalContest)
-            {
-                var eventLoader = new EventsLoader();
-                Helper.Events.Content.AssetRequested += eventLoader.Edit;
-            }
-            if (!ModConfig.DisableMeat)
-            {
-                Helper.Events.Content.AssetRequested += RecipeLoader.Edit;
-            }
 
-            DataLoader.Helper.GameContent.InvalidateCache("Data/Objects");
-            DataLoader.Helper.GameContent.InvalidateCache("Data/FarmAnimals");
-            DataLoader.Helper.GameContent.InvalidateCache("Data/CookingRecipes");
+            var eventLoader = new EventsLoader();
+            Helper.Events.Content.AssetRequested += eventLoader.Edit;
+
+            Helper.Events.Content.AssetRequested += RecipeLoader.Edit;
+
+            InvalidateCache();
+            ToolsLoader.LoadMail();
+            RecipesLoader.LoadMails();
+            LoadTreatsMail();
             CreateConfigMenu(manifest);
+        }
+
+        private static void InvalidateCache()
+        {
+            Helper.GameContent.InvalidateCache("Data/Objects");
+            Helper.GameContent.InvalidateCache("Data/FarmAnimals");
+            Helper.GameContent.InvalidateCache("Data/CookingRecipes");
+            Helper.GameContent.InvalidateCache("Data/Tools");
+            Helper.GameContent.InvalidateCache("Data/Bundles");
+            Helper.GameContent.InvalidateCache("Data/NPCGiftTastes");
         }
 
         public void Edit(object sender, AssetRequestedEventArgs args)
@@ -118,7 +113,8 @@ namespace AnimalHusbandryMod.common
             {
                 args.Edit(asset =>
                 {
-                    var data = asset.AsDictionary<string,ObjectData>().Data;
+                    if (ModConfig.DisableMeat) return;
+                    var data = asset.AsDictionary<string, ObjectData>().Data;
                     //MEAT
                     MeatData = DataLoader.Helper.Data.ReadJsonFile<MeatData>("data\\meats.json") ?? new MeatData();
                     DataLoader.Helper.Data.WriteJsonFile("data\\meats.json", MeatData);
@@ -155,23 +151,23 @@ namespace AnimalHusbandryMod.common
             {
                 args.Edit(asset =>
                 {
+                    if (ModConfig.DisableMeatInBlundle || ModConfig.DisableMeat) return;
                     var data = asset.AsDictionary<string, string>().Data;
                     string value = data["Pantry/4"];
-                    if (!ModConfig.DisableMeatInBlundle)
+                    if (!value.Contains("639 1 0 640 1 0 641 1 0 642 1 0 643 1 0 644 1 0") && value.Contains("/4/5"))
                     {
-                        if (!value.Contains("639 1 0 640 1 0 641 1 0 642 1 0 643 1 0 644 1 0") && value.Contains("/4/5"))
-                        {
-                            value = value.Insert(value.LastIndexOf("/4/5"), " 639 1 0 640 1 0 641 1 0 642 1 0 643 1 0 644 1 0");
-                        }
+                        value = value.Insert(value.LastIndexOf("/4/5"), " 639 1 0 640 1 0 641 1 0 642 1 0 643 1 0 644 1 0");
                     }
 
                     data["Pantry/4"] = value;
+
                 });
             }
             else if (args.NameWithoutLocale.IsEquivalentTo("Data/NPCGiftTastes"))
             {
                 args.Edit(asset =>
                 {
+                    if (ModConfig.DisableMeat) return;
                     var data = asset.AsDictionary<string, string>().Data;
                     AddUniversalGiftTaste(data, Taste.Dislike, "-14");
                     AddNpcGiftTaste(data, "Linus", Taste.Neutral, "-14");
@@ -242,10 +238,11 @@ namespace AnimalHusbandryMod.common
         {
             MailRepository.SaveLetter(
                 new Letter(
-                    "DinosaursFirtTreat"
+                    "DinosaursFirstTreat"
                     , DataLoader.i18n.Get("Feeding.TreatDaffodil.Letter")
-                    , (letter) => !Game1.player.mailReceived.Contains(letter.Id)
+                    , (letter) => !Game1.player.mailReceived.Contains(letter.Id) && !Game1.player.mailReceived.Contains("DinosaursFirtTreat")
                                   && LibraryMuseum.HasDonatedArtifact("107")
+                                  && !ModConfig.DisableTreats
                     , (letter) => Game1.player.mailReceived.Add(letter.Id)
                 )
                 {
@@ -260,6 +257,7 @@ namespace AnimalHusbandryMod.common
                     , DataLoader.i18n.Get("Feeding.TreatCrocus.Letter")
                     , (letter) => !Game1.player.mailReceived.Contains(letter.Id) 
                                   && MuseumContainsTheseItems(new string[] { "579", "580", "581", "582", "583", "584", "585" })
+                                  && !ModConfig.DisableTreats
                     , (letter) => Game1.player.mailReceived.Add(letter.Id)
                 )
                 {
@@ -421,7 +419,11 @@ namespace AnimalHusbandryMod.common
             GenericModConfigMenuApi api = Helper.ModRegistry.GetApi<GenericModConfigMenuApi>("spacechase0.GenericModConfigMenu");
             if (api == null) return;
 
-            api.Register(manifest, () => DataLoader.ModConfig = new ModConfig(), () => Helper.WriteConfig(DataLoader.ModConfig));
+            api.Register(manifest, () => DataLoader.ModConfig = new ModConfig(), () =>
+            {
+                Helper.WriteConfig(DataLoader.ModConfig);
+                InvalidateCache();
+            });
 
             api.AddSectionTitle(manifest, () => "Main Features:", () => "Properties to disable the mod main features.");
 
@@ -439,7 +441,7 @@ namespace AnimalHusbandryMod.common
 
             api.AddBoolOption(manifest, () => DataLoader.ModConfig.DisableRancherMeatPriceAjust, (bool val) => DataLoader.ModConfig.DisableRancherMeatPriceAjust = val, () => "Disable Rancher Affect Meat", () => "Disable the patch that make Rancher Profession work on meat items.");
 
-            api.AddBoolOption(manifest, () => DataLoader.ModConfig.DisableMeatInBlundle, (bool val) => { DataLoader.ModConfig.DisableMeatInBlundle = val; Helper.GameContent.InvalidateCache("Data\\Bundles"); }, () => "Disable Meat In Bundle", () => "Disable the addition of meat to the Animal Bundle in the Community Center. Needs to start a new game so it can take effect.");
+            api.AddBoolOption(manifest, () => DataLoader.ModConfig.DisableMeatInBlundle, (bool val) => DataLoader.ModConfig.DisableMeatInBlundle = val, () => "Disable Meat In Bundle", () => "Disable the addition of meat to the Animal Bundle in the Community Center. Needs to start a new game so it can take effect.");
 
             api.AddBoolOption(manifest, () => DataLoader.ModConfig.DisableMeatFromDinosaur, (bool val) => DataLoader.ModConfig.DisableMeatFromDinosaur = val, () => "Disable Meat From Dinosaur", () => "Disable dinosaur giving a random kind of meat.");
 
