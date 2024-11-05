@@ -368,7 +368,7 @@ namespace ProducerFrameworkMod.Controllers
                     return false;
                 }
                 producer.ProducerQualifiedItemId = StardewValley.DataLoader.BigCraftables(Game1.content)
-                    .Where(bc => bc.Value.Name.Equals(producer.ProducerName))
+                    .Where(bc => producer.ProducerName.Equals(bc.Value.Name))
                     .Select(bc => ItemRegistry.type_bigCraftable + bc.Key)
                     .FirstOrDefault();
                 if (producer.ProducerQualifiedItemId == null)

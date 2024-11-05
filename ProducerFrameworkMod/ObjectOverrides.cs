@@ -152,15 +152,15 @@ namespace ProducerFrameworkMod
                     __instance.showNextIndex.Value = false;
                 }
 
-                if (!__state && !justCheckingForActivity && __result && producerConfig.LightSource?.AlwaysOn == true)
-                {
-                    int identifier = LightSourceConfigController.GenerateIdentifier(__instance.TileLocation);
-                    if (who.currentLocation.hasLightSource(identifier))
-                    {
-                        who.currentLocation.removeLightSource(identifier);
-                        __instance.initializeLightSource(__instance.TileLocation);
-                    }
-                }
+                //if (!__state && !justCheckingForActivity && __result && producerConfig.LightSource?.AlwaysOn == true)
+                //{
+                //    int identifier = LightSourceConfigController.GenerateIdentifier(__instance.TileLocation);
+                //    if (who.currentLocation.hasLightSource(identifier))
+                //    {
+                //        who.currentLocation.removeLightSource(identifier);
+                //        __instance.initializeLightSource(__instance.TileLocation);
+                //    }
+                //}
             }
         }
 
@@ -196,11 +196,11 @@ namespace ProducerFrameworkMod
                         __instance.MinutesUntilReady = 0;
                         __instance.onReadyForHarvest();
                         __instance.showNextIndex.Value = true;
-                        if (__instance.lightSource != null)
-                        {
-                            environment.removeLightSource(__instance.lightSource.Identifier);
-                            __instance.lightSource = (LightSource)null;
-                        }
+                        //if (__instance.lightSource != null)
+                        //{
+                        //    environment.removeLightSource(__instance.lightSource.Identifier);
+                        //    __instance.lightSource = (LightSource)null;
+                        //}
                     }
                     if (!__instance.readyForHarvest.Value && Game1.random.NextDouble() < 0.33)
                     {

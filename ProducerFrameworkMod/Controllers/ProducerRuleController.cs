@@ -144,10 +144,10 @@ namespace ProducerFrameworkMod.Controllers
                             new(producerRule.PlacingAnimationOffsetX, producerRule.PlacingAnimationOffsetY));
                     }
 
-                    if (location.hasLightSource(LightSourceConfigController.GenerateIdentifier(tileLocation)))
-                    {
-                        location.removeLightSource(LightSourceConfigController.GenerateIdentifier(tileLocation));
-                    }
+                    //if (location.hasLightSource(LightSourceConfigController.GenerateIdentifier(tileLocation)))
+                    //{
+                    //    location.removeLightSource(LightSourceConfigController.GenerateIdentifier(tileLocation));
+                    //}
                     producer.initializeLightSource(tileLocation, false);
 
                     producerRule.IncrementStatsOnInput.ForEach(s => StatsController.IncrementStardewStats(s, outputConfig.RequiredInputStack ?? producerRule.InputStack));
@@ -176,15 +176,15 @@ namespace ProducerFrameworkMod.Controllers
             producer.MinutesUntilReady = -1;
             producer.ResetParentSheetIndex();
 
-            if (ProducerController.GetProducerConfig(producer.QualifiedItemId) is ProducerConfig producerConfig && producerConfig.LightSource?.AlwaysOn == true)
-            {
-                int identifier = LightSourceConfigController.GenerateIdentifier(producer.TileLocation);
-                if (location.hasLightSource(identifier))
-                {
-                    location.removeLightSource(identifier);
-                    producer.initializeLightSource(producer.TileLocation);
-                }
-            }
+            //if (ProducerController.GetProducerConfig(producer.QualifiedItemId) is ProducerConfig producerConfig && producerConfig.LightSource?.AlwaysOn == true)
+            //{
+            //    int identifier = LightSourceConfigController.GenerateIdentifier(producer.TileLocation);
+            //    if (location.hasLightSource(identifier))
+            //    {
+            //        location.removeLightSource(identifier);
+            //        producer.initializeLightSource(producer.TileLocation);
+            //    }
+            //}
         }
 
         public static void PrepareOutput(Object producer, GameLocation location, Farmer who)
