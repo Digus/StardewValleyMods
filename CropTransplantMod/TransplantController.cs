@@ -48,6 +48,7 @@ namespace CropTransplantMod
             bush.loadSprite();
             bush.tileSheetOffset.Value = 0;
             bush.setUpSourceRect();
+            bush.inPot.Value = false;
             return bush;
         }
 
