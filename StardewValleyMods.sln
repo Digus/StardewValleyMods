@@ -39,6 +39,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GemLampPostsMod", "GemLampP
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdvancedCasksMod", "AdvancedCasksMod\AdvancedCasksMod.csproj", "{D23D5ED0-109B-4F84-8BAF-26278CC7F7E9}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdvancedWeatherForecastMod", "AdvancedWeatherForecastMod\AdvancedWeatherForecastMod.csproj", "{832418C2-ACD5-4685-9156-6157E0526B34}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
