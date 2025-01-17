@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Force.DeepCloner;
 using StardewModdingAPI.Utilities;
 using DataLoader = AdvancedWeatherForecastMod.common.DataLoader;
+using StardewModdingAPI;
 
 namespace AdvancedWeatherForecastMod
 {
@@ -37,11 +38,13 @@ namespace AdvancedWeatherForecastMod
 
         public static void CalculateAllForecast()
         {
+            AdvancedWeatherForecastModEntry.ModMonitor.Log("Calculating advanced weather forecast for all missing days.", LogLevel.Debug);
             CalculateWeatherForecast(1);
         }
 
         public static void CalculateWeatherForNewDay()
         {
+            AdvancedWeatherForecastModEntry.ModMonitor.Log("Calculating advanced weather forecast for new day.", LogLevel.Debug);
             CalculateWeatherForecast(DataLoader.ModConfig.DaysInAdvanceForecast - 1);
         }
         

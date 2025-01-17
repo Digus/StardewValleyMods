@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AdvancedWeatherForecastMod.api;
 using AdvancedWeatherForecastMod.integrations;
 using Microsoft.Xna.Framework;
 using StardewModdingAPI;
@@ -14,6 +16,7 @@ namespace AdvancedWeatherForecastMod.common
         public static IModHelper Helper;
         public static ITranslationHelper I18N;
         public static ModConfig ModConfig;
+        public static ICloudySkiesApi? CloudySkiesApi;
 
         public DataLoader(IModHelper helper, IManifest manifest)
         {
@@ -24,6 +27,14 @@ namespace AdvancedWeatherForecastMod.common
             LoadMail();
 
             CreateConfigMenu(manifest);
+            try
+            {
+                CloudySkiesApi = Helper.ModRegistry.GetApi<ICloudySkiesApi>("leclair.cloudyskies");
+            }
+            catch (Exception e)
+            {
+                AdvancedWeatherForecastModEntry.ModMonitor.Log("Fail to load Cloud Skies API. Any expected integration won't work.",LogLevel.Warn);
+            }
         }
 
         internal static void LoadMail()
@@ -34,12 +45,9 @@ namespace AdvancedWeatherForecastMod.common
                 new ApiLetter
                 {
                     Id = "AdvancedWeatherForecastLetter"
-                    ,
-                    Text = "AdvancedWeatherForecast.Letter"
-                    ,
-                    Title = "AdvancedWeatherForecast.Letter.Title"
-                    ,
-                    I18N = I18N
+                    , Text = "AdvancedWeatherForecast.Letter"
+                    , Title = "AdvancedWeatherForecast.Letter.Title"
+                    , I18N = I18N
                 }, (l) => !Game1.player.mailReceived.Contains(l.Id)
                 , (l) => Game1.player.mailReceived.Add(l.Id)
             );
@@ -52,7 +60,7 @@ namespace AdvancedWeatherForecastMod.common
 
             api.Register(manifest, () => ModConfig = new ModConfig(), () => Helper.WriteConfig(ModConfig));
 
-            api.AddNumberOption(manifest, () => ModConfig.DaysInAdvanceForecast, (val) => ModConfig.DaysInAdvanceForecast = val, () => "Days in advance forecast", () => "How many days in advance you can know the weather forecast. You can set a number from 1 to 27.", 1, 27);
+            api.AddNumberOption(manifest, () => ModConfig.DaysInAdvanceForecast, (val) => ModConfig.DaysInAdvanceForecast = val, () => I18N.Get("AdvancedWeatherForecast.ConfigMenu.DaysInAdvanceForecast.Name"), () => I18N.Get("AdvancedWeatherForecast.ConfigMenu.DaysInAdvanceForecast.Tooltip") , 1, 27);
         }
     }
 }
