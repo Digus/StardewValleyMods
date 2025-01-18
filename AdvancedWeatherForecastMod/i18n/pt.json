@@ -2,5 +2,7 @@
     "AdvancedWeatherForecast.Letter": "Olá @,^^Para melhor estudar as plantas e animais do vale, instalei recentemente um sistema avançado de previsão do tempo em meu laboratório.^Acredito que essa informação também possam ser útil para você, portanto, a partir de agora estarei atualizando o calendário da cidade com a previsão dos próximos dias.^Essa informação também será refletida nos seus calendários pessoais.^ - Demetrius",
     "AdvancedWeatherForecast.Letter.Title": "Previsão do Tempo Avançada de Demetrius",
     "AdvancedWeatherForecast.ConfigMenu.DaysInAdvanceForecast.Name": "Janela de previsão em dias",
-    "AdvancedWeatherForecast.ConfigMenu.DaysInAdvanceForecast.Tooltip": "Com quantos dias de antecedêcia você pode ver a previsão. Pode ser um número de 1 a 27 dias."
+    "AdvancedWeatherForecast.ConfigMenu.DaysInAdvanceForecast.Tooltip": "Com quantos dias de antecedêcia você pode ver a previsão. Pode ser um número de 1 a 27 dias.",
+    "AdvancedWeatherForecast.ConfigMenu.DisableForecastLetter.Name": "Desabilitar carta",
+    "AdvancedWeatherForecast.ConfigMenu.DisableForecastLetter.Tooltip": "Você não receberá a carta do Demetrius explicando sobre a previsão do tempo avançada."
 }

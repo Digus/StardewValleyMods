@@ -1,4 +1,5 @@
-﻿using StardewValley.Network;
+﻿using StardewValley;
+using StardewValley.Network;
 using DataLoader = AdvancedWeatherForecastMod.common.DataLoader;
 
 namespace AdvancedWeatherForecastMod.overrides
@@ -21,7 +22,7 @@ namespace AdvancedWeatherForecastMod.overrides
 
         public static void UpdateWeatherForNewDay_Postfix()
         {
-            if (DataLoader.ModConfig.DaysInAdvanceForecast <= 1) return;
+            if (DataLoader.ModConfig.DaysInAdvanceForecast <= 1 || Game1.stats.DaysPlayed <= 1) return;
             WeatherForecastController.UpdateWeatherForTomorrow();
             WeatherForecastController.CalculateWeatherForNewDay();
             WeatherDataRepository.ClearPastWeatherData();

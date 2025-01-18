@@ -9,5 +9,6 @@ namespace AdvancedWeatherForecastMod.common
     public class ModConfig
     {
         public int DaysInAdvanceForecast = 7;
+        public bool DisableForecastLetter = false;
     }
 }

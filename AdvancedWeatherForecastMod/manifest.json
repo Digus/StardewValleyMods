@@ -1,7 +1,7 @@
 ﻿{
     "Name": "Advanced Weather Forecast Mod",
     "Author": "Digus",
-    "Version": "1.1.0",
+    "Version": "1.1.1",
     "Description": "Adds weather forecast beyond tomorrow.",
     "UniqueID": "Digus.AdvancedWeatherForecastMod",
     "EntryDll": "AdvancedWeatherForecastMod.dll",

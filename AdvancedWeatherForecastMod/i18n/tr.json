@@ -1,0 +1,6 @@
+{
+    "AdvancedWeatherForecast.Letter": "Sevgili @,^^Geçtiğimiz günlerde, vadinin bitkilerini ve hayvanlarını daha iyi bir şekilde araştırabilmek için laboratuvarımda gelişmiş bir hava durumu tahmin sistemi kurdum.^Bu bilginin senin için de çok faydalı olabileceğini düşündüm, bu yüzden artık kasabanın takvimine önümüzdeki günlerin hava durumlarını ekliyor olacağım.^Ayrıca senin kendi takvimlerinde de görünür olacaktır.^-Demetrius",
+    "AdvancedWeatherForecast.Letter.Title": "Demetrius'un Gelişmiş Hava Tahmini",
+    "AdvancedWeatherForecast.ConfigMenu.DaysInAdvanceForecast.Name": "Öncesinden tahmin edilecek gün sayısı",
+    "AdvancedWeatherForecast.ConfigMenu.DaysInAdvanceForecast.Tooltip": "Kaç gün öncesinden hava tahminlerini öğrenebileceğin. 1'den 27'ye kadar bir sayı girebilirsin."
+}

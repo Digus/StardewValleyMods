@@ -48,7 +48,7 @@ namespace AdvancedWeatherForecastMod.common
                     , Text = "AdvancedWeatherForecast.Letter"
                     , Title = "AdvancedWeatherForecast.Letter.Title"
                     , I18N = I18N
-                }, (l) => !Game1.player.mailReceived.Contains(l.Id)
+                }, (l) => !Game1.player.mailReceived.Contains(l.Id) && !ModConfig.DisableForecastLetter
                 , (l) => Game1.player.mailReceived.Add(l.Id)
             );
         }
@@ -61,6 +61,7 @@ namespace AdvancedWeatherForecastMod.common
             api.Register(manifest, () => ModConfig = new ModConfig(), () => Helper.WriteConfig(ModConfig));
 
             api.AddNumberOption(manifest, () => ModConfig.DaysInAdvanceForecast, (val) => ModConfig.DaysInAdvanceForecast = val, () => I18N.Get("AdvancedWeatherForecast.ConfigMenu.DaysInAdvanceForecast.Name"), () => I18N.Get("AdvancedWeatherForecast.ConfigMenu.DaysInAdvanceForecast.Tooltip") , 1, 27);
+            api.AddBoolOption(manifest, () => ModConfig.DisableForecastLetter, (val) => ModConfig.DisableForecastLetter = val, () => I18N.Get("AdvancedWeatherForecast.ConfigMenu.DisableForecastLetter.Name"), () => I18N.Get("AdvancedWeatherForecast.ConfigMenu.DisableForecastLetter.Tooltip"));
         }
     }
 }
