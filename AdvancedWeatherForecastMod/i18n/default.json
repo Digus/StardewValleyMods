@@ -2,5 +2,7 @@
     "AdvancedWeatherForecast.Letter": "Dear @,^^In order to better study the plants and animals of the valley, I have recently installed an advanced weather forecasting system in my lab.^I thought that information might be useful for you too, so from now on I shall be updating the town's calendar with the forecast of the following days.^That information should also reflect on your personal calendars.^   -Demetrius",
     "AdvancedWeatherForecast.Letter.Title": "Demetrius' Advanced Weather Forecast",
     "AdvancedWeatherForecast.ConfigMenu.DaysInAdvanceForecast.Name": "Days in advance forecast",
-    "AdvancedWeatherForecast.ConfigMenu.DaysInAdvanceForecast.Tooltip": "How many days in advance you can know the weather forecast. You can set a number from 1 to 27."
+    "AdvancedWeatherForecast.ConfigMenu.DaysInAdvanceForecast.Tooltip": "How many days in advance you can know the weather forecast. You can set a number from 1 to 27.",
+    "AdvancedWeatherForecast.ConfigMenu.DisableForecastLetter.Name": "Disable Forecast Letter",
+    "AdvancedWeatherForecast.ConfigMenu.DisableForecastLetter.Tooltip": "You won't receive the letter from Demetrius explaning about the advanced forecast."
 }
