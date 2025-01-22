@@ -4,5 +4,14 @@
     "AdvancedWeatherForecast.ConfigMenu.DaysInAdvanceForecast.Name": "Janela de previsão em dias",
     "AdvancedWeatherForecast.ConfigMenu.DaysInAdvanceForecast.Tooltip": "Com quantos dias de antecedêcia você pode ver a previsão. Pode ser um número de 1 a 27 dias.",
     "AdvancedWeatherForecast.ConfigMenu.DisableForecastLetter.Name": "Desabilitar carta",
-    "AdvancedWeatherForecast.ConfigMenu.DisableForecastLetter.Tooltip": "Você não receberá a carta do Demetrius explicando sobre a previsão do tempo avançada."
+    "AdvancedWeatherForecast.ConfigMenu.DisableForecastLetter.Tooltip": "Você não receberá a carta do Demetrius explicando sobre a previsão do tempo avançada.",
+    "AdvancedWeatherForecast.WeatherHoverName.Sun": "Ensolarado",
+    "AdvancedWeatherForecast.WeatherHoverName.Wind": "Ventoso",
+    "AdvancedWeatherForecast.WeatherHoverName.Rain": "Chuvoso",
+    "AdvancedWeatherForecast.WeatherHoverName.Snow": "Nevoso",
+    "AdvancedWeatherForecast.WeatherHoverName.Festival": "Festival",
+    "AdvancedWeatherForecast.WeatherHoverName.Storm": "Tempestuoso",
+    "AdvancedWeatherForecast.WeatherHoverName.GreenRain": "Anômalo",
+    "AdvancedWeatherForecast.HoverMessage.CurrentSeason": "Previsão: {{weather}}",
+    "AdvancedWeatherForecast.HoverMessage.NextSeason": "Previsão na próxima estação: {{weather}}"
 }

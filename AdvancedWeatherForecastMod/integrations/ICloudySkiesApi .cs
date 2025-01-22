@@ -5,7 +5,7 @@ using StardewValley.Network;
 using System;
 using StardewValley.GameData.Locations;
 
-namespace AdvancedWeatherForecastMod.api;
+namespace AdvancedWeatherForecastMod.integrations;
 
 [Flags]
 public enum LightingTweenMode
@@ -27,7 +27,7 @@ public interface ICloudySkiesApi
     /// Enumerate all the custom weather conditions we know about.
     /// </summary>
     IEnumerable<IWeatherData> GetAllCustomWeather();
-    
+
     /// <summary>
     /// Try to get a custom weather condition by id.
     /// </summary>
