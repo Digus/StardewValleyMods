@@ -131,85 +131,83 @@ namespace AdvancedWeatherForecastMod.overrides
 
         public static void performHoverAction_postfix(Billboard __instance,int x, int y)
         {
-            foreach (ClickableTextureComponent c in __instance.calendarDays)
+            if (__instance.calendarDays == null) return;
+            foreach (ClickableTextureComponent component in __instance.calendarDays)
             {
-                if (c.bounds.Contains(x, y))
+                if (!component.bounds.Contains(x, y)) continue;
+                int componentDay = component.myID;
+                if (componentDay == Game1.dayOfMonth) return;
+                __instance.calendarDayData.TryGetValue(componentDay, out var day);
+                bool wedding = day?.Type.HasFlag(BillboardEventType.Wedding) ?? false;
+                if (wedding) return;
+                string weather;
+                var hoverTextField = DataLoader.Helper.Reflection.GetField<string>(__instance, "hoverText");
+                bool nextSeason = false;
+                if (componentDay == Game1.dayOfMonth + 1)
                 {
-                    if (c.myID == Game1.dayOfMonth) return;
-                    __instance.calendarDayData.TryGetValue(c.myID, out var day);
-                    bool wedding = day?.Type.HasFlag(BillboardEventType.Wedding) ?? false;
-                    if (wedding) return;
-                    int weatherIcon = 0;
-                    string weather;
-                    
-                    var hoverTextField = DataLoader.Helper.Reflection.GetField<string>(__instance, "hoverText");
-                    bool nextSeason = false;
-                    if (c.myID == Game1.dayOfMonth + 1)
+                    weather = Game1.currentLocation.GetWeather().WeatherForTomorrow;
+                }
+                else
+                {
+                    var weatherData = WeatherDataRepository.GetWeatherData();
+                    var locationWeatherData = weatherData[Game1.currentLocation.locationContextId];
+                    if (componentDay > Game1.dayOfMonth)
                     {
-                        weather = Game1.currentLocation.GetWeather().WeatherForTomorrow;
+                        if (!locationWeatherData.ContainsKey(Game1.Date.TotalDays + componentDay - Game1.dayOfMonth)) continue;
+                        weather = locationWeatherData[Game1.Date.TotalDays + componentDay - Game1.dayOfMonth];
                     }
                     else
                     {
-                        var weatherData = WeatherDataRepository.GetWeatherData();
-                        var locationWeatherData = weatherData[Game1.currentLocation.locationContextId];
-                        if (c.myID > Game1.dayOfMonth)
+                        nextSeason = true;
+                        if (!locationWeatherData.ContainsKey(Game1.Date.TotalDays + 28 + componentDay - Game1.dayOfMonth)) continue;
+                        weather = locationWeatherData[Game1.Date.TotalDays + 28 + componentDay - Game1.dayOfMonth];
+                    }
+                }
+
+                var weatherHoverText = "";
+                switch (weather)
+                {
+                    case Game1.weather_green_rain:
+                        weatherHoverText += DataLoader.I18N.Get("AdvancedWeatherForecast.WeatherHoverName.GreenRain");
+                        break;
+                    case Game1.weather_festival:
+                        weatherHoverText += DataLoader.I18N.Get("AdvancedWeatherForecast.WeatherHoverName.Festival");
+                        break;
+                    case Game1.weather_lightning:
+                        weatherHoverText += DataLoader.I18N.Get("AdvancedWeatherForecast.WeatherHoverName.Storm");
+                        break;
+                    case Game1.weather_snow:
+                        weatherHoverText += DataLoader.I18N.Get("AdvancedWeatherForecast.WeatherHoverName.Snow");
+                        break;
+                    case Game1.weather_rain:
+                        weatherHoverText += DataLoader.I18N.Get("AdvancedWeatherForecast.WeatherHoverName.Rain");
+                        break;
+                    case Game1.weather_debris:
+                        if (componentDay >= Game1.dayOfMonth)
                         {
-                            if (!locationWeatherData.ContainsKey(Game1.Date.TotalDays + c.myID - Game1.dayOfMonth)) continue;
-                            weather = locationWeatherData[Game1.Date.TotalDays + c.myID - Game1.dayOfMonth];
+                            if (Game1.IsWinter) weatherHoverText += DataLoader.I18N.Get("AdvancedWeatherForecast.WeatherHoverName.Snow");
+                            else weatherHoverText += DataLoader.I18N.Get("AdvancedWeatherForecast.WeatherHoverName.Wind");
                         }
                         else
                         {
-                            nextSeason = true;
-                            if (!locationWeatherData.ContainsKey(Game1.Date.TotalDays + 28 + c.myID - Game1.dayOfMonth)) continue;
-                            weather = locationWeatherData[Game1.Date.TotalDays + 28 + c.myID - Game1.dayOfMonth];
+                            if (Game1.IsFall) weatherHoverText += DataLoader.I18N.Get("AdvancedWeatherForecast.WeatherHoverName.Snow");
+                            else weatherHoverText += DataLoader.I18N.Get("AdvancedWeatherForecast.WeatherHoverName.Wind");
                         }
-                    }
+                        break;
+                    default:
+                        if (DataLoader.CloudySkiesApi != null && weather != null)
+                        {
+                            if (DataLoader.CloudySkiesApi.TryGetWeather(weather, out IWeatherData? cloudySkyWeatherData))
+                            {
+                                weatherHoverText += cloudySkyWeatherData.DisplayName;
+                                break;
+                            }
+                        }
+                        weatherHoverText += DataLoader.I18N.Get("AdvancedWeatherForecast.WeatherHoverName.Sun");
+                        break;
+                };
 
-                    var weatherHoverText = "";
-                    switch (weather)
-                    {
-                        case Game1.weather_green_rain:
-                            weatherHoverText += DataLoader.I18N.Get("AdvancedWeatherForecast.WeatherHoverName.GreenRain");
-                            break;
-                        case Game1.weather_festival:
-                            weatherHoverText += DataLoader.I18N.Get("AdvancedWeatherForecast.WeatherHoverName.Festival");
-                            break;
-                        case Game1.weather_lightning:
-                            weatherHoverText += DataLoader.I18N.Get("AdvancedWeatherForecast.WeatherHoverName.Storm");
-                            break;
-                        case Game1.weather_snow:
-                            weatherHoverText += DataLoader.I18N.Get("AdvancedWeatherForecast.WeatherHoverName.Snow");
-                            break;
-                        case Game1.weather_rain:
-                            weatherHoverText += DataLoader.I18N.Get("AdvancedWeatherForecast.WeatherHoverName.Rain");
-                            break;
-                        case Game1.weather_debris:
-                            if (c.myID >= Game1.dayOfMonth)
-                            {
-                                if (Game1.IsWinter) weatherHoverText += DataLoader.I18N.Get("AdvancedWeatherForecast.WeatherHoverName.Snow");
-                                else weatherHoverText += DataLoader.I18N.Get("AdvancedWeatherForecast.WeatherHoverName.Wind");
-                            }
-                            else
-                            {
-                                if (Game1.IsFall) weatherHoverText += DataLoader.I18N.Get("AdvancedWeatherForecast.WeatherHoverName.Snow");
-                                else weatherHoverText += DataLoader.I18N.Get("AdvancedWeatherForecast.WeatherHoverName.Wind");
-                            }
-                            break;
-                        default:
-                            if (DataLoader.CloudySkiesApi != null && weather != null)
-                            {
-                                if (DataLoader.CloudySkiesApi.TryGetWeather(weather, out IWeatherData? cloudySkyWeatherData))
-                                {
-                                    weatherHoverText += cloudySkyWeatherData.DisplayName;
-                                    break;
-                                }
-                            }
-                            weatherHoverText += DataLoader.I18N.Get("AdvancedWeatherForecast.WeatherHoverName.Sun");
-                            break;
-                    };
-
-                    hoverTextField.SetValue((hoverTextField.GetValue() + Environment.NewLine + DataLoader.I18N.Get($"AdvancedWeatherForecast.HoverMessage.{(nextSeason?"NextSeason":"CurrentSeason")}",new {weather = weatherHoverText})).Trim());
-                }
+                hoverTextField.SetValue((hoverTextField.GetValue() + Environment.NewLine + DataLoader.I18N.Get($"AdvancedWeatherForecast.HoverMessage.{(nextSeason?"NextSeason":"CurrentSeason")}",new {weather = weatherHoverText})).Trim());
             }
         }
     }
