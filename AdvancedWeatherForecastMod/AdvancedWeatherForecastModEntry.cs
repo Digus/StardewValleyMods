@@ -62,6 +62,11 @@ namespace AdvancedWeatherForecastMod
                 postfix: new HarmonyMethod(typeof(BillboardOverrides), nameof(BillboardOverrides.draw))
             );
 
+            harmony.Patch(
+                original: AccessTools.Method(typeof(Billboard), nameof(Billboard.performHoverAction)),
+                postfix: new HarmonyMethod(typeof(BillboardOverrides), nameof(BillboardOverrides.performHoverAction_postfix))
+            );
+
             ModHelper.ConsoleCommands.Add("world_clear_weatherforecastdata", "Clear weather forecast for all locations", (c, a) => WeatherDataRepository.ClearWeatherData());
             ModHelper.ConsoleCommands.Add("world_calculate_weatherforecast", "Calculate weather forecast for all locations. Won't override data, needs to clear first.", (c, a) => WeatherForecastController.CalculateAllForecast());
 

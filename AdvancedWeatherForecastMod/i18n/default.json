@@ -4,5 +4,15 @@
     "AdvancedWeatherForecast.ConfigMenu.DaysInAdvanceForecast.Name": "Days in advance forecast",
     "AdvancedWeatherForecast.ConfigMenu.DaysInAdvanceForecast.Tooltip": "How many days in advance you can know the weather forecast. You can set a number from 1 to 27.",
     "AdvancedWeatherForecast.ConfigMenu.DisableForecastLetter.Name": "Disable Forecast Letter",
-    "AdvancedWeatherForecast.ConfigMenu.DisableForecastLetter.Tooltip": "You won't receive the letter from Demetrius explaning about the advanced forecast."
+    "AdvancedWeatherForecast.ConfigMenu.DisableForecastLetter.Tooltip": "You won't receive the letter from Demetrius explaning about the advanced forecast.",
+    "AdvancedWeatherForecast.WeatherHoverName.Sun": "Sunny",
+    "AdvancedWeatherForecast.WeatherHoverName.Wind": "Windy",
+    "AdvancedWeatherForecast.WeatherHoverName.Rain": "Rainy",
+    "AdvancedWeatherForecast.WeatherHoverName.Snow": "Snowy",
+    "AdvancedWeatherForecast.WeatherHoverName.Festival": "Festival",
+    "AdvancedWeatherForecast.WeatherHoverName.Storm": "Stormy",
+    "AdvancedWeatherForecast.WeatherHoverName.GreenRain": "Anomalous",
+    "AdvancedWeatherForecast.HoverMessage.CurrentSeason": "Forecast: {{weather}}",
+    "AdvancedWeatherForecast.HoverMessage.NextSeason": "Next season forecast: {{weather}}"
+
 }
