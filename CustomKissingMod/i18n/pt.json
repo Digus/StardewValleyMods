@@ -1,3 +1,65 @@
 ﻿{
-	"Jealousy.Dialog":"Então...ouvi dizer que você andou beijando alguém hoje...$s#$e#Devo desconfiar de você?$s#$e#...$a"
+	"Jealousy.Dialog": "Então...ouvi dizer que você andou beijando alguém hoje...$s#$e#Devo desconfiar de você?$s#$e#...$a",
+	"CustomKissingMod.ConfigMenu.RequirementsSection.Text": "Requsitos:",
+	"CustomKissingMod.ConfigMenu.RequirementsSection.Tooltip": "Configurações de requisitos para beijar um NPC.",
+	"CustomKissingMod.ConfigMenu.DisableDatingRequirement.Text": "Namorando",
+	"CustomKissingMod.ConfigMenu.DisableDatingRequirement.Tooltip": "Se você precisa estar namorando o NPC para beija-lo",
+	"CustomKissingMod.ConfigMenu.DisableEventRequirement.Text": "Evento",
+	"CustomKissingMod.ConfigMenu.DisableEventRequirement.Tooltip": "Se você precisa ter visto um evento específico com o NPC para beija-lo. O evento é definido nas configurações do NPC.",
+	"CustomKissingMod.ConfigMenu.RequiredFriendshipLevel.Text": "Nível de amizade",
+	"CustomKissingMod.ConfigMenu.RequiredFriendshipLevel.Tooltip": "Quantos corações de amizade você precisa para beijar um NPC. Coloque zero para desabilitar.",
+	"CustomKissingMod.ConfigMenu.JealousySection.Text": "Ciúmes:",
+	"CustomKissingMod.ConfigMenu.JealousySection.Tooltip": "Configurações de ciúmes",
+	"CustomKissingMod.ConfigMenu.DisableJealousy.Text": "Ciúmes",
+	"CustomKissingMod.ConfigMenu.DisableJealousy.Tooltip": "Se o(a) esposo(a) deve sentir ciúmes se você beijar outra pessoa. Sempre vai acontecer se ele(a) estiver no mesmo local, caso contrário é baseado em sorte.",
+	"CustomKissingMod.ConfigMenu.JealousyFriendshipPoints.Text": "Pontos de amizade por ciúmes",
+	"CustomKissingMod.ConfigMenu.JealousyFriendshipPoints.Tooltip": "A quantidade de pontos de amizade que você perde com o(a) esposo(a) se ele(a) descobrir sobre o beijo. Para referência, 250 é um coração completo.",
+	"CustomKissingMod.ConfigMenu.BenefitsSection.Text": "Benefícios:",
+	"CustomKissingMod.ConfigMenu.BenefitsSection.Tooltip": "Configurações de efeitos positivos ao beijar um NPC.",
+	"CustomKissingMod.ConfigMenu.DisableExhaustionReset.Text": "Curar Exaustão",
+	"CustomKissingMod.ConfigMenu.DisableExhaustionReset.Tooltip": "Marque se você quer que o beijo remova a exaustão. Uma vez por dia por NPC.",
+	"CustomKissingMod.ConfigMenu.KissingFriendshipPoints.Text": "Pontos de amizade por beijar",
+	"CustomKissingMod.ConfigMenu.KissingFriendshipPoints.Tooltip": "Quantos pontos de amizade você ganha com um NPC por beija-lo. Para referência, 250 é um coração completo.",
+	"CustomKissingMod.ConfigMenu.GeneralSection.Text": "Geral:",
+	"CustomKissingMod.ConfigMenu.GeneralSection.Tooltip": "Outras configurações.",
+	"CustomKissingMod.ConfigMenu.EnableContentPacksOverrides.Text": "Sobrescrita por Content Packs",
+	"CustomKissingMod.ConfigMenu.EnableContentPacksOverrides.Tooltip": "Se content packs podem sobrescrever suas configurações. Se desabilitado, você deve resolver os conflitos manualmente. Se abilitado o mod sempre sobrescreverá a configuração do último content pack carregado. Olhe o log para verificar os alertas de conflito.",
+	"CustomKissingMod.ConfigMenu.NpcListSection.Text": "Lista de NPC:",
+	"CustomKissingMod.ConfigMenu.NpcListSection.Tooltip": "Lista de configurações de NPC.",
+
+	"CustomKissingMod.ConfigMenu.NpcOperationsSection.Text": "Operações na lita de NPC:",
+	"CustomKissingMod.ConfigMenu.NpcOperationsSection.Tooltip": "Operações para incluir e remover NPCs da lista de configuração acima. As operações realizadas na lista persistirão durante a sessão de jogo, mesmo que você não salve as alterações. Se quiser reverter qualquer alteração feita na lista antes de salvar, reinicie o jogo.",
+	"CustomKissingMod.ConfigMenu.NpcOperations.NameNpc.Text": "Nome do NPC",
+	"CustomKissingMod.ConfigMenu.NpcOperations.NameNpc.Tooltip": "O nome do NPC para executar a operação. O nome precisa ser o nome interno do NPC, não o nome traduzido.",
+	"CustomKissingMod.ConfigMenu.NpcOperations.AddNpc.Text": "Adicionar NPC",
+	"CustomKissingMod.ConfigMenu.NpcOperations.AddNpc.Tooltip": "Adiciona uma configuração de NPC à lista. Precisa ser um nome de NPC exista no jogo e já não esteja na lista.",
+	"CustomKissingMod.ConfigMenu.NpcOperations.RemoveNpc.Text": "Remover NPC",
+	"CustomKissingMod.ConfigMenu.NpcOperations.RemoveNpc.Tooltip": "Remove a configuração de NPC da lista. Precisa ser um nome que esteja lista.",
+	"CustomKissingMod.ConfigMenu.NpcOperations.Empty.Message": "'Nome do NPC' não pode estar vazio.",
+	"CustomKissingMod.ConfigMenu.NpcOperations.ExistsList.Message": "O NPC já existe na lista.",
+	"CustomKissingMod.ConfigMenu.NpcOperations.NotExistsList.Message": "O NPC não existe na lista.",
+	"CustomKissingMod.ConfigMenu.NpcOperations.NotExistsGame.Message": "O NPC não existe no jogo.",
+
+	"CustomKissingMod.ConfigMenu.NpcConfig.Frame.Text": "NPC Frame",
+	"CustomKissingMod.ConfigMenu.NpcConfig.Frame.Tooltip": "O frame do NPC que será usado quando o fazendeiro beijar o NPC. Use a rolagem para encontrar o frame que melhor se adequa ao propósito. Nem todos os valores podem ter um sprite válido do NPC.",
+	"CustomKissingMod.ConfigMenu.NpcConfig.FrameDirectionRight.Text": "Frame virado para direita",
+	"CustomKissingMod.ConfigMenu.NpcConfig.FrameDirectionRight.Tooltip": "Marque se o frame do NPC que você escolheu estiver virado para a direita. Caso contrário, o fazendeiro beijará as costas do NPC.",
+	"CustomKissingMod.ConfigMenu.NpcConfig.BeachFrame.Text": "NPC Frame (praia)",
+	"CustomKissingMod.ConfigMenu.NpcConfig.BeachFrame.Tooltip": "O frame de praia do NPC que será usado quando o fazendeiro beijar o NPC. Use a rolagem para encontrar o frame que melhor se adequa ao propósito. Nem todos os valores podem ter um sprite válido do NPC.",
+	"CustomKissingMod.ConfigMenu.NpcConfig.BeachFrameDirectionRight.Text": "Frame (praia) v. p/ direita",
+	"CustomKissingMod.ConfigMenu.NpcConfig.BeachFrameDirectionRight.Tooltip": "Marque se o frame de praia do NPC que você escolheu estiver virado para a direita. Caso contrário, o fazendeiro beijará as costas do NPC.",
+	"CustomKissingMod.ConfigMenu.NpcConfig.RequiredEvent.Text": "Evento requerido",
+	"CustomKissingMod.ConfigMenu.NpcConfig.RequiredEvent.Tooltip": "O identificador do evento necessário para o NPC poder ser beijado. Deixe em branco para não exigir um evento. Normalmente se deve utilizar o evento de 10 corações do NPC.",
+	"CustomKissingMod.ConfigMenu.NpcConfig.Back.Text": "Voltar para a página principal",
+	"CustomKissingMod.ConfigMenu.NpcConfig.Back.Tooltip": "Voltar para a página principal"
+
+
+
+
+
+
+
+
+
+
 }
