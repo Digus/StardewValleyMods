@@ -31,6 +31,8 @@ namespace CustomKissingMod
                     Name = "Abigail",
                     Frame = 33,
                     FrameDirectionRight = false,
+                    BeachFrame = 12,
+                    BeachFrameDirectionRight = false,
                     RequiredEvent = "901756"
                 },
                 new NpcConfig
@@ -38,6 +40,8 @@ namespace CustomKissingMod
                     Name = "Alex",
                     Frame = 42,
                     FrameDirectionRight = true,
+                    BeachFrame = 4,
+                    BeachFrameDirectionRight = true,
                     RequiredEvent = "911526"
                 },
                 new NpcConfig
@@ -45,6 +49,8 @@ namespace CustomKissingMod
                     Name = "Elliott",
                     Frame = 35,
                     FrameDirectionRight = false,
+                    BeachFrame = 12,
+                    BeachFrameDirectionRight = false,
                     RequiredEvent = "43"
                 },
                 new NpcConfig
@@ -52,6 +58,8 @@ namespace CustomKissingMod
                     Name = "Emily",
                     Frame = 33,
                     FrameDirectionRight = false,
+                    BeachFrame = 12,
+                    BeachFrameDirectionRight = false,
                     RequiredEvent = "2123343"
                 },
                 new NpcConfig
@@ -59,6 +67,8 @@ namespace CustomKissingMod
                     Name = "Haley",
                     Frame = 28,
                     FrameDirectionRight = true,
+                    BeachFrame = 4,
+                    BeachFrameDirectionRight = true,
                     RequiredEvent = "15"
                 },
                 new NpcConfig
@@ -66,6 +76,8 @@ namespace CustomKissingMod
                     Name = "Harvey",
                     Frame = 31,
                     FrameDirectionRight = false,
+                    BeachFrame = 12,
+                    BeachFrameDirectionRight = false,
                     RequiredEvent = "528052"
                 },
                 new NpcConfig
@@ -73,6 +85,8 @@ namespace CustomKissingMod
                     Name = "Leah",
                     Frame = 25,
                     FrameDirectionRight = true,
+                    BeachFrame = 4,
+                    BeachFrameDirectionRight = true,
                     RequiredEvent = "54"
                 },
                 new NpcConfig
@@ -80,6 +94,8 @@ namespace CustomKissingMod
                     Name = "Maru",
                     Frame = 28,
                     FrameDirectionRight = false,
+                    BeachFrame = 12,
+                    BeachFrameDirectionRight = false,
                     RequiredEvent = "10"
                 },
                 new NpcConfig
@@ -87,6 +103,8 @@ namespace CustomKissingMod
                     Name = "Penny",
                     Frame = 35,
                     FrameDirectionRight = true,
+                    BeachFrame = 4,
+                    BeachFrameDirectionRight = true,
                     RequiredEvent = "38"
                 },
                 new NpcConfig
@@ -94,6 +112,8 @@ namespace CustomKissingMod
                     Name = "Sam",
                     Frame = 36,
                     FrameDirectionRight = true,
+                    BeachFrame = 4,
+                    BeachFrameDirectionRight = true,
                     RequiredEvent = "233104"
                 },
                 new NpcConfig
@@ -101,6 +121,8 @@ namespace CustomKissingMod
                     Name = "Sebastian",
                     Frame = 40,
                     FrameDirectionRight = false,
+                    BeachFrame = 12,
+                    BeachFrameDirectionRight = false,
                     RequiredEvent = "384882"
                 },
                 new NpcConfig
@@ -108,6 +130,8 @@ namespace CustomKissingMod
                     Name = "Shane",
                     Frame = 34,
                     FrameDirectionRight = false,
+                    BeachFrame = 12,
+                    BeachFrameDirectionRight = false,
                     RequiredEvent = "9581348"
                 }
             };
