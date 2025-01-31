@@ -17,6 +17,7 @@ using StardewModdingAPI.Events;
 using StardewValley;
 using StardewValley.GameData.FarmAnimals;
 using StardewValley.GameData.Objects;
+using StardewValley.GameData.Shops;
 using StardewValley.Locations;
 
 namespace AnimalHusbandryMod.common
@@ -105,6 +106,7 @@ namespace AnimalHusbandryMod.common
             Helper.GameContent.InvalidateCache("Data/Tools");
             Helper.GameContent.InvalidateCache("Data/Bundles");
             Helper.GameContent.InvalidateCache("Data/NPCGiftTastes");
+            Helper.GameContent.InvalidateCache("Data/Shops");
         }
 
         public void Edit(object sender, AssetRequestedEventArgs args)
@@ -230,6 +232,45 @@ namespace AnimalHusbandryMod.common
                 args.Edit(asset =>
                 {
                     AddCustomAnimalsTemplate((IDictionary<string, FarmAnimalData>)(isLoadingFarmAnimals ? asset.Data : null));
+                });
+            }
+            else if (args.NameWithoutLocale.IsEquivalentTo("Data/Shops")) {
+                args.Edit(asset => {
+                    if (!ModConfig.EnableMarnieTools) return;
+                    var items = asset.AsDictionary<string, ShopData>().Data["AnimalShop"].Items;
+                    var shears = items.FirstOrDefault(i => i.Id == "(T)Shears");
+                    var index = items.IndexOf(shears);
+                    var price = shears.Price;
+                    if (!ModConfig.DisableMeat) {
+                        items.Insert(index + 1, new ShopItemData() {
+                            TradeItemAmount = 1,
+                            Price = price,
+                            AvailableStock = 1,
+                            Condition = $"!PLAYER_HAS_ITEM Current (T){MeatCleaverOverrides.MeatCleaverItemId}",
+                            Id = $"(T){MeatCleaverOverrides.MeatCleaverItemId}",
+                            ItemId = $"(T){MeatCleaverOverrides.MeatCleaverItemId}"
+                        });
+                    }
+                    if (!ModConfig.DisablePregnancy) {
+                        items.Insert(index + 2, new ShopItemData() {
+                            TradeItemAmount = 1,
+                            Price = price,
+                            AvailableStock = 1,
+                            Condition = $"!PLAYER_HAS_ITEM Current (T){InseminationSyringeOverrides.InseminationSyringeItemId}",
+                            Id = $"(T){InseminationSyringeOverrides.InseminationSyringeItemId}",
+                            ItemId = $"(T){InseminationSyringeOverrides.InseminationSyringeItemId}"
+                        });
+                    }
+                    if (!ModConfig.DisableTreats) {
+                        items.Insert(index + 3, new ShopItemData() {
+                            TradeItemAmount = 1,
+                            Price = price / 2,
+                            AvailableStock = 1,
+                            Condition = $"!PLAYER_HAS_ITEM Current (T){FeedingBasketOverrides.FeedingBasketItemId}",
+                            Id = $"(T){FeedingBasketOverrides.FeedingBasketItemId}",
+                            ItemId = $"(T){FeedingBasketOverrides.FeedingBasketItemId}"
+                        });
+                    }
                 });
             }
         }
@@ -448,6 +489,8 @@ namespace AnimalHusbandryMod.common
             api.AddBoolOption(manifest, () => DataLoader.ModConfig.DisableMeatToolLetter, (bool val) => DataLoader.ModConfig.DisableMeatToolLetter = val, () => "Disable Meat Tool Letter", () => "Disable the sending of the meat cleaver or the meat wand. Meat will only be able to be obtained through the meat button.");
 
             api.AddBoolOption(manifest, () => DataLoader.ModConfig.DisableMeatButton, (bool val) => DataLoader.ModConfig.DisableMeatButton = val, () => "Disable Meat Button", () => "Disable the meat button showing in the animal query menu. Meat will only be able to be obtained using the tools.");
+
+            api.AddBoolOption(manifest, () => DataLoader.ModConfig.EnableMarnieTools, (bool val) => DataLoader.ModConfig.EnableMarnieTools = val, () => "Marnie Sells Tools", () => "Add the meat cleaver/wand, syringe, and basket to Marnie's shop inventory, useful as an alternative if you disable letters.");
 
             api.AddKeybind(manifest, () => DataLoader.ModConfig.AddMeatCleaverToInventoryKey ?? SButton.None, (SButton val) => DataLoader.ModConfig.AddMeatCleaverToInventoryKey = val == SButton.None ? (SButton?)null : val, () => "Add Meat Tool Key", () => "Set a keyboard key to directly add the Meat Cleaver/Want to your inventory.");
 
