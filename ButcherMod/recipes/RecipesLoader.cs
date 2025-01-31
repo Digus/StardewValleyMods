@@ -101,14 +101,25 @@ namespace AnimalHusbandryMod.recipes
                     }
                 }
 
-                if (meatRecipeNumber > 0 && Game1.hudMessages.Count > 0)
+                if (meatRecipeNumber > 0)
                 {
-                    Regex regex = new Regex(@"[\d]+");
-                    var matchCollection = regex.Matches(Game1.hudMessages.Last()?.message);
-                    if (int.TryParse(matchCollection[0].Value, out var oldNumber))
+                    if (Game1.hudMessages.Count > 0)
                     {
-                        Game1.hudMessages.Last().message = Game1.content.LoadString("Strings\\1_6_Strings:QoS_Cookbook", meatRecipeNumber + oldNumber);
+                        Regex regex = new Regex(@"[\d]+");
+                        var message = Game1.hudMessages.Last()?.message;
+                        if (message != null)
+                        {
+                            var matchCollection = regex.Matches(message);
+                            var messageNumber = meatRecipeNumber;
+                            if (int.TryParse(matchCollection[0].Value, out var oldNumber))
+                            {
+                                messageNumber += oldNumber;
+                            }
+                            Game1.hudMessages.Last().message = Game1.content.LoadString("Strings\\1_6_Strings:QoS_Cookbook", messageNumber);
+                            return;
+                        }
                     }
+                    Game1.showGlobalMessage(Game1.content.LoadString("Strings\\1_6_Strings:QoS_Cookbook", meatRecipeNumber));
                 }
             }
             else

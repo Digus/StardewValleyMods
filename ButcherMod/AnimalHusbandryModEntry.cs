@@ -419,6 +419,7 @@ namespace AnimalHusbandryMod
         }
 
         /// <summary>Raised before the game is saved.</summary>
+        /// <summary>Raised before the game is saved.</summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnSaving(object sender, SavingEventArgs e)

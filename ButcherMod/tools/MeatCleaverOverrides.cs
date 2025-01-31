@@ -68,46 +68,9 @@ namespace AnimalHusbandryMod.tools
 
             if (!DataLoader.ModConfig.DisableMeat && who != null && Game1.player.Equals(who))
             {
-                if (location is Farm farm)
+                if (location is not null)
                 {
-                    foreach (FarmAnimal farmAnimal in farm.animals.Values)
-                    {
-                        if (farmAnimal.GetBoundingBox().Intersects(rectangle))
-                        {
-                            if (TempAnimals.ContainsKey(meatCleaverId) && farmAnimal == TempAnimals[meatCleaverId])
-                            {
-                                Animals[meatCleaverId] = farmAnimal;
-                            }
-                            else
-                            {
-                                TempAnimals[meatCleaverId] = farmAnimal;
-                                if (who != null && Game1.player.Equals(who))
-                                {
-                                    ICue hurtSound;
-                                    if (!DataLoader.ModConfig.Softmode)
-                                    {
-                                        if (farmAnimal.GetSoundId() is { } soundId)
-                                        {
-                                            hurtSound = Game1.soundBank.GetCue(soundId);
-                                            hurtSound.SetVariable("Pitch", 1800);
-                                            hurtSound.Play();
-                                        }
-                                    }
-                                    else
-                                    {
-                                        hurtSound = Game1.soundBank.GetCue("toolCharge");
-                                        hurtSound.SetVariable("Pitch", 5000f);
-                                        hurtSound.Play();
-                                    }
-                                }
-                            }
-                            break;
-                        }
-                    }
-                }
-                else if (location is AnimalHouse animalHouse)
-                {
-                    foreach (FarmAnimal farmAnimal in animalHouse.animals.Values)
+                    foreach (FarmAnimal farmAnimal in location.animals.Values)
                     {
                         if (farmAnimal.GetBoundingBox().Intersects(rectangle))
                         {

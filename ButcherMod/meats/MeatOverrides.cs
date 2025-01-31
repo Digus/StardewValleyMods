@@ -20,6 +20,10 @@ namespace AnimalHusbandryMod.meats
             {
                 float num = (float)(int)((double)__instance.Price * (1.0 + (double)__instance.Quality * 0.25));
                 num *= 1.2f;
+                if (num > 0f)
+                {
+                    num = Math.Max(1f, num * Game1.MasterPlayer.difficultyModifier);
+                }
                 __result = (int)num;
                 return false;                
             }
