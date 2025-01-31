@@ -9,6 +9,7 @@ using Netcode;
 using StardewModdingAPI;
 using StardewValley;
 using StardewValley.Characters;
+using StardewValley.ItemTypeDefinitions;
 using StardewValley.Locations;
 using StardewValley.Tools;
 using DataLoader = AnimalHusbandryMod.common.DataLoader;
@@ -76,9 +77,9 @@ namespace AnimalHusbandryMod.tools
 
             if (!DataLoader.ModConfig.DisableTreats)
             {
-                if (location is Farm farm)
+                if (location is not null)
                 {
-                    foreach (FarmAnimal farmAnimal in farm.animals.Values)
+                    foreach (FarmAnimal farmAnimal in location.animals.Values)
                     {
                         if (farmAnimal.GetBoundingBox().Intersects(rectangle))
                         {
@@ -88,7 +89,7 @@ namespace AnimalHusbandryMod.tools
                     }
                     if (!Animals.ContainsKey(feedingBasketId) || Animals[feedingBasketId] == null)
                     {
-                        foreach (Pet localPet in farm.characters.Where(i => i is Pet))
+                        foreach (Pet localPet in location.characters.Where(i => i is Pet))
                         {
                             if (localPet.GetBoundingBox().Intersects(rectangle))
                             {
@@ -98,35 +99,17 @@ namespace AnimalHusbandryMod.tools
                         }
                     }
                 }
-                else if (location is AnimalHouse animalHouse)
-                {
-                    foreach (FarmAnimal farmAnimal in animalHouse.animals.Values)
-                    {
-                        if (farmAnimal.GetBoundingBox().Intersects(rectangle))
-                        {
-                            Animals[feedingBasketId] = farmAnimal;
-                            break;
-                        }
-                    }
-                }
-                else if (location is FarmHouse)
-                {
-                    foreach (Pet localPet in location.characters.Where(i => i is Pet))
-                    {
-                        if (localPet.GetBoundingBox().Intersects(rectangle))
-                        {
-                            Pets[feedingBasketId] = localPet;
-                            break;
-                        }
-                    }
-                }
             }
 
             Animals.TryGetValue(feedingBasketId, out FarmAnimal animal);
             if (animal != null)
             {
                 string dialogue = "";
-                if (__instance.attachments[0] == null)
+                if (Game1.timeOfDay >= 1900 && !animal.isMoving())
+                {
+                    dialogue = Game1.content.LoadString("Strings\\FarmAnimals:TryingToSleep", animal.displayName);
+                } 
+                else if (__instance.attachments[0] == null)
                 {
                     if (who != null && Game1.player.Equals(who))
                     {
@@ -279,16 +262,17 @@ namespace AnimalHusbandryMod.tools
                     Color.White, Game1.pixelZoom, 0.0f, 0.0f, 0.0f)
                 { delayBeforeAnimationStart = 100 };
                 location.temporarySprites.Add(basketSprite);
-                TemporaryAnimatedSprite foodSprite = new TemporaryAnimatedSprite(Game1.objectSpriteSheetName,
-                    Game1.getSourceRectForStandardTileSheet(Game1.objectSpriteSheet, __instance.attachments[0].ParentSheetIndex,
-                    16, 16), 500.0f, 1, 1, vectorFood, false, false, ((float)boundingBox.Bottom + 0.2f) / 10000f, 0.0f,
-                    Color.White, foodScale, 0.0f, 0.0f, 0.0f)
-                { delayBeforeAnimationStart = 100 };
+                ParsedItemData itemData = ItemRegistry.GetDataOrErrorItem(__instance.attachments[0].QualifiedItemId);
+                TemporaryAnimatedSprite foodSprite = new TemporaryAnimatedSprite(itemData.TextureName,
+                        Game1.getSourceRectForStandardTileSheet(itemData.GetTexture(), __instance.attachments[0].ParentSheetIndex,
+                            16, 16), 500.0f, 1, 1, vectorFood, false, false, ((float)boundingBox.Bottom + 0.2f) / 10000f, 0.0f,
+                        Color.White, foodScale, 0.0f, 0.0f, 0.0f)
+                    { delayBeforeAnimationStart = 100 };
                 location.temporarySprites.Add(foodSprite);
 
                 for (int index = 0; index < 8; ++index)
                 {
-                    Rectangle standardTileSheet = Game1.getSourceRectForStandardTileSheet(Game1.objectSpriteSheet,
+                    Rectangle standardTileSheet = Game1.getSourceRectForStandardTileSheet(itemData.GetTexture(),
                         __instance.attachments[0].ParentSheetIndex, 16, 16);
                     standardTileSheet.X += 8;
                     standardTileSheet.Y += 8;
@@ -296,7 +280,7 @@ namespace AnimalHusbandryMod.tools
                     standardTileSheet.Width = Game1.pixelZoom;
                     standardTileSheet.Height = Game1.pixelZoom;
                     TemporaryAnimatedSprite temporaryAnimatedSprite2 =
-                        new TemporaryAnimatedSprite(Game1.objectSpriteSheetName, standardTileSheet, 400f, 1, 0,
+                        new TemporaryAnimatedSprite(itemData.TextureName, standardTileSheet, 400f, 1, 0,
                             vectorFood + new Vector2(12, 12), false, false,
                             ((float)boundingBox.Bottom + 0.2f) / 10000f, 0.0f, Color.White, (float)foodScale, 0.0f,
                             0.0f, 0.0f, false)
@@ -386,12 +370,12 @@ namespace AnimalHusbandryMod.tools
             {
                 if (!DataLoader.ModConfig.DisableFriendshipInscreseWithTreats)
                 {
-                    double professionAjust = 1.0;
+                    double professionAdjust = 1.0;
                     if (animal.GetAnimalData().ProfessionForHappinessBoost >= 0 && who.professions.Contains(animal.GetAnimalData().ProfessionForHappinessBoost))
                     {
-                        professionAjust += DataLoader.ModConfig.PercentualAjustOnFriendshipInscreaseFromProfessions;
+                        professionAdjust += DataLoader.ModConfig.PercentualAjustOnFriendshipInscreaseFromProfessions;
                     }
-                    animal.friendshipTowardFarmer.Value = Math.Min(1000, animal.friendshipTowardFarmer.Value + (int)Math.Ceiling(professionAjust * __instance.attachments[0].Price * (1.0 + __instance.attachments[0].Quality * 0.25) / (animal.GetAnimalData().SellPrice / 1000.0)));
+                    animal.friendshipTowardFarmer.Value = Math.Min(1000, animal.friendshipTowardFarmer.Value + (int)Math.Ceiling(professionAdjust * __instance.attachments[0].Price * (1.0 + __instance.attachments[0].Quality * 0.25) / (animal.GetAnimalData().SellPrice / 1000.0)));
                 }
                 if (!DataLoader.ModConfig.DisableMoodInscreseWithTreats)
                 {

@@ -28,6 +28,7 @@ namespace AnimalHusbandryMod.common
         /// </summary>
         private static void selectChannel(TV __instance, Farmer who, string answer)
         {
+            if (Game1.IsGreenRainingHere()) return;
             Channel channel = TvController.GetChannel(answer);
             if (channel != null)
             {

@@ -70,20 +70,9 @@ namespace AnimalHusbandryMod.tools
 
             if (!DataLoader.ModConfig.DisablePregnancy)
             {
-                if (location is Farm)
+                if (location is not null)
                 {
-                    foreach (FarmAnimal farmAnimal in (location as Farm).animals.Values)
-                    {
-                        if (farmAnimal.GetBoundingBox().Intersects(rectangle))
-                        {
-                            Animals[inseminationSyringeId] = farmAnimal;
-                            break;
-                        }
-                    }
-                }
-                else if (location is AnimalHouse)
-                {
-                    foreach (FarmAnimal farmAnimal in (location as AnimalHouse).animals.Values)
+                    foreach (FarmAnimal farmAnimal in location.animals.Values)
                     {
                         if (farmAnimal.GetBoundingBox().Intersects(rectangle))
                         {
@@ -98,7 +87,11 @@ namespace AnimalHusbandryMod.tools
             if (animal != null)
             {
                 string dialogue = "";
-                if (__instance.attachments[0] == null)
+                if (Game1.timeOfDay >= 1900 && !animal.isMoving())
+                {
+                    dialogue = Game1.content.LoadString("Strings\\FarmAnimals:TryingToSleep", animal.displayName);
+                } 
+                else if (__instance.attachments[0] == null)
                 {
                     Game1.showRedMessage(DataLoader.i18n.Get("Tool.InseminationSyringe.Empty"));
                     Animals[inseminationSyringeId] = null;
