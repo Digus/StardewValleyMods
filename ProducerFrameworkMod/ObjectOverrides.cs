@@ -26,7 +26,7 @@ namespace ProducerFrameworkMod
         internal static bool PerformObjectDropInAction(Object __instance, Item dropInItem, bool probe, Farmer who, bool returnFalseIfItemConsumed, ref bool __result)
         {
             if (__instance.isTemporarilyInvisible || dropInItem is not Object input)
-                return false;
+                return true;
 
             bool failLocationCondition = false;
             bool failSeasonCondition = false;
