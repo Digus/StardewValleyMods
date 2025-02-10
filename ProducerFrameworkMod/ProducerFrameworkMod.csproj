@@ -37,6 +37,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Pathoschild.Stardew.ModBuildConfig" Version="4.1.1" />
+    <PackageReference Include="Pathoschild.Stardew.ModBuildConfig" Version="4.3.2" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SubscriptionBoxesMod\SubscriptionBoxesMod.csproj" />
   </ItemGroup>
 </Project>
