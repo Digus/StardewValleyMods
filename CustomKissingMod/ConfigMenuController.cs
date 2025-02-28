@@ -51,6 +51,7 @@ namespace CustomKissingMod
 
             api.AddSectionTitle(manifest, GetText("GeneralSection"), GetTooltip("GeneralSection"));
             api.AddBoolOption(manifest, () => DataLoader.ModConfig.EnableContentPacksOverrides, (bool val) => DataLoader.ModConfig.EnableContentPacksOverrides = val, GetText("EnableContentPacksOverrides"), GetTooltip("EnableContentPacksOverrides"));
+            api.AddBoolOption(manifest, () => !DataLoader.ModConfig.DisableCursorKissingIndication, (bool val) => DataLoader.ModConfig.DisableCursorKissingIndication = !val, GetText("DisableCursorKissingIndication"), GetTooltip("DisableCursorKissingIndication"));
 
             if (DataLoader.ModConfig.NpcConfigs.Count > 0)
             {
@@ -181,9 +182,9 @@ namespace CustomKissingMod
                 var texture = DataLoader.Helper.GameContent.Load<Texture2D>($"Characters/{name}");
                 max = (texture.ActualHeight / 32) * 4;
                 
-                if (DataLoader.Helper.GameContent.DoesAssetExist<Texture2D>(DataLoader.Helper.GameContent.ParseAssetName($"Characters/{name}_beach")))
+                if (DataLoader.Helper.GameContent.DoesAssetExist<Texture2D>(DataLoader.Helper.GameContent.ParseAssetName($"Characters/{name}_Beach")))
                 {
-                    var textureBeach = DataLoader.Helper.GameContent.Load<Texture2D>($"Characters/{name}_beach");
+                    var textureBeach = DataLoader.Helper.GameContent.Load<Texture2D>($"Characters/{name}_Beach");
                     hasBeachAttire = true;
                     maxBeach = (textureBeach.ActualHeight / 32) * 4;
                 }
@@ -252,7 +253,7 @@ namespace CustomKissingMod
             if (mod != CustomKissingModEntry.Manifest) return;
             var name = page.Split("Npc")[1];
             if (!Game1.characterData.TryGetValue(name, out CharacterData npcData)) return;
-            var texture = DataLoader.Helper.GameContent.Load<Texture2D>($"Characters/{name}_beach");
+            var texture = DataLoader.Helper.GameContent.Load<Texture2D>($"Characters/{name}_Beach");
             Rectangle dest = new((int)v.X + 350, (int)v.Y - 16, 64, 128);
             sb.Draw(
                 texture,

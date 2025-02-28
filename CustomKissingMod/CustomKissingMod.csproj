@@ -18,9 +18,6 @@
     <None Remove="Properties\**" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="ContentPackTemplate\manifest.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Include="ContentPackTemplate\npc.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -38,6 +35,9 @@
     <PackageReference Include="Pathoschild.Stardew.ModBuildConfig" Version="4.3.2" />
   </ItemGroup>
   <ItemGroup>
+    <None Update="ContentPackTemplate\manifest.json.template">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="i18n\tr.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
