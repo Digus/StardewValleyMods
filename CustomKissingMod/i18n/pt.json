@@ -24,6 +24,8 @@
 	"CustomKissingMod.ConfigMenu.GeneralSection.Tooltip": "Outras configurações.",
 	"CustomKissingMod.ConfigMenu.EnableContentPacksOverrides.Text": "Sobrescrita por Content Packs",
 	"CustomKissingMod.ConfigMenu.EnableContentPacksOverrides.Tooltip": "Se content packs podem sobrescrever suas configurações. Se desabilitado, você deve resolver os conflitos manualmente. Se abilitado o mod sempre sobrescreverá a configuração do último content pack carregado. Olhe o log para verificar os alertas de conflito.",
+	"CustomKissingMod.ConfigMenu.DisableCursorKissingIndication.Text": "Indicador no cursor do mouse",
+	"CustomKissingMod.ConfigMenu.DisableCursorKissingIndication.Tooltip": "Se o cursor do mouse deve mostar um indicador no formato de coração quando é possível beijar o NPC.",
 	"CustomKissingMod.ConfigMenu.NpcListSection.Text": "Lista de NPC:",
 	"CustomKissingMod.ConfigMenu.NpcListSection.Tooltip": "Lista de configurações de NPC.",
 

@@ -161,7 +161,7 @@ namespace CustomKissingMod
                                 && GetTemporaryMessages(who, character).Equals(_lastDialog))))
                     {
                         Game1.mouseCursorTransparency = Utility.tileWithinRadiusOfPlayer((int)tileLocation.X, (int)tileLocation.Y, 1, who) ? 1f : 0.5f;
-                        Game1.mouseCursor = 7;
+                        Game1.mouseCursor = !DataLoader.ModConfig.DisableCursorKissingIndication ? 7 : Game1.cursor_default;
                         __result = true;
                         return false;
                     }
