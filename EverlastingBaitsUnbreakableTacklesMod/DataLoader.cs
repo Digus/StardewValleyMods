@@ -29,7 +29,7 @@ namespace EverlastingBaitsAndUnbreakableTacklesMod
             DataLoader.Helper.Data.WriteJsonFile("data\\CraftingRecipes.json", CraftingData);
 
             Helper.Events.Content.AssetRequested += this.Edit;
-
+            DataLoader.Helper.GameContent.InvalidateCache(CraftingrecipesAssetName);
             LoadMails();
 
             CreateConfigMenu(manifest);
@@ -262,8 +262,10 @@ namespace EverlastingBaitsAndUnbreakableTacklesMod
                     , () => DataLoader.ModConfig.DisableBaits
                     , (bool val) =>
                     {
-                        if(DataLoader.ModConfig.DisableBaits != val) DataLoader.Helper.GameContent.InvalidateCache(CraftingrecipesAssetName);
+                        if (DataLoader.ModConfig.DisableBaits == val) 
+                            return;
                         DataLoader.ModConfig.DisableBaits = val;
+                        DataLoader.Helper.GameContent.InvalidateCache(CraftingrecipesAssetName);
                     }
                     , ()=> "Disable Baits"
                     , ()=> "Disable all features related to everlasting baits. You won't receive letters about it, the crafting recipes won't show, and existing everlasting baits will be consumed as normal."
@@ -275,8 +277,11 @@ namespace EverlastingBaitsAndUnbreakableTacklesMod
                     , () => DataLoader.ModConfig.DisableTackles
                     , (bool val) =>
                     {
-                        if (DataLoader.ModConfig.DisableTackles != val) DataLoader.Helper.GameContent.InvalidateCache(CraftingrecipesAssetName);
+                        if (DataLoader.ModConfig.DisableTackles == val) 
+                            return;
+                        
                         DataLoader.ModConfig.DisableTackles = val;
+                        DataLoader.Helper.GameContent.InvalidateCache(CraftingrecipesAssetName);
                     }
                     , () => "Disable Tackles"
                     , () => "Disable features related to everlasting baits. You won't receive letters starting quests, the crafting recipes won't show, and existing unbreakable tackles will wear out. Active quests will still show and be able to be ended if existing tackles."
