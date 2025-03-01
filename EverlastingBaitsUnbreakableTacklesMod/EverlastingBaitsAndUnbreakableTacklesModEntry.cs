@@ -81,6 +81,7 @@ namespace EverlastingBaitsAndUnbreakableTacklesMod
         /// <param name="e">The event data.</param>
         private void OnSaveLoaded(object sender, SaveLoadedEventArgs e)
         {
+            DataLoader.LoadMails();
             DataLoader.ReloadQuestWhenClient();
         }
     }

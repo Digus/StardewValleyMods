@@ -30,7 +30,13 @@ namespace EverlastingBaitsAndUnbreakableTacklesMod
 
             Helper.Events.Content.AssetRequested += this.Edit;
 
+            LoadMails();
 
+            CreateConfigMenu(manifest);
+        }
+
+        public void LoadMails()
+        {
             MailRepository.SaveLetter
             (
                 new Letter
@@ -132,8 +138,6 @@ namespace EverlastingBaitsAndUnbreakableTacklesMod
                     }
                 )
             );
-
-            CreateConfigMenu(manifest);
         }
 
         public void ReloadQuestWhenClient()
