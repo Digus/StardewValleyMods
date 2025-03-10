@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using StardewValley.Menus;
 
 namespace MailFrameworkMod.ContentPack
 {
@@ -11,7 +12,11 @@ namespace MailFrameworkMod.ContentPack
         public string Text;
         public string Recipe;
         public List<Attachment> Attachments;
+        public int? RandomlyChooseAttachment;
+        public Dictionary<string, int> RandomlyChooseAttachmentPerGroup = new Dictionary<string, int>();
+        public List<string> AttachmentGroupWithReplacement = new List<string>();
         public List<string> AdditionalMailReceived;
+        public List<string> MailReceivedToRemove;
         public string LetterBG;
         public int WhichBG;
         public int? TextColor;
@@ -50,5 +55,6 @@ namespace MailFrameworkMod.ContentPack
         public List<string> HasMods;
         public bool RequireAllMods;
         public bool AutoOpen;
+        public bool KeepValid;
     }
 }

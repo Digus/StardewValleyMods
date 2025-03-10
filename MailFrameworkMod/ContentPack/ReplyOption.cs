@@ -10,7 +10,11 @@ namespace MailFrameworkMod.ContentPack
     {
         public string ReplyKey;
         public string ReplyOptionDialog;
+        public List<string> RequireMailReceived;
+        public bool RequireAllMailReceived;
         public List<string> MailReceivedToAdd;
+        public List<string> MailReceivedToRemove;
         public string ReplyResponseDialog;
+        public int Cost = 0;
     }
 }
