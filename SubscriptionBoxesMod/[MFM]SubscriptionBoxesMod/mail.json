@@ -1,0 +1,1185 @@
+[
+    {
+        "Id": "Digus.SubscriptionBoxesMod.Introduction",
+        "Title": "SubscriptionBoxesMod.Introduction.Letter.Title",
+        "GroupId": "Digus.SubscriptionBoxesMod.BoxTypeQuestion",
+        "Text": "SubscriptionBoxesMod.Introduction.Letter",
+        "ReplyConfig": {
+            "QuestionKey": "Digus.SubscriptionBoxesMod.Introduction.Question",
+            "QuestionDialog": "SubscriptionBoxesMod.BoxType.Question",
+            "Replies": [
+                {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.BoxType.Miner",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.BoxType.Miner",
+                    "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxType.Miner", "Digus.SubscriptionBoxesMod.BoxType" ],
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.BoxType.Miner.Response"
+                },
+                {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.BoxType.Forager",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.BoxType.Forager",
+                    "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxType.Forager", "Digus.SubscriptionBoxesMod.BoxType" ],
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.BoxType.Forager.Response"
+                },
+                {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.BoxType.Adventurer",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.BoxType.Adventurer",
+                    "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxType.Adventurer", "Digus.SubscriptionBoxesMod.BoxType" ],
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.BoxType.Adventurer.Response"
+                },
+                {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.BoxType.Skip",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.BoxType.Skip",
+                    "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxType", "Digus.SubscriptionBoxesMod.BoxType.Skip" ],
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.BoxType.Skip.Response"
+                }
+            ]
+        },
+        "Date": "8 spring Y1"
+    },
+    {
+        "Id": "Digus.SubscriptionBoxesMod.BoxesTypeChoice",
+        "Title": "SubscriptionBoxesMod.Recurrency.Letter.Title",
+        "GroupId": "Digus.SubscriptionBoxesMod.BoxTypeQuestion",
+        "Text": "SubscriptionBoxesMod.Recurrency.Letter",
+        "ReplyConfig": {
+            "QuestionKey": "Digus.SubscriptionBoxesMod.BoxesTypeChoice.Question",
+            "QuestionDialog": "SubscriptionBoxesMod.BoxType.Question",
+            "Replies": [
+                {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.BoxType.Miner",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.BoxType.Miner",
+                    "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxType.Miner", "Digus.SubscriptionBoxesMod.BoxType" ],
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.BoxType.Miner.Response"
+                },
+                {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.BoxType.Forager",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.BoxType.Forager",
+                    "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxType.Forager", "Digus.SubscriptionBoxesMod.BoxType" ],
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.BoxType.Forager.Response"
+                },
+                {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.BoxType.Adventurer",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.BoxType.Adventurer",
+                    "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxType.Adventurer", "Digus.SubscriptionBoxesMod.BoxType" ],
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.BoxType.Adventurer.Response"
+                },
+                {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.BoxType.Skip",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.BoxType.Skip",
+                    "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxType.Skip", "Digus.SubscriptionBoxesMod.BoxType" ],
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.BoxType.Skip.Response"
+                }
+            ]
+        },
+        "Days": [ 1, 2, 3, 4, 8, 9, 10, 11, 15, 16, 17, 18, 22, 23, 24, 25 ],
+        "MailReceived": [ "Digus.SubscriptionBoxesMod.Introduction" ],
+        "MailNotReceived": [ "Digus.SubscriptionBoxesMod.BoxType", "SubscriptionBoxesMod.BoxType.Skip" ],
+        "Repeatable": true,
+        "KeepValid": true
+    },
+    {
+        "Id": "Digus.SubscriptionBoxesMod.ForagerBoxCatalog",
+        "Title": "SubscriptionBoxesMod.ForagerBoxCatalog.Letter.Title",
+        "GroupId": "Digus.SubscriptionBoxesMod.BoxTierQuestion",
+        "Text": "SubscriptionBoxesMod.ForagerBoxCatalog.Letter",
+        "ReplyConfig": {
+            "QuestionKey": "Digus.SubscriptionBoxesMod.ForagerBoxCatalog.Question",
+            "QuestionDialog": "SubscriptionBoxesMod.BoxTier.Question",
+            "Replies": [
+                {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.ForagerBoxCatalog.Later",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.BoxTier.Later",
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.BoxTier.Later.Response"
+                },
+                {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.ForagerBoxCatalog.Standard",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.BoxTier.Standard",
+                    "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxTier.Standard", "Digus.SubscriptionBoxesMod.BoxTier" ],
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.BoxTier.Standard.Response",
+                    "Cost": 500
+                },
+                {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.ForagerBoxCatalog.Deluxe",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.BoxTier.Deluxe",
+                    "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxTier.Deluxe", "Digus.SubscriptionBoxesMod.BoxTier" ],
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.BoxTier.Deluxe.Response",
+                    "Cost": 1000
+                },
+                {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.ForagerBoxCatalog.Premium",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.BoxTier.Premium",
+                    "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxTier.Premium", "Digus.SubscriptionBoxesMod.BoxTier" ],
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.BoxTier.Premium.Response",
+                    "Cost": 1500
+                }
+            ]
+        },
+        "MailReceived": [ "Digus.SubscriptionBoxesMod.BoxType.Forager" ],
+        "MailNotReceived": [ "Digus.SubscriptionBoxesMod.BoxTier" ],
+        "Repeatable": true
+    },
+    {
+        "Id": "Digus.SubscriptionBoxesMod.MinerBoxCatalog",
+        "Title": "SubscriptionBoxesMod.MinerBoxCatalog.Letter.Title",
+        "GroupId": "Digus.SubscriptionBoxesMod.BoxTierQuestion",
+        "Text": "SubscriptionBoxesMod.MinerBoxCatalog.Letter",
+        "ReplyConfig": {
+            "QuestionKey": "Digus.SubscriptionBoxesMod.MinerBoxCatalogQuestion",
+            "QuestionDialog": "SubscriptionBoxesMod.BoxTier.Question",
+            "Replies": [
+                {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.MinerBoxCatalog.Later",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.BoxTier.Later",
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.BoxTier.Later.Response"
+                },
+                {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.MinerBoxCatalog.Standard",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.BoxTier.Standard",
+                    "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxTier.Standard", "Digus.SubscriptionBoxesMod.BoxTier" ],
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.BoxTier.Standard.Response",
+                    "Cost": 500
+                },
+                {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.MinerBoxCatalog.Deluxe",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.BoxTier.Deluxe",
+                    "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxTier.Deluxe", "Digus.SubscriptionBoxesMod.BoxTier" ],
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.BoxTier.Deluxe.Response",
+                    "Cost": 1000
+                },
+                {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.MinerBoxCatalog.Premium",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.BoxTier.Premium",
+                    "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxTier.Premium", "Digus.SubscriptionBoxesMod.BoxTier" ],
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.BoxTier.Premium.Response",
+                    "Cost": 1500
+                }
+            ]
+        },
+        "MailReceived": [ "Digus.SubscriptionBoxesMod.BoxType.Miner" ],
+        "MailNotReceived": [ "Digus.SubscriptionBoxesMod.BoxTier" ],
+        "Repeatable": true
+    },
+    {
+        "Id": "Digus.SubscriptionBoxesMod.AdventurerBoxCatalog",
+        "Title": "SubscriptionBoxesMod.AdventurerBoxCatalog.Letter.Title",
+        "GroupId": "Digus.SubscriptionBoxesMod.BoxTierQuestion",
+        "Text": "SubscriptionBoxesMod.AdventurerBoxCatalog.Letter",
+        "ReplyConfig": {
+            "QuestionKey": "Digus.SubscriptionBoxesMod.AdventurerBoxCatalogQuestion",
+            "QuestionDialog": "SubscriptionBoxesMod.BoxTier.Question",
+            "Replies": [
+                {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.AdventurerBoxCatalog.Later",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.BoxTier.Later",
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.BoxTier.Later.Response"
+                },
+                {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.AdventurerBoxCatalog.Standard",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.BoxTier.Standard",
+                    "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxTier.Standard", "Digus.SubscriptionBoxesMod.BoxTier" ],
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.BoxTier.Standard.Response",
+                    "Cost": 500
+                },
+                {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.AdventurerBoxCatalog.Deluxe",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.BoxTier.Deluxe",
+                    "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxTier.Deluxe", "Digus.SubscriptionBoxesMod.BoxTier" ],
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.BoxTier.Deluxe.Response",
+                    "Cost": 1000
+                },
+                {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.AdventurerBoxCatalog.Premium",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.BoxTier.Premium",
+                    "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxTier.Premium", "Digus.SubscriptionBoxesMod.BoxTier" ],
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.BoxTier.Premium.Response",
+                    "Cost": 1500
+                }
+            ]
+        },
+        "MailReceived": [ "Digus.SubscriptionBoxesMod.BoxType.Adventurer" ],
+        "MailNotReceived": [ "Digus.SubscriptionBoxesMod.BoxTier" ],
+        "Repeatable": true
+    },
+    {
+        "Id": "Digus.SubscriptionBoxesMod.ForagerStandardBoxDelivery",
+        "Title": "SubscriptionBoxesMod.ForagerDelivery.Letter.Title",
+        "GroupId": "Digus.SubscriptionBoxesMod.BoxDelivery",
+        "Text": "SubscriptionBoxesMod.ForagerDelivery.Letter",
+        "RandomlyChooseAttachment": 1,
+        "Attachments": [
+            {"Type": "QualifiedItemId","Index": "(O)404","Stack": 10,"ProbabilityWeight": 10,"RandomGroup": "Mushroom"}, //Common Mushroom
+            {"Type": "QualifiedItemId","Index": "(O)420","Stack": 5,"ProbabilityWeight": 10,"RandomGroup": "Mushroom"}, //Red Mushroom
+            {"Type": "QualifiedItemId","Index": "(O)281","Stack": 3,"ProbabilityWeight": 5,"RandomGroup": "Mushroom"}, //Chanterelle
+            {"Type": "QualifiedItemId","Index": "(O)257","Stack": 3,"ProbabilityWeight": 5,"RandomGroup": "Mushroom"}, //Morel
+            {"Type": "QualifiedItemId","Index": "(O)422","Stack": 2,"ProbabilityWeight": 2,"RandomGroup": "Mushroom"}, //Purple Mushroom
+            {"Type": "QualifiedItemId","Index": "(O)851","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Mushroom", "RequireMailReceived":["Island_FirstParrot"]}, //Magma Cap
+            {"Type": "QualifiedItemId","Index": "(O)TreasureTotem","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "WarpTotem", "RequireMailReceived":["Digus.SubscriptionBoxesMod.ForagingMastery"]}, //Treasure Totem
+            {"Type": "QualifiedItemId","Index": "(O)681","Stack": 1,"ProbabilityWeight": 2,"RandomGroup": "WarpTotem"}, //Rain
+            {"Type": "QualifiedItemId","Index": "(O)886","Stack": 1,"ProbabilityWeight": 2,"RandomGroup": "WarpTotem", "RequireMailReceived":["Visited_Island"]}, //Island
+            {"Type": "QualifiedItemId","Index": "(O)261","Stack": 1,"ProbabilityWeight": 4,"RandomGroup": "WarpTotem", "RequireMailReceived":["ccVault"]}, //Desert
+            {"Type": "QualifiedItemId","Index": "(O)688","Stack": 1,"ProbabilityWeight": 6,"RandomGroup": "WarpTotem"}, //Farm
+            {"Type": "QualifiedItemId","Index": "(O)689","Stack": 1,"ProbabilityWeight": 8,"RandomGroup": "WarpTotem"}, //Mountains
+            {"Type": "QualifiedItemId","Index": "(O)690","Stack": 1,"ProbabilityWeight": 10,"RandomGroup": "WarpTotem"}, //Beach
+            {"Type": "QualifiedItemId","Index": "(O)92","Stack": 30,"ProbabilityWeight": 4,"RandomGroup": "TreeItem"}, //Sap
+            {"Type": "QualifiedItemId","Index": "(O)388","Stack": 50,"ProbabilityWeight": 4,"RandomGroup": "TreeItem"}, //Wood
+            {"Type": "QualifiedItemId","Index": "(O)709","Stack": 10,"ProbabilityWeight": 1,"RandomGroup": "TreeItem"}, //Hard Wood
+            {"Type": "QualifiedItemId","Index": "(O)724","Stack": 2,"ProbabilityWeight": 1,"RandomGroup": "TreeItem"}, //Maple Syrup
+            {"Type": "QualifiedItemId","Index": "(O)725","Stack": 2,"ProbabilityWeight": 2,"RandomGroup": "TreeItem"}, //Oak Resin
+            {"Type": "QualifiedItemId","Index": "(O)726","Stack": 2,"ProbabilityWeight": 3,"RandomGroup": "TreeItem"}, //Pine Tar
+            {"Type": "QualifiedItemId","Index": "(O)Moss","Stack": 20,"ProbabilityWeight": 3,"RandomGroup": "TreeItem"}, //Moss
+            {"Type": "QualifiedItemId","Index": "(O)805","Stack": 5,"ProbabilityWeight": 5,"RandomGroup": "TreeSeed"}, //Tree Fertilizer
+            {"Type": "QualifiedItemId","Index": "(O)309","Stack": 5,"ProbabilityWeight": 10,"RandomGroup": "TreeSeed"}, //Acorn
+            {"Type": "QualifiedItemId","Index": "(O)310","Stack": 5,"ProbabilityWeight": 10,"RandomGroup": "TreeSeed"}, //Maple Seed
+            {"Type": "QualifiedItemId","Index": "(O)311","Stack": 5,"ProbabilityWeight": 10,"RandomGroup": "TreeSeed"}, //Pine Cone
+            {"Type": "QualifiedItemId","Index": "(O)292","Stack": 1,"ProbabilityWeight": 5,"RandomGroup": "TreeSeed"}, //Mahogany Seed
+            {"Type": "QualifiedItemId","Index": "(O)MossySeed","Stack": 1,"ProbabilityWeight": 3,"RandomGroup": "TreeSeed", "RequireMailReceived":["GreenRainGus"]}, //Mossy Seed
+            {"Type": "QualifiedItemId","Index": "(O)891","Stack": 1,"ProbabilityWeight": 2,"RandomGroup": "TreeSeed"}, //Mushroom Tree Seed
+            {"Type": "QualifiedItemId","Index": "(O)MysticTreeSeed","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "TreeSeed", "RequireMailReceived":["Digus.SubscriptionBoxesMod.ForagingMastery"]}, //Mystic Tree Seed
+            {"Type": "QualifiedItemId","Index": "(O)926","Stack": 1,"ProbabilityWeight": 9,"RandomGroup": "Kit"}, //Cookout Kit
+            {"Type": "QualifiedItemId","Index": "(O)TentKit","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Kit"}, //Tent Kit
+            {"Type": "QualifiedItemId","Index": "(O)403","Stack": 5,"ProbabilityWeight": 20,"RandomGroup": "Food"}, //Field Snack
+            {"Type": "QualifiedItemId","Index": "(O)MossSoup","Stack": 2,"ProbabilityWeight": 10,"RandomGroup": "Food"}, //Moss Soup
+            {"Type": "QualifiedItemId","Index": "(O)211","Stack": 2,"ProbabilityWeight": 10,"RandomGroup": "Food"}, //Pancakes
+            {"Type": "QualifiedItemId","Index": "(O)241","Stack": 1,"ProbabilityWeight": 5,"RandomGroup": "Food"}, //Survival Burger
+            {"Type": "QualifiedItemId","Index": "(O)607","Stack": 1,"ProbabilityWeight": 2,"RandomGroup": "Food"}, //Roasted Hazelnuts
+            {"Type": "QualifiedItemId","Index": "(O)235","Stack": 1,"ProbabilityWeight": 2,"RandomGroup": "Food"}, //Autumn's Bounty
+            {"Type": "QualifiedItemId","Index": "(O)907","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Food", "RequireMailReceived":["Island_Resort"]} //Tropical Curry
+        ],
+        "ReplyConfig": {
+            "QuestionKey": "Digus.SubscriptionBoxesMod.ForagerStandardBoxDelivery.Question",
+            "QuestionDialog": "SubscriptionBoxesMod.Delivery.Question",
+            "Replies": [
+                {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.Delivery.Keep",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.Delivery.Keep",
+                    "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxType", "Digus.SubscriptionBoxesMod.BoxType.Forager", "Digus.SubscriptionBoxesMod.BoxTier", "Digus.SubscriptionBoxesMod.BoxTier.Standard" ],
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.Delivery.Keep.Response",
+                    "Cost": 500
+                },
+                {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.Delivery.Later",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.Delivery.Later",
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.Delivery.Later.Response"
+                },
+                {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.Delivery.Miner",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.BoxType.Miner",
+                    "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxType.Miner", "Digus.SubscriptionBoxesMod.BoxType" ],
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.BoxType.Miner.Response"
+                },
+                {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.Delivery.Forager",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.BoxType.Forager",
+                    "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxType.Forager", "Digus.SubscriptionBoxesMod.BoxType" ],
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.BoxType.Forager.Response"
+                },
+                {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.Delivery.Adventurer",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.BoxType.Adventurer",
+                    "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxType.Adventurer", "Digus.SubscriptionBoxesMod.BoxType" ],
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.BoxType.Adventurer.Response"
+                }
+            ]
+        },
+        "Days": [ 5, 12, 19, 26 ],
+        "MailReceived": [ "Digus.SubscriptionBoxesMod.BoxType.Forager", "Digus.SubscriptionBoxesMod.BoxTier.Standard" ],
+        "RequireAllMailReceived": true,
+        "MailReceivedToRemove": [ "Digus.SubscriptionBoxesMod.BoxType", "Digus.SubscriptionBoxesMod.BoxType.Forager", "Digus.SubscriptionBoxesMod.BoxTier", "Digus.SubscriptionBoxesMod.BoxTier.Standard" ],
+        "Repeatable": true,
+        "KeepValid": true
+    },
+    {
+        "Id": "Digus.SubscriptionBoxesMod.ForagerDeluxeBoxDelivery",
+        "Title": "SubscriptionBoxesMod.ForagerDelivery.Letter.Title",
+        "GroupId": "Digus.SubscriptionBoxesMod.BoxDelivery",
+        "Text": "SubscriptionBoxesMod.ForagerDelivery.Letter",
+        "RandomlyChooseAttachment": 2,
+        "RandomlyChooseAttachmentPerGroup": { "Kit": 1 },
+        "Attachments": [
+            {"Type": "QualifiedItemId","Index": "(O)404","Stack": 10,"ProbabilityWeight": 10,"RandomGroup": "Mushroom"}, //Common Mushroom
+            {"Type": "QualifiedItemId","Index": "(O)420","Stack": 5,"ProbabilityWeight": 10,"RandomGroup": "Mushroom"}, //Red Mushroom
+            {"Type": "QualifiedItemId","Index": "(O)281","Stack": 3,"ProbabilityWeight": 5,"RandomGroup": "Mushroom"}, //Chanterelle
+            {"Type": "QualifiedItemId","Index": "(O)257","Stack": 3,"ProbabilityWeight": 5,"RandomGroup": "Mushroom"}, //Morel
+            {"Type": "QualifiedItemId","Index": "(O)422","Stack": 2,"ProbabilityWeight": 2,"RandomGroup": "Mushroom"}, //Purple Mushroom
+            {"Type": "QualifiedItemId","Index": "(O)851","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Mushroom", "RequireMailReceived":["Island_FirstParrot"]}, //Magma Cap
+            {"Type": "QualifiedItemId","Index": "(O)TreasureTotem","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "WarpTotem", "RequireMailReceived":["Digus.SubscriptionBoxesMod.ForagingMastery"]}, //Treasure Totem
+            {"Type": "QualifiedItemId","Index": "(O)681","Stack": 1,"ProbabilityWeight": 2,"RandomGroup": "WarpTotem"}, //Rain
+            {"Type": "QualifiedItemId","Index": "(O)886","Stack": 1,"ProbabilityWeight": 2,"RandomGroup": "WarpTotem", "RequireMailReceived":["Visited_Island"]}, //Island
+            {"Type": "QualifiedItemId","Index": "(O)261","Stack": 1,"ProbabilityWeight": 4,"RandomGroup": "WarpTotem", "RequireMailReceived":["ccVault"]}, //Desert
+            {"Type": "QualifiedItemId","Index": "(O)688","Stack": 1,"ProbabilityWeight": 6,"RandomGroup": "WarpTotem"}, //Farm
+            {"Type": "QualifiedItemId","Index": "(O)689","Stack": 1,"ProbabilityWeight": 8,"RandomGroup": "WarpTotem"}, //Mountains
+            {"Type": "QualifiedItemId","Index": "(O)690","Stack": 1,"ProbabilityWeight": 10,"RandomGroup": "WarpTotem"}, //Beach
+            {"Type": "QualifiedItemId","Index": "(O)92","Stack": 30,"ProbabilityWeight": 4,"RandomGroup": "TreeItem"}, //Sap
+            {"Type": "QualifiedItemId","Index": "(O)388","Stack": 50,"ProbabilityWeight": 4,"RandomGroup": "TreeItem"}, //Wood
+            {"Type": "QualifiedItemId","Index": "(O)709","Stack": 10,"ProbabilityWeight": 1,"RandomGroup": "TreeItem"}, //Hard Wood
+            {"Type": "QualifiedItemId","Index": "(O)724","Stack": 2,"ProbabilityWeight": 1,"RandomGroup": "TreeItem"}, //Maple Syrup
+            {"Type": "QualifiedItemId","Index": "(O)725","Stack": 2,"ProbabilityWeight": 2,"RandomGroup": "TreeItem"}, //Oak Resin
+            {"Type": "QualifiedItemId","Index": "(O)726","Stack": 2,"ProbabilityWeight": 3,"RandomGroup": "TreeItem"}, //Pine Tar
+            {"Type": "QualifiedItemId","Index": "(O)Moss","Stack": 20,"ProbabilityWeight": 3,"RandomGroup": "TreeItem"}, //Moss
+            {"Type": "QualifiedItemId","Index": "(O)805","Stack": 5,"ProbabilityWeight": 5,"RandomGroup": "TreeSeed"}, //Tree Fertilizer
+            {"Type": "QualifiedItemId","Index": "(O)309","Stack": 5,"ProbabilityWeight": 10,"RandomGroup": "TreeSeed"}, //Acorn
+            {"Type": "QualifiedItemId","Index": "(O)310","Stack": 5,"ProbabilityWeight": 10,"RandomGroup": "TreeSeed"}, //Maple Seed
+            {"Type": "QualifiedItemId","Index": "(O)311","Stack": 5,"ProbabilityWeight": 10,"RandomGroup": "TreeSeed"}, //Pine Cone
+            {"Type": "QualifiedItemId","Index": "(O)292","Stack": 1,"ProbabilityWeight": 5,"RandomGroup": "TreeSeed"}, //Mahogany Seed
+            {"Type": "QualifiedItemId","Index": "(O)MossySeed","Stack": 1,"ProbabilityWeight": 3,"RandomGroup": "TreeSeed", "RequireMailReceived":["GreenRainGus"]}, //Mossy Seed
+            {"Type": "QualifiedItemId","Index": "(O)891","Stack": 1,"ProbabilityWeight": 2,"RandomGroup": "TreeSeed"}, //Mushroom Tree Seed
+            {"Type": "QualifiedItemId","Index": "(O)MysticTreeSeed","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "TreeSeed", "RequireMailReceived":["Digus.SubscriptionBoxesMod.ForagingMastery"]}, //Mystic Tree Seed
+            {"Type": "QualifiedItemId","Index": "(O)926","Stack": 1,"ProbabilityWeight": 9,"RandomGroup": "Kit"}, //Cookout Kit
+            {"Type": "QualifiedItemId","Index": "(O)TentKit","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Kit"}, //Tent Kit
+            {"Type": "QualifiedItemId","Index": "(O)403","Stack": 5,"ProbabilityWeight": 20,"RandomGroup": "Food"}, //Field Snack
+            {"Type": "QualifiedItemId","Index": "(O)MossSoup","Stack": 2,"ProbabilityWeight": 10,"RandomGroup": "Food"}, //Moss Soup
+            {"Type": "QualifiedItemId","Index": "(O)211","Stack": 2,"ProbabilityWeight": 10,"RandomGroup": "Food"}, //Pancakes
+            {"Type": "QualifiedItemId","Index": "(O)241","Stack": 1,"ProbabilityWeight": 5,"RandomGroup": "Food"}, //Survival Burger
+            {"Type": "QualifiedItemId","Index": "(O)607","Stack": 1,"ProbabilityWeight": 2,"RandomGroup": "Food"}, //Roasted Hazelnuts
+            {"Type": "QualifiedItemId","Index": "(O)235","Stack": 1,"ProbabilityWeight": 2,"RandomGroup": "Food"}, //Autumn's Bounty
+            {"Type": "QualifiedItemId","Index": "(O)907","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Food", "RequireMailReceived":["Island_Resort"]} //Tropical Curry
+        ],
+        "ReplyConfig": {
+            "QuestionKey": "Digus.SubscriptionBoxesMod.ForagerDeluxeBoxDelivery.Question",
+            "QuestionDialog": "SubscriptionBoxesMod.Delivery.Question",
+            "Replies": [
+                {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.Delivery.Keep",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.Delivery.Keep",
+                    "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxType", "Digus.SubscriptionBoxesMod.BoxType.Forager", "Digus.SubscriptionBoxesMod.BoxTier", "Digus.SubscriptionBoxesMod.BoxTier.Deluxe" ],
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.Delivery.Keep.Response",
+                    "Cost": 1000
+                },
+                {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.Delivery.Later",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.Delivery.Later",
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.Delivery.Later.Response"
+                },
+                {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.Delivery.Miner",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.BoxType.Miner",
+                    "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxType.Miner", "Digus.SubscriptionBoxesMod.BoxType" ],
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.BoxType.Miner.Response"
+                },
+                {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.Delivery.Forager",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.BoxType.Forager",
+                    "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxType.Forager", "Digus.SubscriptionBoxesMod.BoxType" ],
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.BoxType.Forager.Response"
+                },
+                {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.Delivery.Adventurer",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.BoxType.Adventurer",
+                    "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxType.Adventurer", "Digus.SubscriptionBoxesMod.BoxType" ],
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.BoxType.Adventurer.Response"
+                }
+            ]
+        },
+        "Days": [ 5, 12, 19, 26 ],
+        "MailReceived": [ "Digus.SubscriptionBoxesMod.BoxType.Forager", "Digus.SubscriptionBoxesMod.BoxTier.Deluxe" ],
+        "RequireAllMailReceived": true,
+        "MailReceivedToRemove": [ "Digus.SubscriptionBoxesMod.BoxType", "Digus.SubscriptionBoxesMod.BoxType.Forager", "Digus.SubscriptionBoxesMod.BoxTier", "Digus.SubscriptionBoxesMod.BoxTier.Deluxe" ],
+        "Repeatable": true,
+        "KeepValid": true
+    },
+    {
+        "Id": "Digus.SubscriptionBoxesMod.ForagerPremiumBoxDelivery",
+        "Title": "SubscriptionBoxesMod.ForagerDelivery.Letter.Title",
+        "GroupId": "Digus.SubscriptionBoxesMod.BoxDelivery",
+        "Text": "SubscriptionBoxesMod.ForagerDelivery.Letter",
+        "RandomlyChooseAttachment": 3,
+        "RandomlyChooseAttachmentPerGroup": { "Kit": 1 },
+        "Attachments": [
+            {"Type": "QualifiedItemId","Index": "(O)404","Stack": 10,"ProbabilityWeight": 10,"RandomGroup": "Mushroom"}, //Common Mushroom
+            {"Type": "QualifiedItemId","Index": "(O)420","Stack": 5,"ProbabilityWeight": 10,"RandomGroup": "Mushroom"}, //Red Mushroom
+            {"Type": "QualifiedItemId","Index": "(O)281","Stack": 3,"ProbabilityWeight": 5,"RandomGroup": "Mushroom"}, //Chanterelle
+            {"Type": "QualifiedItemId","Index": "(O)257","Stack": 3,"ProbabilityWeight": 5,"RandomGroup": "Mushroom"}, //Morel
+            {"Type": "QualifiedItemId","Index": "(O)422","Stack": 2,"ProbabilityWeight": 2,"RandomGroup": "Mushroom"}, //Purple Mushroom
+            {"Type": "QualifiedItemId","Index": "(O)851","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Mushroom", "RequireMailReceived":["Island_FirstParrot"]}, //Magma Cap
+            {"Type": "QualifiedItemId","Index": "(O)TreasureTotem","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "WarpTotem", "RequireMailReceived":["Digus.SubscriptionBoxesMod.ForagingMastery"]}, //Treasure Totem
+            {"Type": "QualifiedItemId","Index": "(O)681","Stack": 1,"ProbabilityWeight": 2,"RandomGroup": "WarpTotem"}, //Rain
+            {"Type": "QualifiedItemId","Index": "(O)886","Stack": 1,"ProbabilityWeight": 2,"RandomGroup": "WarpTotem", "RequireMailReceived":["Visited_Island"]}, //Island
+            {"Type": "QualifiedItemId","Index": "(O)261","Stack": 1,"ProbabilityWeight": 4,"RandomGroup": "WarpTotem", "RequireMailReceived":["ccVault"]}, //Desert
+            {"Type": "QualifiedItemId","Index": "(O)688","Stack": 1,"ProbabilityWeight": 6,"RandomGroup": "WarpTotem"}, //Farm
+            {"Type": "QualifiedItemId","Index": "(O)689","Stack": 1,"ProbabilityWeight": 8,"RandomGroup": "WarpTotem"}, //Mountains
+            {"Type": "QualifiedItemId","Index": "(O)690","Stack": 1,"ProbabilityWeight": 10,"RandomGroup": "WarpTotem"}, //Beach
+            {"Type": "QualifiedItemId","Index": "(O)92","Stack": 30,"ProbabilityWeight": 4,"RandomGroup": "TreeItem"}, //Sap
+            {"Type": "QualifiedItemId","Index": "(O)388","Stack": 50,"ProbabilityWeight": 4,"RandomGroup": "TreeItem"}, //Wood
+            {"Type": "QualifiedItemId","Index": "(O)709","Stack": 10,"ProbabilityWeight": 1,"RandomGroup": "TreeItem"}, //Hard Wood
+            {"Type": "QualifiedItemId","Index": "(O)724","Stack": 2,"ProbabilityWeight": 1,"RandomGroup": "TreeItem"}, //Maple Syrup
+            {"Type": "QualifiedItemId","Index": "(O)725","Stack": 2,"ProbabilityWeight": 2,"RandomGroup": "TreeItem"}, //Oak Resin
+            {"Type": "QualifiedItemId","Index": "(O)726","Stack": 2,"ProbabilityWeight": 3,"RandomGroup": "TreeItem"}, //Pine Tar
+            {"Type": "QualifiedItemId","Index": "(O)Moss","Stack": 20,"ProbabilityWeight": 3,"RandomGroup": "TreeItem"}, //Moss
+            {"Type": "QualifiedItemId","Index": "(O)805","Stack": 5,"ProbabilityWeight": 5,"RandomGroup": "TreeSeed"}, //Tree Fertilizer
+            {"Type": "QualifiedItemId","Index": "(O)309","Stack": 5,"ProbabilityWeight": 10,"RandomGroup": "TreeSeed"}, //Acorn
+            {"Type": "QualifiedItemId","Index": "(O)310","Stack": 5,"ProbabilityWeight": 10,"RandomGroup": "TreeSeed"}, //Maple Seed
+            {"Type": "QualifiedItemId","Index": "(O)311","Stack": 5,"ProbabilityWeight": 10,"RandomGroup": "TreeSeed"}, //Pine Cone
+            {"Type": "QualifiedItemId","Index": "(O)292","Stack": 1,"ProbabilityWeight": 5,"RandomGroup": "TreeSeed"}, //Mahogany Seed
+            {"Type": "QualifiedItemId","Index": "(O)MossySeed","Stack": 1,"ProbabilityWeight": 3,"RandomGroup": "TreeSeed", "RequireMailReceived":["GreenRainGus"]}, //Mossy Seed
+            {"Type": "QualifiedItemId","Index": "(O)891","Stack": 1,"ProbabilityWeight": 2,"RandomGroup": "TreeSeed"}, //Mushroom Tree Seed
+            {"Type": "QualifiedItemId","Index": "(O)MysticTreeSeed","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "TreeSeed", "RequireMailReceived":["Digus.SubscriptionBoxesMod.ForagingMastery"]}, //Mystic Tree Seed
+            {"Type": "QualifiedItemId","Index": "(O)926","Stack": 1,"ProbabilityWeight": 9,"RandomGroup": "Kit"}, //Cookout Kit
+            {"Type": "QualifiedItemId","Index": "(O)TentKit","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Kit"}, //Tent Kit
+            {"Type": "QualifiedItemId","Index": "(O)403","Stack": 5,"ProbabilityWeight": 20,"RandomGroup": "Food"}, //Field Snack
+            {"Type": "QualifiedItemId","Index": "(O)MossSoup","Stack": 2,"ProbabilityWeight": 10,"RandomGroup": "Food"}, //Moss Soup
+            {"Type": "QualifiedItemId","Index": "(O)211","Stack": 2,"ProbabilityWeight": 10,"RandomGroup": "Food"}, //Pancakes
+            {"Type": "QualifiedItemId","Index": "(O)241","Stack": 1,"ProbabilityWeight": 5,"RandomGroup": "Food"}, //Survival Burger
+            {"Type": "QualifiedItemId","Index": "(O)607","Stack": 1,"ProbabilityWeight": 2,"RandomGroup": "Food"}, //Roasted Hazelnuts
+            {"Type": "QualifiedItemId","Index": "(O)235","Stack": 1,"ProbabilityWeight": 2,"RandomGroup": "Food"}, //Autumn's Bounty
+            {"Type": "QualifiedItemId","Index": "(O)907","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Food", "RequireMailReceived":["Island_Resort"]} //Tropical Curry
+        ],
+        "ReplyConfig": {
+            "QuestionKey": "Digus.SubscriptionBoxesMod.ForagerPremiumBoxDelivery.Question",
+            "QuestionDialog": "SubscriptionBoxesMod.Delivery.Question",
+            "Replies": [
+                {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.Delivery.Keep",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.Delivery.Keep",
+                    "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxType", "Digus.SubscriptionBoxesMod.BoxType.Forager", "Digus.SubscriptionBoxesMod.BoxTier", "Digus.SubscriptionBoxesMod.BoxTier.Premium" ],
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.Delivery.Keep.Response",
+                    "Cost": 1500
+                },
+                {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.Delivery.Later",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.Delivery.Later",
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.Delivery.Later.Response"
+                },
+                {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.Delivery.Miner",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.BoxType.Miner",
+                    "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxType.Miner", "Digus.SubscriptionBoxesMod.BoxType" ],
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.BoxType.Miner.Response"
+                },
+                {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.Delivery.Forager",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.BoxType.Forager",
+                    "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxType.Forager", "Digus.SubscriptionBoxesMod.BoxType" ],
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.BoxType.Forager.Response"
+                },
+                {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.Delivery.Adventurer",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.BoxType.Adventurer",
+                    "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxType.Adventurer", "Digus.SubscriptionBoxesMod.BoxType" ],
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.BoxType.Adventurer.Response"
+                }
+            ]
+        },
+        "Days": [ 5, 12, 19, 26 ],
+        "MailReceived": [ "Digus.SubscriptionBoxesMod.BoxType.Forager", "Digus.SubscriptionBoxesMod.BoxTier.Premium" ],
+        "RequireAllMailReceived": true,
+        "MailReceivedToRemove": [ "Digus.SubscriptionBoxesMod.BoxType", "Digus.SubscriptionBoxesMod.BoxType.Forager", "Digus.SubscriptionBoxesMod.BoxTier", "Digus.SubscriptionBoxesMod.BoxTier.Premium" ],
+        "Repeatable": true,
+        "KeepValid": true
+    },
+    {
+        "Id": "Digus.SubscriptionBoxesMod.MinerStandardBoxDelivery",
+        "Title": "SubscriptionBoxesMod.MinerDelivery.Letter.Title",
+        "GroupId": "Digus.SubscriptionBoxesMod.BoxDelivery",
+        "Text": "SubscriptionBoxesMod.MinerDelivery.Letter",
+        "RandomlyChooseAttachment": 1,
+        "Attachments": [
+            {"Type": "QualifiedItemId","Index": "(O)378","Stack": 25,"ProbabilityWeight": 20,"RandomGroup": "Ore"}, //Copper Ore
+            {"Type": "QualifiedItemId","Index": "(O)380","Stack": 20,"ProbabilityWeight": 15,"RandomGroup": "Ore"}, //Iron Ore
+            {"Type": "QualifiedItemId","Index": "(O)384","Stack": 15,"ProbabilityWeight": 10,"RandomGroup": "Ore"}, //Gold Ore
+            {"Type": "QualifiedItemId","Index": "(O)386","Stack": 10,"ProbabilityWeight": 5,"RandomGroup": "Ore", "RequireMailReceived":["ccCraftsRoom","jojaCraftsRoom","skullCave"]}, //Iridium Ore
+            {"Type": "QualifiedItemId","Index": "(O)909","Stack": 5,"ProbabilityWeight": 1,"RandomGroup": "Ore", "RequireMailReceived":["Digus.SubscriptionBoxesMod.RadiactiveOre"]}, //Radioactive Ore
+            {"Type": "QualifiedItemId","Index": "(O)390","Stack": 50,"ProbabilityWeight": 1,"RandomGroup": "Resource"}, //Stone
+            {"Type": "QualifiedItemId","Index": "(O)330","Stack": 5,"ProbabilityWeight": 1,"RandomGroup": "Resource"}, //Clay
+            {"Type": "QualifiedItemId","Index": "(O)382","Stack": 5,"ProbabilityWeight": 1,"RandomGroup": "Resource"}, //Coal
+            {"Type": "QualifiedItemId","Index": "(O)80","Stack": 5,"ProbabilityWeight": 3,"RandomGroup": "Mineral"}, //Quartz
+            {"Type": "QualifiedItemId","Index": "(O)86","Stack": 3,"ProbabilityWeight": 2,"RandomGroup": "Mineral"}, //Earth Crystal
+            {"Type": "QualifiedItemId","Index": "(O)84","Stack": 3,"ProbabilityWeight": 2,"RandomGroup": "Mineral"}, //Frozen Tear
+            {"Type": "QualifiedItemId","Index": "(O)82","Stack": 2,"ProbabilityWeight": 1,"RandomGroup": "Mineral"}, //Fire Quartz
+            {"Type": "QualifiedItemId","Index": "(O)60","Stack": 1,"ProbabilityWeight": 12,"RandomGroup": "Gem"}, //Emerald
+            {"Type": "QualifiedItemId","Index": "(O)62","Stack": 1,"ProbabilityWeight": 18,"RandomGroup": "Gem"}, //Aquamarine
+            {"Type": "QualifiedItemId","Index": "(O)64","Stack": 1,"ProbabilityWeight": 12,"RandomGroup": "Gem"}, //Ruby
+            {"Type": "QualifiedItemId","Index": "(O)66","Stack": 1,"ProbabilityWeight": 18,"RandomGroup": "Gem"}, //Amethyst
+            {"Type": "QualifiedItemId","Index": "(O)68","Stack": 1,"ProbabilityWeight": 18,"RandomGroup": "Gem"}, //Topaz
+            {"Type": "QualifiedItemId","Index": "(O)70","Stack": 1,"ProbabilityWeight": 15,"RandomGroup": "Gem"}, //Jade
+            {"Type": "QualifiedItemId","Index": "(O)72","Stack": 1,"ProbabilityWeight": 6,"RandomGroup": "Gem"}, //Diamond
+            {"Type": "QualifiedItemId","Index": "(O)74","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Gem"}, //Prismatic Shard
+            {"Type": "QualifiedItemId","Index": "(O)238","Stack": 2,"ProbabilityWeight": 25,"RandomGroup": "Food"}, //Cranberry Sauce
+            {"Type": "QualifiedItemId","Index": "(O)231","Stack": 1,"ProbabilityWeight": 25,"RandomGroup": "Food"}, //Eggplant Parmesan
+            {"Type": "QualifiedItemId","Index": "(O)921","Stack": 1,"ProbabilityWeight": 20,"RandomGroup": "Food"}, //Squid Ink Ravioli
+            {"Type": "QualifiedItemId","Index": "(O)243","Stack": 1,"ProbabilityWeight": 15,"RandomGroup": "Food"}, //Miner's Treat
+            {"Type": "QualifiedItemId","Index": "(O)731","Stack": 1,"ProbabilityWeight": 15,"RandomGroup": "Food"}, //Maple Bar
+            {"Type": "QualifiedItemId","Index": "(O)904","Stack": 1,"ProbabilityWeight": 9,"RandomGroup": "Food", "RequireMailReceived":["Island_UpgradeTrader"]}, //Banana Pudding
+            {"Type": "QualifiedItemId","Index": "(O)279","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Food"}, //Magic Rock Candy
+            {"Type": "QualifiedItemId","Index": "(O)535","Stack": 1,"ProbabilityWeight": 4,"RandomGroup": "Geode"}, //Geode
+            {"Type": "QualifiedItemId","Index": "(O)536","Stack": 1,"ProbabilityWeight": 3,"RandomGroup": "Geode"}, //Frozen Geode
+            {"Type": "QualifiedItemId","Index": "(O)537","Stack": 1,"ProbabilityWeight": 2,"RandomGroup": "Geode"}, //Magma Geode
+            {"Type": "QualifiedItemId","Index": "(O)749","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Geode"} //Omni Geode
+        ],
+        "ReplyConfig": {
+            "QuestionKey": "Digus.SubscriptionBoxesMod.MinerStandardBoxDelivery.Question",
+            "QuestionDialog": "SubscriptionBoxesMod.Delivery.Question",
+            "Replies": [
+                {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.Delivery.Keep",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.Delivery.Keep",
+                    "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxType", "Digus.SubscriptionBoxesMod.BoxType.Miner", "Digus.SubscriptionBoxesMod.BoxTier", "Digus.SubscriptionBoxesMod.BoxTier.Standard" ],
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.Delivery.Keep.Response",
+                    "Cost": 500
+                },
+                {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.Delivery.Later",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.Delivery.Later",
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.Delivery.Later.Response"
+                },
+                {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.Delivery.Miner",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.BoxType.Miner",
+                    "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxType.Miner", "Digus.SubscriptionBoxesMod.BoxType" ],
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.BoxType.Miner.Response"
+                },
+                {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.Delivery.Forager",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.BoxType.Forager",
+                    "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxType.Forager", "Digus.SubscriptionBoxesMod.BoxType" ],
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.BoxType.Forager.Response"
+                },
+                {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.Delivery.Adventurer",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.BoxType.Adventurer",
+                    "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxType.Adventurer", "Digus.SubscriptionBoxesMod.BoxType" ],
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.BoxType.Adventurer.Response"
+                }
+            ]
+        },
+        "Days": [ 5, 12, 19, 26 ],
+        "MailReceived": [ "Digus.SubscriptionBoxesMod.BoxType.Miner", "Digus.SubscriptionBoxesMod.BoxTier.Standard" ],
+        "RequireAllMailReceived": true,
+        "MailReceivedToRemove": [ "Digus.SubscriptionBoxesMod.BoxType", "Digus.SubscriptionBoxesMod.BoxType.Miner", "Digus.SubscriptionBoxesMod.BoxTier", "Digus.SubscriptionBoxesMod.BoxTier.Standard" ],
+        "Repeatable": true,
+        "KeepValid": true
+    },
+    {
+        "Id": "Digus.SubscriptionBoxesMod.MinerDeluxeBoxDelivery",
+        "Title": "SubscriptionBoxesMod.MinerDelivery.Letter.Title",
+        "GroupId": "Digus.SubscriptionBoxesMod.BoxDelivery",
+        "Text": "SubscriptionBoxesMod.MinerDelivery.Letter",
+        "RandomlyChooseAttachment": 2,
+        "RandomlyChooseAttachmentPerGroup": { "Geode": 1 },
+        "Attachments": [
+            {"Type": "QualifiedItemId","Index": "(O)378","Stack": 25,"ProbabilityWeight": 20,"RandomGroup": "Ore"}, //Copper Ore
+            {"Type": "QualifiedItemId","Index": "(O)380","Stack": 20,"ProbabilityWeight": 15,"RandomGroup": "Ore"}, //Iron Ore
+            {"Type": "QualifiedItemId","Index": "(O)384","Stack": 15,"ProbabilityWeight": 10,"RandomGroup": "Ore"}, //Gold Ore
+            {"Type": "QualifiedItemId","Index": "(O)386","Stack": 10,"ProbabilityWeight": 5,"RandomGroup": "Ore", "RequireMailReceived":["ccCraftsRoom","jojaCraftsRoom","skullCave"]}, //Iridium Ore
+            {"Type": "QualifiedItemId","Index": "(O)909","Stack": 5,"ProbabilityWeight": 1,"RandomGroup": "Ore", "RequireMailReceived":["Digus.SubscriptionBoxesMod.RadiactiveOre"]}, //Radioactive Ore
+            {"Type": "QualifiedItemId","Index": "(O)390","Stack": 50,"ProbabilityWeight": 1,"RandomGroup": "Resource"}, //Stone
+            {"Type": "QualifiedItemId","Index": "(O)330","Stack": 5,"ProbabilityWeight": 1,"RandomGroup": "Resource"}, //Clay
+            {"Type": "QualifiedItemId","Index": "(O)382","Stack": 5,"ProbabilityWeight": 1,"RandomGroup": "Resource"}, //Coal
+            {"Type": "QualifiedItemId","Index": "(O)80","Stack": 5,"ProbabilityWeight": 3,"RandomGroup": "Mineral"}, //Quartz
+            {"Type": "QualifiedItemId","Index": "(O)86","Stack": 3,"ProbabilityWeight": 2,"RandomGroup": "Mineral"}, //Earth Crystal
+            {"Type": "QualifiedItemId","Index": "(O)84","Stack": 3,"ProbabilityWeight": 2,"RandomGroup": "Mineral"}, //Frozen Tear
+            {"Type": "QualifiedItemId","Index": "(O)82","Stack": 2,"ProbabilityWeight": 1,"RandomGroup": "Mineral"}, //Fire Quartz
+            {"Type": "QualifiedItemId","Index": "(O)60","Stack": 1,"ProbabilityWeight": 12,"RandomGroup": "Gem"}, //Emerald
+            {"Type": "QualifiedItemId","Index": "(O)62","Stack": 1,"ProbabilityWeight": 18,"RandomGroup": "Gem"}, //Aquamarine
+            {"Type": "QualifiedItemId","Index": "(O)64","Stack": 1,"ProbabilityWeight": 12,"RandomGroup": "Gem"}, //Ruby
+            {"Type": "QualifiedItemId","Index": "(O)66","Stack": 1,"ProbabilityWeight": 18,"RandomGroup": "Gem"}, //Amethyst
+            {"Type": "QualifiedItemId","Index": "(O)68","Stack": 1,"ProbabilityWeight": 18,"RandomGroup": "Gem"}, //Topaz
+            {"Type": "QualifiedItemId","Index": "(O)70","Stack": 1,"ProbabilityWeight": 15,"RandomGroup": "Gem"}, //Jade
+            {"Type": "QualifiedItemId","Index": "(O)72","Stack": 1,"ProbabilityWeight": 6,"RandomGroup": "Gem"}, //Diamond
+            {"Type": "QualifiedItemId","Index": "(O)74","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Gem"}, //Prismatic Shard
+            {"Type": "QualifiedItemId","Index": "(O)238","Stack": 2,"ProbabilityWeight": 25,"RandomGroup": "Food"}, //Cranberry Sauce
+            {"Type": "QualifiedItemId","Index": "(O)231","Stack": 1,"ProbabilityWeight": 25,"RandomGroup": "Food"}, //Eggplant Parmesan
+            {"Type": "QualifiedItemId","Index": "(O)921","Stack": 1,"ProbabilityWeight": 20,"RandomGroup": "Food"}, //Squid Ink Ravioli
+            {"Type": "QualifiedItemId","Index": "(O)243","Stack": 1,"ProbabilityWeight": 15,"RandomGroup": "Food"}, //Miner's Treat
+            {"Type": "QualifiedItemId","Index": "(O)731","Stack": 1,"ProbabilityWeight": 15,"RandomGroup": "Food"}, //Maple Bar
+            {"Type": "QualifiedItemId","Index": "(O)904","Stack": 1,"ProbabilityWeight": 9,"RandomGroup": "Food", "RequireMailReceived":["Island_UpgradeTrader"]}, //Banana Pudding
+            {"Type": "QualifiedItemId","Index": "(O)279","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Food"}, //Magic Rock Candy
+            {"Type": "QualifiedItemId","Index": "(O)535","Stack": 3,"ProbabilityWeight": 4,"RandomGroup": "Geode"}, //Geode
+            {"Type": "QualifiedItemId","Index": "(O)536","Stack": 3,"ProbabilityWeight": 3,"RandomGroup": "Geode"}, //Frozen Geode
+            {"Type": "QualifiedItemId","Index": "(O)537","Stack": 3,"ProbabilityWeight": 2,"RandomGroup": "Geode"}, //Magma Geode
+            {"Type": "QualifiedItemId","Index": "(O)749","Stack": 3,"ProbabilityWeight": 1,"RandomGroup": "Geode"} //Omni Geode
+        ],
+        "ReplyConfig": {
+            "QuestionKey": "Digus.SubscriptionBoxesMod.MinerDeluxeBoxDelivery.Question",
+            "QuestionDialog": "SubscriptionBoxesMod.Delivery.Question",
+            "Replies": [
+                {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.Delivery.Keep",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.Delivery.Keep",
+                    "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxType", "Digus.SubscriptionBoxesMod.BoxType.Miner", "Digus.SubscriptionBoxesMod.BoxTier", "Digus.SubscriptionBoxesMod.BoxTier.Deluxe" ],
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.Delivery.Keep.Response",
+                    "Cost": 1000
+                },
+                {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.Delivery.Later",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.Delivery.Later",
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.Delivery.Later.Response"
+                },
+                {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.Delivery.Miner",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.BoxType.Miner",
+                    "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxType.Miner", "Digus.SubscriptionBoxesMod.BoxType" ],
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.BoxType.Miner.Response"
+                },
+                {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.Delivery.Forager",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.BoxType.Forager",
+                    "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxType.Forager", "Digus.SubscriptionBoxesMod.BoxType" ],
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.BoxType.Forager.Response"
+                },
+                {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.Delivery.Adventurer",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.BoxType.Adventurer",
+                    "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxType.Adventurer", "Digus.SubscriptionBoxesMod.BoxType" ],
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.BoxType.Adventurer.Response"
+                }
+            ]
+        },
+        "Days": [ 5, 12, 19, 26 ],
+        "MailReceived": [ "Digus.SubscriptionBoxesMod.BoxType.Miner", "Digus.SubscriptionBoxesMod.BoxTier.Deluxe" ],
+        "RequireAllMailReceived": true,
+        "MailReceivedToRemove": [ "Digus.SubscriptionBoxesMod.BoxType", "Digus.SubscriptionBoxesMod.BoxType.Miner", "Digus.SubscriptionBoxesMod.BoxTier", "Digus.SubscriptionBoxesMod.BoxTier.Deluxe" ],
+        "Repeatable": true,
+        "KeepValid": true
+    },
+    {
+        "Id": "Digus.SubscriptionBoxesMod.MinerPremiumBoxDelivery",
+        "Title": "SubscriptionBoxesMod.MinerDelivery.Letter.Title",
+        "GroupId": "Digus.SubscriptionBoxesMod.BoxDelivery",
+        "Text": "SubscriptionBoxesMod.MinerDelivery.Letter",
+        "RandomlyChooseAttachment": 3,
+        "RandomlyChooseAttachmentPerGroup": { "Geode": 1 },
+        "Attachments": [
+            {"Type": "QualifiedItemId","Index": "(O)378","Stack": 25,"ProbabilityWeight": 20,"RandomGroup": "Ore"}, //Copper Ore
+            {"Type": "QualifiedItemId","Index": "(O)380","Stack": 20,"ProbabilityWeight": 15,"RandomGroup": "Ore"}, //Iron Ore
+            {"Type": "QualifiedItemId","Index": "(O)384","Stack": 15,"ProbabilityWeight": 10,"RandomGroup": "Ore"}, //Gold Ore
+            {"Type": "QualifiedItemId","Index": "(O)386","Stack": 10,"ProbabilityWeight": 5,"RandomGroup": "Ore", "RequireMailReceived":["ccCraftsRoom","jojaCraftsRoom","skullCave"]}, //Iridium Ore
+            {"Type": "QualifiedItemId","Index": "(O)909","Stack": 5,"ProbabilityWeight": 1,"RandomGroup": "Ore", "RequireMailReceived":["Digus.SubscriptionBoxesMod.RadiactiveOre"]}, //Radioactive Ore
+            {"Type": "QualifiedItemId","Index": "(O)390","Stack": 50,"ProbabilityWeight": 1,"RandomGroup": "Resource"}, //Stone
+            {"Type": "QualifiedItemId","Index": "(O)330","Stack": 5,"ProbabilityWeight": 1,"RandomGroup": "Resource"}, //Clay
+            {"Type": "QualifiedItemId","Index": "(O)382","Stack": 5,"ProbabilityWeight": 1,"RandomGroup": "Resource"}, //Coal
+            {"Type": "QualifiedItemId","Index": "(O)80","Stack": 5,"ProbabilityWeight": 3,"RandomGroup": "Mineral"}, //Quartz
+            {"Type": "QualifiedItemId","Index": "(O)86","Stack": 3,"ProbabilityWeight": 2,"RandomGroup": "Mineral"}, //Earth Crystal
+            {"Type": "QualifiedItemId","Index": "(O)84","Stack": 3,"ProbabilityWeight": 2,"RandomGroup": "Mineral"}, //Frozen Tear
+            {"Type": "QualifiedItemId","Index": "(O)82","Stack": 2,"ProbabilityWeight": 1,"RandomGroup": "Mineral"}, //Fire Quartz
+            {"Type": "QualifiedItemId","Index": "(O)60","Stack": 1,"ProbabilityWeight": 12,"RandomGroup": "Gem"}, //Emerald
+            {"Type": "QualifiedItemId","Index": "(O)62","Stack": 1,"ProbabilityWeight": 18,"RandomGroup": "Gem"}, //Aquamarine
+            {"Type": "QualifiedItemId","Index": "(O)64","Stack": 1,"ProbabilityWeight": 12,"RandomGroup": "Gem"}, //Ruby
+            {"Type": "QualifiedItemId","Index": "(O)66","Stack": 1,"ProbabilityWeight": 18,"RandomGroup": "Gem"}, //Amethyst
+            {"Type": "QualifiedItemId","Index": "(O)68","Stack": 1,"ProbabilityWeight": 18,"RandomGroup": "Gem"}, //Topaz
+            {"Type": "QualifiedItemId","Index": "(O)70","Stack": 1,"ProbabilityWeight": 15,"RandomGroup": "Gem"}, //Jade
+            {"Type": "QualifiedItemId","Index": "(O)72","Stack": 1,"ProbabilityWeight": 6,"RandomGroup": "Gem"}, //Diamond
+            {"Type": "QualifiedItemId","Index": "(O)74","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Gem"}, //Prismatic Shard
+            {"Type": "QualifiedItemId","Index": "(O)238","Stack": 2,"ProbabilityWeight": 25,"RandomGroup": "Food"}, //Cranberry Sauce
+            {"Type": "QualifiedItemId","Index": "(O)231","Stack": 1,"ProbabilityWeight": 25,"RandomGroup": "Food"}, //Eggplant Parmesan
+            {"Type": "QualifiedItemId","Index": "(O)921","Stack": 1,"ProbabilityWeight": 20,"RandomGroup": "Food"}, //Squid Ink Ravioli
+            {"Type": "QualifiedItemId","Index": "(O)243","Stack": 1,"ProbabilityWeight": 15,"RandomGroup": "Food"}, //Miner's Treat
+            {"Type": "QualifiedItemId","Index": "(O)731","Stack": 1,"ProbabilityWeight": 15,"RandomGroup": "Food"}, //Maple Bar
+            {"Type": "QualifiedItemId","Index": "(O)904","Stack": 1,"ProbabilityWeight": 9,"RandomGroup": "Food", "RequireMailReceived":["Island_UpgradeTrader"]}, //Banana Pudding
+            {"Type": "QualifiedItemId","Index": "(O)279","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Food"}, //Magic Rock Candy
+            {"Type": "QualifiedItemId","Index": "(O)535","Stack": 5,"ProbabilityWeight": 4,"RandomGroup": "Geode"}, //Geode
+            {"Type": "QualifiedItemId","Index": "(O)536","Stack": 5,"ProbabilityWeight": 3,"RandomGroup": "Geode"}, //Frozen Geode
+            {"Type": "QualifiedItemId","Index": "(O)537","Stack": 5,"ProbabilityWeight": 2,"RandomGroup": "Geode"}, //Magma Geode
+            {"Type": "QualifiedItemId","Index": "(O)749","Stack": 5,"ProbabilityWeight": 1,"RandomGroup": "Geode"} //Omni Geode
+        ],
+        "ReplyConfig": {
+            "QuestionKey": "Digus.SubscriptionBoxesMod.MinerPremiumBoxDelivery.Question",
+            "QuestionDialog": "SubscriptionBoxesMod.Delivery.Question",
+            "Replies": [
+                {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.Delivery.Keep",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.Delivery.Keep",
+                    "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxType", "Digus.SubscriptionBoxesMod.BoxType.Miner", "Digus.SubscriptionBoxesMod.BoxTier", "Digus.SubscriptionBoxesMod.BoxTier.Premium" ],
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.Delivery.Keep.Response",
+                    "Cost": 1500
+                },
+                {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.Delivery.Later",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.Delivery.Later",
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.Delivery.Later.Response"
+                },
+                {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.Delivery.Miner",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.BoxType.Miner",
+                    "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxType.Miner", "Digus.SubscriptionBoxesMod.BoxType" ],
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.BoxType.Miner.Response"
+                },
+                {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.Delivery.Forager",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.BoxType.Forager",
+                    "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxType.Forager", "Digus.SubscriptionBoxesMod.BoxType" ],
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.BoxType.Forager.Response"
+                },
+                {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.Delivery.Adventurer",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.BoxType.Adventurer",
+                    "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxType.Adventurer", "Digus.SubscriptionBoxesMod.BoxType" ],
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.BoxType.Adventurer.Response"
+                }
+            ]
+        },
+        "Days": [ 5, 12, 19, 26 ],
+        "MailReceived": [ "Digus.SubscriptionBoxesMod.BoxType.Miner", "Digus.SubscriptionBoxesMod.BoxTier.Premium" ],
+        "RequireAllMailReceived": true,
+        "MailReceivedToRemove": [ "Digus.SubscriptionBoxesMod.BoxType", "Digus.SubscriptionBoxesMod.BoxType.Miner", "Digus.SubscriptionBoxesMod.BoxTier", "Digus.SubscriptionBoxesMod.BoxTier.Premium" ],
+        "Repeatable": true,
+        "KeepValid": true
+    },
+    {
+        "Id": "Digus.SubscriptionBoxesMod.AdventurerStandardBoxDelivery",
+        "Title": "SubscriptionBoxesMod.AdventurerDelivery.Letter.Title",
+        "GroupId": "Digus.SubscriptionBoxesMod.BoxDelivery",
+        "Text": "SubscriptionBoxesMod.AdventurerDelivery.Letter",
+        "RandomlyChooseAttachment": 1,
+        "Attachments": [
+            {"Type": "QualifiedItemId","Index": "(O)286","Stack": 5,"ProbabilityWeight": 3,"RandomGroup": "Bomb"}, //Cherry Bomb
+            {"Type": "QualifiedItemId","Index": "(O)287","Stack": 5,"ProbabilityWeight": 2,"RandomGroup": "Bomb"}, //Bomb
+            {"Type": "QualifiedItemId","Index": "(O)288","Stack": 5,"ProbabilityWeight": 1,"RandomGroup": "Bomb"}, //Mega Bomb
+            {"Type": "QualifiedItemId","Index": "(O)441","Stack": 10,"ProbabilityWeight": 1,"RandomGroup": "Bomb"}, //Explosive Ammo
+            {"Type": "QualifiedItemId","Index": "(BC)71","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Misc"}, //Staircase
+            {"Type": "QualifiedItemId","Index": "(W)12","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Weapon"}, //Wooden Blade
+            {"Type": "QualifiedItemId","Index": "(W)43","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Weapon", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel40"]}, //Pirate's Sword
+            {"Type": "QualifiedItemId","Index": "(W)12","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Weapon", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel20"]}, //Silver Saber
+            {"Type": "QualifiedItemId","Index": "(W)44","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Weapon", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel40"]}, //Cutlass
+            {"Type": "QualifiedItemId","Index": "(W)15","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Weapon", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel20"]}, //Forest Sword
+            {"Type": "QualifiedItemId","Index": "(W)6","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Weapon", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel40"]}, //Iron Edge
+            {"Type": "QualifiedItemId","Index": "(W)5","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Weapon", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel80"]}, //Bone Sword
+            {"Type": "QualifiedItemId","Index": "(W)10","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Weapon", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel60"]}, //Claymore
+            {"Type": "QualifiedItemId","Index": "(W)14","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Weapon", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel60"]}, //Neptune's Glaive
+            {"Type": "QualifiedItemId","Index": "(W)7","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Weapon", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel60"]}, //Templar's Blade
+            {"Type": "QualifiedItemId","Index": "(W)60","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Weapon", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel80"]}, //Ossified Blade
+            {"Type": "QualifiedItemId","Index": "(W)3","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Weapon", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel80"]}, //Holy Blade
+            {"Type": "QualifiedItemId","Index": "(W)52","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Weapon", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel80"]}, //Tempered Broadsword
+            {"Type": "QualifiedItemId","Index": "(W)48","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Weapon", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel80"]}, //Yeti Tooth
+            {"Type": "QualifiedItemId","Index": "(W)50","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Weapon", "RequireMailReceived":["HasSkullKey"]}, //Steel Falchion
+            {"Type": "QualifiedItemId","Index": "(W)9","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Weapon", "RequireMailReceived":["HasSkullKey"]}, //Lava Katana
+            {"Type": "QualifiedItemId","Index": "(W)57","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Weapon", "RequireMailReceived":["Island_FirstParrot"]}, //Dragontooth Cutlass
+            {"Type": "QualifiedItemId","Index": "(W)64","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Weapon", "RequireMailReceived":["Island_FirstParrot"]}, //Dwarf Sword
+            {"Type": "QualifiedItemId","Index": "(W)16","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Weapon"}, //Carving Knife
+            {"Type": "QualifiedItemId","Index": "(W)17","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Weapon", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel20"]}, //Iron Dirk
+            {"Type": "QualifiedItemId","Index": "(W)22","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Weapon", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel20"]}, //Wind Spire
+            {"Type": "QualifiedItemId","Index": "(W)20","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Weapon", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel20"]}, //Elf Blade
+            {"Type": "QualifiedItemId","Index": "(W)18","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Weapon", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel60"]}, //Burglar's Shank
+            {"Type": "QualifiedItemId","Index": "(W)19","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Weapon", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel80"]}, //Shadow Dagger
+            {"Type": "QualifiedItemId","Index": "(W)51","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Weapon", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel40"]}, //Broken Trident
+            {"Type": "QualifiedItemId","Index": "(W)45","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Weapon", "RequireMailReceived":["HasSkullKey"]}, //Wicked Kris
+            {"Type": "QualifiedItemId","Index": "(W)56","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Weapon", "RequireMailReceived":["Island_FirstParrot"]}, //Dwarf Dagger
+            {"Type": "QualifiedItemId","Index": "(W)59","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Weapon", "RequireMailReceived":["Island_FirstParrot"]}, //Dragontooth Shiv
+            {"Type": "QualifiedItemId","Index": "(W)31","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Weapon", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel20"]}, //Femur
+            {"Type": "QualifiedItemId","Index": "(W)24","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Weapon"}, //Wood Club
+            {"Type": "QualifiedItemId","Index": "(W)27","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Weapon", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel40"]}, //Wood Mallet
+            {"Type": "QualifiedItemId","Index": "(W)26","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Weapon", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel40"]}, //Lead Rod
+            {"Type": "QualifiedItemId","Index": "(W)46","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Weapon", "RequireMailReceived":["HasSkullKey"]}, //Kudgel
+            {"Type": "QualifiedItemId","Index": "(W)28","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Weapon", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel80"]}, //The Slammer
+            {"Type": "QualifiedItemId","Index": "(W)55","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Weapon", "RequireMailReceived":["Island_FirstParrot"]}, //Dwarf Hammer
+            {"Type": "QualifiedItemId","Index": "(W)58","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Weapon", "RequireMailReceived":["Island_FirstParrot"]}, //Dragontooth Club
+            {"Type": "QualifiedItemId","Index": "(B)504","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Wearable"}, //Sneakers
+            {"Type": "QualifiedItemId","Index": "(B)505","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Wearable"}, //Rubber Boots
+            {"Type": "QualifiedItemId","Index": "(B)507","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Wearable", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel20"]}, //Work Boots
+            {"Type": "QualifiedItemId","Index": "(B)508","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Wearable", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel40"]}, //Combat Boots
+            {"Type": "QualifiedItemId","Index": "(B)509","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Wearable", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel60"]}, //Tundra Boots
+            {"Type": "QualifiedItemId","Index": "(B)510","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Wearable", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel40"]}, //Thermal Boots
+            {"Type": "QualifiedItemId","Index": "(B)511","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Wearable", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel80"]}, //Dark Boots
+            {"Type": "QualifiedItemId","Index": "(B)513","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Wearable", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel80"]}, //Genie Shoes
+            {"Type": "QualifiedItemId","Index": "(B)514","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Wearable", "RequireMailReceived":["HasSkullKey"]}, //Space Boots
+            {"Type": "QualifiedItemId","Index": "(B)878","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Wearable", "RequireMailReceived":["HasSkullKey"]}, //Crystal Shoes
+            {"Type": "QualifiedItemId","Index": "(B)854","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Wearable", "RequireMailReceived":["Island_FirstParrot"]}, //Mermaid Boots
+            {"Type": "QualifiedItemId","Index": "(B)855","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Wearable", "RequireMailReceived":["Island_FirstParrot"]}, //Dragonscale Boots
+            {"Type": "QualifiedItemId","Index": "(O)516","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Wearable"}, //Small Glow Ring
+            {"Type": "QualifiedItemId","Index": "(O)517","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Wearable", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel40"]}, //Glow Ring
+            {"Type": "QualifiedItemId","Index": "(O)518","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Wearable"}, //Small Magnet Ring
+            {"Type": "QualifiedItemId","Index": "(O)519","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Wearable", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel40"]}, //Magnet Ring
+            {"Type": "QualifiedItemId","Index": "(O)529","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Wearable"}, //Amethyst Ring
+            {"Type": "QualifiedItemId","Index": "(O)530","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Wearable"}, //Topaz Ring
+            {"Type": "QualifiedItemId","Index": "(O)531","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Wearable", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel40"]}, //Aquamarine Ring
+            {"Type": "QualifiedItemId","Index": "(O)532","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Wearable", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel40"]}, //Jade Ring
+            {"Type": "QualifiedItemId","Index": "(O)533","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Wearable", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel80"]}, //Emerald Ring
+            {"Type": "QualifiedItemId","Index": "(O)534","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Wearable", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel80"]}, //Ruby Ring
+            {"Type": "QualifiedItemId","Index": "(O)859","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Wearable", "RequireMailReceived":["HasSkullKey","ccFishTank","jojaFishTank"]}, //Lucky Ring
+            {"Type": "QualifiedItemId","Index": "(O)860","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Wearable", "RequireMailReceived":["Island_FirstParrot"]}, //Hot Java Ring
+            {"Type": "QualifiedItemId","Index": "(O)861","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Wearable", "RequireMailReceived":["Island_FirstParrot"]}, //Protection Ring
+            {"Type": "QualifiedItemId","Index": "(O)862","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Wearable", "RequireMailReceived":["Island_FirstParrot"]}, //Soul Sapper Ring
+            {"Type": "QualifiedItemId","Index": "(O)863","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Wearable", "RequireMailReceived":["Island_FirstParrot"]}, //Phoenix Ring
+            {"Type": "QualifiedItemId","Index": "(O)887","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Wearable", "RequireMailReceived":["HasSkullKey"]}, //Immunity Band
+            {"Type": "QualifiedItemId","Index": "(O)874","Stack": 3,"ProbabilityWeight": 1,"RandomGroup": "Food"}, //Bug Steak
+            {"Type": "QualifiedItemId","Index": "(O)204","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Food"}, //Lucky Lunch
+            {"Type": "QualifiedItemId","Index": "(O)205","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Food"}, //Fried Mushroom
+            {"Type": "QualifiedItemId","Index": "(O)225","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Food"}, //Fried Eel
+            {"Type": "QualifiedItemId","Index": "(O)226","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Food"}, //Spicy Eel
+            {"Type": "QualifiedItemId","Index": "(O)231","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Food"}, //Eggplant Parmesan
+            {"Type": "QualifiedItemId","Index": "(O)236","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Food"}, //Pumpkin Soup
+            {"Type": "QualifiedItemId","Index": "(O)237","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Food"}, //Super Meal
+            {"Type": "QualifiedItemId","Index": "(O)239","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Food"}, //Stuffing
+            {"Type": "QualifiedItemId","Index": "(O)244","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Food"}, //Roots Platter
+            {"Type": "QualifiedItemId","Index": "(O)732","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Food"}, //Crab Cakes
+            {"Type": "QualifiedItemId","Index": "(O)905","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Food", "RequireMailReceived":["Visited_Island"]}, //Mango Sticky Rice
+            {"Type": "QualifiedItemId","Index": "(O)921","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Food"}, //Squid Ink Ravioli
+            {"Type": "QualifiedItemId","Index": "(O)773","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Food"}, //Life Elixir
+            {"Type": "QualifiedItemId","Index": "(O)772","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Food"}, //Oil of Garlic
+            {"Type": "QualifiedItemId","Index": "(O)879","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Food", "RequireMailReceived":["WizardReward"]}, //Monster Musk
+            {"Type": "QualifiedItemId","Index": "(O)903","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Food", "RequireMailReceived":["Island_FirstParrot"]}, //Ginger Ale
+            {"Type": "QualifiedItemId","Index": "(O)253","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Food"}, //Triple Shot Espresso
+            {"Type": "QualifiedItemId","Index": "(O)395","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Food"} //Coffee
+        ],
+        "ReplyConfig": {
+            "QuestionKey": "Digus.SubscriptionBoxesMod.AdventurerStandardBoxDelivery.Question",
+            "QuestionDialog": "SubscriptionBoxesMod.Delivery.Question",
+            "Replies": [
+                {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.Delivery.Keep",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.Delivery.Keep",
+                    "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxType", "Digus.SubscriptionBoxesMod.BoxType.Adventurer", "Digus.SubscriptionBoxesMod.BoxTier", "Digus.SubscriptionBoxesMod.BoxTier.Standard" ],
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.Delivery.Keep.Response",
+                    "Cost": 500
+                },
+                {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.Delivery.Later",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.Delivery.Later",
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.Delivery.Later.Response"
+                },
+                {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.Delivery.Miner",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.BoxType.Miner",
+                    "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxType.Miner", "Digus.SubscriptionBoxesMod.BoxType" ],
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.BoxType.Miner.Response"
+                },
+                {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.Delivery.Forager",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.BoxType.Forager",
+                    "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxType.Forager", "Digus.SubscriptionBoxesMod.BoxType" ],
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.BoxType.Forager.Response"
+                },
+                {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.Delivery.Adventurer",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.BoxType.Adventurer",
+                    "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxType.Adventurer", "Digus.SubscriptionBoxesMod.BoxType" ],
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.BoxType.Adventurer.Response"
+                }
+            ]
+        },
+        "Days": [ 5, 12, 19, 26 ],
+        "MailReceived": [ "Digus.SubscriptionBoxesMod.BoxType.Adventurer", "Digus.SubscriptionBoxesMod.BoxTier.Standard" ],
+        "RequireAllMailReceived": true,
+        "MailReceivedToRemove": [ "Digus.SubscriptionBoxesMod.BoxType", "Digus.SubscriptionBoxesMod.BoxType.Adventurer", "Digus.SubscriptionBoxesMod.BoxTier", "Digus.SubscriptionBoxesMod.BoxTier.Standard" ],
+        "Repeatable": true,
+        "KeepValid": true
+    },
+    {
+        "Id": "Digus.SubscriptionBoxesMod.AdventurerDeluxeBoxDelivery",
+        "Title": "SubscriptionBoxesMod.AdventurerDelivery.Letter.Title",
+        "GroupId": "Digus.SubscriptionBoxesMod.BoxDelivery",
+        "Text": "SubscriptionBoxesMod.AdventurerDelivery.Letter",
+        "RandomlyChooseAttachment": 1,
+        "Attachments": [
+            {"Type": "QualifiedItemId","Index": "(O)286","Stack": 5,"ProbabilityWeight": 3,"RandomGroup": "Bomb"}, //Cherry Bomb
+            {"Type": "QualifiedItemId","Index": "(O)287","Stack": 5,"ProbabilityWeight": 2,"RandomGroup": "Bomb"}, //Bomb
+            {"Type": "QualifiedItemId","Index": "(O)288","Stack": 5,"ProbabilityWeight": 1,"RandomGroup": "Bomb"}, //Mega Bomb
+            {"Type": "QualifiedItemId","Index": "(O)441","Stack": 10,"ProbabilityWeight": 1,"RandomGroup": "Bomb"}, //Explosive Ammo
+            {"Type": "QualifiedItemId","Index": "(BC)71","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Misc"}, //Staircase
+            {"Type": "QualifiedItemId","Index": "(W)12","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Sword"}, //Wooden Blade
+            {"Type": "QualifiedItemId","Index": "(W)43","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Sword", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel40"]}, //Pirate's Sword
+            {"Type": "QualifiedItemId","Index": "(W)12","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Sword", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel20"]}, //Silver Saber
+            {"Type": "QualifiedItemId","Index": "(W)44","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Sword", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel40"]}, //Cutlass
+            {"Type": "QualifiedItemId","Index": "(W)15","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Sword", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel20"]}, //Forest Sword
+            {"Type": "QualifiedItemId","Index": "(W)6","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Sword", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel40"]}, //Iron Edge
+            {"Type": "QualifiedItemId","Index": "(W)5","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Sword", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel80"]}, //Bone Sword
+            {"Type": "QualifiedItemId","Index": "(W)10","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Sword", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel60"]}, //Claymore
+            {"Type": "QualifiedItemId","Index": "(W)14","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Sword", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel60"]}, //Neptune's Glaive
+            {"Type": "QualifiedItemId","Index": "(W)7","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Sword", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel60"]}, //Templar's Blade
+            {"Type": "QualifiedItemId","Index": "(W)60","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Sword", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel80"]}, //Ossified Blade
+            {"Type": "QualifiedItemId","Index": "(W)3","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Sword", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel80"]}, //Holy Blade
+            {"Type": "QualifiedItemId","Index": "(W)52","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Sword", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel80"]}, //Tempered Broadsword
+            {"Type": "QualifiedItemId","Index": "(W)48","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Sword", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel80"]}, //Yeti Tooth
+            {"Type": "QualifiedItemId","Index": "(W)50","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Sword", "RequireMailReceived":["HasSkullKey"]}, //Steel Falchion
+            {"Type": "QualifiedItemId","Index": "(W)9","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Sword", "RequireMailReceived":["HasSkullKey"]}, //Lava Katana
+            {"Type": "QualifiedItemId","Index": "(W)57","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Sword", "RequireMailReceived":["Island_FirstParrot"]}, //Dragontooth Cutlass
+            {"Type": "QualifiedItemId","Index": "(W)64","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Sword", "RequireMailReceived":["Island_FirstParrot"]}, //Dwarf Sword
+            {"Type": "QualifiedItemId","Index": "(W)16","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Weapon"}, //Carving Knife
+            {"Type": "QualifiedItemId","Index": "(W)17","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Weapon", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel20"]}, //Iron Dirk
+            {"Type": "QualifiedItemId","Index": "(W)22","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Weapon", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel20"]}, //Wind Spire
+            {"Type": "QualifiedItemId","Index": "(W)20","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Weapon", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel20"]}, //Elf Blade
+            {"Type": "QualifiedItemId","Index": "(W)18","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Weapon", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel60"]}, //Burglar's Shank
+            {"Type": "QualifiedItemId","Index": "(W)19","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Weapon", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel80"]}, //Shadow Dagger
+            {"Type": "QualifiedItemId","Index": "(W)51","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Weapon", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel40"]}, //Broken Trident
+            {"Type": "QualifiedItemId","Index": "(W)45","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Weapon", "RequireMailReceived":["HasSkullKey"]}, //Wicked Kris
+            {"Type": "QualifiedItemId","Index": "(W)56","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Weapon", "RequireMailReceived":["Island_FirstParrot"]}, //Dwarf Dagger
+            {"Type": "QualifiedItemId","Index": "(W)59","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Weapon", "RequireMailReceived":["Island_FirstParrot"]}, //Dragontooth Shiv
+            {"Type": "QualifiedItemId","Index": "(W)31","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Weapon", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel20"]}, //Femur
+            {"Type": "QualifiedItemId","Index": "(W)24","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Weapon"}, //Wood Club
+            {"Type": "QualifiedItemId","Index": "(W)27","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Weapon", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel40"]}, //Wood Mallet
+            {"Type": "QualifiedItemId","Index": "(W)26","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Weapon", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel40"]}, //Lead Rod
+            {"Type": "QualifiedItemId","Index": "(W)46","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Weapon", "RequireMailReceived":["HasSkullKey"]}, //Kudgel
+            {"Type": "QualifiedItemId","Index": "(W)28","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Weapon", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel80"]}, //The Slammer
+            {"Type": "QualifiedItemId","Index": "(W)55","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Weapon", "RequireMailReceived":["Island_FirstParrot"]}, //Dwarf Hammer
+            {"Type": "QualifiedItemId","Index": "(W)58","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Weapon", "RequireMailReceived":["Island_FirstParrot"]}, //Dragontooth Club
+            {"Type": "QualifiedItemId","Index": "(B)504","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Boots"}, //Sneakers
+            {"Type": "QualifiedItemId","Index": "(B)505","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Boots"}, //Rubber Boots
+            {"Type": "QualifiedItemId","Index": "(B)507","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Boots", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel20"]}, //Work Boots
+            {"Type": "QualifiedItemId","Index": "(B)508","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Boots", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel40"]}, //Combat Boots
+            {"Type": "QualifiedItemId","Index": "(B)509","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Boots", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel60"]}, //Tundra Boots
+            {"Type": "QualifiedItemId","Index": "(B)510","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Boots", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel40"]}, //Thermal Boots
+            {"Type": "QualifiedItemId","Index": "(B)511","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Boots", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel80"]}, //Dark Boots
+            {"Type": "QualifiedItemId","Index": "(B)513","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Boots", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel80"]}, //Genie Shoes
+            {"Type": "QualifiedItemId","Index": "(B)514","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Boots", "RequireMailReceived":["HasSkullKey"]}, //Space Boots
+            {"Type": "QualifiedItemId","Index": "(B)878","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Boots", "RequireMailReceived":["HasSkullKey"]}, //Crystal Shoes
+            {"Type": "QualifiedItemId","Index": "(B)854","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Boots", "RequireMailReceived":["Island_FirstParrot"]}, //Mermaid Boots
+            {"Type": "QualifiedItemId","Index": "(B)855","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Boots", "RequireMailReceived":["Island_FirstParrot"]}, //Dragonscale Boots
+            {"Type": "QualifiedItemId","Index": "(O)516","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Ring"}, //Small Glow Ring
+            {"Type": "QualifiedItemId","Index": "(O)517","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Ring", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel40"]}, //Glow Ring
+            {"Type": "QualifiedItemId","Index": "(O)518","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Ring"}, //Small Magnet Ring
+            {"Type": "QualifiedItemId","Index": "(O)519","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Ring", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel40"]}, //Magnet Ring
+            {"Type": "QualifiedItemId","Index": "(O)529","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Ring"}, //Amethyst Ring
+            {"Type": "QualifiedItemId","Index": "(O)530","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Ring"}, //Topaz Ring
+            {"Type": "QualifiedItemId","Index": "(O)531","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Ring", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel40"]}, //Aquamarine Ring
+            {"Type": "QualifiedItemId","Index": "(O)532","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Ring", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel40"]}, //Jade Ring
+            {"Type": "QualifiedItemId","Index": "(O)533","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Ring", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel80"]}, //Emerald Ring
+            {"Type": "QualifiedItemId","Index": "(O)534","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Ring", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel80"]}, //Ruby Ring
+            {"Type": "QualifiedItemId","Index": "(O)859","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Ring", "RequireMailReceived":["HasSkullKey","ccFishTank","jojaFishTank"]}, //Lucky Ring
+            {"Type": "QualifiedItemId","Index": "(O)860","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Ring", "RequireMailReceived":["Island_FirstParrot"]}, //Hot Java Ring
+            {"Type": "QualifiedItemId","Index": "(O)861","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Ring", "RequireMailReceived":["Island_FirstParrot"]}, //Protection Ring
+            {"Type": "QualifiedItemId","Index": "(O)862","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Ring", "RequireMailReceived":["Island_FirstParrot"]}, //Soul Sapper Ring
+            {"Type": "QualifiedItemId","Index": "(O)863","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Ring", "RequireMailReceived":["Island_FirstParrot"]}, //Phoenix Ring
+            {"Type": "QualifiedItemId","Index": "(O)887","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Ring", "RequireMailReceived":["HasSkullKey"]}, //Immunity Band
+            {"Type": "QualifiedItemId","Index": "(O)874","Stack": 3,"ProbabilityWeight": 1,"RandomGroup": "Cooking"}, //Bug Steak
+            {"Type": "QualifiedItemId","Index": "(O)204","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Cooking"}, //Lucky Lunch
+            {"Type": "QualifiedItemId","Index": "(O)205","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Cooking"}, //Fried Mushroom
+            {"Type": "QualifiedItemId","Index": "(O)225","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Cooking"}, //Fried Eel
+            {"Type": "QualifiedItemId","Index": "(O)226","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Cooking"}, //Spicy Eel
+            {"Type": "QualifiedItemId","Index": "(O)231","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Cooking"}, //Eggplant Parmesan
+            {"Type": "QualifiedItemId","Index": "(O)236","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Cooking"}, //Pumpkin Soup
+            {"Type": "QualifiedItemId","Index": "(O)237","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Cooking"}, //Super Meal
+            {"Type": "QualifiedItemId","Index": "(O)239","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Cooking"}, //Stuffing
+            {"Type": "QualifiedItemId","Index": "(O)244","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Cooking"}, //Roots Platter
+            {"Type": "QualifiedItemId","Index": "(O)732","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Cooking"}, //Crab Cakes
+            {"Type": "QualifiedItemId","Index": "(O)905","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Cooking", "RequireMailReceived":["Visited_Island"]}, //Mango Sticky Rice
+            {"Type": "QualifiedItemId","Index": "(O)921","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Cooking"}, //Squid Ink Ravioli
+            {"Type": "QualifiedItemId","Index": "(O)773","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Drinking"}, //Life Elixir
+            {"Type": "QualifiedItemId","Index": "(O)772","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Drinking"}, //Oil of Garlic
+            {"Type": "QualifiedItemId","Index": "(O)879","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Drinking", "RequireMailReceived":["WizardReward"]}, //Monster Musk
+            {"Type": "QualifiedItemId","Index": "(O)903","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Drinking", "RequireMailReceived":["Island_FirstParrot"]}, //Ginger Ale
+            {"Type": "QualifiedItemId","Index": "(O)253","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Drinking"}, //Triple Shot Espresso
+            {"Type": "QualifiedItemId","Index": "(O)395","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Drinking"} //Coffee
+        ],
+        "ReplyConfig": {
+            "QuestionKey": "Digus.SubscriptionBoxesMod.AdventurerDeluxeBoxDelivery.Question",
+            "QuestionDialog": "SubscriptionBoxesMod.Delivery.Question",
+            "Replies": [
+                {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.Delivery.Keep",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.Delivery.Keep",
+                    "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxType", "Digus.SubscriptionBoxesMod.BoxType.Adventurer", "Digus.SubscriptionBoxesMod.BoxTier", "Digus.SubscriptionBoxesMod.BoxTier.Deluxe" ],
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.Delivery.Keep.Response",
+                    "Cost": 1000
+                },
+                {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.Delivery.Later",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.Delivery.Later",
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.Delivery.Later.Response"
+                },
+                {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.Delivery.Miner",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.BoxType.Miner",
+                    "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxType.Miner", "Digus.SubscriptionBoxesMod.BoxType" ],
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.BoxType.Miner.Response"
+                },
+                {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.Delivery.Forager",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.BoxType.Forager",
+                    "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxType.Forager", "Digus.SubscriptionBoxesMod.BoxType" ],
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.BoxType.Forager.Response"
+                },
+                {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.Delivery.Adventurer",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.BoxType.Adventurer",
+                    "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxType.Adventurer", "Digus.SubscriptionBoxesMod.BoxType" ],
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.BoxType.Adventurer.Response"
+                }
+            ]
+        },
+        "Days": [ 5, 12, 19, 26 ],
+        "MailReceived": [ "Digus.SubscriptionBoxesMod.BoxType.Adventurer", "Digus.SubscriptionBoxesMod.BoxTier.Deluxe" ],
+        "RequireAllMailReceived": true,
+        "MailReceivedToRemove": [ "Digus.SubscriptionBoxesMod.BoxType", "Digus.SubscriptionBoxesMod.BoxType.Adventurer", "Digus.SubscriptionBoxesMod.BoxTier", "Digus.SubscriptionBoxesMod.BoxTier.Deluxe" ],
+        "Repeatable": true,
+        "KeepValid": true
+    },
+    {
+        "Id": "Digus.SubscriptionBoxesMod.AdventurerPremiumBoxDelivery",
+        "Title": "SubscriptionBoxesMod.AdventurerDelivery.Letter.Title",
+        "GroupId": "Digus.SubscriptionBoxesMod.BoxDelivery",
+        "Text": "SubscriptionBoxesMod.AdventurerDelivery.Letter",
+        "RandomlyChooseAttachment": 1,
+        "RandomlyChooseAttachmentPerGroup": { "Ring": 2,  "Cooking": 2},
+        "Attachments": [
+            {"Type": "QualifiedItemId","Index": "(O)286","Stack": 5,"ProbabilityWeight": 3,"RandomGroup": "Bomb"}, //Cherry Bomb
+            {"Type": "QualifiedItemId","Index": "(O)287","Stack": 5,"ProbabilityWeight": 2,"RandomGroup": "Bomb"}, //Bomb
+            {"Type": "QualifiedItemId","Index": "(O)288","Stack": 5,"ProbabilityWeight": 1,"RandomGroup": "Bomb"}, //Mega Bomb
+            {"Type": "QualifiedItemId","Index": "(O)441","Stack": 10,"ProbabilityWeight": 1,"RandomGroup": "Bomb"}, //Explosive Ammo
+            {"Type": "QualifiedItemId","Index": "(BC)71","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Misc"}, //Staircase
+            {"Type": "QualifiedItemId","Index": "(W)12","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Sword"}, //Wooden Blade
+            {"Type": "QualifiedItemId","Index": "(W)43","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Sword", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel40"]}, //Pirate's Sword
+            {"Type": "QualifiedItemId","Index": "(W)12","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Sword", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel20"]}, //Silver Saber
+            {"Type": "QualifiedItemId","Index": "(W)44","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Sword", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel40"]}, //Cutlass
+            {"Type": "QualifiedItemId","Index": "(W)15","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Sword", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel20"]}, //Forest Sword
+            {"Type": "QualifiedItemId","Index": "(W)6","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Sword", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel40"]}, //Iron Edge
+            {"Type": "QualifiedItemId","Index": "(W)5","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Sword", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel80"]}, //Bone Sword
+            {"Type": "QualifiedItemId","Index": "(W)10","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Sword", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel60"]}, //Claymore
+            {"Type": "QualifiedItemId","Index": "(W)14","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Sword", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel60"]}, //Neptune's Glaive
+            {"Type": "QualifiedItemId","Index": "(W)7","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Sword", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel60"]}, //Templar's Blade
+            {"Type": "QualifiedItemId","Index": "(W)60","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Sword", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel80"]}, //Ossified Blade
+            {"Type": "QualifiedItemId","Index": "(W)3","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Sword", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel80"]}, //Holy Blade
+            {"Type": "QualifiedItemId","Index": "(W)52","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Sword", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel80"]}, //Tempered Broadsword
+            {"Type": "QualifiedItemId","Index": "(W)48","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Sword", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel80"]}, //Yeti Tooth
+            {"Type": "QualifiedItemId","Index": "(W)50","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Sword", "RequireMailReceived":["HasSkullKey"]}, //Steel Falchion
+            {"Type": "QualifiedItemId","Index": "(W)9","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Sword", "RequireMailReceived":["HasSkullKey"]}, //Lava Katana
+            {"Type": "QualifiedItemId","Index": "(W)57","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Sword", "RequireMailReceived":["Island_FirstParrot"]}, //Dragontooth Cutlass
+            {"Type": "QualifiedItemId","Index": "(W)64","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Sword", "RequireMailReceived":["Island_FirstParrot"]}, //Dwarf Sword
+            {"Type": "QualifiedItemId","Index": "(W)16","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Dagger"}, //Carving Knife
+            {"Type": "QualifiedItemId","Index": "(W)17","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Dagger", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel20"]}, //Iron Dirk
+            {"Type": "QualifiedItemId","Index": "(W)22","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Dagger", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel20"]}, //Wind Spire
+            {"Type": "QualifiedItemId","Index": "(W)20","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Dagger", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel20"]}, //Elf Blade
+            {"Type": "QualifiedItemId","Index": "(W)18","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Dagger", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel60"]}, //Burglar's Shank
+            {"Type": "QualifiedItemId","Index": "(W)19","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Dagger", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel80"]}, //Shadow Dagger
+            {"Type": "QualifiedItemId","Index": "(W)51","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Dagger", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel40"]}, //Broken Trident
+            {"Type": "QualifiedItemId","Index": "(W)45","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Dagger", "RequireMailReceived":["HasSkullKey"]}, //Wicked Kris
+            {"Type": "QualifiedItemId","Index": "(W)56","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Dagger", "RequireMailReceived":["Island_FirstParrot"]}, //Dwarf Dagger
+            {"Type": "QualifiedItemId","Index": "(W)59","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Dagger", "RequireMailReceived":["Island_FirstParrot"]}, //Dragontooth Shiv
+            {"Type": "QualifiedItemId","Index": "(W)31","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Club", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel20"]}, //Femur
+            {"Type": "QualifiedItemId","Index": "(W)24","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Club"}, //Wood Club
+            {"Type": "QualifiedItemId","Index": "(W)27","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Club", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel40"]}, //Wood Mallet
+            {"Type": "QualifiedItemId","Index": "(W)26","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Club", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel40"]}, //Lead Rod
+            {"Type": "QualifiedItemId","Index": "(W)46","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Club", "RequireMailReceived":["HasSkullKey"]}, //Kudgel
+            {"Type": "QualifiedItemId","Index": "(W)28","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Club", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel80"]}, //The Slammer
+            {"Type": "QualifiedItemId","Index": "(W)55","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Club", "RequireMailReceived":["Island_FirstParrot"]}, //Dwarf Hammer
+            {"Type": "QualifiedItemId","Index": "(W)58","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Club", "RequireMailReceived":["Island_FirstParrot"]}, //Dragontooth Club
+            {"Type": "QualifiedItemId","Index": "(B)504","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Boots"}, //Sneakers
+            {"Type": "QualifiedItemId","Index": "(B)505","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Boots"}, //Rubber Boots
+            {"Type": "QualifiedItemId","Index": "(B)507","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Boots", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel20"]}, //Work Boots
+            {"Type": "QualifiedItemId","Index": "(B)508","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Boots", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel40"]}, //Combat Boots
+            {"Type": "QualifiedItemId","Index": "(B)509","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Boots", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel60"]}, //Tundra Boots
+            {"Type": "QualifiedItemId","Index": "(B)510","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Boots", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel40"]}, //Thermal Boots
+            {"Type": "QualifiedItemId","Index": "(B)511","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Boots", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel80"]}, //Dark Boots
+            {"Type": "QualifiedItemId","Index": "(B)513","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Boots", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel80"]}, //Genie Shoes
+            {"Type": "QualifiedItemId","Index": "(B)514","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Boots", "RequireMailReceived":["HasSkullKey"]}, //Space Boots
+            {"Type": "QualifiedItemId","Index": "(B)878","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Boots", "RequireMailReceived":["HasSkullKey"]}, //Crystal Shoes
+            {"Type": "QualifiedItemId","Index": "(B)854","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Boots", "RequireMailReceived":["Island_FirstParrot"]}, //Mermaid Boots
+            {"Type": "QualifiedItemId","Index": "(B)855","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Boots", "RequireMailReceived":["Island_FirstParrot"]}, //Dragonscale Boots
+            {"Type": "QualifiedItemId","Index": "(O)516","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Ring"}, //Small Glow Ring
+            {"Type": "QualifiedItemId","Index": "(O)517","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Ring", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel40"]}, //Glow Ring
+            {"Type": "QualifiedItemId","Index": "(O)518","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Ring"}, //Small Magnet Ring
+            {"Type": "QualifiedItemId","Index": "(O)519","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Ring", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel40"]}, //Magnet Ring
+            {"Type": "QualifiedItemId","Index": "(O)529","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Ring"}, //Amethyst Ring
+            {"Type": "QualifiedItemId","Index": "(O)530","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Ring"}, //Topaz Ring
+            {"Type": "QualifiedItemId","Index": "(O)531","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Ring", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel40"]}, //Aquamarine Ring
+            {"Type": "QualifiedItemId","Index": "(O)532","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Ring", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel40"]}, //Jade Ring
+            {"Type": "QualifiedItemId","Index": "(O)533","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Ring", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel80"]}, //Emerald Ring
+            {"Type": "QualifiedItemId","Index": "(O)534","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Ring", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel80"]}, //Ruby Ring
+            {"Type": "QualifiedItemId","Index": "(O)859","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Ring", "RequireMailReceived":["HasSkullKey","ccFishTank","jojaFishTank"]}, //Lucky Ring
+            {"Type": "QualifiedItemId","Index": "(O)860","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Ring", "RequireMailReceived":["Island_FirstParrot"]}, //Hot Java Ring
+            {"Type": "QualifiedItemId","Index": "(O)861","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Ring", "RequireMailReceived":["Island_FirstParrot"]}, //Protection Ring
+            {"Type": "QualifiedItemId","Index": "(O)862","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Ring", "RequireMailReceived":["Island_FirstParrot"]}, //Soul Sapper Ring
+            {"Type": "QualifiedItemId","Index": "(O)863","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Ring", "RequireMailReceived":["Island_FirstParrot"]}, //Phoenix Ring
+            {"Type": "QualifiedItemId","Index": "(O)887","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Ring", "RequireMailReceived":["HasSkullKey"]}, //Immunity Band
+            {"Type": "QualifiedItemId","Index": "(O)874","Stack": 3,"ProbabilityWeight": 1,"RandomGroup": "Cooking"}, //Bug Steak
+            {"Type": "QualifiedItemId","Index": "(O)204","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Cooking"}, //Lucky Lunch
+            {"Type": "QualifiedItemId","Index": "(O)205","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Cooking"}, //Fried Mushroom
+            {"Type": "QualifiedItemId","Index": "(O)225","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Cooking"}, //Fried Eel
+            {"Type": "QualifiedItemId","Index": "(O)226","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Cooking"}, //Spicy Eel
+            {"Type": "QualifiedItemId","Index": "(O)231","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Cooking"}, //Eggplant Parmesan
+            {"Type": "QualifiedItemId","Index": "(O)236","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Cooking"}, //Pumpkin Soup
+            {"Type": "QualifiedItemId","Index": "(O)237","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Cooking"}, //Super Meal
+            {"Type": "QualifiedItemId","Index": "(O)239","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Cooking"}, //Stuffing
+            {"Type": "QualifiedItemId","Index": "(O)244","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Cooking"}, //Roots Platter
+            {"Type": "QualifiedItemId","Index": "(O)732","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Cooking"}, //Crab Cakes
+            {"Type": "QualifiedItemId","Index": "(O)905","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Cooking", "RequireMailReceived":["Visited_Island"]}, //Mango Sticky Rice
+            {"Type": "QualifiedItemId","Index": "(O)921","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Cooking"}, //Squid Ink Ravioli
+            {"Type": "QualifiedItemId","Index": "(O)773","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Drinking"}, //Life Elixir
+            {"Type": "QualifiedItemId","Index": "(O)772","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Drinking"}, //Oil of Garlic
+            {"Type": "QualifiedItemId","Index": "(O)879","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Drinking", "RequireMailReceived":["WizardReward"]}, //Monster Musk
+            {"Type": "QualifiedItemId","Index": "(O)903","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Drinking", "RequireMailReceived":["Island_FirstParrot"]}, //Ginger Ale
+            {"Type": "QualifiedItemId","Index": "(O)253","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Drinking"}, //Triple Shot Espresso
+            {"Type": "QualifiedItemId","Index": "(O)395","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Drinking"} //Coffee
+        ],
+        "ReplyConfig": {
+            "QuestionKey": "Digus.SubscriptionBoxesMod.AdventurerPremiumBoxDelivery.Question",
+            "QuestionDialog": "SubscriptionBoxesMod.Delivery.Question",
+            "Replies": [
+                {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.Delivery.Keep",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.Delivery.Keep",
+                    "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxType", "Digus.SubscriptionBoxesMod.BoxType.Adventurer", "Digus.SubscriptionBoxesMod.BoxTier", "Digus.SubscriptionBoxesMod.BoxTier.Premium" ],
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.Delivery.Keep.Response",
+                    "Cost": 1500
+                },
+                {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.Delivery.Later",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.Delivery.Later",
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.Delivery.Later.Response"
+                },
+                {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.Delivery.Miner",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.BoxType.Miner",
+                    "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxType.Miner", "Digus.SubscriptionBoxesMod.BoxType" ],
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.BoxType.Miner.Response"
+                },
+                {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.Delivery.Forager",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.BoxType.Forager",
+                    "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxType.Forager", "Digus.SubscriptionBoxesMod.BoxType" ],
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.BoxType.Forager.Response"
+                },
+                {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.Delivery.Adventurer",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.BoxType.Adventurer",
+                    "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxType.Adventurer", "Digus.SubscriptionBoxesMod.BoxType" ],
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.BoxType.Adventurer.Response"
+                }
+            ]
+        },
+        "Days": [ 5, 12, 19, 26 ],
+        "MailReceived": [ "Digus.SubscriptionBoxesMod.BoxType.Adventurer", "Digus.SubscriptionBoxesMod.BoxTier.Premium" ],
+        "RequireAllMailReceived": true,
+        "MailReceivedToRemove": [ "Digus.SubscriptionBoxesMod.BoxType", "Digus.SubscriptionBoxesMod.BoxType.Adventurer", "Digus.SubscriptionBoxesMod.BoxTier", "Digus.SubscriptionBoxesMod.BoxTier.Premium" ],
+        "Repeatable": true,
+        "KeepValid": true
+    },
+    {
+        "Id": "Digus.SubscriptionBoxesMod.NoBoxDelivery",
+        "GroupId": "Digus.SubscriptionBoxesMod.BoxDelivery",
+        "Days": [ 5, 12, 19, 26 ],
+        "MailReceived": [ "Digus.SubscriptionBoxesMod.BoxType.Skip" ],
+        "MailReceivedToRemove": [ "Digus.SubscriptionBoxesMod.BoxType", "Digus.SubscriptionBoxesMod.BoxType.Skip" ],
+        "Repeatable": true,
+        "AutoOpen": true
+    },
+    {
+        "Id": "Digus.SubscriptionBoxesMod.ForagingMastery",
+        "StatsConditions": [
+            {
+                "StatsLabel": "mastery_2",
+                "Amount": 1
+            }
+        ],
+        "AutoOpen": true
+    },
+    {
+        "Id": "Digus.SubscriptionBoxesMod.RadiactiveOre",
+        "CollectionConditions": [
+            {
+                "Collection": "Shipped",
+                "Ids": [ "909" ],
+                "Amount": 1
+            }
+        ],
+        "AutoOpen": true
+    },
+    {
+        "Id": "Digus.SubscriptionBoxesMod.MinesLevel40",
+        "DeepestMineLevel": 40,
+        "AutoOpen": true
+    },
+    {
+        "Id": "Digus.SubscriptionBoxesMod.MinesLevel20",
+        "DeepestMineLevel": 20,
+        "AutoOpen": true
+    },
+    {
+        "Id": "Digus.SubscriptionBoxesMod.MinesLevel60",
+        "DeepestMineLevel": 60,
+        "AutoOpen": true
+    },
+    {
+        "Id": "Digus.SubscriptionBoxesMod.MinesLevel80",
+        "DeepestMineLevel": 80,
+        "AutoOpen": true
+    }
+]
