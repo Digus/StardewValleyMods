@@ -41,6 +41,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdvancedCasksMod", "Advance
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdvancedWeatherForecastMod", "AdvancedWeatherForecastMod\AdvancedWeatherForecastMod.csproj", "{832418C2-ACD5-4685-9156-6157E0526B34}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SubscriptionBoxesMod", "SubscriptionBoxesMod\SubscriptionBoxesMod.csproj", "{8E386F1C-2894-4D68-B7A1-76E73BB997D4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

@@ -4,13 +4,20 @@
 		"GroupId": "MyMod.MyGroupId", // Letter group id. Letters with the same group id are never delivered in the same day. Letters registered first have priority, unless the group id ends with ".Random", in that case, a random letter will be chosen. Default is null.
 		"Title": "My Letter Title", // Letter title. Will be shown in the collections menu. Set it null or remove the line if you don't want the letter to appear in the collection. If an translation file is provide, you should put a translation key here, but you can still leave if null for no Title.
 		"Text": "Dear @^This is my custom mail.", // Text of the letter. You can use @ to put the players name and ^ for line breaks. You can also use the base game commands to add money, items and stuff. If an translation file is provide, you should put a translation key here.
+		"RandomlyChooseAttachment": 2, // If a number is set, it will choose randomly that amount of items from the attachment list, per group. Default is null.
+		"RandomlyChooseAttachmentPerGroup": { "CaveItems": 3 }, // If a group and amount is set here, it will use that amount to pick items instead of the one that set on RandomlyChooseAttachment. Default is empty.
+		"AttachmentGroupWithReplacement": [ "CaveItems" ], // Attachments are chosen randonly from a list without replacement by default, if you want the pick to be chosen replacing the the attachments, add the group to the list. If you didn't add groups, use an empty string. Default value is an empty list.
 		"Attachments": [ // List of attachments. Remove the property to not attach items to the mail.
 			{
-				"Type": "Object", // [Object|BigCraftable|Tool|Ring|Furniture|Weapon|Boots|DGA|FullId] Required. The type of item that will be attached. If not provided the item will be ignored.
+				"Type": "Object", // [Object|BigCraftable|Tool|Ring|Furniture|Weapon|Boots|DGA|QualifiedItemId|None] Required. The type of item that will be attached. If not provided the item will be ignored. 'None' is always igored without errors in the log and should be used when you want a probability of not adding an attachment.
 				"Name": "Cave Carrot", // Used to find the item index. That's required if using custom objects like Json Assets ones. Should be the full DGA ID is using DGA. If not provided, the index will be used. Default is null.
 				"Index": "(0)78", // The index of an item. Should be the qualified item id as a string, but will also work as an integer for retro compatibility. If no name is provided or an item for the name is not found, the index is used. Otherwise, the attachment is ignored. Ignored if the type is DGA.
 				"Stack": 1, // The stack value of the item to be delivered. Used only for Objects and BigCraftable. Default is 1.
-				"Quality": 2 // The quality value of the item to be delivered. Used only for Objects. 0 = none, 1 = silver, 2 = gold, 4 = iridium. Default is 0; 
+				"Quality": 2, // The quality value of the item to be delivered. Used only for Objects. 0 = none, 1 = silver, 2 = gold, 4 = iridium. Default is 0;
+				"RequireMailReceived": [ "jojaVault", "ccVault" ], // Require one of the mails to have been received. The game list also contain others thing that are not mail, like community center flags. Default is null to no require a mail received.
+				"RequireAllMailReceived": false, // If true, require that all mails in the "RequireMailReceived" list to have been received. Default is false.
+				"ProbabilityWeight": 1, // The weight this attachment have when choosing which one to deliver. The mod sum all weight in a given group and give it a probability dividing this weight by the total. Default is 1.
+				"RandomGroup": "CaveItems" // When choosing the items randonly, group the list by the found groups and pick the amount set from each group. Default value is an empty string that function as the default group.
 			},
 			{
 				"Type": "Tool", // When using tool, only supported ones can be attached.
@@ -32,6 +39,7 @@
 		],
 		"Recipe": "Recipe Name", // Remove the line if you don't want to attach a recipe to the mail. It will only work if you have no other attachments to the mail. For DGA recipes only use the ID part (leave away the ModID)
 		"AdditionalMailReceived": ["MyMod.AnotherMailId", "VANILLA_FLAG"], // Use this to add additional text to the MailReceived list. Can be useful to add vanilla flags or other MFM letter ids.
+		"MailReceivedToRemove": ["MyMod.AnotherMailThatNeedToBeResent","MyMod.SomeFlagThatWasLockingSomeFeature"], //Text to removed from the MailReceived list. This can be used to trigger new mail, events, vanilla flags, stop other MFM mail from being sent...
 		"LetterBG": "CustomLetterBG.png", // Name of the file in your content pack that has the custom letter background to use. It should follow the same structure of the game LetterBG file . WhichBG will be relative to this file for this letter. If null or removed the mod will use the game LetterBG.
 		"WhichBG": 0, //The id of the letter background. 0 = classic, 1 = notepad, 2 = pyramids
 		"TextColor": -1, //Remove this line to use the default color. Will be ignored if a CustomTextColor is set. -1 = Dark Red, 0 = Black, 1 = Sky Blue, 2 = Red, 3 = Blue Violet, 4 = White, 5 = Orange Red, 6 = Lime Green, 7 = Cyan, 8 = Darkest Gray
@@ -44,8 +52,12 @@
 				{
 					"ReplyKey": "MyMod.MyMailId.Reply1", //Must be unique between the question replies.
 					"ReplyOptionDialog": "I want seeds.", //The option text that will show in the reply list. If an translation file is provided, you should put a translation key here.
+					"RequireMailReceived": [ "jojaVault", "ccVault" ], // Require one of the mails to have been received. The game list also contain others thing that are not mail, like community center flags. Default is null to no require a mail received.
+					"RequireAllMailReceived": false, // If true, require that all mails in the "RequireMailReceived" list to have been received. Default is false.
 					"MailReceivedToAdd": [ "MyMod.MyMailId.PlayerSeedOption" ], // Text to add to the MailReceived list. This can be used to trigger new mail, events, vanilla flags, stop other MFM mail from being sent...
-					"ReplyResponseDialog": "Your letter requesting seeds was sent." //Text that will show after this reply option is chosen. If an translation file is provided, you should put a translation key here.
+					"MailReceivedToRemove": [ "MyMod.MyMailId.PlayerSapplingOption" ], //Text to removed from the MailReceived list. This can be used to trigger new mail, events, vanilla flags, stop other MFM mail from being sent...
+					"ReplyResponseDialog": "Your letter requesting seeds was sent.", //Text that will show after this reply option is chosen. If an translation file is provided, you should put a translation key here.
+					"Cost": 50 //The amount of money the player needs to have to choose this option. If they do choose it, that amount is immediately subtracted from the player's money. Always provide an option with no cost, or you mighty softlock the player.
 				}
 			]
 		},
@@ -112,6 +124,7 @@
 		"EventsNotSeen": [ "4", "32423" ], // Require the events to have not been seen by the player. Should be a string, but will also work as an integer for retro compatibility.
 		"RecipeKnown": ["Pizza","Survival Burger"], // Require one of the recipes to have been learned by the player.
 		"RequireAllRecipeKnown": false, // If true, require that all the recipes in the "RecipeKnown" list to have been learned by the player. Default is false.
-		"RecipeNotKnown": ["Wild Bait"] // Require the recipes to have not been learned by the player.
+		"RecipeNotKnown": ["Wild Bait"], // Require the recipes to have not been learned by the player.
+		"KeepValid": false // If this is true, once the conditions are meet, keep the mail valid until read. Default is false.
 	}
 ]

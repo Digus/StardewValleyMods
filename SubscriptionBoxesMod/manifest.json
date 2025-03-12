@@ -1,0 +1,10 @@
+﻿{
+    "Name": "SubscriptionBoxesMod",
+    "Author": "Digus",
+    "Version": "1.0.0",
+    "Description": "Fake manifest. Delete if found.",
+    "UniqueID": "Digus.SubscriptionBoxesMod",
+    "MinimumApiVersion": "4.0.0",
+    "UpdateKeys": [ "Nexus:" ],
+    "EntryDll": "SubscriptionBoxesMod.dll"
+}

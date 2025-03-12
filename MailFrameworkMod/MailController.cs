@@ -48,6 +48,7 @@ namespace MailFrameworkMod
                     }
                     else
                     {
+                        Game1.player.mailReceived.Add(l.Id + DataLoader.ValidTagSuffix);
                         Letters.Value.Add(l);
                     }
                 });
@@ -292,6 +293,7 @@ namespace MailFrameworkMod
                 try
                 {
                     letter.Callback?.Invoke(letter);
+                    Game1.player.mailReceived.Remove(letter.Id+DataLoader.ValidTagSuffix);
                 }
                 catch (Exception e)
                 {
