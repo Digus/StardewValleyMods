@@ -92,25 +92,32 @@
                     "ReplyResponseDialog": "SubscriptionBoxesMod.BoxTier.Later.Response"
                 },
                 {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.ForagerBoxCatalog.Basic",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.BoxTier.Basic",
+                    "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxTier.Basic", "Digus.SubscriptionBoxesMod.BoxTier" ],
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.BoxTier.Basic.Response",
+                    "Cost": 500
+                },
+                {
                     "ReplyKey": "Digus.SubscriptionBoxesMod.ForagerBoxCatalog.Standard",
                     "ReplyOptionDialog": "SubscriptionBoxesMod.BoxTier.Standard",
                     "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxTier.Standard", "Digus.SubscriptionBoxesMod.BoxTier" ],
                     "ReplyResponseDialog": "SubscriptionBoxesMod.BoxTier.Standard.Response",
-                    "Cost": 500
+                    "Cost": 1000
                 },
                 {
                     "ReplyKey": "Digus.SubscriptionBoxesMod.ForagerBoxCatalog.Deluxe",
                     "ReplyOptionDialog": "SubscriptionBoxesMod.BoxTier.Deluxe",
                     "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxTier.Deluxe", "Digus.SubscriptionBoxesMod.BoxTier" ],
                     "ReplyResponseDialog": "SubscriptionBoxesMod.BoxTier.Deluxe.Response",
-                    "Cost": 1000
+                    "Cost": 2000
                 },
                 {
                     "ReplyKey": "Digus.SubscriptionBoxesMod.ForagerBoxCatalog.Premium",
                     "ReplyOptionDialog": "SubscriptionBoxesMod.BoxTier.Premium",
                     "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxTier.Premium", "Digus.SubscriptionBoxesMod.BoxTier" ],
                     "ReplyResponseDialog": "SubscriptionBoxesMod.BoxTier.Premium.Response",
-                    "Cost": 1500
+                    "Cost": 3000
                 }
             ]
         },
@@ -133,25 +140,32 @@
                     "ReplyResponseDialog": "SubscriptionBoxesMod.BoxTier.Later.Response"
                 },
                 {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.MinerBoxCatalog.Basic",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.BoxTier.Basic",
+                    "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxTier.Basic", "Digus.SubscriptionBoxesMod.BoxTier" ],
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.BoxTier.Basic.Response",
+                    "Cost": 500
+                },
+                {
                     "ReplyKey": "Digus.SubscriptionBoxesMod.MinerBoxCatalog.Standard",
                     "ReplyOptionDialog": "SubscriptionBoxesMod.BoxTier.Standard",
                     "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxTier.Standard", "Digus.SubscriptionBoxesMod.BoxTier" ],
                     "ReplyResponseDialog": "SubscriptionBoxesMod.BoxTier.Standard.Response",
-                    "Cost": 500
+                    "Cost": 1000
                 },
                 {
                     "ReplyKey": "Digus.SubscriptionBoxesMod.MinerBoxCatalog.Deluxe",
                     "ReplyOptionDialog": "SubscriptionBoxesMod.BoxTier.Deluxe",
                     "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxTier.Deluxe", "Digus.SubscriptionBoxesMod.BoxTier" ],
                     "ReplyResponseDialog": "SubscriptionBoxesMod.BoxTier.Deluxe.Response",
-                    "Cost": 1000
+                    "Cost": 2000
                 },
                 {
                     "ReplyKey": "Digus.SubscriptionBoxesMod.MinerBoxCatalog.Premium",
                     "ReplyOptionDialog": "SubscriptionBoxesMod.BoxTier.Premium",
                     "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxTier.Premium", "Digus.SubscriptionBoxesMod.BoxTier" ],
                     "ReplyResponseDialog": "SubscriptionBoxesMod.BoxTier.Premium.Response",
-                    "Cost": 1500
+                    "Cost": 3000
                 }
             ]
         },
@@ -174,31 +188,110 @@
                     "ReplyResponseDialog": "SubscriptionBoxesMod.BoxTier.Later.Response"
                 },
                 {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.AdventurerBoxCatalog.Basic",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.BoxTier.Basic",
+                    "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxTier.Basic", "Digus.SubscriptionBoxesMod.BoxTier" ],
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.BoxTier.Basic.Response",
+                    "Cost": 500
+                },
+                {
                     "ReplyKey": "Digus.SubscriptionBoxesMod.AdventurerBoxCatalog.Standard",
                     "ReplyOptionDialog": "SubscriptionBoxesMod.BoxTier.Standard",
                     "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxTier.Standard", "Digus.SubscriptionBoxesMod.BoxTier" ],
                     "ReplyResponseDialog": "SubscriptionBoxesMod.BoxTier.Standard.Response",
-                    "Cost": 500
+                    "Cost": 1000
                 },
                 {
                     "ReplyKey": "Digus.SubscriptionBoxesMod.AdventurerBoxCatalog.Deluxe",
                     "ReplyOptionDialog": "SubscriptionBoxesMod.BoxTier.Deluxe",
                     "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxTier.Deluxe", "Digus.SubscriptionBoxesMod.BoxTier" ],
                     "ReplyResponseDialog": "SubscriptionBoxesMod.BoxTier.Deluxe.Response",
-                    "Cost": 1000
+                    "Cost": 2000
                 },
                 {
                     "ReplyKey": "Digus.SubscriptionBoxesMod.AdventurerBoxCatalog.Premium",
                     "ReplyOptionDialog": "SubscriptionBoxesMod.BoxTier.Premium",
                     "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxTier.Premium", "Digus.SubscriptionBoxesMod.BoxTier" ],
                     "ReplyResponseDialog": "SubscriptionBoxesMod.BoxTier.Premium.Response",
-                    "Cost": 1500
+                    "Cost": 3000
                 }
             ]
         },
         "MailReceived": [ "Digus.SubscriptionBoxesMod.BoxType.Adventurer" ],
         "MailNotReceived": [ "Digus.SubscriptionBoxesMod.BoxTier" ],
         "Repeatable": true
+    },
+    {
+        "Id": "Digus.SubscriptionBoxesMod.ForagerBasicBoxDelivery",
+        "Title": "SubscriptionBoxesMod.ForagerDelivery.Letter.Title",
+        "GroupId": "Digus.SubscriptionBoxesMod.BoxDelivery",
+        "Text": "SubscriptionBoxesMod.ForagerDelivery.Letter",
+        "RandomlyChooseAttachment": 3,
+        "RandomlyChooseAttachmentPerGroup": { "Kit": 1 },
+        "Attachments": [
+            {"Type": "QualifiedItemId","Index": "(O)404","Stack": 10}, //Common Mushroom
+            {"Type": "QualifiedItemId","Index": "(O)420","Stack": 5}, //Red Mushroom
+            {"Type": "QualifiedItemId","Index": "(O)281","Stack": 3}, //Chanterelle
+            {"Type": "QualifiedItemId","Index": "(O)257","Stack": 3}, //Morel
+            {"Type": "QualifiedItemId","Index": "(O)688","Stack": 1}, //Farm
+            {"Type": "QualifiedItemId","Index": "(O)689","Stack": 1}, //Mountains
+            {"Type": "QualifiedItemId","Index": "(O)690","Stack": 1}, //Beach
+            {"Type": "QualifiedItemId","Index": "(O)92","Stack": 30}, //Sap
+            {"Type": "QualifiedItemId","Index": "(O)388","Stack": 50}, //Wood
+            {"Type": "QualifiedItemId","Index": "(O)Moss","Stack": 20}, //Moss
+            {"Type": "QualifiedItemId","Index": "(O)805","Stack": 5}, //Tree Fertilizer
+            {"Type": "QualifiedItemId","Index": "(O)309","Stack": 5}, //Acorn
+            {"Type": "QualifiedItemId","Index": "(O)310","Stack": 5}, //Maple Seed
+            {"Type": "QualifiedItemId","Index": "(O)311","Stack": 5}, //Pine Cone
+            {"Type": "QualifiedItemId","Index": "(O)926","Stack": 1,"ProbabilityWeight": 9,"RandomGroup": "Kit"}, //Cookout Kit
+            {"Type": "QualifiedItemId","Index": "(O)TentKit","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Kit"}, //Tent Kit
+            {"Type": "QualifiedItemId","Index": "(O)403","Stack": 5}, //Field Snack
+            {"Type": "QualifiedItemId","Index": "(O)MossSoup","Stack": 2}, //Moss Soup
+            {"Type": "QualifiedItemId","Index": "(O)211","Stack": 2}, //Pancakes
+            {"Type": "QualifiedItemId","Index": "(O)241","Stack": 1} //Survival Burger
+        ],
+        "ReplyConfig": {
+            "QuestionKey": "Digus.SubscriptionBoxesMod.ForagerBasicBoxDelivery.Question",
+            "QuestionDialog": "SubscriptionBoxesMod.Delivery.Question",
+            "Replies": [
+                {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.Delivery.Keep",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.Delivery.Keep",
+                    "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxType", "Digus.SubscriptionBoxesMod.BoxType.Forager", "Digus.SubscriptionBoxesMod.BoxTier", "Digus.SubscriptionBoxesMod.BoxTier.Basic" ],
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.Delivery.Keep.Response",
+                    "Cost": 500
+                },
+                {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.Delivery.Later",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.Delivery.Later",
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.Delivery.Later.Response"
+                },
+                {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.Delivery.Miner",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.BoxType.Miner",
+                    "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxType.Miner", "Digus.SubscriptionBoxesMod.BoxType" ],
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.BoxType.Miner.Response"
+                },
+                {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.Delivery.Forager",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.BoxType.Forager",
+                    "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxType.Forager", "Digus.SubscriptionBoxesMod.BoxType" ],
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.BoxType.Forager.Response"
+                },
+                {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.Delivery.Adventurer",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.BoxType.Adventurer",
+                    "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxType.Adventurer", "Digus.SubscriptionBoxesMod.BoxType" ],
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.BoxType.Adventurer.Response"
+                }
+            ]
+        },
+        "Days": [ 5, 12, 19, 26 ],
+        "MailReceived": [ "Digus.SubscriptionBoxesMod.BoxType.Forager", "Digus.SubscriptionBoxesMod.BoxTier.Basic" ],
+        "RequireAllMailReceived": true,
+        "MailReceivedToRemove": [ "Digus.SubscriptionBoxesMod.BoxType", "Digus.SubscriptionBoxesMod.BoxType.Forager", "Digus.SubscriptionBoxesMod.BoxTier", "Digus.SubscriptionBoxesMod.BoxTier.Basic" ],
+        "Repeatable": true,
+        "KeepValid": true
     },
     {
         "Id": "Digus.SubscriptionBoxesMod.ForagerStandardBoxDelivery",
@@ -254,7 +347,7 @@
                     "ReplyOptionDialog": "SubscriptionBoxesMod.Delivery.Keep",
                     "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxType", "Digus.SubscriptionBoxesMod.BoxType.Forager", "Digus.SubscriptionBoxesMod.BoxTier", "Digus.SubscriptionBoxesMod.BoxTier.Standard" ],
                     "ReplyResponseDialog": "SubscriptionBoxesMod.Delivery.Keep.Response",
-                    "Cost": 500
+                    "Cost": 1000
                 },
                 {
                     "ReplyKey": "Digus.SubscriptionBoxesMod.Delivery.Later",
@@ -343,7 +436,7 @@
                     "ReplyOptionDialog": "SubscriptionBoxesMod.Delivery.Keep",
                     "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxType", "Digus.SubscriptionBoxesMod.BoxType.Forager", "Digus.SubscriptionBoxesMod.BoxTier", "Digus.SubscriptionBoxesMod.BoxTier.Deluxe" ],
                     "ReplyResponseDialog": "SubscriptionBoxesMod.Delivery.Keep.Response",
-                    "Cost": 1000
+                    "Cost": 2000
                 },
                 {
                     "ReplyKey": "Digus.SubscriptionBoxesMod.Delivery.Later",
@@ -432,7 +525,7 @@
                     "ReplyOptionDialog": "SubscriptionBoxesMod.Delivery.Keep",
                     "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxType", "Digus.SubscriptionBoxesMod.BoxType.Forager", "Digus.SubscriptionBoxesMod.BoxTier", "Digus.SubscriptionBoxesMod.BoxTier.Premium" ],
                     "ReplyResponseDialog": "SubscriptionBoxesMod.Delivery.Keep.Response",
-                    "Cost": 1500
+                    "Cost": 3000
                 },
                 {
                     "ReplyKey": "Digus.SubscriptionBoxesMod.Delivery.Later",
@@ -467,6 +560,73 @@
         "KeepValid": true
     },
     {
+        "Id": "Digus.SubscriptionBoxesMod.MinerBasicBoxDelivery",
+        "Title": "SubscriptionBoxesMod.MinerDelivery.Letter.Title",
+        "GroupId": "Digus.SubscriptionBoxesMod.BoxDelivery",
+        "Text": "SubscriptionBoxesMod.MinerDelivery.Letter",
+        "RandomlyChooseAttachment": 3,
+        "RandomlyChooseAttachmentPerGroup": { "Geode": 1 },
+        "Attachments": [
+            {"Type": "QualifiedItemId","Index": "(O)378","Stack": 25}, //Copper Ore
+            {"Type": "QualifiedItemId","Index": "(O)380","Stack": 20}, //Iron Ore
+            {"Type": "QualifiedItemId","Index": "(O)384","Stack": 15}, //Gold Ore
+            {"Type": "QualifiedItemId","Index": "(O)390","Stack": 50}, //Stone
+            {"Type": "QualifiedItemId","Index": "(O)330","Stack": 5}, //Clay
+            {"Type": "QualifiedItemId","Index": "(O)382","Stack": 5}, //Coal
+            {"Type": "QualifiedItemId","Index": "(O)80","Stack": 5}, //Quartz
+            {"Type": "QualifiedItemId","Index": "(O)86","Stack": 3}, //Earth Crystal
+            {"Type": "QualifiedItemId","Index": "(O)62","Stack": 1}, //Aquamarine
+            {"Type": "QualifiedItemId","Index": "(O)66","Stack": 1}, //Amethyst
+            {"Type": "QualifiedItemId","Index": "(O)68","Stack": 1}, //Topaz
+            {"Type": "QualifiedItemId","Index": "(O)70","Stack": 1}, //Jade
+            {"Type": "QualifiedItemId","Index": "(O)238","Stack": 2}, //Cranberry Sauce
+            {"Type": "QualifiedItemId","Index": "(O)231","Stack": 1}, //Eggplant Parmesan
+            {"Type": "QualifiedItemId","Index": "(O)921","Stack": 1}, //Squid Ink Ravioli
+            {"Type": "QualifiedItemId","Index": "(O)535","Stack": 1,"RandomGroup": "Geode"} //Geode
+        ],
+        "ReplyConfig": {
+            "QuestionKey": "Digus.SubscriptionBoxesMod.MinerBasicBoxDelivery.Question",
+            "QuestionDialog": "SubscriptionBoxesMod.Delivery.Question",
+            "Replies": [
+                {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.Delivery.Keep",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.Delivery.Keep",
+                    "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxType", "Digus.SubscriptionBoxesMod.BoxType.Miner", "Digus.SubscriptionBoxesMod.BoxTier", "Digus.SubscriptionBoxesMod.BoxTier.Basic" ],
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.Delivery.Keep.Response",
+                    "Cost": 500
+                },
+                {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.Delivery.Later",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.Delivery.Later",
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.Delivery.Later.Response"
+                },
+                {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.Delivery.Miner",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.BoxType.Miner",
+                    "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxType.Miner", "Digus.SubscriptionBoxesMod.BoxType" ],
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.BoxType.Miner.Response"
+                },
+                {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.Delivery.Forager",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.BoxType.Forager",
+                    "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxType.Forager", "Digus.SubscriptionBoxesMod.BoxType" ],
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.BoxType.Forager.Response"
+                },
+                {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.Delivery.Adventurer",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.BoxType.Adventurer",
+                    "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxType.Adventurer", "Digus.SubscriptionBoxesMod.BoxType" ],
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.BoxType.Adventurer.Response"
+                }
+            ]
+        },
+        "Days": [ 5, 12, 19, 26 ],
+        "MailReceived": [ "Digus.SubscriptionBoxesMod.BoxType.Miner", "Digus.SubscriptionBoxesMod.BoxTier.Basic" ],
+        "RequireAllMailReceived": true,
+        "MailReceivedToRemove": [ "Digus.SubscriptionBoxesMod.BoxType", "Digus.SubscriptionBoxesMod.BoxType.Miner", "Digus.SubscriptionBoxesMod.BoxTier", "Digus.SubscriptionBoxesMod.BoxTier.Basic" ],
+        "Repeatable": true,
+        "KeepValid": true
+    },{
         "Id": "Digus.SubscriptionBoxesMod.MinerStandardBoxDelivery",
         "Title": "SubscriptionBoxesMod.MinerDelivery.Letter.Title",
         "GroupId": "Digus.SubscriptionBoxesMod.BoxDelivery",
@@ -514,7 +674,7 @@
                     "ReplyOptionDialog": "SubscriptionBoxesMod.Delivery.Keep",
                     "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxType", "Digus.SubscriptionBoxesMod.BoxType.Miner", "Digus.SubscriptionBoxesMod.BoxTier", "Digus.SubscriptionBoxesMod.BoxTier.Standard" ],
                     "ReplyResponseDialog": "SubscriptionBoxesMod.Delivery.Keep.Response",
-                    "Cost": 500
+                    "Cost": 1000
                 },
                 {
                     "ReplyKey": "Digus.SubscriptionBoxesMod.Delivery.Later",
@@ -597,7 +757,7 @@
                     "ReplyOptionDialog": "SubscriptionBoxesMod.Delivery.Keep",
                     "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxType", "Digus.SubscriptionBoxesMod.BoxType.Miner", "Digus.SubscriptionBoxesMod.BoxTier", "Digus.SubscriptionBoxesMod.BoxTier.Deluxe" ],
                     "ReplyResponseDialog": "SubscriptionBoxesMod.Delivery.Keep.Response",
-                    "Cost": 1000
+                    "Cost": 2000
                 },
                 {
                     "ReplyKey": "Digus.SubscriptionBoxesMod.Delivery.Later",
@@ -680,7 +840,7 @@
                     "ReplyOptionDialog": "SubscriptionBoxesMod.Delivery.Keep",
                     "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxType", "Digus.SubscriptionBoxesMod.BoxType.Miner", "Digus.SubscriptionBoxesMod.BoxTier", "Digus.SubscriptionBoxesMod.BoxTier.Premium" ],
                     "ReplyResponseDialog": "SubscriptionBoxesMod.Delivery.Keep.Response",
-                    "Cost": 1500
+                    "Cost": 3000
                 },
                 {
                     "ReplyKey": "Digus.SubscriptionBoxesMod.Delivery.Later",
@@ -715,16 +875,125 @@
         "KeepValid": true
     },
     {
+        "Id": "Digus.SubscriptionBoxesMod.AdventurerBasicBoxDelivery",
+        "Title": "SubscriptionBoxesMod.AdventurerDelivery.Letter.Title",
+        "GroupId": "Digus.SubscriptionBoxesMod.BoxDelivery",
+        "Text": "SubscriptionBoxesMod.AdventurerDelivery.Letter",
+        "RandomlyChooseAttachment": 1,
+        "Attachments": [
+            {"Type": "QualifiedItemId","Index": "(O)286","Stack": 1,"ProbabilityWeight": 3,"RandomGroup": "Bomb"}, //Cherry Bomb
+            {"Type": "QualifiedItemId","Index": "(O)287","Stack": 1,"ProbabilityWeight": 2,"RandomGroup": "Bomb"}, //Bomb
+            {"Type": "QualifiedItemId","Index": "(BC)71","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Misc"}, //Staircase
+            {"Type": "QualifiedItemId","Index": "(W)12","Stack": 1,"ProbabilityWeight": 1}, //Wooden Blade
+            {"Type": "QualifiedItemId","Index": "(W)43","Stack": 1,"ProbabilityWeight": 1, "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel40"]}, //Pirate's Sword
+            {"Type": "QualifiedItemId","Index": "(W)12","Stack": 1,"ProbabilityWeight": 1, "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel20"]}, //Silver Saber
+            {"Type": "QualifiedItemId","Index": "(W)44","Stack": 1,"ProbabilityWeight": 1, "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel40"]}, //Cutlass
+            {"Type": "QualifiedItemId","Index": "(W)15","Stack": 1,"ProbabilityWeight": 1, "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel20"]}, //Forest Sword
+            {"Type": "QualifiedItemId","Index": "(W)6","Stack": 1,"ProbabilityWeight": 1, "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel40"]}, //Iron Edge
+            {"Type": "QualifiedItemId","Index": "(W)5","Stack": 1,"ProbabilityWeight": 1, "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel80"]}, //Bone Sword
+            {"Type": "QualifiedItemId","Index": "(W)10","Stack": 1,"ProbabilityWeight": 1, "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel60"]}, //Claymore
+            {"Type": "QualifiedItemId","Index": "(W)14","Stack": 1,"ProbabilityWeight": 1, "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel60"]}, //Neptune's Glaive
+            {"Type": "QualifiedItemId","Index": "(W)7","Stack": 1,"ProbabilityWeight": 1, "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel60"]}, //Templar's Blade
+            {"Type": "QualifiedItemId","Index": "(W)60","Stack": 1,"ProbabilityWeight": 1, "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel80"]}, //Ossified Blade
+            {"Type": "QualifiedItemId","Index": "(W)3","Stack": 1,"ProbabilityWeight": 1, "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel80"]}, //Holy Blade
+            {"Type": "QualifiedItemId","Index": "(W)52","Stack": 1,"ProbabilityWeight": 1, "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel80"]}, //Tempered Broadsword
+            {"Type": "QualifiedItemId","Index": "(W)48","Stack": 1,"ProbabilityWeight": 1, "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel80"]}, //Yeti Tooth
+            {"Type": "QualifiedItemId","Index": "(W)16","Stack": 1,"ProbabilityWeight": 1}, //Carving Knife
+            {"Type": "QualifiedItemId","Index": "(W)17","Stack": 1,"ProbabilityWeight": 1, "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel20"]}, //Iron Dirk
+            {"Type": "QualifiedItemId","Index": "(W)22","Stack": 1,"ProbabilityWeight": 1, "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel20"]}, //Wind Spire
+            {"Type": "QualifiedItemId","Index": "(W)20","Stack": 1,"ProbabilityWeight": 1, "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel20"]}, //Elf Blade
+            {"Type": "QualifiedItemId","Index": "(W)18","Stack": 1,"ProbabilityWeight": 1, "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel60"]}, //Burglar's Shank
+            {"Type": "QualifiedItemId","Index": "(W)19","Stack": 1,"ProbabilityWeight": 1, "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel80"]}, //Shadow Dagger
+            {"Type": "QualifiedItemId","Index": "(W)51","Stack": 1,"ProbabilityWeight": 1, "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel40"]}, //Broken TridentShiv
+            {"Type": "QualifiedItemId","Index": "(W)31","Stack": 1,"ProbabilityWeight": 1, "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel20"]}, //Femur
+            {"Type": "QualifiedItemId","Index": "(W)24","Stack": 1,"ProbabilityWeight": 1}, //Wood Club
+            {"Type": "QualifiedItemId","Index": "(W)27","Stack": 1,"ProbabilityWeight": 1, "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel40"]}, //Wood Mallet
+            {"Type": "QualifiedItemId","Index": "(W)26","Stack": 1,"ProbabilityWeight": 1, "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel40"]}, //Lead Rod
+            {"Type": "QualifiedItemId","Index": "(W)28","Stack": 1,"ProbabilityWeight": 1, "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel80"]}, //The SlammerClub
+            {"Type": "QualifiedItemId","Index": "(B)504","Stack": 1,"ProbabilityWeight": 1}, //Sneakers
+            {"Type": "QualifiedItemId","Index": "(B)505","Stack": 1,"ProbabilityWeight": 1}, //Rubber Boots
+            {"Type": "QualifiedItemId","Index": "(B)507","Stack": 1,"ProbabilityWeight": 1, "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel20"]}, //Work Boots
+            {"Type": "QualifiedItemId","Index": "(B)508","Stack": 1,"ProbabilityWeight": 1, "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel40"]}, //Combat Boots
+            {"Type": "QualifiedItemId","Index": "(B)509","Stack": 1,"ProbabilityWeight": 1, "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel60"]}, //Tundra Boots
+            {"Type": "QualifiedItemId","Index": "(B)510","Stack": 1,"ProbabilityWeight": 1, "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel40"]}, //Thermal Boots
+            {"Type": "QualifiedItemId","Index": "(B)511","Stack": 1,"ProbabilityWeight": 1, "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel80"]}, //Dark Boots
+            {"Type": "QualifiedItemId","Index": "(B)513","Stack": 1,"ProbabilityWeight": 1, "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel80"]}, //Genie Shoes
+            {"Type": "QualifiedItemId","Index": "(O)516","Stack": 1,"ProbabilityWeight": 1}, //Small Glow Ring
+            {"Type": "QualifiedItemId","Index": "(O)517","Stack": 1,"ProbabilityWeight": 1, "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel40"]}, //Glow Ring
+            {"Type": "QualifiedItemId","Index": "(O)518","Stack": 1,"ProbabilityWeight": 1}, //Small Magnet Ring
+            {"Type": "QualifiedItemId","Index": "(O)519","Stack": 1,"ProbabilityWeight": 1, "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel40"]}, //Magnet Ring
+            {"Type": "QualifiedItemId","Index": "(O)529","Stack": 1,"ProbabilityWeight": 1}, //Amethyst Ring
+            {"Type": "QualifiedItemId","Index": "(O)530","Stack": 1,"ProbabilityWeight": 1}, //Topaz Ring
+            {"Type": "QualifiedItemId","Index": "(O)531","Stack": 1,"ProbabilityWeight": 1, "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel40"]}, //Aquamarine Ring
+            {"Type": "QualifiedItemId","Index": "(O)532","Stack": 1,"ProbabilityWeight": 1, "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel40"]}, //Jade Ring
+            {"Type": "QualifiedItemId","Index": "(O)533","Stack": 1,"ProbabilityWeight": 1, "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel80"]}, //Emerald Ring
+            {"Type": "QualifiedItemId","Index": "(O)534","Stack": 1,"ProbabilityWeight": 1, "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel80"]}, //Ruby Ring
+            {"Type": "QualifiedItemId","Index": "(O)859","Stack": 1,"ProbabilityWeight": 1, "RequireMailReceived":["HasSkullKey","ccFishTank","jojaFishTank"]}, //Lucky Ring
+            {"Type": "QualifiedItemId","Index": "(O)874","Stack": 3,"ProbabilityWeight": 1}, //Bug Steak
+            {"Type": "QualifiedItemId","Index": "(O)205","Stack": 1,"ProbabilityWeight": 1}, //Fried Mushroom
+            {"Type": "QualifiedItemId","Index": "(O)225","Stack": 1,"ProbabilityWeight": 1}, //Fried Eel
+            {"Type": "QualifiedItemId","Index": "(O)226","Stack": 1,"ProbabilityWeight": 1}, //Spicy Eel
+            {"Type": "QualifiedItemId","Index": "(O)231","Stack": 1,"ProbabilityWeight": 1}, //Eggplant Parmesan
+            {"Type": "QualifiedItemId","Index": "(O)239","Stack": 1,"ProbabilityWeight": 1}, //Stuffing
+            {"Type": "QualifiedItemId","Index": "(O)244","Stack": 1,"ProbabilityWeight": 1}, //Roots Platter
+            {"Type": "QualifiedItemId","Index": "(O)921","Stack": 1,"ProbabilityWeight": 1}, //Squid Ink Ravioli
+            {"Type": "QualifiedItemId","Index": "(O)772","Stack": 1,"ProbabilityWeight": 1}, //Oil of Garlic
+            {"Type": "QualifiedItemId","Index": "(O)395","Stack": 1,"ProbabilityWeight": 1} //Coffee
+        ],
+        "ReplyConfig": {
+            "QuestionKey": "Digus.SubscriptionBoxesMod.AdventurerBasicBoxDelivery.Question",
+            "QuestionDialog": "SubscriptionBoxesMod.Delivery.Question",
+            "Replies": [
+                {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.Delivery.Keep",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.Delivery.Keep",
+                    "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxType", "Digus.SubscriptionBoxesMod.BoxType.Adventurer", "Digus.SubscriptionBoxesMod.BoxTier", "Digus.SubscriptionBoxesMod.BoxTier.Basic" ],
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.Delivery.Keep.Response",
+                    "Cost": 500
+                },
+                {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.Delivery.Later",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.Delivery.Later",
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.Delivery.Later.Response"
+                },
+                {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.Delivery.Miner",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.BoxType.Miner",
+                    "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxType.Miner", "Digus.SubscriptionBoxesMod.BoxType" ],
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.BoxType.Miner.Response"
+                },
+                {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.Delivery.Forager",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.BoxType.Forager",
+                    "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxType.Forager", "Digus.SubscriptionBoxesMod.BoxType" ],
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.BoxType.Forager.Response"
+                },
+                {
+                    "ReplyKey": "Digus.SubscriptionBoxesMod.Delivery.Adventurer",
+                    "ReplyOptionDialog": "SubscriptionBoxesMod.BoxType.Adventurer",
+                    "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxType.Adventurer", "Digus.SubscriptionBoxesMod.BoxType" ],
+                    "ReplyResponseDialog": "SubscriptionBoxesMod.BoxType.Adventurer.Response"
+                }
+            ]
+        },
+        "Days": [ 5, 12, 19, 26 ],
+        "MailReceived": [ "Digus.SubscriptionBoxesMod.BoxType.Adventurer", "Digus.SubscriptionBoxesMod.BoxTier.Basic" ],
+        "RequireAllMailReceived": true,
+        "MailReceivedToRemove": [ "Digus.SubscriptionBoxesMod.BoxType", "Digus.SubscriptionBoxesMod.BoxType.Adventurer", "Digus.SubscriptionBoxesMod.BoxTier", "Digus.SubscriptionBoxesMod.BoxTier.Basic" ],
+        "Repeatable": true,
+        "KeepValid": true
+    },
+    {
         "Id": "Digus.SubscriptionBoxesMod.AdventurerStandardBoxDelivery",
         "Title": "SubscriptionBoxesMod.AdventurerDelivery.Letter.Title",
         "GroupId": "Digus.SubscriptionBoxesMod.BoxDelivery",
         "Text": "SubscriptionBoxesMod.AdventurerDelivery.Letter",
         "RandomlyChooseAttachment": 1,
         "Attachments": [
-            {"Type": "QualifiedItemId","Index": "(O)286","Stack": 5,"ProbabilityWeight": 3,"RandomGroup": "Bomb"}, //Cherry Bomb
-            {"Type": "QualifiedItemId","Index": "(O)287","Stack": 5,"ProbabilityWeight": 2,"RandomGroup": "Bomb"}, //Bomb
-            {"Type": "QualifiedItemId","Index": "(O)288","Stack": 5,"ProbabilityWeight": 1,"RandomGroup": "Bomb"}, //Mega Bomb
-            {"Type": "QualifiedItemId","Index": "(O)441","Stack": 10,"ProbabilityWeight": 1,"RandomGroup": "Bomb"}, //Explosive Ammo
+            {"Type": "QualifiedItemId","Index": "(O)286","Stack": 1,"ProbabilityWeight": 3,"RandomGroup": "Bomb"}, //Cherry Bomb
+            {"Type": "QualifiedItemId","Index": "(O)287","Stack": 1,"ProbabilityWeight": 2,"RandomGroup": "Bomb"}, //Bomb
+            {"Type": "QualifiedItemId","Index": "(O)288","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Bomb"}, //Mega Bomb
+            {"Type": "QualifiedItemId","Index": "(O)441","Stack": 3,"ProbabilityWeight": 1,"RandomGroup": "Bomb"}, //Explosive Ammo
             {"Type": "QualifiedItemId","Index": "(BC)71","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Misc"}, //Staircase
             {"Type": "QualifiedItemId","Index": "(W)12","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Weapon"}, //Wooden Blade
             {"Type": "QualifiedItemId","Index": "(W)43","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Weapon", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel40"]}, //Pirate's Sword
@@ -819,7 +1088,7 @@
                     "ReplyOptionDialog": "SubscriptionBoxesMod.Delivery.Keep",
                     "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxType", "Digus.SubscriptionBoxesMod.BoxType.Adventurer", "Digus.SubscriptionBoxesMod.BoxTier", "Digus.SubscriptionBoxesMod.BoxTier.Standard" ],
                     "ReplyResponseDialog": "SubscriptionBoxesMod.Delivery.Keep.Response",
-                    "Cost": 500
+                    "Cost": 1000
                 },
                 {
                     "ReplyKey": "Digus.SubscriptionBoxesMod.Delivery.Later",
@@ -860,10 +1129,10 @@
         "Text": "SubscriptionBoxesMod.AdventurerDelivery.Letter",
         "RandomlyChooseAttachment": 1,
         "Attachments": [
-            {"Type": "QualifiedItemId","Index": "(O)286","Stack": 5,"ProbabilityWeight": 3,"RandomGroup": "Bomb"}, //Cherry Bomb
-            {"Type": "QualifiedItemId","Index": "(O)287","Stack": 5,"ProbabilityWeight": 2,"RandomGroup": "Bomb"}, //Bomb
-            {"Type": "QualifiedItemId","Index": "(O)288","Stack": 5,"ProbabilityWeight": 1,"RandomGroup": "Bomb"}, //Mega Bomb
-            {"Type": "QualifiedItemId","Index": "(O)441","Stack": 10,"ProbabilityWeight": 1,"RandomGroup": "Bomb"}, //Explosive Ammo
+            {"Type": "QualifiedItemId","Index": "(O)286","Stack": 3,"ProbabilityWeight": 3,"RandomGroup": "Bomb"}, //Cherry Bomb
+            {"Type": "QualifiedItemId","Index": "(O)287","Stack": 3,"ProbabilityWeight": 2,"RandomGroup": "Bomb"}, //Bomb
+            {"Type": "QualifiedItemId","Index": "(O)288","Stack": 3,"ProbabilityWeight": 1,"RandomGroup": "Bomb"}, //Mega Bomb
+            {"Type": "QualifiedItemId","Index": "(O)441","Stack": 6,"ProbabilityWeight": 1,"RandomGroup": "Bomb"}, //Explosive Ammo
             {"Type": "QualifiedItemId","Index": "(BC)71","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Misc"}, //Staircase
             {"Type": "QualifiedItemId","Index": "(W)12","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Sword"}, //Wooden Blade
             {"Type": "QualifiedItemId","Index": "(W)43","Stack": 1,"ProbabilityWeight": 1,"RandomGroup": "Sword", "RequireMailReceived":["Digus.SubscriptionBoxesMod.MinesLevel40"]}, //Pirate's Sword
@@ -958,7 +1227,7 @@
                     "ReplyOptionDialog": "SubscriptionBoxesMod.Delivery.Keep",
                     "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxType", "Digus.SubscriptionBoxesMod.BoxType.Adventurer", "Digus.SubscriptionBoxesMod.BoxTier", "Digus.SubscriptionBoxesMod.BoxTier.Deluxe" ],
                     "ReplyResponseDialog": "SubscriptionBoxesMod.Delivery.Keep.Response",
-                    "Cost": 1000
+                    "Cost": 2000
                 },
                 {
                     "ReplyKey": "Digus.SubscriptionBoxesMod.Delivery.Later",
@@ -1098,7 +1367,7 @@
                     "ReplyOptionDialog": "SubscriptionBoxesMod.Delivery.Keep",
                     "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxType", "Digus.SubscriptionBoxesMod.BoxType.Adventurer", "Digus.SubscriptionBoxesMod.BoxTier", "Digus.SubscriptionBoxesMod.BoxTier.Premium" ],
                     "ReplyResponseDialog": "SubscriptionBoxesMod.Delivery.Keep.Response",
-                    "Cost": 1500
+                    "Cost": 3000
                 },
                 {
                     "ReplyKey": "Digus.SubscriptionBoxesMod.Delivery.Later",
