@@ -32,7 +32,9 @@ namespace MailFrameworkMod
 
                 if (Letters.Exists((l) => l.Id == letter.Id))
                 {
-                    Letters[Letters.FindIndex((l) => l.Id == letter.Id)] = letter;
+                    var letterIndex = Letters.FindIndex((l) => l.Id == letter.Id);
+                    letter.I18N ??= Letters[letterIndex].I18N;
+                    Letters[letterIndex] = letter;
                 }
                 else
                 {

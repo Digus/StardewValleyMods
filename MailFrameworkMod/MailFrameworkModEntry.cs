@@ -36,7 +36,7 @@ namespace MailFrameworkMod
             helper.Events.GameLoop.DayStarted += OnDayStarted;
             helper.Events.GameLoop.ReturnedToTitle += OnReturnedToTitle;
             helper.Events.GameLoop.Saving += OnSaving;
-            Helper.Events.GameLoop.SaveLoaded += DataLoader.LoadContentPacks;
+            helper.Events.GameLoop.SaveLoaded += DataLoader.LoadMailDataToLetterRepository;
 
             helper.ConsoleCommands.Add("player_addreceivedmail", "Adds a mail as received.\n\nUsage: player_addreceivedmail <value>\n- value: name of the mail.", Commands.AddsReceivedMail);
             helper.ConsoleCommands.Add("player_removereceivedmail", "Remove a mail from the list of received mail.\n\nUsage: player_removereceivedmail <value>\n- value: name of the mail.", Commands.RemoveReceivedMail);
@@ -92,10 +92,15 @@ namespace MailFrameworkMod
         /// <param name="e">The event arguments.</param>
         private void OnDayStarted(object sender, DayStartedEventArgs e)
         {
+            if (DataLoader.WasMailDataInvalidated())
+            {
+                DataLoader.ReloadAssets();
+            }
             if (MailRepository.HasRepositoryChanged())
             {
                 Helper.GameContent.InvalidateCache(DataLoader.MailAssetName);
             }
+            ModMonitor.Log("Updating mailbox for the day.",LogLevel.Debug);
             MailController.UpdateMailBox();
 
         }

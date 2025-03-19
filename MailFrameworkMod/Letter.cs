@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
 using StardewValley;
+using StardewValley.TokenizableStrings;
 
 namespace MailFrameworkMod
 {
@@ -32,7 +33,7 @@ namespace MailFrameworkMod
         /// <summary>
         /// translated title
         /// </summary>
-        public string TranslatedTitle => I18N != null ? I18N.Get(Title) : Title;
+        public string TranslatedTitle => TokenParser.ParseText(I18N != null ? I18N.Get(Title) : Title);
         /// <summary>
         /// text to be show on the letter menu. You can use @ to put the players name and ^ for line breaks. Use a translation key if you provide a ITranslationHelper
         /// </summary>
@@ -40,7 +41,7 @@ namespace MailFrameworkMod
         /// <summary>
         /// translated text
         /// </summary>
-        public string TranslatedText => I18N != null ? I18N.Get(Text) : Text;
+        public string TranslatedText => TokenParser.ParseText(I18N != null ? I18N.Get(Text) : Text);
         /// <summary>
         /// list of static items to be added in the letter. If null or empty, no item is added
         /// There is a bug with the game when adding more than one object. It draws one over the other, and when clicked the one showing is the last one to be picked.

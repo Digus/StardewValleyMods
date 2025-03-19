@@ -1,11 +1,15 @@
 ﻿using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using Microsoft.Xna.Framework;
+using StardewModdingAPI;
 using StardewValley.Menus;
 
 namespace MailFrameworkMod.ContentPack
 {
     public class MailItem
     {
+        [JsonIgnore] 
+        public IContentPack ContentPack;
         public string Id;
         public string GroupId;
         public string Title;
