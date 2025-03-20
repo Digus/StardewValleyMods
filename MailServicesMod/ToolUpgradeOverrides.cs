@@ -37,7 +37,7 @@ namespace MailServicesMod
         {
             try
             {
-                itemsToAdd.RemoveAll(i => i is GenericTool g && g.ItemId.EndsWith("TrashCan"));
+                itemsToAdd.RemoveAll(i => i is GenericTool g && (g.ItemId.EndsWith("TrashCan")|| g.ItemId.StartsWith("blueberry.LoveOfCooking_cookingtool")));
                 if (itemsToAdd.Count == 0)
                 {
                     itemsToAdd = null;
