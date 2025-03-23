@@ -2,7 +2,9 @@
 	{
 		"Name": "John", //The name of the NPC
 		"Frame": 33, //The frame of the NPC sprite sheet that should be using while kissing. Start with 0 and go from left to right, top to botton.
-		"FrameDirectionRight": false, //True if the frame is facing right, false if facing left.
+		"FrameDirectionRight": false, //True if the frame is facing right, false if facing left.		
+		"BeachFrame": 4,//The frame of the NPC sprite sheet that should be using while kissing at the beach. Start with 0 and go from left to right, top to botton.
+		"BeachFrameDirectionRight": true, //True if the beach frame is facing right, false if facing left.	
 		"RequiredEvent": 901756 // Number of the required event for the player to be able to kiss the NPC. Can set the value to null or remove the line for no event requirment.
 	} //Place a comma here add more than one NPC.
 ]
