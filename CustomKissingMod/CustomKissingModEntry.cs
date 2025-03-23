@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using CustomKissingMod.Api;
 using HarmonyLib;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley;
+using StardewValley.GameData.Characters;
 
 namespace CustomKissingMod
 {
@@ -21,6 +23,16 @@ namespace CustomKissingMod
             ModMonitor = Monitor;
             Manifest = ModManifest;
             helper.Events.GameLoop.GameLaunched += OnGameLaunched;
+            helper.Events.GameLoop.UpdateTicked += OnUpdateTicked;
+        }
+
+        private void OnUpdateTicked(object sender, UpdateTickedEventArgs e)
+        {
+            if (e.Ticks == 10)
+            {
+                ConfigMenuController.DeleteConfigMenu();
+                ConfigMenuController.CreateConfigMenu();
+            }
         }
 
         private void OnGameLaunched(object sender, GameLaunchedEventArgs e)

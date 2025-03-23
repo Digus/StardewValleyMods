@@ -35,7 +35,7 @@ namespace CustomKissingMod
                         || (
                             HasRequiredFriendshipToKiss(who, __instance)
                             && __instance.CurrentDialogue.Count > 0
-                            && __instance.CurrentDialogue.Peek().TranslationKey.Equals(_lastDialog))))
+                            && _lastDialog != null && _lastDialog.Equals(__instance.CurrentDialogue.Peek().TranslationKey))))
                 {
                     if (Game1.activeClickableMenu is DialogueBox dialogueBox)
                     {

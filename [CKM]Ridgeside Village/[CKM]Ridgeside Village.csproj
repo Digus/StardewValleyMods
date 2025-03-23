@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <IgnoreModFilePatterns>\.dll$, \.pdb$</IgnoreModFilePatterns>
+    <ProjectGuid>{1DBCD330-8A17-439E-BCC4-A80E57F38893}</ProjectGuid>
+    <RootNamespace>CKM_Ridgeside_Village</RootNamespace>
+    <AssemblyName>[CKM]Ridgeside Village</AssemblyName>
+    <TargetFramework>net6.0</TargetFramework>
+    <EnableHarmony>true</EnableHarmony>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Pathoschild.Stardew.ModBuildConfig" Version="4.3.2" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="manifest.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="npc.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+</Project>
