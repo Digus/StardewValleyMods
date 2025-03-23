@@ -1,0 +1,178 @@
+﻿[
+	{
+		"Name": "Ian",
+		"Frame": 28,
+		"FrameDirectionRight": true,
+		"BeachFrame": 4,
+		"BeachFrameDirectionRight": true,
+		"RequiredEvent": 75160150 
+	},
+	{
+		"Name": "Jeric",
+		"Frame": 28,
+		"FrameDirectionRight": true,
+		"BeachFrame": 4,
+		"BeachFrameDirectionRight": true,
+		"RequiredEvent": 75160156 
+	},
+	{
+		"Name": "June",
+		"Frame": 28,
+		"FrameDirectionRight": true,
+		"BeachFrame": 4,
+		"BeachFrameDirectionRight": true,
+		"RequiredEvent": 94620010 
+	},
+	{
+		"Name": "Kenneth",
+		"Frame": 28,
+		"FrameDirectionRight": true,
+		"BeachFrame": 4,
+		"BeachFrameDirectionRight": true,
+		"RequiredEvent": 751601610 
+	},
+	{
+		"Name": "Philip",
+		"Frame": 28,
+		"FrameDirectionRight": true,
+		"BeachFrame": 4,
+		"BeachFrameDirectionRight": true,
+		"RequiredEvent": 75160167 
+	},
+	{
+		"Name": "Sean",
+		"Frame": 28,
+		"FrameDirectionRight": true,
+		"BeachFrame": 4,
+		"BeachFrameDirectionRight": true,
+		"RequiredEvent": 75160368 
+	},
+	{
+		"Name": "Shiro",
+		"Frame": 28,
+		"FrameDirectionRight": true,
+		"BeachFrame": 4,
+		"BeachFrameDirectionRight": true,
+		"RequiredEvent": 75160172 
+	},
+	{
+		"Name": "Alissa",
+		"Frame": 28,
+		"FrameDirectionRight": true,
+		"BeachFrame": 4,
+		"BeachFrameDirectionRight": true,
+		"RequiredEvent": 75160121 
+	},
+	{
+		"Name": "Blair",
+		"Frame": 28,
+		"FrameDirectionRight": true,
+		"BeachFrame": 4,
+		"BeachFrameDirectionRight": true,
+		"RequiredEvent": 75160388 
+	},
+	{
+		"Name": "Corine",
+		"Frame": 28,
+		"FrameDirectionRight": true,
+		"BeachFrame": 4,
+		"BeachFrameDirectionRight": true,
+		"RequiredEvent": 75160127 
+	},
+	{
+		"Name": "Flor",
+		"Frame": 28,
+		"FrameDirectionRight": true,
+		"BeachFrame": 4,
+		"BeachFrameDirectionRight": true,
+		"RequiredEvent": 75160133 
+	},
+	{
+		"Name": "Kiarra",
+		"Frame": 28,
+		"FrameDirectionRight": true,
+		"BeachFrame": 4,
+		"BeachFrameDirectionRight": true,
+		"RequiredEvent": 75160365 
+	},
+	{
+		"Name": "Maddie",
+		"Frame": 28,
+		"FrameDirectionRight": true,
+		"BeachFrame": 4,
+		"BeachFrameDirectionRight": true,
+		"RequiredEvent": 75160140 
+	},
+	{
+		"Name": "Ysabelle",
+		"Frame": 28,
+		"FrameDirectionRight": true,
+		"BeachFrame": 4,
+		"BeachFrameDirectionRight": true,
+		"RequiredEvent": 75160145 
+	},
+	{
+		"Name": "Anton",
+		"Frame": 28,
+		"FrameDirectionRight": true,
+		"BeachFrame": 4,
+		"BeachFrameDirectionRight": true,
+		"RequiredEvent": 75160392 
+	},
+	{
+		"Name": "Bryle",
+		"Frame": 28,
+		"FrameDirectionRight": true,
+		"BeachFrame": 4,
+		"BeachFrameDirectionRight": true,
+		"RequiredEvent": 75160455 
+	},
+	{
+		"Name": "Daia",
+		"Frame": 28,
+		"FrameDirectionRight": true,
+		"BeachFrame": 4,
+		"BeachFrameDirectionRight": true,
+		"RequiredEvent": 75160208 
+	},
+	{
+		"Name": "Faye",
+		"Frame": 28,
+		"FrameDirectionRight": true,
+		"BeachFrame": 4,
+		"BeachFrameDirectionRight": true,
+		"RequiredEvent": 75160454 
+	},
+	{
+		"Name": "Irene",
+		"Frame": 28,
+		"FrameDirectionRight": true,
+		"BeachFrame": 4,
+		"BeachFrameDirectionRight": true,
+		"RequiredEvent": 75160433 
+	},
+	{
+		"Name": "Jio",
+		"Frame": 28,
+		"FrameDirectionRight": true,
+		"BeachFrame": 4,
+		"BeachFrameDirectionRight": true,
+		"RequiredEvent": 75160200 
+	},
+	{
+		"Name": "Paula",
+		"Frame": 28,
+		"FrameDirectionRight": true,
+		"BeachFrame": 4,
+		"BeachFrameDirectionRight": true,
+		"RequiredEvent": 75160390 
+	},
+	{
+		"Name": "Zayne",
+		"Frame": 28,
+		"FrameDirectionRight": true,
+		"BeachFrame": 4,
+		"BeachFrameDirectionRight": true,
+		"RequiredEvent": 75160442 
+	}
+]
