@@ -17,15 +17,21 @@ using StardewValley.GameData.Objects;
 using StardewValley.Objects;
 using StardewValley.Tools;
 using Attachment = MailFrameworkMod.ContentPack.Attachment;
+using MailDataAssetType = System.Collections.Generic.Dictionary<string, MailFrameworkMod.ContentPack.MailItem>;
 
 namespace MailFrameworkMod
 {
     public partial class DataLoader
     {
+        internal const string MailDataAssetName = "DIGUS.MailFrameworkMod/MailData";
         internal const string MailAssetName = "Data/mail";
         internal const string ValidTagSuffix = "::Valid";
-        public static Dictionary<Tuple<string,string>, Texture2D> _contentPackAssets = new Dictionary<Tuple<string, string>, Texture2D>();
+
+        private static readonly Dictionary<Tuple<string,string>, Texture2D> _contentPackAssets = new Dictionary<Tuple<string, string>, Texture2D>();
         private static readonly HashSet<IContentPack> RegisteredContentPacks = new HashSet<IContentPack>(new ContentPackComparer());
+        private static MailDataAssetType MailData = new MailDataAssetType();
+
+        private static bool _wasMailDataInvalidate;
 
         private static readonly List<string> NoUpgradeLevelTools = new List<string>() {"Scythe", "Shears", "Milk Pail", "Fishing Rod", "Golden Scythe", "Pan", "Return Scepter" };
         private static readonly List<string> SlingshotIndexes = new List<string>() {"32", "33", "34", "(W)32", "(W)33", "(W)34" };
@@ -37,14 +43,17 @@ namespace MailFrameworkMod
         public DataLoader(IModHelper helper)
         {
             Helper = helper;
-            Helper.Events.Content.AssetRequested += this.Edit;
+            Helper.Events.Content.AssetRequested += this.AssetRequested;
+            Helper.Events.Content.AssetReady += this.AssetReady;
+            Helper.Events.Content.AssetsInvalidated += this.AssetInvalidated;
 
             DgaApi = MailFrameworkModEntry.ModHelper.ModRegistry.GetApi<IDynamicGameAssetsApi>("spacechase0.DynamicGameAssets");
             ConditionsCheckerApi = Helper.ModRegistry.GetApi<IConditionsChecker>("Cherry.ExpandedPreconditionsUtility");
             ConditionsCheckerApi?.Initialize(false, MailFrameworkModEntry.Manifest.UniqueID);
+            LoadContentPacks();
         }
 
-        public void Edit(object sender, AssetRequestedEventArgs e)
+        public void AssetRequested(object sender, AssetRequestedEventArgs e)
         {
             if (e.NameWithoutLocale.IsEquivalentTo(MailAssetName))
             {
@@ -69,10 +78,38 @@ namespace MailFrameworkMod
 
                     MailRepository.CleanDataToUpdate();
                 });
+            } if (e.NameWithoutLocale.IsEquivalentTo(MailDataAssetName)) {
+                MailFrameworkModEntry.ModMonitor.Log($"Asset {MailDataAssetName} requested.");
+                e.LoadFrom(() => MailData, AssetLoadPriority.Exclusive);
             }
         }
 
-        public static void LoadContentPacks(object sender, EventArgs e)
+        public void AssetReady(object sender, AssetReadyEventArgs e)
+        {
+            if (e.NameWithoutLocale.IsEquivalentTo(MailDataAssetName))
+            {
+                MailFrameworkModEntry.ModMonitor.Log($"Asset {MailDataAssetName} ready.");
+                LoadMailDataToLetterRepository(null, null);
+            }
+        }
+
+        public void AssetInvalidated(object sender, AssetsInvalidatedEventArgs e) {
+            foreach (var name in e.NamesWithoutLocale) {
+                if (name.IsEquivalentTo(MailDataAssetName)) {
+                    MailFrameworkModEntry.ModMonitor.Log($"Asset {MailDataAssetName} invalidated.");
+                    MailData.RemoveWhere(i => i.Value.ContentPack == null);
+                    _wasMailDataInvalidate = true;
+                }
+            }
+        }
+
+        public static void ReloadAssets()
+        {
+            Game1.content.Load<MailDataAssetType>(MailDataAssetName);
+            _wasMailDataInvalidate = false;
+        }
+
+        public static void LoadContentPacks()
         {
             foreach (IContentPack contentPack in MailFrameworkModEntry.ModHelper.ContentPacks.GetOwned())
             {
@@ -82,22 +119,50 @@ namespace MailFrameworkMod
             {
                 LoadContentPack(contentPack);
             }
+            Helper.GameContent.InvalidateCache(MailDataAssetName);
+        }
+
+        public static bool WasMailDataInvalidated()
+        {
+            return _wasMailDataInvalidate;
+        }
+
+        public static void LoadMailDataToLetterRepository(object sender, EventArgs e)
+        {
+            MailData = Game1.content.Load<MailDataAssetType>(MailDataAssetName);
+            LoadMailData(MailData.Values.ToList());
         }
 
         public static void LoadContentPack(IContentPack contentPack)
         {
             if (File.Exists(Path.Combine(contentPack.DirectoryPath, "mail.json")))
             {
-                bool hasTranslation = contentPack.Translation.GetTranslations().Any();
-
                 MailFrameworkModEntry.ModMonitor.Log(
                     $"Reading content pack: {contentPack.Manifest.Name} {contentPack.Manifest.Version} from {contentPack.DirectoryPath}");
                 List<MailItem> mailItems = contentPack.ReadJsonFile<List<MailItem>>("mail.json");
-                foreach (MailItem mailItem in mailItems)
+                MailData.RemoveWhere(i => i.Value.ContentPack?.Manifest.UniqueID == contentPack.Manifest.UniqueID);
+                mailItems?.ForEach(m =>
                 {
+                    m.ContentPack = contentPack;
+                    MailData[m.Id] = m;
+                });
+            }
+            else
+            {
+                MailFrameworkModEntry.ModMonitor.Log(
+                    $"Ignoring content pack: {contentPack.Manifest.Name} {contentPack.Manifest.Version} from {contentPack.DirectoryPath}\nIt does not have an mail.json file.",
+                    LogLevel.Warn);
+            }
+        }
 
-                    //Populate all Indexes based on the given name. Ignore the letter otherwise.
-                    if (mailItem.CollectionConditions != null && mailItem.CollectionConditions.Any(c =>
+        private static void LoadMailData(List<MailItem> mailItems)
+        {
+            foreach (MailItem mailItem in mailItems)
+            {
+                var contentPack = mailItem.ContentPack;
+                bool hasTranslation = contentPack?.Translation.GetTranslations().Any()??false;
+                //Populate all Indexes based on the given name. Ignore the letter otherwise.
+                if (mailItem.CollectionConditions != null && mailItem.CollectionConditions.Any(c =>
                     {
                         c.Ids ??= new HashSet<string>();
                         if (c.Index != null) c.Ids.Add(c.Index);
@@ -128,188 +193,161 @@ namespace MailFrameworkMod
                         return false;
                     })) continue;
 
-                    bool Condition(Letter l) =>
-                        ( mailItem.KeepValid && Game1.player.mailReceived.Contains(l.Id + ValidTagSuffix))
-                        || (
-                            (!Game1.player.mailReceived.Contains(l.Id) || mailItem.Repeatable || (mailItem.Recipe != null && mailItem.Attachments?.Count == 0))
-                            && (mailItem.Recipe == null || !(Game1.player.cookingRecipes.ContainsKey(mailItem.Recipe) 
-                                                        || Game1.player.craftingRecipes.ContainsKey(mailItem.Recipe)
-                                                        || Game1.player.cookingRecipes.ContainsKey(CraftingRecipe.cookingRecipes.Where(r => ItemRegistry.GetData(r.Value.Split("/")[2].Split(" ")[0])?.InternalName == mailItem.Recipe).Select(r=>r.Key).FirstOrDefault()??"")
-                                                        || Game1.player.craftingRecipes.ContainsKey(CraftingRecipe.craftingRecipes.Where(r => ItemRegistry.GetData(r.Value.Split("/")[2].Split(" ")[0])?.InternalName == mailItem.Recipe).Select(r => r.Key).FirstOrDefault() ?? "")))
-                            && (mailItem.Date == null || SDate.Now() >= new SDate(Convert.ToInt32(mailItem.Date.Split(' ')[0]),
-                                    mailItem.Date.Split(' ')[1], Convert.ToInt32(mailItem.Date.Split(' ')[2].Replace("Y", ""))))
-                            && (mailItem.Days == null || mailItem.Days.Contains(SDate.Now().Day))
-                            && (mailItem.Seasons == null || mailItem.Seasons.Exists(s=> string.Equals(s,SDate.Now().Season.ToString(),StringComparison.OrdinalIgnoreCase)))
-                            && (mailItem.Weather == null || (Game1.isRaining && "rainy".Equals(mailItem.Weather)) ||
-                                (!Game1.isRaining && "sunny".Equals(mailItem.Weather)))
-                            && (mailItem.FriendshipConditions == null || (mailItem.FriendshipConditions.TrueForAll(f =>
-                                    Game1.player.getFriendshipHeartLevelForNPC(f.NpcName) >= f.FriendshipLevel))
-                                && mailItem.FriendshipConditions.TrueForAll(f =>
-                                    f.FriendshipStatus == null || (Game1.player.friendshipData.ContainsKey(f.NpcName) &&
-                                                                   f.FriendshipStatus.Any(s =>
-                                                                       s == Game1.player.friendshipData[f.NpcName].Status))))
-                            && (mailItem.SkillConditions == null || mailItem.SkillConditions.TrueForAll(s =>
-                                    Game1.player.getEffectiveSkillLevel((int) s.SkillName) >= s.SkillLevel))
-                            && (mailItem.StatsConditions == null ||
-                                (mailItem.StatsConditions.TrueForAll(s =>
-                                     s.StatsLabel == null || Game1.player.stats.Get(s.StatsLabel) >= s.Amount) &&
-                                 mailItem.StatsConditions.TrueForAll(s =>
-                                     s.StatsName == null ||
-                                     MailFrameworkModEntry.ModHelper.Reflection
-                                         .GetProperty<uint>(Game1.player.stats, s.StatsName.ToString()).GetValue() >= s.Amount)))
-                            && (mailItem.CollectionConditions == null || (mailItem.CollectionConditions.TrueForAll(c =>
-                                    (c.Collection == Collection.Shipped && c.Ids.Sum(i => Game1.player.basicShipped.ContainsKey(i) ? Game1.player.basicShipped[i] : 0)   >= c.Amount)
-                                    || (c.Collection == Collection.Fish && c.Ids.Sum(i => Game1.player.fishCaught.ContainsKey(i) ? Game1.player.fishCaught[i][0] : 0) >= c.Amount)
-                                    || (c.Collection == Collection.Artifacts && c.Ids.Sum(i => Game1.player.archaeologyFound.ContainsKey(i) ? Game1.player.archaeologyFound[i][0] : 0) >= c.Amount)
-                                    || (c.Collection == Collection.Minerals && c.Ids.Sum(i => Game1.player.mineralsFound.ContainsKey(i) ? Game1.player.mineralsFound[i] : 0) >= c.Amount)
-                                    || (c.Collection == Collection.Cooking && c.Ids.Sum(i => Game1.player.recipesCooked.ContainsKey(i) ? Game1.player.recipesCooked[i] : 0) >= c.Amount)
-                                    || (c.Collection == Collection.Crafting && c.Ids.Sum(i => Game1.player.craftingRecipes.ContainsKey(i) ? Game1.player.craftingRecipes[i] : 0) >= c.Amount)
-                                )))
-                            && (mailItem.RandomChance == null ||
-                                new Random((int) (((ulong) Game1.stats.DaysPlayed * 1000000000000000) +
-                                                  (((ulong) l.Id.GetHashCode()) % 1000000000 * 1000000) +
-                                                  Game1.uniqueIDForThisGame % 1000000)).NextDouble() < mailItem.RandomChance)
-                            && (mailItem.Buildings == null || (mailItem.RequireAllBuildings
-                                    ? mailItem.Buildings.TrueForAll(b => Game1.getFarm().isBuildingConstructed(b))
-                                    : mailItem.Buildings.Any(b => Game1.getFarm().isBuildingConstructed(b))))
-                            && (mailItem.MailReceived == null || (mailItem.RequireAllMailReceived
-                                    ? !mailItem.MailReceived.Except(Game1.player.mailReceived).Any()
-                                    : mailItem.MailReceived.Intersect(Game1.player.mailReceived).Any()))
-                            && (mailItem.MailNotReceived == null ||
-                                !mailItem.MailNotReceived.Intersect(Game1.player.mailReceived).Any())
-                            && (mailItem.EventsSeen == null || (mailItem.RequireAllEventsSeen
-                                    ? !mailItem.EventsSeen.Except(Game1.player.eventsSeen).Any()
-                                    : mailItem.EventsSeen.Intersect(Game1.player.eventsSeen).Any()))
-                            && (mailItem.EventsNotSeen == null || !mailItem.EventsNotSeen.Intersect(Game1.player.eventsSeen).Any())
-                            && (mailItem.RecipeKnown == null || (mailItem.RequireAllRecipeKnown
-                                    ? mailItem.RecipeKnown.All(r => Game1.player.knowsRecipe(r))
-                                    : mailItem.RecipeKnown.Any(r => Game1.player.knowsRecipe(r))))
-                            && (mailItem.RecipeNotKnown == null || mailItem.RecipeNotKnown.All(r => !Game1.player.knowsRecipe(r)))
-                            && (mailItem.HasMods == null || (mailItem.RequireAllMods
-                                ? mailItem.HasMods.All(r => Helper.ModRegistry.IsLoaded(r))
-                                : mailItem.HasMods.Any(r => Helper.ModRegistry.IsLoaded(r))))
-                            && (mailItem.ExpandedPrecondition == null ||
-                                (ConditionsCheckerApi != null &&
-                                 ConditionsCheckerApi.CheckConditions(mailItem.ExpandedPrecondition)))
-                            && (mailItem.ExpandedPreconditions == null ||
-                                (ConditionsCheckerApi != null &&
-                                 ConditionsCheckerApi.CheckConditions(mailItem.ExpandedPreconditions)))
-                            && (mailItem.HouseUpgradeLevel == null || mailItem.HouseUpgradeLevel <= Game1.player.HouseUpgradeLevel)
-                            && (mailItem.DeepestMineLevel == null || mailItem.DeepestMineLevel <= Game1.player.deepestMineLevel)
-                            && (mailItem.CurrentMoney == null || mailItem.CurrentMoney <= Game1.player.Money)
-                            && (mailItem.TotalMoneyEarned == null || mailItem.TotalMoneyEarned <= Game1.player.totalMoneyEarned)
-                            && (mailItem.SpecialDateCondition == null 
-                                || (mailItem.SpecialDateCondition.SpecialDate == SpecialDate.Wedding 
-                                    && Game1.player.GetSpouseFriendship() != null 
-                                    && SDate.Now() >= SDate.FromDaysSinceStart(1 + Game1.player.GetSpouseFriendship().WeddingDate.TotalDays + mailItem.SpecialDateCondition.YearsSince * WorldDate.MonthsPerYear * WorldDate.DaysPerMonth)) 
-                                || (mailItem.SpecialDateCondition.SpecialDate == SpecialDate.ChildBirth 
-                                    && Game1.player.getChildrenCount() >= mailItem.SpecialDateCondition.WhichChild 
-                                    && GetChild(mailItem.SpecialDateCondition.WhichChild).daysOld.Value >= mailItem.SpecialDateCondition.YearsSince * WorldDate.MonthsPerYear * WorldDate.DaysPerMonth))
-                        )
-                    ;
+                bool Condition(Letter l) =>
+                    ( mailItem.KeepValid && Game1.player.mailReceived.Contains(l.Id + ValidTagSuffix))
+                    || (
+                        (!Game1.player.mailReceived.Contains(l.Id) || mailItem.Repeatable || (mailItem.Recipe != null && mailItem.Attachments?.Count == 0))
+                        && (mailItem.Recipe == null || !(Game1.player.cookingRecipes.ContainsKey(mailItem.Recipe) 
+                                                         || Game1.player.craftingRecipes.ContainsKey(mailItem.Recipe)
+                                                         || Game1.player.cookingRecipes.ContainsKey(CraftingRecipe.cookingRecipes.Where(r => ItemRegistry.GetData(r.Value.Split("/")[2].Split(" ")[0])?.InternalName == mailItem.Recipe).Select(r=>r.Key).FirstOrDefault()??"")
+                                                         || Game1.player.craftingRecipes.ContainsKey(CraftingRecipe.craftingRecipes.Where(r => ItemRegistry.GetData(r.Value.Split("/")[2].Split(" ")[0])?.InternalName == mailItem.Recipe).Select(r => r.Key).FirstOrDefault() ?? "")))
+                        && (mailItem.Date == null || SDate.Now() >= new SDate(Convert.ToInt32(mailItem.Date.Split(' ')[0]),
+                            mailItem.Date.Split(' ')[1], Convert.ToInt32(mailItem.Date.Split(' ')[2].Replace("Y", ""))))
+                        && (mailItem.Days == null || mailItem.Days.Contains(SDate.Now().Day))
+                        && (mailItem.Seasons == null || mailItem.Seasons.Exists(s=> string.Equals(s,SDate.Now().Season.ToString(),StringComparison.OrdinalIgnoreCase)))
+                        && (mailItem.Weather == null || (Game1.isRaining && "rainy".Equals(mailItem.Weather)) ||
+                            (!Game1.isRaining && "sunny".Equals(mailItem.Weather)))
+                        && (mailItem.FriendshipConditions == null || (mailItem.FriendshipConditions.TrueForAll(f =>
+                                Game1.player.getFriendshipHeartLevelForNPC(f.NpcName) >= f.FriendshipLevel))
+                            && mailItem.FriendshipConditions.TrueForAll(f =>
+                                f.FriendshipStatus == null || (Game1.player.friendshipData.ContainsKey(f.NpcName) &&
+                                                               f.FriendshipStatus.Any(s =>
+                                                                   s == Game1.player.friendshipData[f.NpcName].Status))))
+                        && (mailItem.SkillConditions == null || mailItem.SkillConditions.TrueForAll(s =>
+                            Game1.player.getEffectiveSkillLevel((int) s.SkillName) >= s.SkillLevel))
+                        && (mailItem.StatsConditions == null ||
+                            (mailItem.StatsConditions.TrueForAll(s =>
+                                 s.StatsLabel == null || Game1.player.stats.Get(s.StatsLabel) >= s.Amount) &&
+                             mailItem.StatsConditions.TrueForAll(s =>
+                                 s.StatsName == null ||
+                                 MailFrameworkModEntry.ModHelper.Reflection
+                                     .GetProperty<uint>(Game1.player.stats, s.StatsName.ToString()).GetValue() >= s.Amount)))
+                        && (mailItem.CollectionConditions == null || (mailItem.CollectionConditions.TrueForAll(c =>
+                            (c.Collection == Collection.Shipped && c.Ids.Sum(i => Game1.player.basicShipped.ContainsKey(i) ? Game1.player.basicShipped[i] : 0)   >= c.Amount)
+                            || (c.Collection == Collection.Fish && c.Ids.Sum(i => Game1.player.fishCaught.ContainsKey(i) ? Game1.player.fishCaught[i][0] : 0) >= c.Amount)
+                            || (c.Collection == Collection.Artifacts && c.Ids.Sum(i => Game1.player.archaeologyFound.ContainsKey(i) ? Game1.player.archaeologyFound[i][0] : 0) >= c.Amount)
+                            || (c.Collection == Collection.Minerals && c.Ids.Sum(i => Game1.player.mineralsFound.ContainsKey(i) ? Game1.player.mineralsFound[i] : 0) >= c.Amount)
+                            || (c.Collection == Collection.Cooking && c.Ids.Sum(i => Game1.player.recipesCooked.ContainsKey(i) ? Game1.player.recipesCooked[i] : 0) >= c.Amount)
+                            || (c.Collection == Collection.Crafting && c.Ids.Sum(i => Game1.player.craftingRecipes.ContainsKey(i) ? Game1.player.craftingRecipes[i] : 0) >= c.Amount)
+                        )))
+                        && (mailItem.RandomChance == null ||
+                            new Random((int) (((ulong) Game1.stats.DaysPlayed * 1000000000000000) +
+                                              (((ulong) l.Id.GetHashCode()) % 1000000000 * 1000000) +
+                                              Game1.uniqueIDForThisGame % 1000000)).NextDouble() < mailItem.RandomChance)
+                        && (mailItem.Buildings == null || (mailItem.RequireAllBuildings
+                            ? mailItem.Buildings.TrueForAll(b => Game1.getFarm().isBuildingConstructed(b))
+                            : mailItem.Buildings.Any(b => Game1.getFarm().isBuildingConstructed(b))))
+                        && (mailItem.MailReceived == null || (mailItem.RequireAllMailReceived
+                            ? !mailItem.MailReceived.Except(Game1.player.mailReceived).Any()
+                            : mailItem.MailReceived.Intersect(Game1.player.mailReceived).Any()))
+                        && (mailItem.MailNotReceived == null ||
+                            !mailItem.MailNotReceived.Intersect(Game1.player.mailReceived).Any())
+                        && (mailItem.EventsSeen == null || (mailItem.RequireAllEventsSeen
+                            ? !mailItem.EventsSeen.Except(Game1.player.eventsSeen).Any()
+                            : mailItem.EventsSeen.Intersect(Game1.player.eventsSeen).Any()))
+                        && (mailItem.EventsNotSeen == null || !mailItem.EventsNotSeen.Intersect(Game1.player.eventsSeen).Any())
+                        && (mailItem.RecipeKnown == null || (mailItem.RequireAllRecipeKnown
+                            ? mailItem.RecipeKnown.All(r => Game1.player.knowsRecipe(r))
+                            : mailItem.RecipeKnown.Any(r => Game1.player.knowsRecipe(r))))
+                        && (mailItem.RecipeNotKnown == null || mailItem.RecipeNotKnown.All(r => !Game1.player.knowsRecipe(r)))
+                        && (mailItem.HasMods == null || (mailItem.RequireAllMods
+                            ? mailItem.HasMods.All(r => Helper.ModRegistry.IsLoaded(r))
+                            : mailItem.HasMods.Any(r => Helper.ModRegistry.IsLoaded(r))))
+                        && (mailItem.ExpandedPrecondition == null ||
+                            (ConditionsCheckerApi != null &&
+                             ConditionsCheckerApi.CheckConditions(mailItem.ExpandedPrecondition)))
+                        && (mailItem.ExpandedPreconditions == null ||
+                            (ConditionsCheckerApi != null &&
+                             ConditionsCheckerApi.CheckConditions(mailItem.ExpandedPreconditions)))
+                        && (mailItem.HouseUpgradeLevel == null || mailItem.HouseUpgradeLevel <= Game1.player.HouseUpgradeLevel)
+                        && (mailItem.DeepestMineLevel == null || mailItem.DeepestMineLevel <= Game1.player.deepestMineLevel)
+                        && (mailItem.CurrentMoney == null || mailItem.CurrentMoney <= Game1.player.Money)
+                        && (mailItem.TotalMoneyEarned == null || mailItem.TotalMoneyEarned <= Game1.player.totalMoneyEarned)
+                        && (mailItem.SpecialDateCondition == null 
+                            || (mailItem.SpecialDateCondition.SpecialDate == SpecialDate.Wedding 
+                                && Game1.player.GetSpouseFriendship() != null 
+                                && SDate.Now() >= SDate.FromDaysSinceStart(1 + Game1.player.GetSpouseFriendship().WeddingDate.TotalDays + mailItem.SpecialDateCondition.YearsSince * WorldDate.MonthsPerYear * WorldDate.DaysPerMonth)) 
+                            || (mailItem.SpecialDateCondition.SpecialDate == SpecialDate.ChildBirth 
+                                && Game1.player.getChildrenCount() >= mailItem.SpecialDateCondition.WhichChild 
+                                && GetChild(mailItem.SpecialDateCondition.WhichChild).daysOld.Value >= mailItem.SpecialDateCondition.YearsSince * WorldDate.MonthsPerYear * WorldDate.DaysPerMonth))
+                    )
+                ;
 
-                    if (mailItem.CustomTextColorName != null)
+                if (mailItem.CustomTextColorName != null)
+                {
+                    try
                     {
-                        try
-                        {
-                            mailItem.CustomTextColor = DataLoader.Helper.Reflection.GetProperty<Color>(typeof(Color), mailItem.CustomTextColorName).GetValue();
-                        }
-                        catch (Exception)
-                        {
-                            MailFrameworkModEntry.ModMonitor.Log($"Color '{mailItem.CustomTextColorName}' isn't valid. Check XNA Color Chart for valid names. This color will be ignored.");
-                        }
+                        mailItem.CustomTextColor = DataLoader.Helper.Reflection.GetProperty<Color>(typeof(Color), mailItem.CustomTextColorName).GetValue();
                     }
-
-                    var contentPackTranslation = hasTranslation ? contentPack.Translation : null;
-                    Action<Letter> callback = (l) =>
+                    catch (Exception)
                     {
-                        Game1.player.mailReceived.Add(l.Id);
-                        if (mailItem.AdditionalMailReceived != null) Game1.player.mailReceived.AddRange(mailItem.AdditionalMailReceived);
-                        if (mailItem.MailReceivedToRemove != null) Game1.player.mailReceived.RemoveWhere(s => mailItem.MailReceivedToRemove?.Contains(s) ?? false);
-                        if (mailItem.ReplyConfig != null) ReplyController.OpenReplyDialog(mailItem.ReplyConfig, contentPackTranslation);
-                    };
-
-                    if (mailItem.Attachments != null && mailItem.Attachments.Count > 0)
-                    {
-                        if (mailItem.RandomlyChooseAttachment != null)
-                        {
-                            MailRepository.SaveLetter(
-                                new Letter(
-                                    mailItem.Id
-                                    , mailItem.Text
-                                    , Condition
-                                    , callback
-                                    , mailItem.WhichBG
-                                )
-                                {
-                                    TextColor = mailItem.TextColor,
-                                    CustomTextColor = mailItem.CustomTextColor,
-                                    Title = mailItem.Title,
-                                    GroupId = mailItem.GroupId,
-                                    LetterTexture = mailItem.LetterBG != null
-                                        ? GetTextureAsset(contentPack, mailItem.LetterBG)
-                                        : null,
-                                    UpperRightCloseButtonTexture = mailItem.UpperRightCloseButton != null
-                                        ? GetTextureAsset(contentPack, mailItem.UpperRightCloseButton)
-                                        : null,
-                                    AutoOpen = mailItem.AutoOpen,
-                                    I18N = contentPackTranslation,
-                                    DynamicItems = l =>
-                                    {
-                                        var dynamicItems = new List<Item>();
-                                        var random = new Random(SDate.Now().DaysSinceStart + mailItem.Id.GetHashCode() + (int)Game1.uniqueIDForThisGame);
-
-                                        var filteredAttachments = mailItem.Attachments.FindAll(a =>
-                                            a.RequireMailReceived == null || (a.RequireAllMailReceived
-                                                ? !a.RequireMailReceived.Except(Game1.player.mailReceived).Any()
-                                                : a.RequireMailReceived.Intersect(Game1.player.mailReceived).Any()));
-                                        foreach (var groupAttachments in filteredAttachments.GroupBy(a => a.RandomGroup).Select(g => new Tuple<string,List<Attachment>>(g.Key,g.ToList())))
-                                        {
-                                            int? amount = null;
-                                            var groupName = groupAttachments.Item1;
-                                            if (mailItem.RandomlyChooseAttachmentPerGroup.TryGetValue(groupName, out int value)) amount = value;
-                                            var attachments = groupAttachments.Item2;
-                                            for (var i = 1; i <= (amount ?? mailItem.RandomlyChooseAttachment) ; i++) if (attachments.Count > 0) if (GetNextItem(mailItem, ref attachments,mailItem.AttachmentGroupWithReplacement.Contains(groupName), random) is {} item) dynamicItems.Add(item);
-                                        }
-                                        return dynamicItems;
-                                    }
-                                });
-                        }
-                        else
-                        {
-                            var attachments = GetAttachments(mailItem);
-                            MailRepository.SaveLetter(
-                                new Letter(
-                                    mailItem.Id
-                                    , mailItem.Text
-                                    , attachments
-                                    , Condition
-                                    , callback
-                                    , mailItem.WhichBG
-                                )
-                                {
-                                    TextColor = mailItem.TextColor,
-                                    CustomTextColor = mailItem.CustomTextColor,
-                                    Title = mailItem.Title,
-                                    GroupId = mailItem.GroupId,
-                                    LetterTexture = mailItem.LetterBG != null
-                                        ? GetTextureAsset(contentPack, mailItem.LetterBG)
-                                        : null,
-                                    UpperRightCloseButtonTexture = mailItem.UpperRightCloseButton != null
-                                        ? GetTextureAsset(contentPack, mailItem.UpperRightCloseButton)
-                                        : null,
-                                    AutoOpen = mailItem.AutoOpen,
-                                    I18N = contentPackTranslation
-                                });
-                        }
+                        MailFrameworkModEntry.ModMonitor.Log($"Color '{mailItem.CustomTextColorName}' isn't valid. Check XNA Color Chart for valid names. This color will be ignored.");
                     }
-                    else
+                }
+
+                var contentPackTranslation = hasTranslation ? contentPack.Translation : null;
+                Action<Letter> callback = (l) =>
+                {
+                    Game1.player.mailReceived.Add(l.Id);
+                    if (mailItem.AdditionalMailReceived != null) Game1.player.mailReceived.AddRange(mailItem.AdditionalMailReceived);
+                    if (mailItem.MailReceivedToRemove != null) Game1.player.mailReceived.RemoveWhere(s => mailItem.MailReceivedToRemove?.Contains(s) ?? false);
+                    if (mailItem.ReplyConfig != null) ReplyController.OpenReplyDialog(mailItem.ReplyConfig, contentPackTranslation);
+                };
+
+                if (mailItem.Attachments != null && mailItem.Attachments.Count > 0)
+                {
+                    if (mailItem.RandomlyChooseAttachment != null)
                     {
                         MailRepository.SaveLetter(
                             new Letter(
                                 mailItem.Id
                                 , mailItem.Text
-                                , mailItem.Recipe
+                                , Condition
+                                , callback
+                                , mailItem.WhichBG
+                            )
+                            {
+                                TextColor = mailItem.TextColor,
+                                CustomTextColor = mailItem.CustomTextColor,
+                                Title = mailItem.Title,
+                                GroupId = mailItem.GroupId,
+                                LetterTexture = mailItem.LetterBG != null
+                                    ? GetTextureAsset(contentPack, mailItem.LetterBG)
+                                    : null,
+                                UpperRightCloseButtonTexture = mailItem.UpperRightCloseButton != null
+                                    ? GetTextureAsset(contentPack, mailItem.UpperRightCloseButton)
+                                    : null,
+                                AutoOpen = mailItem.AutoOpen,
+                                I18N = contentPackTranslation,
+                                DynamicItems = l =>
+                                {
+                                    var dynamicItems = new List<Item>();
+                                    var random = new Random(SDate.Now().DaysSinceStart + mailItem.Id.GetHashCode() + (int)Game1.uniqueIDForThisGame);
+
+                                    var filteredAttachments = mailItem.Attachments.FindAll(a =>
+                                        a.RequireMailReceived == null || (a.RequireAllMailReceived
+                                            ? !a.RequireMailReceived.Except(Game1.player.mailReceived).Any()
+                                            : a.RequireMailReceived.Intersect(Game1.player.mailReceived).Any()));
+                                    foreach (var groupAttachments in filteredAttachments.GroupBy(a => a.RandomGroup).Select(g => new Tuple<string,List<Attachment>>(g.Key,g.ToList())))
+                                    {
+                                        int? amount = null;
+                                        var groupName = groupAttachments.Item1;
+                                        if (mailItem.RandomlyChooseAttachmentPerGroup.TryGetValue(groupName, out int value)) amount = value;
+                                        var attachments = groupAttachments.Item2;
+                                        for (var i = 1; i <= (amount ?? mailItem.RandomlyChooseAttachment) ; i++) if (attachments.Count > 0) if (GetNextItem(mailItem, ref attachments,mailItem.AttachmentGroupWithReplacement.Contains(groupName), random) is {} item) dynamicItems.Add(item);
+                                    }
+                                    return dynamicItems;
+                                }
+                            });
+                    }
+                    else
+                    {
+                        var attachments = GetAttachments(mailItem);
+                        MailRepository.SaveLetter(
+                            new Letter(
+                                mailItem.Id
+                                , mailItem.Text
+                                , attachments
                                 , Condition
                                 , callback
                                 , mailItem.WhichBG
@@ -330,12 +368,32 @@ namespace MailFrameworkMod
                             });
                     }
                 }
-            }
-            else
-            {
-                MailFrameworkModEntry.ModMonitor.Log(
-                    $"Ignoring content pack: {contentPack.Manifest.Name} {contentPack.Manifest.Version} from {contentPack.DirectoryPath}\nIt does not have an mail.json file.",
-                    LogLevel.Warn);
+                else
+                {
+                    MailRepository.SaveLetter(
+                        new Letter(
+                            mailItem.Id
+                            , mailItem.Text
+                            , mailItem.Recipe
+                            , Condition
+                            , callback
+                            , mailItem.WhichBG
+                        )
+                        {
+                            TextColor = mailItem.TextColor,
+                            CustomTextColor = mailItem.CustomTextColor,
+                            Title = mailItem.Title,
+                            GroupId = mailItem.GroupId,
+                            LetterTexture = mailItem.LetterBG != null
+                                ? GetTextureAsset(contentPack, mailItem.LetterBG)
+                                : null,
+                            UpperRightCloseButtonTexture = mailItem.UpperRightCloseButton != null
+                                ? GetTextureAsset(contentPack, mailItem.UpperRightCloseButton)
+                                : null,
+                            AutoOpen = mailItem.AutoOpen,
+                            I18N = contentPackTranslation
+                        });
+                }
             }
         }
 
@@ -658,12 +716,24 @@ namespace MailFrameworkMod
 
         public static Texture2D GetTextureAsset(IContentPack contentPack, string textureName)
         {
-            var key = new Tuple<string, string>(contentPack.Manifest.UniqueID, textureName);
-            if (!_contentPackAssets.ContainsKey(key))
+            if (contentPack != null && contentPack.ModContent.DoesAssetExist<Texture2D>(textureName))
             {
-                _contentPackAssets[key] = contentPack.ModContent.Load<Texture2D>(textureName);
+                var key = new Tuple<string, string>(contentPack.Manifest.UniqueID, textureName);
+                if (!_contentPackAssets.ContainsKey(key))
+                {
+                    _contentPackAssets[key] = contentPack.ModContent.Load<Texture2D>(textureName);
+                }
+                return _contentPackAssets[key];
             }
-            return _contentPackAssets[key];
+            else
+            {
+                var key = new Tuple<string, string>("DIGUS.MailFrameworkMod", textureName);
+                if (!_contentPackAssets.ContainsKey(key))
+                {
+                    _contentPackAssets[key] = MailFrameworkModEntry.ModHelper.GameContent.Load<Texture2D>(textureName);
+                }
+                return _contentPackAssets[key];
+            }
         }
 
         public static void RegisterContentPack(IContentPack contentPack)
