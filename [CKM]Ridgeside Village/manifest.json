@@ -1,0 +1,17 @@
+﻿{
+	"Name": "[CKM]Ridgeside Village",
+	"Author": "Digus",
+	"Version": "1.0.0",
+	"Description": "Adds custom kissing configuration for Ridgeside Village",
+	"UniqueID": "Digus.RidgesideVillageForCustomKissingMod",
+	"MinimumApiVersion": "4.0.0",
+	"UpdateKeys": ["Nexus:32573"],
+	"Dependencies": [
+		{
+			"UniqueID": "Rafseazz.RSVCP"
+		}
+	],
+	"ContentPackFor": {
+		"UniqueID": "Digus.CustomKissingMod"
+	}
+}
