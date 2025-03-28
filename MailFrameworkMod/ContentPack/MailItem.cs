@@ -44,6 +44,7 @@ namespace MailFrameworkMod.ContentPack
         public SpecialDateCondition SpecialDateCondition;
         public string ExpandedPrecondition;
         public string[] ExpandedPreconditions;
+        public string GameStateQuery;
         public double? RandomChance;
         public List<string> Buildings;
         public bool RequireAllBuildings;

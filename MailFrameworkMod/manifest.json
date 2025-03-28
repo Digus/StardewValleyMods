@@ -1,7 +1,7 @@
 ﻿{
 	"Name": "Mail Framework Mod",
 	"Author": "Digus",
-	"Version": "1.20.0-beta1",
+	"Version": "1.20.0",
 	"MinimumApiVersion": "4.0.0",
 	"Description": "Utility classes and content packs to add mail into the game.",
 	"UniqueID": "DIGUS.MailFrameworkMod",

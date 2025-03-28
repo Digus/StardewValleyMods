@@ -111,6 +111,7 @@
 		},
 		"ExpandedPrecondition": "d Mon Fri/HasItem Pink Cake/!JojaMartComplete/!w rainy", //Needs the Expanded Preconditions Utility mod. Sees that mod documentation to see how this works. If the mod is not loaded, the letter will not be delivered.
 		"ExpandedPreconditions": [ "!z spring/t 600 1000", "f Linus 1000/w rainy/z spring", "f Linus 2500" ], //Needs the Expanded Preconditions Utility mod. Sees that mod documentation to see how this works. If the mod is not loaded, the letter will not be delivered.
+		"GameStateQuery": "IS_FESTIVAL_DAY Any", // Check if the Game State Query is true. ref https://stardewvalleywiki.com/Modding:Game_state_queries
 		"RandomChance": 0.25, // The mod will check if a random number from 0 to 1 is bellow the given number. The same save, on the same day for the same letter will always have the same result to avoid cheating.
 		"Buildings": ["Coop","Big Coop","Deluxe Coop"], // Require one of the buildings to be currently constructed in the farm.
 		"RequireAllBuildings": false, // If true, require that all the buildings in the "Buildings" list to be currently constructed in the farm. Default is false.

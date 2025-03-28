@@ -270,6 +270,7 @@ namespace MailFrameworkMod
                             || (mailItem.SpecialDateCondition.SpecialDate == SpecialDate.ChildBirth 
                                 && Game1.player.getChildrenCount() >= mailItem.SpecialDateCondition.WhichChild 
                                 && GetChild(mailItem.SpecialDateCondition.WhichChild).daysOld.Value >= mailItem.SpecialDateCondition.YearsSince * WorldDate.MonthsPerYear * WorldDate.DaysPerMonth))
+                        && (mailItem.GameStateQuery == null || GameStateQuery.CheckConditions(mailItem.GameStateQuery))
                     )
                 ;
 
