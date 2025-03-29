@@ -1,0 +1,169 @@
+{
+    "Format": "2.5.3",
+    "Changes": [
+        {
+            "LogName": "Load Strings asset for Subscription Boxes Mod",
+            "Action": "Load",
+            "Target": "Digus.SubscriptionBoxesMod/Strings",
+            "FromFile" : "data/strings.json"
+        },
+        {
+            "LogName": "Editing Strings asset with config tokens for Subscription Boxes Mod",
+            "Action": "EditData",
+            "Target": "Digus.SubscriptionBoxesMod/Strings",
+            "Entries": {
+                "BasicTierCost": "{{BasicTierCost}}",
+                "StandardTierCost": "{{StandardTierCost}}",
+                "DeluxeTierCost": "{{DeluxeTierCost}}",
+                "PremiumTierCost": "{{PremiumTierCost}}"
+            }
+        },
+        {
+            "Action": "Include",
+            "FromFile": "data/catalog-reply.json",
+            "LocalTokens": {
+                "IdSuffix": "Forager"
+            }
+        },
+        {
+            "Action": "Include",
+            "FromFile": "data/catalog-reply.json",
+            "LocalTokens": {
+                "IdSuffix": "Miner"
+            }
+        },
+        {
+            "Action": "Include",
+            "FromFile": "data/catalog-reply.json",
+            "LocalTokens": {
+                "IdSuffix": "Adventurer"
+            }
+        },
+        {
+            "Action": "Include",
+            "FromFile": "data/delivery-reply.json",
+            "LocalTokens": {
+                "BoxType": "Forager",
+                "BoxTier": "Basic",
+                "TierCost": "{{BasicTierCost}}"
+            }
+        },
+        {
+            "Action": "Include",
+            "FromFile": "data/delivery-reply.json",
+            "LocalTokens": {
+                "BoxType": "Forager",
+                "BoxTier": "Standard",
+                "TierCost": "{{StandardTierCost}}"
+            }
+        },
+        {
+            "Action": "Include",
+            "FromFile": "data/delivery-reply.json",
+            "LocalTokens": {
+                "BoxType": "Forager",
+                "BoxTier": "Deluxe",
+                "TierCost": "{{DeluxeTierCost}}"
+            }
+        },
+        {
+            "Action": "Include",
+            "FromFile": "data/delivery-reply.json",
+            "LocalTokens": {
+                "BoxType": "Forager",      
+                "BoxTier": "Premium",      
+                "TierCost": "{{PremiumTierCost}}"
+            }
+        },
+        {
+            "Action": "Include",
+            "FromFile": "data/delivery-reply.json",
+            "LocalTokens": {
+                "BoxType": "Miner",
+                "BoxTier": "Basic",
+                "TierCost": "{{BasicTierCost}}"
+            }
+        },
+        {
+            "Action": "Include",
+            "FromFile": "data/delivery-reply.json",
+            "LocalTokens": {
+                "BoxType": "Miner",
+                "BoxTier": "Standard",
+                "TierCost": "{{StandardTierCost}}"
+            }
+        },
+        {
+            "Action": "Include",
+            "FromFile": "data/delivery-reply.json",
+            "LocalTokens": {
+                "BoxType": "Miner",
+                "BoxTier": "Deluxe",
+                "TierCost": "{{DeluxeTierCost}}"
+            }
+        },
+        {
+            "Action": "Include",
+            "FromFile": "data/delivery-reply.json",
+            "LocalTokens": {
+                "BoxType": "Miner",      
+                "BoxTier": "Premium",      
+                "TierCost": "{{PremiumTierCost}}"
+            }
+        },
+        {
+            "Action": "Include",
+            "FromFile": "data/delivery-reply.json",
+            "LocalTokens": {
+                "BoxType": "Adventurer",
+                "BoxTier": "Basic",
+                "TierCost": "{{BasicTierCost}}"
+            }
+        },
+        {
+            "Action": "Include",
+            "FromFile": "data/delivery-reply.json",
+            "LocalTokens": {
+                "BoxType": "Adventurer",
+                "BoxTier": "Standard",
+                "TierCost": "{{StandardTierCost}}"
+            }
+        },
+        {
+            "Action": "Include",
+            "FromFile": "data/delivery-reply.json",
+            "LocalTokens": {
+                "BoxType": "Adventurer",
+                "BoxTier": "Deluxe",
+                "TierCost": "{{DeluxeTierCost}}"
+            }
+        },
+        {
+            "Action": "Include",
+            "FromFile": "data/delivery-reply.json",
+            "LocalTokens": {
+                "BoxType": "Adventurer",      
+                "BoxTier": "Premium",      
+                "TierCost": "{{PremiumTierCost}}"
+            }
+        }
+    ],
+    "ConfigSchema": {
+        "BasicTierCost": {
+            "Default": 500,
+            "Section": "Cost"
+        },
+        "StandardTierCost": {
+            "Default": 1000,
+            "Section": "Cost"
+        },
+        "DeluxeTierCost": {
+            "Default": 2000,
+            "Section": "Cost"
+        },
+        "PremiumTierCost": {
+            "Default": 3000,
+            "Section": "Cost"
+        }
+    }
+}

@@ -1,0 +1,6 @@
+{
+    "BasicTierCost": "500",
+    "StandardTierCost": "1000",
+    "DeluxeTierCost": "2000",
+    "PremiumTierCost": "3000"
+}

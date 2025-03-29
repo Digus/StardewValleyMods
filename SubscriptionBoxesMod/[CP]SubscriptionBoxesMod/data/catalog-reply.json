@@ -1,0 +1,52 @@
+{
+    "Changes": [
+        {
+            "LogName": "Edits ReplyConfig for Catalog Letters for Subscription Boxes Mod",
+            "Action": "EditData",
+            "Target": "DIGUS.MailFrameworkMod/MailData",
+            "Fields": {
+                "{{ModId}}.{{IdSuffix}}BoxCatalog": {
+                    "ReplyConfig": {
+                        "QuestionKey": "{{ModId}}.{{IdSuffix}}BoxCatalogQuestion",
+                        "QuestionDialog": "SubscriptionBoxesMod.BoxTier.Question",
+                        "Replies": [
+                            {
+                                "ReplyKey": "{{ModId}}.{{IdSuffix}}BoxCatalog.Later",
+                                "ReplyOptionDialog": "SubscriptionBoxesMod.BoxTier.Later",
+                                "ReplyResponseDialog": "SubscriptionBoxesMod.BoxTier.Later.Response"
+                            },
+                            {
+                                "ReplyKey": "{{ModId}}.{{IdSuffix}}BoxCatalog.Basic",
+                                "ReplyOptionDialog": "SubscriptionBoxesMod.BoxTier.Basic",
+                                "MailReceivedToAdd": [ "{{ModId}}.BoxTier.Basic", "{{ModId}}.BoxTier" ],
+                                "ReplyResponseDialog": "SubscriptionBoxesMod.BoxTier.Basic.Response",
+                                "Cost": "{{BasicTierCost}}"
+                            },
+                            {
+                                "ReplyKey": "{{ModId}}.{{IdSuffix}}BoxCatalog.Standard",
+                                "ReplyOptionDialog": "SubscriptionBoxesMod.BoxTier.Standard",
+                                "MailReceivedToAdd": [ "{{ModId}}.BoxTier.Standard", "{{ModId}}.BoxTier" ],
+                                "ReplyResponseDialog": "SubscriptionBoxesMod.BoxTier.Standard.Response",
+                                "Cost": "{{StandardTierCost}}"
+                            },
+                            {
+                                "ReplyKey": "{{ModId}}.{{IdSuffix}}BoxCatalog.Deluxe",
+                                "ReplyOptionDialog": "SubscriptionBoxesMod.BoxTier.Deluxe",
+                                "MailReceivedToAdd": [ "{{ModId}}.BoxTier.Deluxe", "{{ModId}}.BoxTier" ],
+                                "ReplyResponseDialog": "SubscriptionBoxesMod.BoxTier.Deluxe.Response",
+                                "Cost": "{{DeluxeTierCost}}"
+                            },
+                            {
+                                "ReplyKey": "{{ModId}}.{{IdSuffix}}BoxCatalog.Premium",
+                                "ReplyOptionDialog": "SubscriptionBoxesMod.BoxTier.Premium",
+                                "MailReceivedToAdd": [ "{{ModId}}.BoxTier.Premium", "{{ModId}}.BoxTier" ],
+                                "ReplyResponseDialog": "SubscriptionBoxesMod.BoxTier.Premium.Response",
+                                "Cost": "{{PremiumTierCost}}"
+                            }
+                        ]
+                    }
+                }
+            }
+        }
+    ]
+}
