@@ -1,0 +1,12 @@
+﻿{
+    "Config.BasicTierCost.Name":  "Básico",
+    "Config.BasicTierCost.Description": "Custo do nível básico em ouros.",
+    "Config.StandardTierCost.Name": "Padrão",
+    "Config.StandardTierCost.Description": "Custo do nível padrão em ouros.",
+    "Config.DeluxeTierCost.Name": "Luxo",
+    "Config.DeluxeTierCost.Description": "Custo do nível luxo em ouros.",
+    "Config.PremiumTierCost.Name": "Premium",
+    "Config.PremiumTierCost.Description": "Custo do nível premium em ouros.",
+    "Config.Section.Cost.Name": "Custo do Nível",
+    "Config.Section.Cost.Description": "Propriedades para configurar o custo de cada nível."
+}

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <AssemblyName>SubscriptionBoxesMod</AssemblyName>
@@ -14,6 +14,27 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="[CP]SubscriptionBoxesMod\data\delivery-reply.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="[CP]SubscriptionBoxesMod\data\catalog-reply.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="[CP]SubscriptionBoxesMod\content.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="[CP]SubscriptionBoxesMod\i18n\pt.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="[CP]SubscriptionBoxesMod\i18n\default.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="[CP]SubscriptionBoxesMod\manifest.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="[CP]SubscriptionBoxesMod\data\strings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="[MFM]SubscriptionBoxesMod\i18n\default.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

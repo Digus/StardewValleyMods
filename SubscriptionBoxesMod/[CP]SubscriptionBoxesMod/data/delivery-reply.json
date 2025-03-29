@@ -1,0 +1,49 @@
+{
+    "Changes": [
+        {
+            "LogName": "Edits ReplyConfig for Delivery Letters for Subscription Boxes Mod",
+            "Action": "EditData",
+            "Target": "DIGUS.MailFrameworkMod/MailData",
+            "Fields": {
+                "{{ModId}}.{{BoxType}}{{BoxTier}}BoxDelivery": {
+                    "ReplyConfig": {
+                        "QuestionKey": "Digus.SubscriptionBoxesMod.{{BoxType}}{{BoxTier}}BoxDelivery.Question",
+                        "QuestionDialog": "SubscriptionBoxesMod.Delivery.Question",
+                        "Replies": [
+                            {
+                                "ReplyKey": "Digus.SubscriptionBoxesMod.Delivery.Keep",
+                                "ReplyOptionDialog": "SubscriptionBoxesMod.Delivery.Keep",
+                                "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxType", "Digus.SubscriptionBoxesMod.BoxType.{{BoxType}}", "Digus.SubscriptionBoxesMod.BoxTier", "Digus.SubscriptionBoxesMod.BoxTier.{{BoxTier}}" ],
+                                "ReplyResponseDialog": "SubscriptionBoxesMod.Delivery.Keep.Response",
+                                "Cost": "{{TierCost}}"
+                            },
+                            {
+                                "ReplyKey": "Digus.SubscriptionBoxesMod.Delivery.Later",
+                                "ReplyOptionDialog": "SubscriptionBoxesMod.Delivery.Later",
+                                "ReplyResponseDialog": "SubscriptionBoxesMod.Delivery.Later.Response"
+                            },
+                            {
+                                "ReplyKey": "Digus.SubscriptionBoxesMod.Delivery.Miner",
+                                "ReplyOptionDialog": "SubscriptionBoxesMod.BoxType.Miner",
+                                "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxType.Miner", "Digus.SubscriptionBoxesMod.BoxType" ],
+                                "ReplyResponseDialog": "SubscriptionBoxesMod.BoxType.Miner.Response"
+                            },
+                            {
+                                "ReplyKey": "Digus.SubscriptionBoxesMod.Delivery.Forager",
+                                "ReplyOptionDialog": "SubscriptionBoxesMod.BoxType.Forager",
+                                "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxType.Forager", "Digus.SubscriptionBoxesMod.BoxType" ],
+                                "ReplyResponseDialog": "SubscriptionBoxesMod.BoxType.Forager.Response"
+                            },
+                            {
+                                "ReplyKey": "Digus.SubscriptionBoxesMod.Delivery.Adventurer",
+                                "ReplyOptionDialog": "SubscriptionBoxesMod.BoxType.Adventurer",
+                                "MailReceivedToAdd": [ "Digus.SubscriptionBoxesMod.BoxType.Adventurer", "Digus.SubscriptionBoxesMod.BoxType" ],
+                                "ReplyResponseDialog": "SubscriptionBoxesMod.BoxType.Adventurer.Response"
+                            }
+                        ]
+                    }
+                }
+            }
+        }
+    ]
+}
