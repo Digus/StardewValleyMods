@@ -140,6 +140,16 @@ namespace AnimalHusbandryMod.animals
                 }
             }
 
+            if (!DataLoader.ModConfig.DisableSellPriceAdjustOverMeatLimit)
+            {
+                while (tempTotal < farmAnimal.getSellPrice())
+                {
+                    numberOfMeat++;
+                    quality[4]++;
+                    tempTotal += meatPrice * 0.50;
+                }
+            }
+
             for (; numberOfMeat > 0; --numberOfMeat)
             {
                 Object newItem = ItemRegistry.Create<Object>(debrisType, 1, quality[4] > 0 ? 4 : quality[2] > 0 ? 2 : quality[1] > 0 ? 1 : 0);
