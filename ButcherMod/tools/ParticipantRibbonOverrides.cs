@@ -207,6 +207,21 @@ namespace AnimalHusbandryMod.tools
                             who.FarmerSprite.animateOnce(new FarmerSprite.AnimationFrame[1] { new FarmerSprite.AnimationFrame(58, 200, false, true, new AnimatedSprite.endOfAnimationBehavior(Farmer.useTool), true) });
                             break;
                     }
+                    Rectangle boundingBox;
+                    boundingBox = animal != null ? animal.GetBoundingBox() : pet.GetBoundingBox();
+
+                    double numX = boundingBox.Center.X;
+                    double numY = boundingBox.Center.Y;
+
+                    Vector2 vectorRibbon = new Vector2((float)numX - 32, (float)numY-32);
+                    var ribbonScale = Game1.pixelZoom * 0.75f;
+                    TemporaryAnimatedSprite ribbonSprite = new TemporaryAnimatedSprite(__instance.GetToolData().Texture,
+                            Game1.getSourceRectForStandardTileSheet(DataLoader.ToolsSprites, __instance.CurrentParentTileIndex, 16, 16),
+                            750.0f, 1, 1, vectorRibbon, false, false, ((float)boundingBox.Bottom + 0.1f) / 10000f, 0.0f,
+                            Color.White, ribbonScale, 0.0f, 0.0f, 0.0f)
+                        { delayBeforeAnimationStart = 25 };
+                    location.temporarySprites.Add(ribbonSprite);
+
                 }
                 else
                 {
