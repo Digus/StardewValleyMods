@@ -25,6 +25,7 @@ namespace AnimalHusbandryMod
         public bool DisableInseminationSyringeLetter;
         public bool DisableMeatToolLetter;
         public bool DisableMeatButton;
+        public bool EnableMarnieTools;
         public bool DisableMeatInBlundle;
         public bool ForceDrawAttachmentOnAnyOS;
         public bool DisableTvChannels;
