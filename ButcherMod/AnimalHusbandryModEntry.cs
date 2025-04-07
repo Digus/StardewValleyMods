@@ -12,6 +12,7 @@ using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley;
 using StardewValley.Characters;
+using StardewValley.Internal;
 using StardewValley.Menus;
 using StardewValley.Objects;
 using StardewValley.Tools;
@@ -429,7 +430,13 @@ namespace AnimalHusbandryMod
 
             if (Context.IsMainPlayer)
             {
-                ItemUtility.RemoveModdedItemAnywhere(ParticipantRibbonOverrides.ParticipantRibbonKey);
+                Utility.ForEachItemContext(HandleItem);
+                bool HandleItem(in ForEachItemContext context)
+                {
+                    if (context.Item is not Tool obj) return true;
+                    if (context.Item.ItemId == ParticipantRibbonOverrides.ParticipantRibbonItemId) context.RemoveItem();
+                    return true;
+                };
             }
 
             EventsLoader.CheckUnseenEvents();
