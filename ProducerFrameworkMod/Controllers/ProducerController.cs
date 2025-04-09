@@ -4,13 +4,11 @@ using ProducerFrameworkMod.Utils;
 using StardewModdingAPI;
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Linq;
 using Force.DeepCloner;
 using StardewValley;
 using StardewValley.GameData.Objects;
 using Object = StardewValley.Object;
-using System.Xml.Linq;
 
 namespace ProducerFrameworkMod.Controllers
 {

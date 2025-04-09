@@ -33,7 +33,11 @@ namespace ProducerFrameworkMod.Utils
         {
             if (obj.GetKey(OutputTranslationKey) is string key && GetKey(obj, ContentPackUniqueID) is string id)
             {
-                string translation = TranslationHelpers[id].Get(key);
+                string translation = key;
+                if(TranslationHelpers.TryGetValue(id, out var value))
+                {
+                    translation = value.Get(key);
+                }
                 return !translation.Contains("(no translation:") ? translation : key;
             }
             return null;
@@ -43,7 +47,11 @@ namespace ProducerFrameworkMod.Utils
         {
             if (obj.GetKey(OutputGenericParentNameTranslationKey) is string key && GetKey(obj, ContentPackUniqueID) is string id)
             {
-                string translation = TranslationHelpers[id].Get(key);
+                string translation = key;
+                if(TranslationHelpers.TryGetValue(id, out var value))
+                {
+                    translation = value.Get(key);
+                }
                 return !translation.Contains("(no translation:") ? translation : key;
             }
             return null;
