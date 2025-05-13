@@ -119,7 +119,7 @@ namespace CustomKissingMod
                     }
                 } else if (__instance.hasTemporaryMessageAvailable())
                 {
-                    _lastDialog = __instance.CurrentDialogue.Peek().TranslationKey;
+                    _lastDialog = __instance.CurrentDialogue.Peek()?.TranslationKey;
                 }
             }
             else if (__instance.isMarried())
