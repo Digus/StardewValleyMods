@@ -179,12 +179,12 @@ namespace CustomKissingMod
 
             if (Game1.characterData.TryGetValue(name, out CharacterData npcData))
             {
-                var texture = DataLoader.Helper.GameContent.Load<Texture2D>($"Characters/{name}");
+                var texture = DataLoader.Helper.GameContent.Load<Texture2D>($"Characters/{npcData.TextureName ?? name}");
                 max = (texture.ActualHeight / 32) * 4;
                 
-                if (DataLoader.Helper.GameContent.DoesAssetExist<Texture2D>(DataLoader.Helper.GameContent.ParseAssetName($"Characters/{name}_Beach")))
+                if (DataLoader.Helper.GameContent.DoesAssetExist<Texture2D>(DataLoader.Helper.GameContent.ParseAssetName($"Characters/{npcData.TextureName ?? name}_Beach")))
                 {
-                    var textureBeach = DataLoader.Helper.GameContent.Load<Texture2D>($"Characters/{name}_Beach");
+                    var textureBeach = DataLoader.Helper.GameContent.Load<Texture2D>($"Characters/{npcData.TextureName ?? name}_Beach");
                     hasBeachAttire = true;
                     maxBeach = (textureBeach.ActualHeight / 32) * 4;
                 }
@@ -236,7 +236,7 @@ namespace CustomKissingMod
             if (mod != CustomKissingModEntry.Manifest) return;
             var name = page.Split("Npc")[1];
             if (!Game1.characterData.TryGetValue(name, out CharacterData npcData)) return;
-            var texture = DataLoader.Helper.GameContent.Load<Texture2D>($"Characters/{name}");
+            var texture = DataLoader.Helper.GameContent.Load<Texture2D>($"Characters/{npcData.TextureName ?? name}");
             Rectangle dest = new((int)v.X + 250, (int)v.Y, 64, 128);
             sb.Draw(
                 texture,
@@ -253,7 +253,7 @@ namespace CustomKissingMod
             if (mod != CustomKissingModEntry.Manifest) return;
             var name = page.Split("Npc")[1];
             if (!Game1.characterData.TryGetValue(name, out CharacterData npcData)) return;
-            var texture = DataLoader.Helper.GameContent.Load<Texture2D>($"Characters/{name}_Beach");
+            var texture = DataLoader.Helper.GameContent.Load<Texture2D>($"Characters/{npcData.TextureName ?? name}_Beach");
             Rectangle dest = new((int)v.X + 350, (int)v.Y - 16, 64, 128);
             sb.Draw(
                 texture,
