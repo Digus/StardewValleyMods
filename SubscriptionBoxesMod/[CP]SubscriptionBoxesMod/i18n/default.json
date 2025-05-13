@@ -1,0 +1,12 @@
+﻿{
+    "Config.BasicTierCost.Name":  "Basic",
+    "Config.BasicTierCost.Description": "Cost of the basic tier in gold.",
+    "Config.StandardTierCost.Name": "Standard",
+    "Config.StandardTierCost.Description": "Cost of the standard tier in gold.",
+    "Config.DeluxeTierCost.Name": "Deluxe",
+    "Config.DeluxeTierCost.Description": "Cost of the deluxe tier in gold.",
+    "Config.PremiumTierCost.Name": "Premium",
+    "Config.PremiumTierCost.Description": "Cost of the premium tier in gold.",
+    "Config.Section.Cost.Name": "Tier Cost",
+    "Config.Section.Cost.Description": "Properties to configure the cost of the tiers."
+}

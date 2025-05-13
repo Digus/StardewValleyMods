@@ -29,5 +29,7 @@ namespace AnimalHusbandryMod
         public bool DisableMeatInBlundle;
         public bool ForceDrawAttachmentOnAnyOS;
         public bool DisableTvChannels;
+        public bool DisableSellPriceAdjustOverMeatLimit;
+        public bool EnableAutomaticNameBabies;
     }
 }

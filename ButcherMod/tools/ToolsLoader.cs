@@ -15,7 +15,9 @@ using StardewModdingAPI.Events;
 using StardewModdingAPI.Utilities;
 using StardewValley;
 using StardewValley.Buildings;
+using StardewValley.Delegates;
 using StardewValley.GameData.Tools;
+using StardewValley.Internal;
 using StardewValley.Inventories;
 using StardewValley.Locations;
 using StardewValley.Objects;
@@ -235,7 +237,7 @@ namespace AnimalHusbandryMod.tools
 
             bool MeatCleaverCondition(Letter l)
             {
-                return !DataLoader.ModConfig.DisableMeat && !DataLoader.ModConfig.DisableMeatToolLetter && HasAnimal() && (!ItemUtility.HasModdedItem(MeatCleaverOverrides.MeatCleaverKey) || !Game1.player.mailReceived.Contains(l.Id));
+                return !DataLoader.ModConfig.DisableMeat && !DataLoader.ModConfig.DisableMeatToolLetter && HasAnimal() && (!Utility.doesItemExistAnywhere(MeatCleaverOverrides.MeatCleaverItemId) || !Game1.player.mailReceived.Contains(l.Id));
             }
 
             List<string> validBuildingsForInsemination = new List<string>(new string[] { "Deluxe Barn", "Big Barn", "Deluxe Coop" });
@@ -254,7 +256,7 @@ namespace AnimalHusbandryMod.tools
                     return false;
                 });
                
-                return hasAnimalInValidBuildings && (!ItemUtility.HasModdedItem(InseminationSyringeOverrides.InseminationSyringeKey) || !Game1.player.mailReceived.Contains(l.Id));
+                return hasAnimalInValidBuildings && (!Utility.doesItemExistAnywhere(InseminationSyringeOverrides.InseminationSyringeItemId) || !Game1.player.mailReceived.Contains(l.Id));
             }
 
             bool FeedingBasketCondition(Letter l)
@@ -264,7 +266,8 @@ namespace AnimalHusbandryMod.tools
 
             bool FeedingBasketRedeliveryCondition(Letter l)
             {
-                return !DataLoader.ModConfig.DisableTreats && !DataLoader.ModConfig.DisableFeedingBasketLetter && Game1.player.mailReceived.Contains("feedingBasket") && !ItemUtility.HasModdedItem(FeedingBasketOverrides.FeedingBasketKey) && Game1.player.getFriendshipHeartLevelForNPC("Marnie") >= 6;
+                return !DataLoader.ModConfig.DisableTreats && !DataLoader.ModConfig.DisableFeedingBasketLetter && Game1.player.mailReceived.Contains("feedingBasket") && !
+                    Utility.doesItemExistAnywhere(FeedingBasketOverrides.FeedingBasketItemId) && Game1.player.getFriendshipHeartLevelForNPC("Marnie") >= 6;
             }
 
             Letter meatCleaverLetter = new Letter("meatCleaver", meatCleaverText, MeatCleaverCondition, (l) => { if (!Game1.player.mailReceived.Contains(l.Id)) Game1.player.mailReceived.Add(l.Id); })
@@ -354,10 +357,16 @@ namespace AnimalHusbandryMod.tools
 
         public void RemoveAllToolsCommand(string n, string[] d)
         {
-            ItemUtility.RemoveModdedItemAnywhere(MeatCleaverOverrides.MeatCleaverKey);
-            ItemUtility.RemoveModdedItemAnywhere(InseminationSyringeOverrides.InseminationSyringeKey);
-            ItemUtility.RemoveModdedItemAnywhere(FeedingBasketOverrides.FeedingBasketKey);
-            ItemUtility.RemoveModdedItemAnywhere(ParticipantRibbonOverrides.ParticipantRibbonKey);
+            Utility.ForEachItemContext(HandleItem);
+            bool HandleItem(in ForEachItemContext context)
+            {
+                if (context.Item is not Tool obj) return true;
+                if (context.Item.ItemId == MeatCleaverOverrides.MeatCleaverItemId) context.RemoveItem();
+                if (context.Item.ItemId == InseminationSyringeOverrides.InseminationSyringeItemId) context.RemoveItem();
+                if (context.Item.ItemId == FeedingBasketOverrides.FeedingBasketItemId) context.RemoveItem();
+                if (context.Item.ItemId == ParticipantRibbonOverrides.ParticipantRibbonItemId) context.RemoveItem();
+                return true;
+            };
         }
     }
 }

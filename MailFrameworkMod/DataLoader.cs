@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using MailFrameworkMod.ContentPack;
 using MailFrameworkMod.integrations;
 using Microsoft.Xna.Framework;
@@ -15,19 +13,25 @@ using StardewModdingAPI.Utilities;
 using StardewValley;
 using StardewValley.Characters;
 using StardewValley.Extensions;
-using StardewValley.GameData.BigCraftables;
 using StardewValley.GameData.Objects;
-using StardewValley.GameData.Weapons;
 using StardewValley.Objects;
 using StardewValley.Tools;
+using Attachment = MailFrameworkMod.ContentPack.Attachment;
+using MailDataAssetType = System.Collections.Generic.Dictionary<string, MailFrameworkMod.ContentPack.MailItem>;
 
 namespace MailFrameworkMod
 {
     public partial class DataLoader
     {
+        internal const string MailDataAssetName = "DIGUS.MailFrameworkMod/MailData";
         internal const string MailAssetName = "Data/mail";
-        public static Dictionary<Tuple<string,string>, Texture2D> _contentPackAssets = new Dictionary<Tuple<string, string>, Texture2D>();
+        internal const string ValidTagSuffix = "::Valid";
+
+        private static readonly Dictionary<Tuple<string,string>, Texture2D> _contentPackAssets = new Dictionary<Tuple<string, string>, Texture2D>();
         private static readonly HashSet<IContentPack> RegisteredContentPacks = new HashSet<IContentPack>(new ContentPackComparer());
+        private static MailDataAssetType MailData = new MailDataAssetType();
+
+        private static bool _wasMailDataInvalidate;
 
         private static readonly List<string> NoUpgradeLevelTools = new List<string>() {"Scythe", "Shears", "Milk Pail", "Fishing Rod", "Golden Scythe", "Pan", "Return Scepter" };
         private static readonly List<string> SlingshotIndexes = new List<string>() {"32", "33", "34", "(W)32", "(W)33", "(W)34" };
@@ -39,14 +43,17 @@ namespace MailFrameworkMod
         public DataLoader(IModHelper helper)
         {
             Helper = helper;
-            Helper.Events.Content.AssetRequested += this.Edit;
+            Helper.Events.Content.AssetRequested += this.AssetRequested;
+            Helper.Events.Content.AssetReady += this.AssetReady;
+            Helper.Events.Content.AssetsInvalidated += this.AssetInvalidated;
 
             DgaApi = MailFrameworkModEntry.ModHelper.ModRegistry.GetApi<IDynamicGameAssetsApi>("spacechase0.DynamicGameAssets");
             ConditionsCheckerApi = Helper.ModRegistry.GetApi<IConditionsChecker>("Cherry.ExpandedPreconditionsUtility");
             ConditionsCheckerApi?.Initialize(false, MailFrameworkModEntry.Manifest.UniqueID);
+            LoadContentPacks();
         }
 
-        public void Edit(object sender, AssetRequestedEventArgs e)
+        public void AssetRequested(object sender, AssetRequestedEventArgs e)
         {
             if (e.NameWithoutLocale.IsEquivalentTo(MailAssetName))
             {
@@ -71,10 +78,38 @@ namespace MailFrameworkMod
 
                     MailRepository.CleanDataToUpdate();
                 });
+            } if (e.NameWithoutLocale.IsEquivalentTo(MailDataAssetName)) {
+                MailFrameworkModEntry.ModMonitor.Log($"Asset {MailDataAssetName} requested.");
+                e.LoadFrom(() => MailData, AssetLoadPriority.Exclusive);
             }
         }
 
-        public static void LoadContentPacks(object sender, EventArgs e)
+        public void AssetReady(object sender, AssetReadyEventArgs e)
+        {
+            if (e.NameWithoutLocale.IsEquivalentTo(MailDataAssetName))
+            {
+                MailFrameworkModEntry.ModMonitor.Log($"Asset {MailDataAssetName} ready.");
+                LoadMailDataToLetterRepository(null, null);
+            }
+        }
+
+        public void AssetInvalidated(object sender, AssetsInvalidatedEventArgs e) {
+            foreach (var name in e.NamesWithoutLocale) {
+                if (name.IsEquivalentTo(MailDataAssetName)) {
+                    MailFrameworkModEntry.ModMonitor.Log($"Asset {MailDataAssetName} invalidated.");
+                    MailData.RemoveWhere(i => i.Value.ContentPack == null);
+                    _wasMailDataInvalidate = true;
+                }
+            }
+        }
+
+        public static void ReloadAssets()
+        {
+            Game1.content.Load<MailDataAssetType>(MailDataAssetName);
+            _wasMailDataInvalidate = false;
+        }
+
+        public static void LoadContentPacks()
         {
             foreach (IContentPack contentPack in MailFrameworkModEntry.ModHelper.ContentPacks.GetOwned())
             {
@@ -84,22 +119,50 @@ namespace MailFrameworkMod
             {
                 LoadContentPack(contentPack);
             }
+            Helper.GameContent.InvalidateCache(MailDataAssetName);
+        }
+
+        public static bool WasMailDataInvalidated()
+        {
+            return _wasMailDataInvalidate;
+        }
+
+        public static void LoadMailDataToLetterRepository(object sender, EventArgs e)
+        {
+            MailData = Game1.content.Load<MailDataAssetType>(MailDataAssetName);
+            LoadMailData(MailData.Values.ToList());
         }
 
         public static void LoadContentPack(IContentPack contentPack)
         {
             if (File.Exists(Path.Combine(contentPack.DirectoryPath, "mail.json")))
             {
-                bool hasTranslation = contentPack.Translation.GetTranslations().Any();
-
                 MailFrameworkModEntry.ModMonitor.Log(
                     $"Reading content pack: {contentPack.Manifest.Name} {contentPack.Manifest.Version} from {contentPack.DirectoryPath}");
                 List<MailItem> mailItems = contentPack.ReadJsonFile<List<MailItem>>("mail.json");
-                foreach (MailItem mailItem in mailItems)
+                MailData.RemoveWhere(i => i.Value.ContentPack?.Manifest.UniqueID == contentPack.Manifest.UniqueID);
+                mailItems?.ForEach(m =>
                 {
+                    m.ContentPack = contentPack;
+                    MailData[m.Id] = m;
+                });
+            }
+            else
+            {
+                MailFrameworkModEntry.ModMonitor.Log(
+                    $"Ignoring content pack: {contentPack.Manifest.Name} {contentPack.Manifest.Version} from {contentPack.DirectoryPath}\nIt does not have an mail.json file.",
+                    LogLevel.Warn);
+            }
+        }
 
-                    //Populate all Indexes based on the given name. Ignore the letter otherwise.
-                    if (mailItem.CollectionConditions != null && mailItem.CollectionConditions.Any(c =>
+        private static void LoadMailData(List<MailItem> mailItems)
+        {
+            foreach (MailItem mailItem in mailItems)
+            {
+                var contentPack = mailItem.ContentPack;
+                bool hasTranslation = contentPack?.Translation.GetTranslations().Any()??false;
+                //Populate all Indexes based on the given name. Ignore the letter otherwise.
+                if (mailItem.CollectionConditions != null && mailItem.CollectionConditions.Any(c =>
                     {
                         c.Ids ??= new HashSet<string>();
                         if (c.Index != null) c.Ids.Add(c.Index);
@@ -130,14 +193,16 @@ namespace MailFrameworkMod
                         return false;
                     })) continue;
 
-                    bool Condition(Letter l) =>
+                bool Condition(Letter l) =>
+                    ( mailItem.KeepValid && Game1.player.mailReceived.Contains(l.Id + ValidTagSuffix))
+                    || (
                         (!Game1.player.mailReceived.Contains(l.Id) || mailItem.Repeatable || (mailItem.Recipe != null && mailItem.Attachments?.Count == 0))
                         && (mailItem.Recipe == null || !(Game1.player.cookingRecipes.ContainsKey(mailItem.Recipe) 
-                                                    || Game1.player.craftingRecipes.ContainsKey(mailItem.Recipe)
-                                                    || Game1.player.cookingRecipes.ContainsKey(CraftingRecipe.cookingRecipes.Where(r => ItemRegistry.GetData(r.Value.Split("/")[2].Split(" ")[0])?.InternalName == mailItem.Recipe).Select(r=>r.Key).FirstOrDefault()??"")
-                                                    || Game1.player.craftingRecipes.ContainsKey(CraftingRecipe.craftingRecipes.Where(r => ItemRegistry.GetData(r.Value.Split("/")[2].Split(" ")[0])?.InternalName == mailItem.Recipe).Select(r => r.Key).FirstOrDefault() ?? "")))
+                                                         || Game1.player.craftingRecipes.ContainsKey(mailItem.Recipe)
+                                                         || Game1.player.cookingRecipes.ContainsKey(CraftingRecipe.cookingRecipes.Where(r => ItemRegistry.GetData(r.Value.Split("/")[2].Split(" ")[0])?.InternalName == mailItem.Recipe).Select(r=>r.Key).FirstOrDefault()??"")
+                                                         || Game1.player.craftingRecipes.ContainsKey(CraftingRecipe.craftingRecipes.Where(r => ItemRegistry.GetData(r.Value.Split("/")[2].Split(" ")[0])?.InternalName == mailItem.Recipe).Select(r => r.Key).FirstOrDefault() ?? "")))
                         && (mailItem.Date == null || SDate.Now() >= new SDate(Convert.ToInt32(mailItem.Date.Split(' ')[0]),
-                                mailItem.Date.Split(' ')[1], Convert.ToInt32(mailItem.Date.Split(' ')[2].Replace("Y", ""))))
+                            mailItem.Date.Split(' ')[1], Convert.ToInt32(mailItem.Date.Split(' ')[2].Replace("Y", ""))))
                         && (mailItem.Days == null || mailItem.Days.Contains(SDate.Now().Day))
                         && (mailItem.Seasons == null || mailItem.Seasons.Exists(s=> string.Equals(s,SDate.Now().Season.ToString(),StringComparison.OrdinalIgnoreCase)))
                         && (mailItem.Weather == null || (Game1.isRaining && "rainy".Equals(mailItem.Weather)) ||
@@ -149,7 +214,7 @@ namespace MailFrameworkMod
                                                                f.FriendshipStatus.Any(s =>
                                                                    s == Game1.player.friendshipData[f.NpcName].Status))))
                         && (mailItem.SkillConditions == null || mailItem.SkillConditions.TrueForAll(s =>
-                                Game1.player.getEffectiveSkillLevel((int) s.SkillName) >= s.SkillLevel))
+                            Game1.player.getEffectiveSkillLevel((int) s.SkillName) >= s.SkillLevel))
                         && (mailItem.StatsConditions == null ||
                             (mailItem.StatsConditions.TrueForAll(s =>
                                  s.StatsLabel == null || Game1.player.stats.Get(s.StatsLabel) >= s.Amount) &&
@@ -158,32 +223,32 @@ namespace MailFrameworkMod
                                  MailFrameworkModEntry.ModHelper.Reflection
                                      .GetProperty<uint>(Game1.player.stats, s.StatsName.ToString()).GetValue() >= s.Amount)))
                         && (mailItem.CollectionConditions == null || (mailItem.CollectionConditions.TrueForAll(c =>
-                                (c.Collection == Collection.Shipped && c.Ids.Sum(i => Game1.player.basicShipped.ContainsKey(i) ? Game1.player.basicShipped[i] : 0)   >= c.Amount)
-                                || (c.Collection == Collection.Fish && c.Ids.Sum(i => Game1.player.fishCaught.ContainsKey(i) ? Game1.player.fishCaught[i][0] : 0) >= c.Amount)
-                                || (c.Collection == Collection.Artifacts && c.Ids.Sum(i => Game1.player.archaeologyFound.ContainsKey(i) ? Game1.player.archaeologyFound[i][0] : 0) >= c.Amount)
-                                || (c.Collection == Collection.Minerals && c.Ids.Sum(i => Game1.player.mineralsFound.ContainsKey(i) ? Game1.player.mineralsFound[i] : 0) >= c.Amount)
-                                || (c.Collection == Collection.Cooking && c.Ids.Sum(i => Game1.player.recipesCooked.ContainsKey(i) ? Game1.player.recipesCooked[i] : 0) >= c.Amount)
-                                || (c.Collection == Collection.Crafting && c.Ids.Sum(i => Game1.player.craftingRecipes.ContainsKey(i) ? Game1.player.craftingRecipes[i] : 0) >= c.Amount)
-                            )))
+                            (c.Collection == Collection.Shipped && c.Ids.Sum(i => Game1.player.basicShipped.ContainsKey(i) ? Game1.player.basicShipped[i] : 0)   >= c.Amount)
+                            || (c.Collection == Collection.Fish && c.Ids.Sum(i => Game1.player.fishCaught.ContainsKey(i) ? Game1.player.fishCaught[i][0] : 0) >= c.Amount)
+                            || (c.Collection == Collection.Artifacts && c.Ids.Sum(i => Game1.player.archaeologyFound.ContainsKey(i) ? Game1.player.archaeologyFound[i][0] : 0) >= c.Amount)
+                            || (c.Collection == Collection.Minerals && c.Ids.Sum(i => Game1.player.mineralsFound.ContainsKey(i) ? Game1.player.mineralsFound[i] : 0) >= c.Amount)
+                            || (c.Collection == Collection.Cooking && c.Ids.Sum(i => Game1.player.recipesCooked.ContainsKey(i) ? Game1.player.recipesCooked[i] : 0) >= c.Amount)
+                            || (c.Collection == Collection.Crafting && c.Ids.Sum(i => Game1.player.craftingRecipes.ContainsKey(i) ? Game1.player.craftingRecipes[i] : 0) >= c.Amount)
+                        )))
                         && (mailItem.RandomChance == null ||
                             new Random((int) (((ulong) Game1.stats.DaysPlayed * 1000000000000000) +
                                               (((ulong) l.Id.GetHashCode()) % 1000000000 * 1000000) +
                                               Game1.uniqueIDForThisGame % 1000000)).NextDouble() < mailItem.RandomChance)
                         && (mailItem.Buildings == null || (mailItem.RequireAllBuildings
-                                ? mailItem.Buildings.TrueForAll(b => Game1.getFarm().isBuildingConstructed(b))
-                                : mailItem.Buildings.Any(b => Game1.getFarm().isBuildingConstructed(b))))
+                            ? mailItem.Buildings.TrueForAll(b => Game1.getFarm().isBuildingConstructed(b))
+                            : mailItem.Buildings.Any(b => Game1.getFarm().isBuildingConstructed(b))))
                         && (mailItem.MailReceived == null || (mailItem.RequireAllMailReceived
-                                ? !mailItem.MailReceived.Except(Game1.player.mailReceived).Any()
-                                : mailItem.MailReceived.Intersect(Game1.player.mailReceived).Any()))
+                            ? !mailItem.MailReceived.Except(Game1.player.mailReceived).Any()
+                            : mailItem.MailReceived.Intersect(Game1.player.mailReceived).Any()))
                         && (mailItem.MailNotReceived == null ||
                             !mailItem.MailNotReceived.Intersect(Game1.player.mailReceived).Any())
                         && (mailItem.EventsSeen == null || (mailItem.RequireAllEventsSeen
-                                ? !mailItem.EventsSeen.Except(Game1.player.eventsSeen).Any()
-                                : mailItem.EventsSeen.Intersect(Game1.player.eventsSeen).Any()))
+                            ? !mailItem.EventsSeen.Except(Game1.player.eventsSeen).Any()
+                            : mailItem.EventsSeen.Intersect(Game1.player.eventsSeen).Any()))
                         && (mailItem.EventsNotSeen == null || !mailItem.EventsNotSeen.Intersect(Game1.player.eventsSeen).Any())
                         && (mailItem.RecipeKnown == null || (mailItem.RequireAllRecipeKnown
-                                ? mailItem.RecipeKnown.All(r => Game1.player.knowsRecipe(r))
-                                : mailItem.RecipeKnown.Any(r => Game1.player.knowsRecipe(r))))
+                            ? mailItem.RecipeKnown.All(r => Game1.player.knowsRecipe(r))
+                            : mailItem.RecipeKnown.Any(r => Game1.player.knowsRecipe(r))))
                         && (mailItem.RecipeNotKnown == null || mailItem.RecipeNotKnown.All(r => !Game1.player.knowsRecipe(r)))
                         && (mailItem.HasMods == null || (mailItem.RequireAllMods
                             ? mailItem.HasMods.All(r => Helper.ModRegistry.IsLoaded(r))
@@ -205,30 +270,78 @@ namespace MailFrameworkMod
                             || (mailItem.SpecialDateCondition.SpecialDate == SpecialDate.ChildBirth 
                                 && Game1.player.getChildrenCount() >= mailItem.SpecialDateCondition.WhichChild 
                                 && GetChild(mailItem.SpecialDateCondition.WhichChild).daysOld.Value >= mailItem.SpecialDateCondition.YearsSince * WorldDate.MonthsPerYear * WorldDate.DaysPerMonth))
+                        && (mailItem.GameStateQuery == null || GameStateQuery.CheckConditions(mailItem.GameStateQuery))
+                    )
+                ;
 
-                    ;
-
-                    if (mailItem.CustomTextColorName != null)
+                if (mailItem.CustomTextColorName != null)
+                {
+                    try
                     {
-                        try
-                        {
-                            mailItem.CustomTextColor = DataLoader.Helper.Reflection.GetProperty<Color>(typeof(Color), mailItem.CustomTextColorName).GetValue();
-                        }
-                        catch (Exception)
-                        {
-                            MailFrameworkModEntry.ModMonitor.Log($"Color '{mailItem.CustomTextColorName}' isn't valid. Check XNA Color Chart for valid names. This color will be ignored.");
-                        }
+                        mailItem.CustomTextColor = DataLoader.Helper.Reflection.GetProperty<Color>(typeof(Color), mailItem.CustomTextColorName).GetValue();
                     }
-
-                    var contentPackTranslation = hasTranslation ? contentPack.Translation : null;
-                    Action<Letter> callback = (l) =>
+                    catch (Exception)
                     {
-                        Game1.player.mailReceived.Add(l.Id);
-                        if (mailItem.AdditionalMailReceived != null) Game1.player.mailReceived.AddRange(mailItem.AdditionalMailReceived);
-                        if (mailItem.ReplyConfig != null) ReplyController.OpenReplyDialog(mailItem.ReplyConfig, contentPackTranslation);
-                    };
+                        MailFrameworkModEntry.ModMonitor.Log($"Color '{mailItem.CustomTextColorName}' isn't valid. Check XNA Color Chart for valid names. This color will be ignored.");
+                    }
+                }
 
-                    if (mailItem.Attachments != null && mailItem.Attachments.Count > 0)
+                var contentPackTranslation = hasTranslation ? contentPack.Translation : null;
+                Action<Letter> callback = (l) =>
+                {
+                    Game1.player.mailReceived.Add(l.Id);
+                    if (mailItem.AdditionalMailReceived != null) Game1.player.mailReceived.AddRange(mailItem.AdditionalMailReceived);
+                    if (mailItem.MailReceivedToRemove != null) Game1.player.mailReceived.RemoveWhere(s => mailItem.MailReceivedToRemove?.Contains(s) ?? false);
+                    if (mailItem.ReplyConfig != null) ReplyController.OpenReplyDialog(mailItem.ReplyConfig, contentPackTranslation);
+                };
+
+                if (mailItem.Attachments != null && mailItem.Attachments.Count > 0)
+                {
+                    if (mailItem.RandomlyChooseAttachment != null)
+                    {
+                        MailRepository.SaveLetter(
+                            new Letter(
+                                mailItem.Id
+                                , mailItem.Text
+                                , Condition
+                                , callback
+                                , mailItem.WhichBG
+                            )
+                            {
+                                TextColor = mailItem.TextColor,
+                                CustomTextColor = mailItem.CustomTextColor,
+                                Title = mailItem.Title,
+                                GroupId = mailItem.GroupId,
+                                LetterTexture = mailItem.LetterBG != null
+                                    ? GetTextureAsset(contentPack, mailItem.LetterBG)
+                                    : null,
+                                UpperRightCloseButtonTexture = mailItem.UpperRightCloseButton != null
+                                    ? GetTextureAsset(contentPack, mailItem.UpperRightCloseButton)
+                                    : null,
+                                AutoOpen = mailItem.AutoOpen,
+                                I18N = contentPackTranslation,
+                                DynamicItems = l =>
+                                {
+                                    var dynamicItems = new List<Item>();
+                                    var random = new Random(SDate.Now().DaysSinceStart + mailItem.Id.GetHashCode() + (int)Game1.uniqueIDForThisGame);
+
+                                    var filteredAttachments = mailItem.Attachments.FindAll(a =>
+                                        a.RequireMailReceived == null || (a.RequireAllMailReceived
+                                            ? !a.RequireMailReceived.Except(Game1.player.mailReceived).Any()
+                                            : a.RequireMailReceived.Intersect(Game1.player.mailReceived).Any()));
+                                    foreach (var groupAttachments in filteredAttachments.GroupBy(a => a.RandomGroup).Select(g => new Tuple<string,List<Attachment>>(g.Key,g.ToList())))
+                                    {
+                                        int? amount = null;
+                                        var groupName = groupAttachments.Item1;
+                                        if (mailItem.RandomlyChooseAttachmentPerGroup.TryGetValue(groupName, out int value)) amount = value;
+                                        var attachments = groupAttachments.Item2;
+                                        for (var i = 1; i <= (amount ?? mailItem.RandomlyChooseAttachment) ; i++) if (attachments.Count > 0) if (GetNextItem(mailItem, ref attachments,mailItem.AttachmentGroupWithReplacement.Contains(groupName), random) is {} item) dynamicItems.Add(item);
+                                    }
+                                    return dynamicItems;
+                                }
+                            });
+                    }
+                    else
                     {
                         var attachments = GetAttachments(mailItem);
                         MailRepository.SaveLetter(
@@ -255,48 +368,71 @@ namespace MailFrameworkMod
                                 I18N = contentPackTranslation
                             });
                     }
-                    else
-                    {
-                        MailRepository.SaveLetter(
-                            new Letter(
-                                mailItem.Id
-                                , mailItem.Text
-                                , mailItem.Recipe
-                                , Condition
-                                , callback
-                                , mailItem.WhichBG
-                            )
-                            {
-                                TextColor = mailItem.TextColor,
-                                CustomTextColor = mailItem.CustomTextColor,
-                                Title = mailItem.Title,
-                                GroupId = mailItem.GroupId,
-                                LetterTexture = mailItem.LetterBG != null
-                                    ? GetTextureAsset(contentPack, mailItem.LetterBG)
-                                    : null,
-                                UpperRightCloseButtonTexture = mailItem.UpperRightCloseButton != null
-                                    ? GetTextureAsset(contentPack, mailItem.UpperRightCloseButton)
-                                    : null,
-                                AutoOpen = mailItem.AutoOpen,
-                                I18N = contentPackTranslation
-                            });
-                    }
+                }
+                else
+                {
+                    MailRepository.SaveLetter(
+                        new Letter(
+                            mailItem.Id
+                            , mailItem.Text
+                            , mailItem.Recipe
+                            , Condition
+                            , callback
+                            , mailItem.WhichBG
+                        )
+                        {
+                            TextColor = mailItem.TextColor,
+                            CustomTextColor = mailItem.CustomTextColor,
+                            Title = mailItem.Title,
+                            GroupId = mailItem.GroupId,
+                            LetterTexture = mailItem.LetterBG != null
+                                ? GetTextureAsset(contentPack, mailItem.LetterBG)
+                                : null,
+                            UpperRightCloseButtonTexture = mailItem.UpperRightCloseButton != null
+                                ? GetTextureAsset(contentPack, mailItem.UpperRightCloseButton)
+                                : null,
+                            AutoOpen = mailItem.AutoOpen,
+                            I18N = contentPackTranslation
+                        });
                 }
             }
-            else
+        }
+
+        private static Item GetNextItem(MailItem mailItem, ref List<Attachment> attachments, bool withReplacement, Random random)
+        {
+            Double chance = random.Next(attachments.Sum(a=> a.ProbabilityWeight));
+            Double probabilities = 0;
+            Item result = null;
+            Attachment chosenAttachment = null;
+            foreach (Attachment attachment in attachments)
             {
-                MailFrameworkModEntry.ModMonitor.Log(
-                    $"Ignoring content pack: {contentPack.Manifest.Name} {contentPack.Manifest.Version} from {contentPack.DirectoryPath}\nIt does not have an mail.json file.",
-                    LogLevel.Warn);
+                probabilities += (double) attachment.ProbabilityWeight;
+                if (chance - probabilities < 0)
+                {
+                    chosenAttachment = attachment;
+                    result = CreateItemFromAttachment(attachment,mailItem);
+                    break;
+                }
             }
+            if (!withReplacement) attachments = attachments.FindAll(a => !a.Equals(chosenAttachment));
+            return result;
         }
 
         private static List<Item> GetAttachments(MailItem mailItem)
         {
             var attachments = new List<Item>();
-            mailItem.Attachments.ForEach(i =>
+            var filteredAttachments = mailItem.Attachments.FindAll(a =>
+                a.RequireMailReceived == null || (a.RequireAllMailReceived
+                    ? !a.RequireMailReceived.Except(Game1.player.mailReceived).Any()
+                    : a.RequireMailReceived.Intersect(Game1.player.mailReceived).Any()));
+
+            filteredAttachments.ForEach(i => {if (CreateItemFromAttachment(i, mailItem) is { } item) attachments.Add(item);});
+            return attachments;
+        }
+
+        internal static Item CreateItemFromAttachment(Attachment i, MailItem mailItem)
             {
-                if (i == null) return;
+                if (i == null) return null;
                 switch (i.Type)
                 {
                     case ItemType.Object:
@@ -309,21 +445,17 @@ namespace MailFrameworkMod
                             }
                             else
                             {
-                                MailFrameworkModEntry.ModMonitor.Log(
-                                    $"No object found with the name {i.Name} for letter {mailItem.Id}.",
-                                    LogLevel.Warn);
+                                MailFrameworkModEntry.ModMonitor.Log($"No object found with the name {i.Name} for letter {mailItem.Id}.", LogLevel.Warn);
                             }
                         }
 
                         if (i.Index != null)
                         {
-                            attachments.Add(new StardewValley.Object(i.Index, i.Stack ?? 1, quality: i.Quality));
+                            return new StardewValley.Object(i.Index, i.Stack ?? 1, quality: i.Quality);
                         }
                         else
                         {
-                            MailFrameworkModEntry.ModMonitor.Log(
-                                $"An index value is required to attach an object for letter {mailItem.Id}.",
-                                LogLevel.Warn);
+                            MailFrameworkModEntry.ModMonitor.Log($"An index value is required to attach an object for letter {mailItem.Id}.", LogLevel.Warn);
                         }
 
                         break;
@@ -338,9 +470,7 @@ namespace MailFrameworkMod
                             }
                             else
                             {
-                                MailFrameworkModEntry.ModMonitor.Log(
-                                    $"No big craftable found with the name {i.Name} for letter {mailItem.Id}.",
-                                    LogLevel.Warn);
+                                MailFrameworkModEntry.ModMonitor.Log($"No big craftable found with the name {i.Name} for letter {mailItem.Id}.", LogLevel.Warn);
                             }
                         }
 
@@ -352,13 +482,11 @@ namespace MailFrameworkMod
                                 item.Stack = i.Stack.Value;
                             }
 
-                            attachments.Add(item);
+                            return item;
                         }
                         else
                         {
-                            MailFrameworkModEntry.ModMonitor.Log(
-                                $"An index value is required to attach a big craftable for letter {mailItem.Id}.",
-                                LogLevel.Warn);
+                            MailFrameworkModEntry.ModMonitor.Log($"An index value is required to attach a big craftable for letter {mailItem.Id}.", LogLevel.Warn);
                         }
 
                         break;
@@ -400,8 +528,7 @@ namespace MailFrameworkMod
                                 tool = new Wand();
                                 break;
                             default:
-                                MailFrameworkModEntry.ModMonitor.Log(
-                                    $"Tool with name {i.Name} not found for letter {mailItem.Id}.", LogLevel.Warn);
+                                MailFrameworkModEntry.ModMonitor.Log($"Tool with name {i.Name} not found for letter {mailItem.Id}.", LogLevel.Warn);
                                 break;
                         }
 
@@ -412,24 +539,21 @@ namespace MailFrameworkMod
                                 tool.UpgradeLevel = i.UpgradeLevel ?? 0;
                             }
 
-                            attachments.Add(tool);
+                            return tool;
                         }
 
                         break;
                     case ItemType.Ring:
                         if (i.Name != null)
                         {
-                            KeyValuePair<string, ObjectData> pair =
-                                Game1.objectData.FirstOrDefault(o => i.Name.Equals(o.Value.Name));
+                            KeyValuePair<string, ObjectData> pair = Game1.objectData.FirstOrDefault(o => i.Name.Equals(o.Value.Name));
                             if (pair.Value != null)
                             {
                                 i.Index = pair.Key;
                             }
                             else
                             {
-                                MailFrameworkModEntry.ModMonitor.Log(
-                                    $"No ring found with the name {i.Name} for letter {mailItem.Id}.",
-                                    LogLevel.Warn);
+                                MailFrameworkModEntry.ModMonitor.Log($"No ring found with the name {i.Name} for letter {mailItem.Id}.", LogLevel.Warn);
                             }
                         }
 
@@ -437,52 +561,41 @@ namespace MailFrameworkMod
                         {
                             if (Game1.objectData[i.Index].Type.Equals("Ring"))
                             {
-                                attachments.Add(new Ring(i.Index));
+                                return new Ring(i.Index);
                             }
                             else
                             {
-                                MailFrameworkModEntry.ModMonitor.Log(
-                                    $"A valid ring is required to attach an ring for letter {mailItem.Id}.",
-                                    LogLevel.Warn);
+                                MailFrameworkModEntry.ModMonitor.Log($"A valid ring is required to attach an ring for letter {mailItem.Id}.", LogLevel.Warn);
                             }
                         }
                         else
                         {
-                            MailFrameworkModEntry.ModMonitor.Log(
-                                $"An index value is required to attach an ring for letter {mailItem.Id}.",
-                                LogLevel.Warn);
+                            MailFrameworkModEntry.ModMonitor.Log($"An index value is required to attach an ring for letter {mailItem.Id}.", LogLevel.Warn);
                         }
 
                         break;
                     case ItemType.Furniture:
                         if (i.Name != null)
                         {
-                            Dictionary<string, string> furnitures =
-                                MailFrameworkModEntry.ModHelper.GameContent.Load<Dictionary<string, string>>(
-                                    PathUtilities.NormalizeAssetName("Data/Furniture"));
-                            KeyValuePair<string, string> pair =
-                                furnitures.FirstOrDefault(o => o.Value.StartsWith(i.Name + "/"));
+                            Dictionary<string, string> furnitures = MailFrameworkModEntry.ModHelper.GameContent.Load<Dictionary<string, string>>(PathUtilities.NormalizeAssetName("Data/Furniture"));
+                            KeyValuePair<string, string> pair = furnitures.FirstOrDefault(o => o.Value.StartsWith(i.Name + "/"));
                             if (pair.Value != null)
                             {
                                 i.Index = pair.Key;
                             }
                             else
                             {
-                                MailFrameworkModEntry.ModMonitor.Log(
-                                    $"No furniture found with the name {i.Name} for letter {mailItem.Id}.",
-                                    LogLevel.Warn);
+                                MailFrameworkModEntry.ModMonitor.Log($"No furniture found with the name {i.Name} for letter {mailItem.Id}.", LogLevel.Warn);
                             }
                         }
 
                         if (i.Index != null)
                         {
-                            attachments.Add(Furniture.GetFurnitureInstance(i.Index));
+                            return Furniture.GetFurnitureInstance(i.Index);
                         }
                         else
                         {
-                            MailFrameworkModEntry.ModMonitor.Log(
-                                $"An index value is required to attach a furniture for letter {mailItem.Id}.",
-                                LogLevel.Warn);
+                            MailFrameworkModEntry.ModMonitor.Log($"An index value is required to attach a furniture for letter {mailItem.Id}.", LogLevel.Warn);
                         }
 
                         break;
@@ -496,32 +609,27 @@ namespace MailFrameworkMod
                             }
                             else
                             {
-                                MailFrameworkModEntry.ModMonitor.Log(
-                                    $"No weapon found with the name {i.Name} for letter {mailItem.Id}.",
-                                    LogLevel.Warn);
+                                MailFrameworkModEntry.ModMonitor.Log($"No weapon found with the name {i.Name} for letter {mailItem.Id}.", LogLevel.Warn);
                             }
                         }
 
                         if (i.Index != null)
                         {
                             string index = i.Index;
-                            attachments.Add(SlingshotIndexes.Contains(index)
+                            return SlingshotIndexes.Contains(index)
                                 ? (Item)new Slingshot(index.Replace("(W)", ""))
-                                : (Item)new MeleeWeapon(index));
+                                : (Item)new MeleeWeapon(index);
                         }
                         else
                         {
-                            MailFrameworkModEntry.ModMonitor.Log(
-                                $"An index value is required to attach a weapon for letter {mailItem.Id}.",
-                                LogLevel.Warn);
+                            MailFrameworkModEntry.ModMonitor.Log($"An index value is required to attach a weapon for letter {mailItem.Id}.", LogLevel.Warn);
                         }
 
                         break;
                     case ItemType.Boots:
                         if (i.Name != null)
                         {
-                            var boots = MailFrameworkModEntry.ModHelper.GameContent.Load<Dictionary<string, string>>(
-                                PathUtilities.NormalizeAssetName("Data/Boots"));
+                            var boots = MailFrameworkModEntry.ModHelper.GameContent.Load<Dictionary<string, string>>(PathUtilities.NormalizeAssetName("Data/Boots"));
                             var pair = boots.FirstOrDefault(o => o.Value.StartsWith(i.Name + "/"));
                             if (pair.Value != null)
                             {
@@ -529,21 +637,17 @@ namespace MailFrameworkMod
                             }
                             else
                             {
-                                MailFrameworkModEntry.ModMonitor.Log(
-                                    $"No boots found with the name {i.Name} for letter {mailItem.Id}.",
-                                    LogLevel.Warn);
+                                MailFrameworkModEntry.ModMonitor.Log($"No boots found with the name {i.Name} for letter {mailItem.Id}.", LogLevel.Warn);
                             }
                         }
 
                         if (i.Index != null)
                         {
-                            attachments.Add(new Boots(i.Index));
+                            return new Boots(i.Index);
                         }
                         else
                         {
-                            MailFrameworkModEntry.ModMonitor.Log(
-                                $"An index value is required to attach a boots for letter {mailItem.Id}.",
-                                LogLevel.Warn);
+                            MailFrameworkModEntry.ModMonitor.Log($"An index value is required to attach a boots for letter {mailItem.Id}.", LogLevel.Warn);
                         }
 
                         break;
@@ -565,28 +669,22 @@ namespace MailFrameworkMod
                                         dgaItem.Stack = 1;
                                     }
 
-                                    attachments.Add(dgaItem);
+                                    return dgaItem;
                                 }
                                 else
                                 {
-                                    MailFrameworkModEntry.ModMonitor.Log(
-                                        $"No DGA item found with the ID {i.Name} for letter {mailItem.Id}.",
-                                        LogLevel.Warn);
+                                    MailFrameworkModEntry.ModMonitor.Log($"No DGA item found with the ID {i.Name} for letter {mailItem.Id}.", LogLevel.Warn);
                                 }
                             }
                             catch (Exception ex)
                             {
-                                MailFrameworkModEntry.ModMonitor.Log(
-                                    $"Error trying to create item with the DGA ID {i.Name} for letter {mailItem.Id}.",
-                                    LogLevel.Warn);
+                                MailFrameworkModEntry.ModMonitor.Log($"Error trying to create item with the DGA ID {i.Name} for letter {mailItem.Id}.", LogLevel.Warn);
                                 MailFrameworkModEntry.ModMonitor.Log(ex.Message, LogLevel.Trace);
                             }
                         }
                         else
                         {
-                            MailFrameworkModEntry.ModMonitor.Log(
-                                $"No DGA API found, so item with the ID {i.Name} for letter {mailItem.Id} will be ignored.",
-                                LogLevel.Warn);
+                            MailFrameworkModEntry.ModMonitor.Log($"No DGA API found, so item with the ID {i.Name} for letter {mailItem.Id} will be ignored.", LogLevel.Warn);
                         }
 
                         break;
@@ -594,24 +692,23 @@ namespace MailFrameworkMod
                         if (i.Index != null)
                         {
                             Item item = ItemRegistry.Create(i.Index, i.Stack ?? 1, i.Quality);
-                            attachments.Add(item);
+                            return item;
                         }
                         else
                         {
-                            MailFrameworkModEntry.ModMonitor.Log(
-                                $"An index value is required to attach a FullId Item for letter {mailItem.Id}.",
-                                LogLevel.Warn);
+                            MailFrameworkModEntry.ModMonitor.Log($"An index value is required to attach a FullId Item for letter {mailItem.Id}.", LogLevel.Warn);
                         }
 
                         break;
+                    case ItemType.None:
+                        break;
                     default:
-                        MailFrameworkModEntry.ModMonitor.Log(
-                            $"Invalid attachment type '{i.Type}' found in letter {mailItem.Id}.", LogLevel.Warn);
+                        MailFrameworkModEntry.ModMonitor.Log($"Invalid attachment type '{i.Type}' found in letter {mailItem.Id}.", LogLevel.Warn);
                         break;
                 }
-            });
-            return attachments;
-        }
+
+                return null;
+            }
 
         private static Child GetChild(int childNumber)
         {
@@ -620,12 +717,24 @@ namespace MailFrameworkMod
 
         public static Texture2D GetTextureAsset(IContentPack contentPack, string textureName)
         {
-            var key = new Tuple<string, string>(contentPack.Manifest.UniqueID, textureName);
-            if (!_contentPackAssets.ContainsKey(key))
+            if (contentPack != null && contentPack.ModContent.DoesAssetExist<Texture2D>(textureName))
             {
-                _contentPackAssets[key] = contentPack.ModContent.Load<Texture2D>(textureName);
+                var key = new Tuple<string, string>(contentPack.Manifest.UniqueID, textureName);
+                if (!_contentPackAssets.ContainsKey(key))
+                {
+                    _contentPackAssets[key] = contentPack.ModContent.Load<Texture2D>(textureName);
+                }
+                return _contentPackAssets[key];
             }
-            return _contentPackAssets[key];
+            else
+            {
+                var key = new Tuple<string, string>("DIGUS.MailFrameworkMod", textureName);
+                if (!_contentPackAssets.ContainsKey(key))
+                {
+                    _contentPackAssets[key] = MailFrameworkModEntry.ModHelper.GameContent.Load<Texture2D>(textureName);
+                }
+                return _contentPackAssets[key];
+            }
         }
 
         public static void RegisterContentPack(IContentPack contentPack)

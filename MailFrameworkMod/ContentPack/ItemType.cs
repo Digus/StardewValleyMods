@@ -11,6 +11,7 @@
         Weapon,
         Boots,
         DGA,
-        QualifiedItemId
+        QualifiedItemId,
+        None
     }
 }

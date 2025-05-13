@@ -73,7 +73,7 @@ namespace MailServicesMod
                     api.AddBoolOption(manifest, () => recoveryConfig.RecoverAllItems, (bool val) => recoveryConfig.RecoverAllItems = val, () => "Recover All Items", () => recoverAllItemsDescription);
                     api.AddBoolOption(manifest, () => recoveryConfig.RecoverForFree, (bool val) => recoveryConfig.RecoverForFree = val, () => "Recover For Free", () => recoverForFreeDescription);
                     api.AddBoolOption(manifest, () => !recoveryConfig.DisableClearLostItemsOnRandomRecovery, (bool val) => recoveryConfig.DisableClearLostItemsOnRandomRecovery = !val, () => "Clear Lost Items", () => clearLostItemsDescription);
-                    api.AddPageLink(manifest, "Return", () => "Back to the main page", () => "");
+                    api.AddPageLink(manifest, "", () => "Back to the main page", () => "");
                 }
             }
         }

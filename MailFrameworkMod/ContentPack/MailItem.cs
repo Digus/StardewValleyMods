@@ -1,17 +1,26 @@
 ﻿using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using Microsoft.Xna.Framework;
+using StardewModdingAPI;
+using StardewValley.Menus;
 
 namespace MailFrameworkMod.ContentPack
 {
     public class MailItem
     {
+        [JsonIgnore] 
+        public IContentPack ContentPack;
         public string Id;
         public string GroupId;
         public string Title;
         public string Text;
         public string Recipe;
         public List<Attachment> Attachments;
+        public int? RandomlyChooseAttachment;
+        public Dictionary<string, int> RandomlyChooseAttachmentPerGroup = new Dictionary<string, int>();
+        public List<string> AttachmentGroupWithReplacement = new List<string>();
         public List<string> AdditionalMailReceived;
+        public List<string> MailReceivedToRemove;
         public string LetterBG;
         public int WhichBG;
         public int? TextColor;
@@ -35,6 +44,7 @@ namespace MailFrameworkMod.ContentPack
         public SpecialDateCondition SpecialDateCondition;
         public string ExpandedPrecondition;
         public string[] ExpandedPreconditions;
+        public string GameStateQuery;
         public double? RandomChance;
         public List<string> Buildings;
         public bool RequireAllBuildings;
@@ -50,5 +60,6 @@ namespace MailFrameworkMod.ContentPack
         public List<string> HasMods;
         public bool RequireAllMods;
         public bool AutoOpen;
+        public bool KeepValid;
     }
 }

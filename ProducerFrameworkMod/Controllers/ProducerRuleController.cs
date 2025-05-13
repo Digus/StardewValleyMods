@@ -11,7 +11,6 @@ using System.Collections.Generic;
 using System.Linq;
 using StardewValley.GameData.Objects;
 using Object = StardewValley.Object;
-using System.Security.AccessControl;
 using StardewValley.Inventories;
 
 namespace ProducerFrameworkMod.Controllers
@@ -99,7 +98,7 @@ namespace ProducerFrameworkMod.Controllers
             , ProducerConfig producerConfig = null, Object input = null
             , bool probe = false, bool noSoundAndAnimation = false)
         {
-            who ??= Game1.getFarmer((long)producer.owner.Value);
+            who ??= Game1.GetPlayer((long)producer.owner.Value,true) ?? Game1.MasterPlayer;
             Vector2 tileLocation = producer.TileLocation;
             Random random = ProducerRuleController.GetRandomForProducing(tileLocation);
             OutputConfig outputConfig = OutputConfigController.ChooseOutput(producerRule.OutputConfigs, random, fuelSearch, location, input);

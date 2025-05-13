@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using StardewModdingAPI;
 
 namespace CustomKissingMod
@@ -20,7 +17,6 @@ namespace CustomKissingMod
             Helper = helper;
             I18N = helper.Translation;
             ModConfig = helper.ReadConfig<ModConfig>();
-            ConfigMenuController.CreateConfigMenu();
         }
 
         public static void LoadContentPacks()

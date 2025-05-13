@@ -1,0 +1,10 @@
+﻿{
+	"Name": "[MFM]Subscription Boxes Mod",
+	"Author": "Digus",
+	"Version": "1.2.0",
+	"Description": "Adds an interactive subscription boxes service to the game.",
+	"UniqueID": "Digus.MfmSubscriptionBoxesMod",
+	"MinimumApiVersion": "4.0.0",
+	"UpdateKeys": [ "Nexus:32308" ],
+	"ContentPackFor": { "UniqueID": "DIGUS.MailFrameworkMod" , "MinimumVersion": "1.19.0" }
+}

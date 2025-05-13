@@ -95,10 +95,10 @@ namespace AnimalHusbandryMod.common
             ToolsLoader.LoadMail();
             RecipesLoader.LoadMails();
             LoadTreatsMail();
-            CreateConfigMenu(manifest);
+            ConfigMenuController.CreateConfigMenu(manifest);
         }
 
-        private static void InvalidateCache()
+        internal static void InvalidateCache()
         {
             Helper.GameContent.InvalidateCache("Data/Objects");
             Helper.GameContent.InvalidateCache("Data/FarmAnimals");
@@ -454,7 +454,7 @@ namespace AnimalHusbandryMod.common
                 AnimalData.FillLikedTreatsIds();
             }
         }
-
+      
         private void CreateConfigMenu(IManifest manifest)
         {
             GenericModConfigMenuApi api = Helper.ModRegistry.GetApi<GenericModConfigMenuApi>("spacechase0.GenericModConfigMenu");
@@ -528,6 +528,7 @@ namespace AnimalHusbandryMod.common
 
             api.AddBoolOption(manifest, () => DataLoader.ModConfig.DisableTvChannels, (bool val) => DataLoader.ModConfig.DisableTvChannels = val, () => "Disable TV Channels", () => "Disable all TV channels added by this mod.");
         }
+      
         enum Taste {
             Love = 1,
             Like = 3,

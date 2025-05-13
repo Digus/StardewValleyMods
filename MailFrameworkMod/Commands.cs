@@ -76,6 +76,7 @@ namespace MailFrameworkMod
         {
             if (Context.IsWorldReady)
             {
+                ModMonitor.Log("Updating mailbox with debug command.",LogLevel.Debug);
                 MailController.UpdateMailBox();
             }
             else
@@ -86,7 +87,7 @@ namespace MailFrameworkMod
 
         internal static void ReloadContentPacks(string command, string[] args)
         {
-            DataLoader.LoadContentPacks(null,null);
+            DataLoader.LoadContentPacks();
         }
     }
 }

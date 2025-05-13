@@ -24,6 +24,8 @@
 	"CustomKissingMod.ConfigMenu.GeneralSection.Tooltip": "Other configurations.",
 	"CustomKissingMod.ConfigMenu.EnableContentPacksOverrides.Text": "Content Packs Overrides",
 	"CustomKissingMod.ConfigMenu.EnableContentPacksOverrides.Tooltip": "If content packs can override loaded configs. If disabled you should handle conflicts manually. If enabled the mod will always override and uses the config of the last content pack to loaded. Check you log for warnings about conflicts.",
+	"CustomKissingMod.ConfigMenu.DisableCursorKissingIndication.Text": "Cursor Indicator",
+	"CustomKissingMod.ConfigMenu.DisableCursorKissingIndication.Tooltip": "If the cursor heart indicator should be shown when its possible to kiss the NPC.",
 	"CustomKissingMod.ConfigMenu.NpcListSection.Text": "NPC List:",
 	"CustomKissingMod.ConfigMenu.NpcListSection.Tooltip": "List of NPC kissing configuration.",
 

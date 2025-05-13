@@ -179,7 +179,10 @@ namespace AnimalHusbandryMod.animals
                     }
                     else
                     {
-                        Game1.drawObjectDialogue(Game1.content.LoadString("Strings\\Events:AnimalBirth", (object)parentAnimal.Value.displayName, (object)parentAnimal.Value.shortDisplayType()));
+                        if (!DataLoader.ModConfig.EnableAutomaticNameBabies)
+                        {
+                            Game1.drawObjectDialogue(Game1.content.LoadString("Strings\\Events:AnimalBirth", (object)parentAnimal.Value.displayName, (object)parentAnimal.Value.shortDisplayType()));
+                        }
                     }
                 }
                 else
@@ -195,9 +198,18 @@ namespace AnimalHusbandryMod.animals
             {
                 if (parentAnimal.Value.ownerID.Value == Game1.player.UniqueMultiplayerID || (AnimalHusbandryModEntry.ModHelper.Multiplayer.GetConnectedPlayer(parentAnimal.Value.ownerID.Value) == null && Context.IsMainPlayer))
                 {
-                    NamingMenu.doneNamingBehavior b = new NamingMenu.doneNamingBehavior(addNewHatchedAnimal);
-                    string title = Game1.content.LoadString("Strings\\Events:AnimalNamingTitle", (object)parentAnimal.Value.displayType);
-                    Game1.activeClickableMenu = (IClickableMenu)new NamingMenu(b, title, (string)null);
+                    if (DataLoader.ModConfig.EnableAutomaticNameBabies)
+                    {
+                        var randomName = Dialogue.randomName();
+                        Game1.chatBox.addInfoMessage(Game1.content.LoadString("Strings\\Events:AnimalBirth", (object)parentAnimal.Value.displayName, (object)parentAnimal.Value.shortDisplayType())+$" ({randomName})");
+                        addNewHatchedAnimal(randomName);
+                    }
+                    else
+                    {
+                        NamingMenu.doneNamingBehavior b = new NamingMenu.doneNamingBehavior(addNewHatchedAnimal);
+                        string title = Game1.content.LoadString("Strings\\Events:AnimalNamingTitle", (object)parentAnimal.Value.displayType);
+                        Game1.activeClickableMenu = (IClickableMenu)new NamingMenu(b, title, (string)null);
+                    }
                 }
                 else
                 {

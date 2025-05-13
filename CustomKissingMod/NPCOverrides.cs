@@ -35,7 +35,7 @@ namespace CustomKissingMod
                         || (
                             HasRequiredFriendshipToKiss(who, __instance)
                             && __instance.CurrentDialogue.Count > 0
-                            && __instance.CurrentDialogue.Peek().TranslationKey.Equals(_lastDialog))))
+                            && _lastDialog != null && _lastDialog.Equals(__instance.CurrentDialogue.Peek().TranslationKey))))
                 {
                     if (Game1.activeClickableMenu is DialogueBox dialogueBox)
                     {
@@ -119,7 +119,7 @@ namespace CustomKissingMod
                     }
                 } else if (__instance.hasTemporaryMessageAvailable())
                 {
-                    _lastDialog = __instance.CurrentDialogue.Peek().TranslationKey;
+                    _lastDialog = __instance.CurrentDialogue.Peek()?.TranslationKey;
                 }
             }
             else if (__instance.isMarried())
@@ -161,7 +161,7 @@ namespace CustomKissingMod
                                 && GetTemporaryMessages(who, character).Equals(_lastDialog))))
                     {
                         Game1.mouseCursorTransparency = Utility.tileWithinRadiusOfPlayer((int)tileLocation.X, (int)tileLocation.Y, 1, who) ? 1f : 0.5f;
-                        Game1.mouseCursor = 7;
+                        Game1.mouseCursor = !DataLoader.ModConfig.DisableCursorKissingIndication ? 7 : Game1.cursor_default;
                         __result = true;
                         return false;
                     }
