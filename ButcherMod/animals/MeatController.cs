@@ -165,7 +165,7 @@ namespace AnimalHusbandryMod.animals
 
                 for (; numberOfWools > 0; --numberOfWools)
                 {
-                    Object newItem = ItemRegistry.Create<Object>(farmAnimal.GetAnimalData().CustomFields?.GetValueOrDefault("woolIndex") ?? farmAnimal.GetProduceID(random, false) ?? "440", 1, ProduceQuality(random, farmAnimal));
+                    Object newItem = ItemRegistry.Create<Object>(farmAnimal.GetAnimalData().CustomFields?.GetValueOrDefault("woolIndex", null) ?? farmAnimal.GetProduceID(random, false) ?? "440", 1, ProduceQuality(random, farmAnimal));
                     itemsToReturn.Add(newItem);
                 }
             }
@@ -180,7 +180,7 @@ namespace AnimalHusbandryMod.animals
                     {
                         if (random.NextDouble() < ((double)farmAnimal.friendshipTowardFarmer.Value + (double)num1) / 5000.0 + Game1.player.DailyLuck + (double)Game1.player.LuckLevel * 0.01)
                         {
-                            Object newItem = ItemRegistry.Create<Object>(farmAnimal.GetAnimalData().CustomFields?.GetValueOrDefault("featherIndex") ?? farmAnimal.GetProduceID(random, true) ?? "444", 1, ProduceQuality(random, farmAnimal));
+                            Object newItem = ItemRegistry.Create<Object>(farmAnimal.GetAnimalData().CustomFields?.GetValueOrDefault("featherIndex", null) ?? farmAnimal.GetProduceID(random, true) ?? "444", 1, ProduceQuality(random, farmAnimal));
                             itemsToReturn.Add(newItem);
                         }
                     }
@@ -197,7 +197,7 @@ namespace AnimalHusbandryMod.animals
                     {
                         if (random.NextDouble() < ((double)farmAnimal.friendshipTowardFarmer.Value + (double)num1) / 5000.0 + Game1.player.DailyLuck + (double)Game1.player.LuckLevel * 0.01)
                         {
-                            Object newItem = ItemRegistry.Create<Object>(farmAnimal.GetAnimalData().CustomFields?.GetValueOrDefault("feetIndex") ?? farmAnimal.GetProduceID(random, true) ?? "446", 1, ProduceQuality(random, farmAnimal));
+                            Object newItem = ItemRegistry.Create<Object>(farmAnimal.GetAnimalData().CustomFields?.GetValueOrDefault("feetIndex", null) ?? farmAnimal.GetProduceID(random, true) ?? "446", 1, ProduceQuality(random, farmAnimal));
                             newItem.Quality = ProduceQuality(random, farmAnimal);
                             itemsToReturn.Add(newItem);
                         }
