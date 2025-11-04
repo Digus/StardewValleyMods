@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using AnimalHusbandryMod.animals.data;
 using StardewModdingAPI.Utilities;
 using StardewValley;
+using DataLoader = AnimalHusbandryMod.common.DataLoader;
 
 namespace AnimalHusbandryMod.animals
 {
@@ -126,6 +125,27 @@ namespace AnimalHusbandryMod.animals
         private static bool ClearKey(Character character, string key )
         {
             return character.modData.Remove(key);
+        }
+
+        internal static void ReduceFriendshipFromMeat(this FarmAnimal farmAnimal)
+        {
+            MeatAnimalItem meatAnimalItem = (MeatAnimalItem) DataLoader.AnimalData.GetAnimalItem(farmAnimal);
+            int friendshipReductionFromMeat = 1000 / Math.Max(meatAnimalItem.MaximumNumberOfMeat - meatAnimalItem.MinimalNumberOfMeat,1);
+            farmAnimal.friendshipTowardFarmer.Value = Math.Max(0, farmAnimal.friendshipTowardFarmer.Value - friendshipReductionFromMeat);
+            farmAnimal.doEmote(12);
+        }
+        
+        public static void RemoveOrHitAnimal(this FarmAnimal farmAnimal)
+        {
+            if (!DataLoader.ModConfig.Softermode)
+            {
+                (farmAnimal.home.GetIndoors() as AnimalHouse)?.animalsThatLiveHere.Remove(farmAnimal.myID.Value);
+                farmAnimal.health.Value = -1;
+            }
+            else
+            {
+                farmAnimal.doEmote(12,true);
+            }
         }
     }
 }

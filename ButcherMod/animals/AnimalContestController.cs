@@ -89,7 +89,7 @@ namespace AnimalHusbandryMod.animals
         public static Character ContestParticipant(SDate contestDate)
         {
             Pet pet = Game1.player.getPet();
-            return pet.GetDayParticipatedContest() == contestDate
+            return pet?.GetDayParticipatedContest() == contestDate
                 ? (Character) pet
                 : AnimalUtility.FindAnimals(a => a.GetDayParticipatedContest() == contestDate).FirstOrDefault();
         }

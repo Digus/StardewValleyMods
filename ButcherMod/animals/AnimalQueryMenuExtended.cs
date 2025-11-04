@@ -8,6 +8,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AnimalHusbandryMod.animals.data;
 using AnimalHusbandryMod.common;
 using AnimalHusbandryMod.tools;
 using Microsoft.Xna.Framework.Graphics;
@@ -228,8 +229,7 @@ namespace AnimalHusbandryMod.animals
             {
                 if (this.yesButton.containsPoint(x, y))
                 {
-                    (this._farmAnimal.home.GetIndoors() as AnimalHouse)?.animalsThatLiveHere.Remove(this._farmAnimal.myID.Value);
-                    this._farmAnimal.health.Value = -1;
+                    _farmAnimal.RemoveOrHitAnimal();
                     int num1 = this._farmAnimal.Sprite.SourceRect.Width / 2;
                     for (int index = 0; index < num1; ++index)
                     {
@@ -246,8 +246,15 @@ namespace AnimalHusbandryMod.animals
                     Game1.exitActiveMenu();
                     Game1.player.Stamina -= ((float)4f - (float)Game1.player.FarmingLevel * 0.2f);
                     Game1.player.Stamina -= ((float)4f - (float)Game1.player.FarmingLevel * 0.2f);
-                    Game1.player.gainExperience(0, 5);
-                    MeatController.AddItemsToInventoryByMenuIfNecessary(MeatController.CreateMeat(this._farmAnimal));
+                    List<Item> meatToCreate = MeatController.CreateMeat(this._farmAnimal);
+                    if (meatToCreate.Count > 0) {
+                        MeatController.AddItemsToInventoryByMenuIfNecessary(meatToCreate);
+                        if (DataLoader.ModConfig.Softermode)
+                        {
+                            _farmAnimal.ReduceFriendshipFromMeat();
+                        }
+                        Game1.player.gainExperience(0, DataLoader.ModConfig.Softermode ? 1 : 5);
+                    }
                 }
                 else
                 {

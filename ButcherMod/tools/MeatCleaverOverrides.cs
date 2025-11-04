@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 using AnimalHusbandryMod.animals;
+using AnimalHusbandryMod.animals.data;
 using AnimalHusbandryMod.common;
 using Microsoft.Xna.Framework;
 using StardewValley;
@@ -56,17 +57,18 @@ namespace AnimalHusbandryMod.tools
             __result = false;
         }
 
-        public static bool beginUsing(GenericTool __instance, GameLocation location, int x, int y, StardewValley.Farmer who, ref bool __result)
+        public static bool beginUsing(GenericTool __instance, GameLocation location, StardewValley.Farmer who, ref bool __result)
         {
             if (!IsMeatCleaver(__instance)) return true;
+            if (who == null) return true;
 
             string meatCleaverId = __instance.modData[MeatCleaverKey];
 
-            x = (int)who.GetToolLocation(false).X;
-            y = (int)who.GetToolLocation(false).Y;
+            int x = (int)who.GetToolLocation(false).X;
+            int y = (int)who.GetToolLocation(false).Y;
             Rectangle rectangle = new Rectangle(x - Game1.tileSize / 2, y - Game1.tileSize / 2, Game1.tileSize, Game1.tileSize);
 
-            if (!DataLoader.ModConfig.DisableMeat && who != null && Game1.player.Equals(who))
+            if (!DataLoader.ModConfig.DisableMeat && Game1.player.Equals(who))
             {
                 if (location is not null)
                 {
@@ -81,7 +83,7 @@ namespace AnimalHusbandryMod.tools
                             else
                             {
                                 TempAnimals[meatCleaverId] = farmAnimal;
-                                if (who != null && Game1.player.Equals(who))
+                                if (Game1.player.Equals(who))
                                 {
                                     ICue hurtSound;
                                     if (!DataLoader.ModConfig.Softmode)
@@ -108,14 +110,25 @@ namespace AnimalHusbandryMod.tools
             }
 
             __instance.Update(who.FacingDirection, 0, who);
-            if (TempAnimals.TryGetValue(meatCleaverId, out FarmAnimal tempAnimal) && tempAnimal != null && tempAnimal.isBaby())
+            if (TempAnimals.TryGetValue(meatCleaverId, out FarmAnimal tempAnimal) && tempAnimal != null)
             {
-                if (who != null && Game1.player.Equals(who))
+                if (tempAnimal.isBaby())
                 {
-                    string dialogue = DataLoader.i18n.Get("Tool.MeatCleaver.TooYoung" + Suffix, new {animalName = tempAnimal.displayName});
-                    DelayedAction.showDialogueAfterDelay(dialogue, 150);
+                    if (Game1.player.Equals(who))
+                    {
+                        string dialogue = DataLoader.i18n.Get("Tool.MeatCleaver.TooYoung" + Suffix, new {animalName = tempAnimal.displayName});
+                        DelayedAction.showDialogueAfterDelay(dialogue, 150);
+                    }
+                    TempAnimals[meatCleaverId] = null;
+                } else if (DataLoader.ModConfig.Softermode && MeatController.CreateMeat(tempAnimal).Count == 0)
+                {
+                    if (Game1.player.Equals(who))
+                    {
+                        string dialogue = DataLoader.i18n.Get("Tool.MeatCleaver.NoMeat" + Suffix, new {animalName = tempAnimal.displayName});
+                        DelayedAction.showDialogueAfterDelay(dialogue, 150);
+                    }
+                    TempAnimals[meatCleaverId] = null;
                 }
-                TempAnimals[meatCleaverId] = null;
             }
             who.EndUsingTool();
             __result = true;
@@ -144,8 +157,8 @@ namespace AnimalHusbandryMod.tools
                 return;
             }
 
-            (farmAnimal.home.indoors.Value as AnimalHouse)?.animalsThatLiveHere.Remove(farmAnimal.myID.Value);
-            farmAnimal.health.Value = -1;
+            farmAnimal.RemoveOrHitAnimal();
+
             int numClouds = farmAnimal.Sprite.SourceRect.Width / 2;
             int cloudSprite = !DataLoader.ModConfig.Softmode ? 5 : 10;
             for (int i = 0; i < numClouds; i++)
@@ -173,33 +186,24 @@ namespace AnimalHusbandryMod.tools
                 );
             }
 
-            Color animalColor;
-            float alfaFade;
-            if (!DataLoader.ModConfig.Softmode)
+            if (!DataLoader.ModConfig.Softermode)
             {
-                animalColor = Color.LightPink;
-                alfaFade = .025f;
-            }
-            else
-            {
-                animalColor = Color.White;
-                alfaFade = .050f;
+                location.temporarySprites.Add(
+                    new TemporaryAnimatedSprite
+                    (
+                        farmAnimal.Sprite.textureName.Value
+                        , farmAnimal.Sprite.SourceRect
+                        , farmAnimal.Position
+                        , farmAnimal.FacingDirection == Game1.left
+                        , DataLoader.ModConfig.Softmode ? 0.050f : 0.025f 
+                        , DataLoader.ModConfig.Softmode ? Color.White : Color.LightPink
+                    )
+                    {
+                        scale = 4f
+                    }
+                );
             }
 
-            location.temporarySprites.Add(
-                new TemporaryAnimatedSprite
-                (
-                    farmAnimal.Sprite.textureName.Value
-                    , farmAnimal.Sprite.SourceRect
-                    , farmAnimal.Position
-                    , farmAnimal.FacingDirection == Game1.left
-                    , alfaFade
-                    , animalColor
-                )
-                {
-                    scale = 4f
-                }
-            );
             if (!DataLoader.ModConfig.Softmode)
             {
                 location.playSound("killAnimal");
@@ -211,10 +215,21 @@ namespace AnimalHusbandryMod.tools
                 warptSound.Play();
             }
 
-            MeatController.ThrowItem(MeatController.CreateMeat(farmAnimal), farmAnimal);
-            who.gainExperience(0, 5);
+            List<Item> meatToCreate = MeatController.CreateMeat(farmAnimal);
+            if (meatToCreate.Count > 0) 
+            {
+                MeatController.ThrowItem(meatToCreate, farmAnimal);
+                if (DataLoader.ModConfig.Softermode)
+                {
+                    farmAnimal.ReduceFriendshipFromMeat();
+                }
+                who.gainExperience(0, DataLoader.ModConfig.Softermode ? 1 : 5);
+            }
             Animals[meatCleaverId] = (FarmAnimal) null;
-            TempAnimals[meatCleaverId] = (FarmAnimal) null;
+            if (!DataLoader.ModConfig.Softermode)
+            {
+                TempAnimals[meatCleaverId] = (FarmAnimal)null;
+            }
             return;
         }
 

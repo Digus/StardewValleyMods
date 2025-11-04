@@ -101,14 +101,17 @@ namespace AnimalHusbandryMod.animals
             }
             var numberOfMeat = minimumNumberOfMeat;
 
-            numberOfMeat += (int)((farmAnimal.getSellPrice() / ((double)farmAnimal.GetAnimalData().SellPrice) - 0.3) * (maxNumberOfMeat - minimumNumberOfMeat));
+            int numberOfMeatOverMinimum = (int)((farmAnimal.getSellPrice() / ((double)farmAnimal.GetAnimalData().SellPrice) - 0.3) * (maxNumberOfMeat - minimumNumberOfMeat));
+            numberOfMeat += numberOfMeatOverMinimum;
 
             Random random = new Random((int)farmAnimal.myID.Value * 10000 + (int)Game1.stats.DaysPlayed);
             int[] quality = { 0, 0, 0, 0, 0 };
+            var lastRandomQuality = 0;
+
             for (int i = 0; i < numberOfMeat; i++)
             {
-                var produceQuality = ProduceQuality(random, farmAnimal);
-                quality[produceQuality]++;
+                lastRandomQuality = ProduceQuality(random, farmAnimal);
+                quality[lastRandomQuality]++;
             }
 
             var tempTotal = meatPrice * quality[0] + meatPrice * quality[1] * 1.25 + meatPrice * quality[2] * 1.5 + meatPrice * quality[4] * 2;
@@ -146,70 +149,82 @@ namespace AnimalHusbandryMod.animals
                 {
                     numberOfMeat++;
                     quality[4]++;
-                    tempTotal += meatPrice * 0.50;
+                    tempTotal += meatPrice * 2;
                 }
             }
 
-            for (; numberOfMeat > 0; --numberOfMeat)
+            if (DataLoader.ModConfig.Softermode)
             {
-                Object newItem = ItemRegistry.Create<Object>(debrisType, 1, quality[4] > 0 ? 4 : quality[2] > 0 ? 2 : quality[1] > 0 ? 1 : 0);
-                quality[newItem.Quality]--;
-
-                itemsToReturn.Add(newItem);
-            }
-
-            if (animalItem is WoolAnimalItem woolAnimalItem)
-            {
-                int numberOfWools = farmAnimal.currentProduce.Value != null && ItemRegistry.Exists(farmAnimal.currentProduce.Value) && farmAnimal.currentProduce.Value != "0" ? 1 : 0;
-                numberOfWools += (int)(woolAnimalItem.MinimumNumberOfExtraWool + (farmAnimal.getSellPrice() / ((double)farmAnimal.GetAnimalData().SellPrice) - 0.3) * (woolAnimalItem.MaximumNumberOfExtraWool - woolAnimalItem.MinimumNumberOfExtraWool));
-
-                for (; numberOfWools > 0; --numberOfWools)
+                if (numberOfMeatOverMinimum > 0)
                 {
-                    Object newItem = ItemRegistry.Create<Object>(farmAnimal.GetProduceID(random, false), 1, ProduceQuality(random, farmAnimal));
+                    Object newItem = ItemRegistry.Create<Object>(debrisType, 1, quality[lastRandomQuality] > 0 ? lastRandomQuality : quality[lastRandomQuality+1] > 0 ? lastRandomQuality+1 : quality[lastRandomQuality+2] > 0 ? lastRandomQuality+2 : 4);
                     itemsToReturn.Add(newItem);
                 }
             }
-
-            if (animalItem is FeatherAnimalItem featherAnimalItem)
+            else
             {
-                int numberOfFeather = (int)(featherAnimalItem.MinimumNumberOfFeatherChances + (farmAnimal.getSellPrice() / ((double)farmAnimal.GetAnimalData().SellPrice) - 0.3) * (featherAnimalItem.MaximumNumberOfFeatherChances - featherAnimalItem.MinimumNumberOfFeatherChances));
-                float num1 = (int)farmAnimal.happiness.Value > 200 ? (float)farmAnimal.happiness.Value * 1.5f : ((int)farmAnimal.happiness.Value <= 100 ? (float)((int)farmAnimal.happiness.Value - 100) : 0.0f);
-                for (; numberOfFeather > 0; --numberOfFeather)
+                while(numberOfMeat > 0)
                 {
-                    if (random.NextDouble() < (double)farmAnimal.happiness.Value / 150.0)
+                    Object newItem = ItemRegistry.Create<Object>(debrisType, 1, quality[4] > 0 ? 4 : quality[2] > 0 ? 2 : quality[1] > 0 ? 1 : 0);
+                    quality[newItem.Quality]--;
+                    itemsToReturn.Add(newItem);
+                    numberOfMeat--;
+                }
+            }
+            if (!DataLoader.ModConfig.Softermode)
+            {
+                if (animalItem is WoolAnimalItem woolAnimalItem)
+                {
+                    int numberOfWools = farmAnimal.currentProduce.Value != null && ItemRegistry.Exists(farmAnimal.currentProduce.Value) && farmAnimal.currentProduce.Value != "0" ? 1 : 0;
+                    numberOfWools += (int)(woolAnimalItem.MinimumNumberOfExtraWool + (farmAnimal.getSellPrice() / ((double)farmAnimal.GetAnimalData().SellPrice) - 0.3) * (woolAnimalItem.MaximumNumberOfExtraWool - woolAnimalItem.MinimumNumberOfExtraWool));
+
+                    for (; numberOfWools > 0; --numberOfWools)
                     {
-                        if (random.NextDouble() < ((double)farmAnimal.friendshipTowardFarmer.Value + (double)num1) / 5000.0 + Game1.player.DailyLuck + (double)Game1.player.LuckLevel * 0.01)
+                        Object newItem = ItemRegistry.Create<Object>(farmAnimal.GetProduceID(random, false), 1, ProduceQuality(random, farmAnimal));
+                        itemsToReturn.Add(newItem);
+                    }
+                }
+
+                if (animalItem is FeatherAnimalItem featherAnimalItem)
+                {
+                    int numberOfFeather = (int)(featherAnimalItem.MinimumNumberOfFeatherChances + (farmAnimal.getSellPrice() / ((double)farmAnimal.GetAnimalData().SellPrice) - 0.3) * (featherAnimalItem.MaximumNumberOfFeatherChances - featherAnimalItem.MinimumNumberOfFeatherChances));
+                    float num1 = (int)farmAnimal.happiness.Value > 200 ? (float)farmAnimal.happiness.Value * 1.5f : ((int)farmAnimal.happiness.Value <= 100 ? (float)((int)farmAnimal.happiness.Value - 100) : 0.0f);
+                    for (; numberOfFeather > 0; --numberOfFeather)
+                    {
+                        if (random.NextDouble() < (double)farmAnimal.happiness.Value / 150.0)
                         {
-                            Object newItem = ItemRegistry.Create<Object>(farmAnimal.GetProduceID(random, true), 1, ProduceQuality(random, farmAnimal));
-                            itemsToReturn.Add(newItem);
+                            if (random.NextDouble() < ((double)farmAnimal.friendshipTowardFarmer.Value + (double)num1) / 5000.0 + Game1.player.DailyLuck + (double)Game1.player.LuckLevel * 0.01)
+                            {
+                                Object newItem = ItemRegistry.Create<Object>(farmAnimal.GetProduceID(random, true), 1, ProduceQuality(random, farmAnimal));
+                                itemsToReturn.Add(newItem);
+                            }
                         }
                     }
                 }
-            }
 
-            if (animalItem is FeetAnimalItem feetAnimalItem)
-            {
-                int numberOfFeet = (int)(feetAnimalItem.MinimumNumberOfFeetChances + (farmAnimal.getSellPrice() / ((double)farmAnimal.GetAnimalData().SellPrice) - 0.3) * (feetAnimalItem.MaximumNumberOfFeetChances - feetAnimalItem.MinimumNumberOfFeetChances));
-                float num1 = (int)farmAnimal.happiness.Value > 200 ? (float)farmAnimal.happiness.Value * 1.5f : ((int)farmAnimal.happiness.Value <= 100 ? (float)((int)farmAnimal.happiness.Value - 100) : 0.0f);
-                for (; numberOfFeet > 0; --numberOfFeet)
+                if (animalItem is FeetAnimalItem feetAnimalItem)
                 {
-                    if (random.NextDouble() < (double)farmAnimal.happiness.Value / 150.0)
+                    int numberOfFeet = (int)(feetAnimalItem.MinimumNumberOfFeetChances + (farmAnimal.getSellPrice() / ((double)farmAnimal.GetAnimalData().SellPrice) - 0.3) * (feetAnimalItem.MaximumNumberOfFeetChances - feetAnimalItem.MinimumNumberOfFeetChances));
+                    float num1 = (int)farmAnimal.happiness.Value > 200 ? (float)farmAnimal.happiness.Value * 1.5f : ((int)farmAnimal.happiness.Value <= 100 ? (float)((int)farmAnimal.happiness.Value - 100) : 0.0f);
+                    for (; numberOfFeet > 0; --numberOfFeet)
                     {
-                        if (random.NextDouble() < ((double)farmAnimal.friendshipTowardFarmer.Value + (double)num1) / 5000.0 + Game1.player.DailyLuck + (double)Game1.player.LuckLevel * 0.01)
+                        if (random.NextDouble() < (double)farmAnimal.happiness.Value / 150.0)
                         {
-                            Object newItem = ItemRegistry.Create<Object>(farmAnimal.GetProduceID(random, true), 1, ProduceQuality(random, farmAnimal));
-                            newItem.Quality = ProduceQuality(random, farmAnimal);
-                            itemsToReturn.Add(newItem);
+                            if (random.NextDouble() < ((double)farmAnimal.friendshipTowardFarmer.Value + (double)num1) / 5000.0 + Game1.player.DailyLuck + (double)Game1.player.LuckLevel * 0.01)
+                            {
+                                Object newItem = ItemRegistry.Create<Object>(farmAnimal.GetProduceID(random, true), 1, ProduceQuality(random, farmAnimal));
+                                newItem.Quality = ProduceQuality(random, farmAnimal);
+                                itemsToReturn.Add(newItem);
+                            }
                         }
                     }
+                }                
+                if (AnimalContestController.CanChangeParticipant(farmAnimal))
+                {
+                    AnimalContestController.RemoveAnimalParticipant(farmAnimal);
+                    itemsToReturn.Add(ToolsFactory.GetParticipantRibbon());
                 }
             }
-            if (AnimalContestController.CanChangeParticipant(farmAnimal))
-            {
-                AnimalContestController.RemoveAnimalParticipant(farmAnimal);
-                itemsToReturn.Add(ToolsFactory.GetParticipantRibbon());
-            }
-
             return itemsToReturn;
         }
 
