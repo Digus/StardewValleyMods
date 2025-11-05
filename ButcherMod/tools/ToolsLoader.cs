@@ -219,8 +219,8 @@ namespace AnimalHusbandryMod.tools
 
         public void LoadMail()
         {
-            string meatCleaverText = DataLoader.i18n.Get(DataLoader.ModConfig.Softmode ? "Tool.MeatCleaver.Letter.Soft" : "Tool.MeatCleaver.Letter");
-            string meatCleaverTitle = DataLoader.i18n.Get(DataLoader.ModConfig.Softmode ? "Tool.MeatCleaver.Letter.Soft.Title" : "Tool.MeatCleaver.Letter.Title");
+            string meatCleaverText = DataLoader.i18n.Get($"Tool.MeatCleaver.Letter{(DataLoader.ModConfig.Softmode?".Soft":"")}{(DataLoader.ModConfig.Softermode?".Softer":"")}");
+            string meatCleaverTitle = DataLoader.i18n.Get($"Tool.MeatCleaver.Letter{(DataLoader.ModConfig.Softmode?".Soft":"")}.Title");
 
             bool HasAnimal()
             {

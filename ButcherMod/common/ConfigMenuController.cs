@@ -35,6 +35,8 @@ namespace AnimalHusbandryMod.common
 
             api.AddBoolOption(manifest, () => DataLoader.ModConfig.Softmode, (bool val) => DataLoader.ModConfig.Softmode = val, () => "Softmode", () => "Enable the Softmode. When enabled the Meat Cleaver is replaced with the Meat Want. They work the same, but sound, text and effects are changed to resemble magic. Restart the game after changing this.");
 
+            api.AddBoolOption(manifest, () => DataLoader.ModConfig.Softermode, (bool val) => DataLoader.ModConfig.Softermode = val, () => "Softermode", () => "Enable the Softermode. When enabled you will receive one piece of meat at a time. The animal will never be removed, but friendship will drop.");
+
             api.AddBoolOption(manifest, () => DataLoader.ModConfig.DisableRancherMeatPriceAjust, (bool val) => DataLoader.ModConfig.DisableRancherMeatPriceAjust = val, () => "Disable Rancher Affect Meat", () => "Disable the patch that make Rancher Profession work on meat items.");
 
             api.AddBoolOption(manifest, () => DataLoader.ModConfig.DisableMeatInBlundle, (bool val) => DataLoader.ModConfig.DisableMeatInBlundle = val, () => "Disable Meat In Bundle", () => "Disable the addition of meat to the Animal Bundle in the Community Center. Needs to start a new game so it can take effect.");

@@ -5,6 +5,7 @@ namespace AnimalHusbandryMod
     public class ModConfig
     {
         public bool Softmode;
+        public bool Softermode;
         public SButton? AddMeatCleaverToInventoryKey;
         public SButton? AddInseminationSyringeToInventoryKey;
         public SButton? AddFeedingBasketToInventoryKey;
