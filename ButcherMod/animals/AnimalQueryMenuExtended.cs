@@ -487,6 +487,8 @@ namespace AnimalHusbandryMod.animals
 
         public static bool Pet(FarmAnimal __instance, ref Farmer who, bool is_auto_pet)
         {
+            if (__instance == null) return true;
+            if (__instance.modData?.ContainsKey("MEEP_Farm_Animal")??false) return true;
             if (who.FarmerSprite.PauseForSingleAnimation) return true;
             if (is_auto_pet) return true;
             if (Game1.timeOfDay >= 1900 && !__instance.isMoving()) return true;
