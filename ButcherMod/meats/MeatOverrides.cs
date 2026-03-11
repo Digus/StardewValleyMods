@@ -25,14 +25,16 @@ namespace AnimalHusbandryMod.meats
                     num = Math.Max(1f, num * Game1.MasterPlayer.difficultyModifier);
                 }
                 __result = (int)num;
-                return false;                
+                return false;
             }
-            return true;            
+            return true;
         }
 
-        public static bool isPotentialBasicShipped(ref int category, ref bool __result)
+        public static bool isPotentialBasicShipped(string itemId, ref int category, ref bool __result)
         {
-            if  (category == -14)
+            if (category == -14
+                    && Game1.objectData.TryGetValue(itemId, out var objectData)
+                    && !objectData.ExcludeFromShippingCollection)
             {
                 __result = true;
                 return false;
@@ -43,7 +45,9 @@ namespace AnimalHusbandryMod.meats
 
         public static bool countsForShippedCollection(SObject __instance, ref bool __result)
         {
-            if (__instance.Category == -14)
+            if (__instance.Category == -14
+                    && Game1.objectData.TryGetValue(__instance.ItemId, out var objectData)
+                    && !objectData.ExcludeFromShippingCollection)
             {
                 __result = true;
                 return false;
